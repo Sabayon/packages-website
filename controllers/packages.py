@@ -112,6 +112,8 @@ class PackagesController(BaseController,WebsiteController):
         if mysize != None:
             data['size'] = entropy_tools.bytes_into_human(mysize)
         data['digest'] = dbconn.retrieveDigest(idpackage)
+        data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
+            dbconn.retrieveSignatures(idpackage)
         data['idpackage'] = idpackage
         return data
 

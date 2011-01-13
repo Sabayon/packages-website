@@ -302,6 +302,16 @@
             <a href="${c.repo_mirrors[0]}/${c.atominfo['download'] | u}.md5">${c.atominfo.get('digest')}</a>
         </dd>
     </dl>
+    %if c.atominfo.get('sha256'):
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("SHA 256")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('sha256')}
+            </dd>
+        </dl>
+    %endif
 
     <!-- creationdate -->
     <dl class="form-line" id="form-line-packages-search">
