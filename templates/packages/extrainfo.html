@@ -100,12 +100,57 @@
         <!-- dependencies -->
         <dl class="form-line" id="form-line-packages-search">
             <dt class="form-left" style="clear: both;">
-                <label>${_("Dependencies")}</label>
+                <label>${_("Runtime dependencies")}</label>
             </dt>
             <dd>
                 <div style="position: relative; left: 16em; top: -1em;">
                     <br/>
-                    % for dep in c.atominfo['dependencies']:
+                    % for dep, dep_type in sorted([x for x in c.atominfo['dependencies'] if x[1] == c.dependency_type_ids['rdepend_id']):
+                        <a href="/repository/match/${c.depdata[dep][1]}/${c.atominfo['idproduct']}/${c.atominfo['arch']}/${c.atominfo['branch']}/${dep}" target="_blank">${dep | h,trim}</a>
+                        <br/>
+                    % endfor
+                </div>
+            </dd>
+        </dl>
+
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left" style="clear: both;">
+                <label>${_("Build dependencies")}</label>
+            </dt>
+            <dd>
+                <div style="position: relative; left: 16em; top: -1em;">
+                    <br/>
+                    % for dep, dep_type in sorted([x for x in c.atominfo['dependencies'] if x[1] == c.dependency_type_ids['bdepend_id']):
+                        <a href="/repository/match/${c.depdata[dep][1]}/${c.atominfo['idproduct']}/${c.atominfo['arch']}/${c.atominfo['branch']}/${dep}" target="_blank">${dep | h,trim}</a>
+                        <br/>
+                    % endfor
+                </div>
+            </dd>
+        </dl>
+
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left" style="clear: both;">
+                <label>${_("Post dependencies")}</label>
+            </dt>
+            <dd>
+                <div style="position: relative; left: 16em; top: -1em;">
+                    <br/>
+                    % for dep, dep_type in sorted([x for x in c.atominfo['dependencies'] if x[1] == c.dependency_type_ids['pdepend_id']):
+                        <a href="/repository/match/${c.depdata[dep][1]}/${c.atominfo['idproduct']}/${c.atominfo['arch']}/${c.atominfo['branch']}/${dep}" target="_blank">${dep | h,trim}</a>
+                        <br/>
+                    % endfor
+                </div>
+            </dd>
+        </dl>
+
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left" style="clear: both;">
+                <label>${_("Other dependencies")}</label>
+            </dt>
+            <dd>
+                <div style="position: relative; left: 16em; top: -1em;">
+                    <br/>
+                    % for dep, dep_type in sorted([x for x in c.atominfo['dependencies'] if x[1] == c.dependency_type_ids['mdepend_id']):
                         <a href="/repository/match/${c.depdata[dep][1]}/${c.atominfo['idproduct']}/${c.atominfo['arch']}/${c.atominfo['branch']}/${dep}" target="_blank">${dep | h,trim}</a>
                         <br/>
                     % endfor

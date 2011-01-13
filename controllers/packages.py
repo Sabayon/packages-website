@@ -149,8 +149,8 @@ class PackagesController(BaseController,WebsiteController):
         data['license'] = mydata[10].split()
         data['homepage'] = mydata[9]
         data['description'] = mydata[4]
-        data['dependencies'] = dbconn.retrieveDependencies(idpackage)
-        for dep in data['dependencies']:
+        data['dependencies'] = dbconn.retrieveDependencies(idpackage, extended = True)
+        for dep, dep_type in data['dependencies']:
             match_repo = repoid
             match_id = dbconn.atomMatch(dep)[0]
             if (match_id == -1) and (repoid != model.config.ETP_REPOSITORY): # search in official repo
@@ -654,6 +654,7 @@ class PackagesController(BaseController,WebsiteController):
         c.products = model.config.available_products
         c.repoid = repoid
         c.product = product
+        c.dependency_type_ids = etpConst['dependency_type_ids']
 
         if search_type == "expanded":
             return render_mako('/packages/searchparams_args.html')
