@@ -1390,7 +1390,7 @@ class PackagesController(BaseController,WebsiteController):
                 continue
 
             categories = dbconn.listAllCategories(order_by = 'category')
-            for idcategory, category in categories:
+            for category in categories:
                 s = category[0].lower()
                 if s not in c.categories:
                     c.categories[s] = []
@@ -1448,26 +1448,14 @@ class PackagesController(BaseController,WebsiteController):
                     pass
                 continue
 
-            try:
-                if hasattr(dbconn, 'isCategoryAvailable'):
-                    idcat = dbconn.isCategoryAvailable(cat)
-                else:
-                    idcat = dbconn._isCategoryAvailable(cat)
-            except:
-                continue
-            if idcat == -1:
-                continue
-
             c.packages[branch] = {}
             c.atoms[branch] = []
 
-            if hasattr(dbconn, 'listIdPackagesInIdcategory'):
-                idpackages = dbconn.listIdPackagesInIdcategory(idcat)
-            else:
-                idpackages = dbconn.listPackageIdsInCategoryId(idcat)
+            idpackages = dbconn.listPackageIdsInCategory(cat)
             for idpackage in idpackages:
                 myatom = dbconn.retrieveAtom(idpackage)
-                if not myatom: continue
+                if not myatom:
+                    continue
                 myatom = myatom.split("/")[1]
                 c.atoms[branch].append(myatom)
                 c.packages[branch][myatom] = {}
