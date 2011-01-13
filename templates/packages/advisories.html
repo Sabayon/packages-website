@@ -1,10 +1,31 @@
-<hr id="spacer" />
-<div style="margin-bottom: 20px; text-align: right">
-    <h3>${_("Security Advisories")}</h3>
-</div>
-<%include file="/packages/advisories_desc.html"/>
-<hr id="spacer" />
-<div style="padding-left: 20px">
-    <%include file="/packages/feed.html"/>
-</div>
-${_("You can get the complete list on the")} <a href="http://www.gentoo.org/rdf/en/glsa-index.rdf" target="_blank">${_("Gentoo Linux Security Advisories feed")}</a>
+## -*- coding: utf-8 -*-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<%include file="/head.html"/>
+<link href="/css/packages.css" rel="stylesheet" type="text/css"/>
+%if c.repository_feeds:
+    % for feed_product in c.repository_feeds:
+        %for feed_arch in c.repository_feeds[feed_product]:
+            <link rel="alternate" type="application/rss+xml" title="Sabayon Linux ${feed_product[0].upper()+feed_product[1:]} ${feed_arch} Repository" href="${c.repository_feeds[feed_product][feed_arch]}"/>
+        %endfor
+    %endfor
+%endif
+<script type="text/javascript"><%include file="/../public/js/packages.js"/></script>
+<body>
+    <%include file="/wrapper.html"/>
+    <div id="small_band">
+        <%include file="/menu.html"/>
+    </div>
+
+    <div id="body">
+        <div align="center" style="margin-bottom: 10px"><%include file="/adsense/728x15.html"/></div>
+        <%include file="/packages/menu.html"/>
+        <div id="packages-area">
+            <%include file="/packages/advisories_inner.html"/>
+        </div>
+    </div>
+
+    <%include file="/footer.html"/>
+</body>
+</html>

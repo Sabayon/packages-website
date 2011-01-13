@@ -666,7 +666,7 @@ class PackagesController(BaseController,WebsiteController):
 
     def ugc(self):
         self._generate_packages_ugc()
-        return render_mako('/packages/ugc_searchbox.html')
+        return render_mako('/packages/ugc.html')
 
     def search_ugc_package(self, search_type = None, search_string = None, search_string2 = None):
 

@@ -22,6 +22,11 @@ def make_map(config):
     # CUSTOM ROUTES HERE
 
     map.connect('/', controller='packages', action='index')
+    map.connect('/ugc', controller='packages', action='ugc')
+    map.connect('/stats', controller='packages', action='stats')
+    map.connect('/categories', controller='packages', action='categories')
+    map.connect('/releases', controller='packages', action='releases')
+    map.connect('/advisories', controller='packages', action='advisories')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='search_pkg')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgcat}/{pkgnamever}', controller='packages', action='search_pkg_atom')
     map.connect('/repository/match/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='match_pkg')

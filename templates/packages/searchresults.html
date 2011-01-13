@@ -33,7 +33,7 @@
             ${_("Perhaps, you meant?")}<br/>
             <div style="width: 80%; margin-left: auto; margin-right: auto;">
                 % for atom in i_meant:
-                    <a href="javascript:get_packages_home_string('packages-area','${atom}')">${atom}</a><br/>
+                    <a href="/?searchstring=${atom}">${atom}</a><br/>
                 % endfor
             </div>
             <br/>
@@ -42,6 +42,6 @@
         <h4>${_("Cannot find the software you are looking for?")}</h4>
         <a href="http://bugs.sabayon.org/enter_bug.cgi?product=Entropy&format=packreq" target="_blank">${_("Submit a package request")}</a>!
         <br/><br/>
-        [ <a href="javascript:get_packages_home('packages-area')">${_("Back to Search")}</a> ]
+        [ <a href="/">${_("Back to Search")}</a> ]
     </div>
 %endif

@@ -13,18 +13,6 @@ function load_content(idpackage,arch,product,repo,branch,dest_div) {
         completeAHAH.ahah('/packages/content?idpackage=' + idpackage + '&arch=' + arch + '&product=' + product + '&branch=' + branch + '&repo=' + repo, dest_div, null, 'get', null);
 }
 
-function get_packages_stats(dest_div) {
-    completeAHAH.ahah('/packages/stats', dest_div, null, 'get', null, packages_loading_html);
-}
-
-function get_packages_home(dest_div) {
-    completeAHAH.ahah('/packages/home', dest_div, null, 'get', null, packages_loading_html);
-}
-
-function get_packages_home_string(dest_div,mystring) {
-    completeAHAH.ahah('/packages/home?searchstring='+mystring, dest_div, null, 'get', null, packages_loading_html);
-}
-
 function get_package_data(formname, where, image, idpackage, branch, repoid, ugc_count_class) {
 
     short_el = document.getElementById('shortinfo_'+idpackage+'_'+branch+'_'+repoid);
@@ -67,14 +55,6 @@ function get_package_data(formname, where, image, idpackage, branch, repoid, ugc
 
 }
 
-function load_categories(dest_div) {
-    completeAHAH.ahah('/packages/categories', dest_div, null, 'get', null, packages_loading_html);
-}
-
-function load_releases(dest_div) {
-    completeAHAH.ahah('/packages/releases', dest_div, null, 'get', null, packages_loading_html);
-}
-
 function load_release(branch,product,repo,arch,dest_div) {
         completeAHAH.ahah('/packages/release?branch=' + branch + '&arch=' + arch + '&product=' + product + '&repo=' + repo, dest_div, null, 'get', null, packages_loading_html);
 }
@@ -109,10 +89,6 @@ function load_category(cat, product, repo, arch) {
 
 function load_advisory(atom,repo,dest_div) {
     completeAHAH.ahah('/packages/getadvisory?atom='+atom+'&repo='+repo, dest_div, null, 'get', null);
-}
-
-function load_advisories(dest_div) {
-        completeAHAH.ahah('/packages/advisories', dest_div, null, 'get', null, packages_loading_html);
 }
 
 function set_stars_rating(item,elem_prefix,vote) {
@@ -272,9 +248,5 @@ function ugc_search(form_name,search_input,dest_div,offset,do_spin,spin_target,s
         }
 
     completeAHAH.likeSubmit('/packages/ugc_search?offset='+offset, 'POST', form_name, spin_target, loading_html, do_et_complete, do_spin, spin_target);
-}
-
-function get_ugc_home(dest_div) {
-    completeAHAH.ahah('/packages/ugc', dest_div, null, 'get', null, packages_loading_html);
 }
 

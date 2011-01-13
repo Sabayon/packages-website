@@ -19,8 +19,8 @@
     </div>
 
     <div id="body">
+        <div align="center" style="margin-bottom: 10px"><%include file="/adsense/728x15.html"/></div>
         <%include file="/packages/menu.html"/>
-
         <div id="packages-area">
             % if c.show_search_results:
                 <%include file="/packages/ugc_searchresults.html"/>
@@ -28,7 +28,6 @@
                 <%include file="/packages/ugc_searchbox.html"/>
             % endif
         </div>
-
     </div>
 
     <%include file="/footer.html"/>

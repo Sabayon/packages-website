@@ -1,0 +1,63 @@
+<hr id="spacer" />
+<div style="margin-bottom: 20px; text-align: right">
+    <h3>${_("Current status")}</h3>
+</div>
+%for product in sorted(c.overview.keys(), reverse = True):
+    <div style="margin-bottom: 10px">
+        <h4><u>${c.products[product]}</u></h4>
+    </div>
+
+        %for arch in c.overview[product]:
+
+            <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Architecture")}:</label>
+                </dt>
+                <dd>
+                    <b>${arch}</b>
+                </dd>
+            </dl>
+            <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Branches")}:</label>
+                </dt>
+                <dd>
+                    <b>${c.overview[product][arch]['branches']}</b>
+                </dd>
+            </dl>
+            <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Number of packages")}:</label>
+                </dt>
+                <dd>
+                    <b>${c.overview[product][arch]['packages']}</b>
+                </dd>
+            </dl>
+            <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Number of categories")}:</label>
+                </dt>
+                <dd>
+                    <b>${c.overview[product][arch]['categories']}</b>
+                </dd>
+            </dl>
+            <!-- <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Number of files")}:</label>
+                </dt>
+                <dd>
+                    <b>${c.overview[product][arch]['files_number']}</b>
+                </dd>
+            </dl> -->
+            <dl class="form-line">
+                <dt class="form-left" style="width: 18em">
+                    <label>${_("Overall size")}:</label>
+                </dt>
+                <dd>
+                    <b>${c.overview[product][arch]['repo_size']}</b>
+                </dd>
+            </dl>
+            <hr id="spacer" style="height: 10px; border: 0px"/>
+        %endfor
+
+%endfor
