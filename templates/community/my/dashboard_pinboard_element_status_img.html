@@ -1,7 +1,0 @@
-% if c.el_status == c.pinboard_data_status['done']:
-    <img src="/images/status/online.png" alt="${c.pinboard_data_status_desc[c.el_status]}" title="${c.pinboard_data_status_desc[c.el_status]}"/>
-% elif c.el_status == c.pinboard_data_status['not_done']:
-    <img src="/images/status/idle.png" alt="${c.pinboard_data_status_desc[c.el_status]}" title="${c.pinboard_data_status_desc[c.el_status]}"/>
-% elif c.el_status == c.pinboard_data_status['discarded']:
-    <img src="/images/status/busy.png" alt="${c.pinboard_data_status_desc[c.el_status]}" title="${c.pinboard_data_status_desc[c.el_status]}"/>
-% endif
