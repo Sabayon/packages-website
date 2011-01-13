@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-13 11:54+0100\n"
+"POT-Creation-Date: 2011-01-13 23:57+0100\n"
 "PO-Revision-Date: 2009-08-05 12:09+0100\n"
 "Last-Translator: Rémy Epke <testflacon@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,8 +49,8 @@ msgstr ""
 msgid "The Jabber.org Open Source Protocol"
 msgstr ""
 
-#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:155
-#: ../templates/community/users/public_profile.html:157
+#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:215
+#: ../templates/community/users/public_profile.html:156
 msgid "Website"
 msgstr "Website"
 
@@ -59,7 +59,7 @@ msgid "Do you have a website?"
 msgstr ""
 
 #: ../controllers/community.py:47
-#: ../templates/community/users/public_profile.html:83
+#: ../templates/community/users/public_profile.html:82
 msgid "Location"
 msgstr "Locatie"
 
@@ -68,7 +68,7 @@ msgid "Where do you live?"
 msgstr ""
 
 #: ../controllers/community.py:54
-#: ../templates/community/users/public_profile.html:116
+#: ../templates/community/users/public_profile.html:115
 msgid "Interests"
 msgstr "Interesses"
 
@@ -77,7 +77,7 @@ msgid "What do you like most?"
 msgstr ""
 
 #: ../controllers/community.py:61
-#: ../templates/community/users/public_profile.html:105
+#: ../templates/community/users/public_profile.html:104
 msgid "Occupation"
 msgstr "Beroep"
 
@@ -95,7 +95,6 @@ msgid "Your Community signature"
 msgstr "Community Score van deze gebruiker"
 
 #: ../controllers/community.py:75
-#: ../templates/community/my/dashboard_profile_tab.html:52
 msgid "E-mail"
 msgstr "Email"
 
@@ -182,19 +181,19 @@ msgstr "Mijn Dashboard"
 #: ../controllers/login.py:301 ../controllers/login.py:303
 #: ../controllers/login.py:305 ../controllers/login.py:308
 #: ../controllers/login.py:310 ../controllers/login.py:318
-#: ../controllers/login.py:324 ../controllers/packages.py:724
-#: ../controllers/packages.py:731 ../controllers/packages.py:737
-#: ../controllers/packages.py:743 ../controllers/packages.py:860
-#: ../controllers/packages.py:865 ../controllers/packages.py:872
-#: ../controllers/packages.py:876 ../controllers/packages.py:885
-#: ../controllers/packages.py:891 ../controllers/packages.py:893
-#: ../controllers/packages.py:905 ../controllers/packages.py:908
-#: ../controllers/packages.py:913 ../controllers/packages.py:920
-#: ../controllers/packages.py:925 ../controllers/packages.py:927
-#: ../controllers/packages.py:932 ../controllers/packages.py:937
-#: ../controllers/packages.py:947 ../controllers/packages.py:958
-#: ../controllers/packages.py:965 ../controllers/packages.py:978
-#: ../controllers/packages.py:988 ../controllers/packages.py:993
+#: ../controllers/login.py:324 ../controllers/packages.py:730
+#: ../controllers/packages.py:737 ../controllers/packages.py:743
+#: ../controllers/packages.py:749 ../controllers/packages.py:866
+#: ../controllers/packages.py:871 ../controllers/packages.py:878
+#: ../controllers/packages.py:882 ../controllers/packages.py:891
+#: ../controllers/packages.py:897 ../controllers/packages.py:899
+#: ../controllers/packages.py:911 ../controllers/packages.py:914
+#: ../controllers/packages.py:919 ../controllers/packages.py:926
+#: ../controllers/packages.py:931 ../controllers/packages.py:933
+#: ../controllers/packages.py:938 ../controllers/packages.py:943
+#: ../controllers/packages.py:953 ../controllers/packages.py:964
+#: ../controllers/packages.py:971 ../controllers/packages.py:984
+#: ../controllers/packages.py:994 ../controllers/packages.py:999
 msgid "Error"
 msgstr "Fout"
 
@@ -212,7 +211,7 @@ msgid "invalid HTTP method"
 msgstr "Ongeldige HTTP-methode"
 
 #: ../controllers/community.py:295 ../controllers/login.py:210
-#: ../controllers/login.py:287 ../controllers/packages.py:860
+#: ../controllers/login.py:287 ../controllers/packages.py:866
 msgid "not logged in"
 msgstr "Niet ingelogd"
 
@@ -368,196 +367,194 @@ msgstr "Fout: u heeft geen geldig emailadres"
 msgid "Sabayon Linux Community Password Update Activation"
 msgstr ""
 
-#: ../controllers/packages.py:37
+#: ../controllers/packages.py:38
 msgid "Packages"
 msgstr "Packages"
 
-#: ../controllers/packages.py:38
+#: ../controllers/packages.py:39
 msgid "Packages match"
 msgstr "Packages komen overeen"
 
-#: ../controllers/packages.py:39
+#: ../controllers/packages.py:40
 msgid "Package descriptions"
 msgstr "Packagebeschrijvingen"
 
-#: ../controllers/packages.py:40 ../templates/community/my/stats.html:103
-#: ../templates/community/users/public_profile.html:237
+#: ../controllers/packages.py:41 ../templates/community/my/stats.html:102
+#: ../templates/community/users/public_profile.html:236
 msgid "Files"
 msgstr "Bestanden"
 
-#: ../controllers/packages.py:41
+#: ../controllers/packages.py:42
 msgid "Libraries"
 msgstr "Libraries"
 
-#: ../controllers/packages.py:44 ../controllers/packages.py:508
+#: ../controllers/packages.py:45 ../controllers/packages.py:513
 msgid "Alphabet"
 msgstr "Alfabet"
 
-#: ../controllers/packages.py:45 ../controllers/packages.py:510
-#: ../templates/comment_header.html:5
+#: ../controllers/packages.py:46 ../controllers/packages.py:515
 msgid "Vote"
 msgstr "Stem"
 
-#: ../controllers/packages.py:46 ../templates/loginbox_inner.html:29
-#: ../templates/loginbox_inner.html:91
+#: ../controllers/packages.py:47 ../templates/loginbox_inner.html:29
+#: ../templates/loginbox_inner.html:83
 #: ../templates/packages/ugc_shortinfo.html:11
 msgid "Downloads"
 msgstr "Downloads"
 
-#: ../controllers/packages.py:308 ../controllers/packages.py:516
+#: ../controllers/packages.py:313 ../controllers/packages.py:521
 msgid "vote"
 msgstr "stem"
 
-#: ../controllers/packages.py:309 ../controllers/packages.py:517
+#: ../controllers/packages.py:314 ../controllers/packages.py:522
 msgid "downloads"
 msgstr "downloads"
 
-#: ../controllers/packages.py:497
+#: ../controllers/packages.py:502
 msgid "Package name"
 msgstr "Naam van package"
 
-#: ../controllers/packages.py:498
+#: ../controllers/packages.py:503
 msgid "Content (text)"
 msgstr "Inhoud (tekst)"
 
-#: ../controllers/packages.py:499
+#: ../controllers/packages.py:504
 msgid "Keyword (tag)"
 msgstr "Keyword (tag)"
 
-#: ../controllers/packages.py:500 ../controllers/packages.py:509
+#: ../controllers/packages.py:505 ../controllers/packages.py:514
 #: ../templates/registration_form.html:7
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-#: ../templates/community/my/stats.html:23
-#: ../templates/community/users/public_profile.html:37
+#: ../templates/community/my/stats.html:22
+#: ../templates/community/users/public_profile.html:36
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: ../controllers/packages.py:501
+#: ../controllers/packages.py:506
 msgid "Document id."
 msgstr "Document id."
 
-#: ../controllers/packages.py:504
+#: ../controllers/packages.py:509
 msgid "No restrictions"
 msgstr "Geen beperkingen"
 
-#: ../controllers/packages.py:511
+#: ../controllers/packages.py:516
 msgid "Number of downloads"
 msgstr "Aantal downloads"
 
-#: ../controllers/packages.py:514
+#: ../controllers/packages.py:519
 msgid "key"
 msgstr "key"
 
-#: ../controllers/packages.py:515
+#: ../controllers/packages.py:520
 msgid "username"
 msgstr "gebruikersnaam"
 
-#: ../controllers/packages.py:610 ../controllers/packages.py:713
+#: ../controllers/packages.py:615 ../controllers/packages.py:719
 #, fuzzy
 msgid "Sabayon Linux Packages Repository"
 msgstr "Sabayon Linux Forum"
 
-#: ../controllers/packages.py:724
+#: ../controllers/packages.py:730
 msgid "invalid search string"
 msgstr "Ongeldige zoekstring"
 
-#: ../controllers/packages.py:731
+#: ../controllers/packages.py:737
 msgid "invalid search type"
 msgstr "Ongeldig zoektype"
 
-#: ../controllers/packages.py:737
+#: ../controllers/packages.py:743
 msgid "invalid search restriction type"
 msgstr "Ongeldig type zoekbeperking"
 
-#: ../controllers/packages.py:743
+#: ../controllers/packages.py:749
 msgid "invalid 'order by'"
 msgstr "Ongeldige 'order by'"
 
-#: ../controllers/packages.py:865
+#: ../controllers/packages.py:871
 msgid "invalid document"
 msgstr "Ongeldig document"
 
-#: ../controllers/packages.py:872
+#: ../controllers/packages.py:878
 msgid "invalid document specified"
 msgstr "Ongeldig document gespecificeerd"
 
-#: ../controllers/packages.py:876
+#: ../controllers/packages.py:882
 msgid "permission denied, you suck!"
 msgstr "Toegang geweigerd...kut voor je!"
 
-#: ../controllers/packages.py:885
+#: ../controllers/packages.py:891
 msgid "WTF? invalid document type!"
 msgstr "Krijg nou de tering? Ongeldig documenttype!"
 
-#: ../controllers/packages.py:891
+#: ../controllers/packages.py:897
 msgid "you know what? I cannot handle this document"
 msgstr "Weet je wat? Ik kan niets met dit document...zoek het lekker zelf uit!"
 
-#: ../controllers/packages.py:895
+#: ../controllers/packages.py:901
 msgid "Document removed successfully, sigh :'-("
 msgstr "Document verwijderd...zucht :'-("
 
-#: ../controllers/packages.py:905 ../controllers/packages.py:908
+#: ../controllers/packages.py:911 ../controllers/packages.py:914
 msgid "wrong username"
 msgstr "Verkeerde gebruikersnaam"
 
-#: ../controllers/packages.py:913
+#: ../controllers/packages.py:919
 msgid "no document specified"
 msgstr "Geen document gespecificeerd"
 
-#: ../controllers/packages.py:920
+#: ../controllers/packages.py:926
 msgid "invalid document type"
 msgstr "Ongeldig documenttype"
 
-#: ../controllers/packages.py:925
+#: ../controllers/packages.py:931
 msgid "invalid package key"
 msgstr "Ongeldige package key"
 
-#: ../controllers/packages.py:927
+#: ../controllers/packages.py:933
 msgid "invalid package string"
 msgstr "Ongeldige package string"
 
-#: ../controllers/packages.py:932
+#: ../controllers/packages.py:938
 msgid "title too short"
 msgstr "Titel te kort"
 
-#: ../controllers/packages.py:937
+#: ../controllers/packages.py:943
 msgid "description too short"
 msgstr "Beschrijving te kort"
 
-#: ../controllers/packages.py:947
+#: ../controllers/packages.py:953
 msgid "comment text too short"
 msgstr "Commentaar te kort"
 
-#: ../controllers/packages.py:958
+#: ../controllers/packages.py:964
 msgid "no file? no party!"
 msgstr "Geen bestand? Geen feest!"
 
-#: ../controllers/packages.py:978
+#: ../controllers/packages.py:984
 msgid "file too big"
 msgstr "Bestand te groot"
 
-#: ../controllers/packages.py:993
+#: ../controllers/packages.py:999
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr "Document toegevoegd, maar kon geen correcte 'iddoc' toewijzen"
 
-#: ../controllers/packages.py:1125
+#: ../controllers/packages.py:1131
 msgid "user not authenticated"
 msgstr "Gebruiker niet geïdentificeerd"
 
-#: ../controllers/packages.py:1133
+#: ../controllers/packages.py:1139
 msgid "invalid vote"
 msgstr "Ongeldige stem (ben jij al 18?)"
 
-#: ../controllers/packages.py:1136
+#: ../controllers/packages.py:1142
 msgid "invalid package"
 msgstr "Ongeldige package"
 
-#: ../controllers/packages.py:1142
+#: ../controllers/packages.py:1148
 msgid "vote not in range"
 msgstr "Stem buiten bereik"
 
-#: ../controllers/packages.py:1147
+#: ../controllers/packages.py:1153
 msgid "you already voted this"
 msgstr "U heeft hier al op gestemd"
 
@@ -570,108 +567,27 @@ msgstr "N/A"
 msgid "Public Profile"
 msgstr "Profiel"
 
-#: ../templates/activation_successful.html:18
-#: ../templates/email_activation_successful.html:18
-#: ../templates/password_activation_successful.html:18
+#: ../templates/activation_successful.html:17
+#: ../templates/email_activation_successful.html:17
+#: ../templates/password_activation_successful.html:17
 msgid "Activation successful"
 msgstr "Activatie succesvol"
 
-#: ../templates/activation_successful.html:18
+#: ../templates/activation_successful.html:17
 msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
 msgstr "OK dan, bedankt! Nu kun je volop gebruik maken van onze Community"
 
-#: ../templates/activation_successful.html:20
-#: ../templates/email_activation_successful.html:20
-#: ../templates/password_activation_successful.html:20
+#: ../templates/activation_successful.html:19
+#: ../templates/email_activation_successful.html:19
+#: ../templates/password_activation_successful.html:19
 msgid "Sorry"
 msgstr "Sorry"
 
-#: ../templates/activation_successful.html:20
-#: ../templates/email_activation_successful.html:20
-#: ../templates/password_activation_successful.html:20
+#: ../templates/activation_successful.html:19
+#: ../templates/email_activation_successful.html:19
+#: ../templates/password_activation_successful.html:19
 msgid "There is no activation information available"
 msgstr "Geen activatie-informatie beschikbaar"
-
-#: ../templates/big_band.html:23
-msgid "the cutest, free Operating System"
-msgstr ""
-
-#: ../templates/big_band.html:24
-msgid "as easy as an abacus, as fast as a segway"
-msgstr "Zo simpel als een telraam, zo snel als een Segway"
-
-#: ../templates/big_band.html:26
-msgid "Be active"
-msgstr "Wees actief!"
-
-#: ../templates/big_band.html:28 ../templates/body_headlines.html:34
-msgid "Join us"
-msgstr "Kom erbij :)"
-
-#: ../templates/big_band.html:30 ../templates/menubox.html:66
-#: ../templates/packages/ugc_generic_file.html:4
-msgid "Download"
-msgstr "Download"
-
-#: ../templates/body_headlines.html:5
-msgid "Administrative messages"
-msgstr "Huishoudelijke mededelingen"
-
-#: ../templates/body_headlines.html:20
-msgid "We are looking for funds, give us 2 minutes"
-msgstr "Twee minuutjes, even wat fondsen zoeken..."
-
-#: ../templates/body_headlines.html:33
-msgid "Join Sabayon Linux on Facebook"
-msgstr "Voeg Sabayon Linux toe op Facebook"
-
-#: ../templates/body_headlines.html:34
-msgid ""
-"There is no way in the entire World we wouldn't had our Facebook Group! Like "
-"it or not, we are there. So, what are you waiting for?"
-msgstr ""
-"Het kan gewoon niet bestaan dat wij geen eigen Facebook-groep hebben! Of je "
-"'t leuk vindt of niet, we hebben er een. Dus...waar wacht je nog op?"
-
-#: ../templates/body_headlines.html:43
-#, fuzzy
-msgid "Sabayon 5.4 GNOME and KDE are HERE"
-msgstr "Sabayon 4.2 Gnome is HIER!</a>"
-
-#: ../templates/body_headlines.html:44
-#, fuzzy
-msgid ""
-"On the behalf of the Sabayon Linux team, we are pleased to announce that the "
-"next big thing is here"
-msgstr ""
-"Namens het Sabayon Linux team, verheugen wij ons te berichten dat <i>the "
-"next big thing</i> er is!"
-
-#: ../templates/body_headlines.html:44
-#, fuzzy
-msgid "Go get it"
-msgstr "Pak 'm dan!"
-
-#: ../templates/body_left.html:11
-msgid "Distribution news"
-msgstr "Distributienieuws"
-
-#: ../templates/body_left.html:42
-msgid "Forum activity"
-msgstr "Forumactiviteit"
-
-#: ../templates/body_left.html:81
-msgid "Planet activity"
-msgstr "Planetactiviteit"
-
-#: ../templates/body_left.html:116
-#, fuzzy
-msgid "Code activity"
-msgstr "Programmeeractiviteit"
-
-#: ../templates/body_left.html:135
-msgid "Overlay activity"
-msgstr "Overlay-activiteit"
 
 #: ../templates/body_right.html:8
 msgid "Sponsors"
@@ -739,77 +655,7 @@ msgstr ""
 msgid "Ibiblio.org Hosting"
 msgstr ""
 
-#: ../templates/comment_edit.html:4
-msgid "Edit your comment"
-msgstr "Wijzig uw commentaar"
-
-#: ../templates/comment_edit.html:11
-msgid "You need to be logged in to edit a comment"
-msgstr "U moet ingelogd zijn om een commentaar te wijzigen"
-
-#: ../templates/comment_edit.html:12 ../templates/do_comment_page.html:13
-#: ../templates/packages/do_document_page.html:121
-msgid "Login?"
-msgstr "Login?"
-
-#: ../templates/comment_edit.html:12 ../templates/do_comment_page.html:13
-#: ../templates/packages/do_document_page.html:121
-msgid "Register?"
-msgstr "Registreer?"
-
-#: ../templates/comment_header.html:3
-#, c-format
-msgid "written by <b>%s</b>, around %s"
-msgstr ""
-
-#: ../templates/comment_header.html:3 ../templates/community/my/stats.html:133
-#: ../templates/community/users/public_profile.html:267
-msgid "Score"
-msgstr "Score"
-
-#: ../templates/comment_header.html:20
-#: ../templates/packages/ugc_doc_handling_links.html:15
-#: ../templates/community/my/dashboard_mirrors_item.html:11
-#: ../templates/community/my/dashboard_pages_page_navigation.html:13
-#: ../templates/community/my/dashboard_pinboard_element_inner.html:19
-msgid "Delete"
-msgstr "Verwijder"
-
-#: ../templates/comment_header.html:22
-#: ../templates/packages/ugc_doc_handling_links.html:17
-#: ../templates/community/my/dashboard_mirrors_item.html:9
-#: ../templates/community/my/dashboard_pages_page_navigation.html:12
-msgid "Edit"
-msgstr "Bewerken"
-
-#: ../templates/comment.html:17
-#, fuzzy
-msgid "Comment error"
-msgstr "Fout in commentaar"
-
-#: ../templates/comments_page.html:3
-msgid "comments"
-msgstr "commentaar"
-
-#: ../templates/do_comment_page.html:5
-msgid "Write your new comment below"
-msgstr "Plaats uw commentaar hieronder"
-
-#: ../templates/do_comment_page.html:12
-msgid "You need to be logged in to post a comment"
-msgstr "U moet ingelogd zijn om commentaar te plaatsen"
-
-#: ../templates/donate_content.html:1
-msgid "This is what we need to cover our daily duties"
-msgstr ""
-
-#: ../templates/donate_content.html:10
-msgid ""
-"We would like to thank everybody who has donated in the past 2010. We all "
-"hope to see you back supporting us in this 2011."
-msgstr ""
-
-#: ../templates/email_activation_successful.html:18
+#: ../templates/email_activation_successful.html:17
 msgid "Your E-mail is now active"
 msgstr "Uw emailadres is nu actief"
 
@@ -822,15 +668,11 @@ msgstr "Handelsmerken zijn eigendom van hun respectievelijke eigenaars"
 msgid "Sabayon Linux Five Oh!"
 msgstr "Sabayon Linux Four Oh!"
 
-#: ../templates/ip_banned.html:2
-msgid "Your IP address has been banned for-EVA! Poor you... POOR you!"
-msgstr "Je IP-adres is voor EEUWIG gebanned! Och arme jij...ARREME jij..."
-
 #: ../templates/loginbox_inner.html:4
 msgid "Entropy Web Dashboard Login"
 msgstr "Entropy Web Dashboard Login"
 
-#: ../templates/loginbox_inner.html:11 ../templates/login.html:18
+#: ../templates/loginbox_inner.html:11 ../templates/login.html:17
 msgid "New user?"
 msgstr "Nieuwe gebruiker?"
 
@@ -838,23 +680,23 @@ msgstr "Nieuwe gebruiker?"
 msgid "What is all this ?"
 msgstr "Wat is dit allemaal?"
 
-#: ../templates/loginbox_inner.html:24 ../templates/login.html:23
+#: ../templates/loginbox_inner.html:24 ../templates/login.html:22
 msgid "Login error"
 msgstr "Loginfout"
 
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:89
-#: ../templates/community/my/stats.html:83
-#: ../templates/community/users/public_profile.html:217
+#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
+#: ../templates/community/my/stats.html:82
+#: ../templates/community/users/public_profile.html:216
 msgid "Comments"
 msgstr "Commentaar"
 
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:89
+#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
 msgid "Docs"
 msgstr "Docs"
 
-#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:91
-#: ../templates/community/my/stats.html:53
-#: ../templates/community/users/public_profile.html:189
+#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:83
+#: ../templates/community/my/stats.html:52
+#: ../templates/community/users/public_profile.html:188
 msgid "Votes"
 msgstr "Stemmen"
 
@@ -871,131 +713,42 @@ msgstr "Uitloggen?"
 msgid "My Entropy"
 msgstr "Mijn Entropy"
 
-#: ../templates/loginbox_inner.html:60
-msgid "My Sabayon"
-msgstr "Mijn Sabayon"
+#: ../templates/loginbox_inner.html:58
+#, fuzzy
+msgid "Community Menu"
+msgstr "Community Home"
 
-#: ../templates/loginbox_inner.html:63
-msgid "My Dashboard"
-msgstr "Mijn Dashboard"
-
-#: ../templates/loginbox_inner.html:66
-msgid "My Pastebin"
-msgstr "Mijn Pastebin"
-
-#: ../templates/loginbox_inner.html:79
-#: ../templates/community/my/stats.html:138
-#: ../templates/community/users/public_profile.html:272
+#: ../templates/loginbox_inner.html:71
+#: ../templates/community/my/stats.html:137
+#: ../templates/community/users/public_profile.html:271
 msgid "points"
 msgstr "punten"
 
-#: ../templates/loginbox_inner.html:83
+#: ../templates/loginbox_inner.html:75
 msgid "My Comments"
 msgstr "Mijn commentaar"
 
-#: ../templates/loginbox_inner.html:83
+#: ../templates/loginbox_inner.html:75
 msgid "My Docs"
 msgstr "Mijn documenten"
 
-#: ../templates/loginbox_inner.html:84
+#: ../templates/loginbox_inner.html:76
 msgid "My Votes"
 msgstr "Mijn stemmen"
 
 # Not sure...Avg == average ??
 # Translation based on this assumption
 # [ReemZ]
-#: ../templates/loginbox_inner.html:84
+#: ../templates/loginbox_inner.html:76
 #, fuzzy
 msgid "My Avg"
 msgstr "Mijn Gem."
 
-#: ../templates/menubox.html:5
-msgid "Communicate"
-msgstr "Communiceer"
-
-#: ../templates/menubox.html:8
-msgid "Organisation"
-msgstr "Organisatie"
-
-#: ../templates/menubox.html:11
-msgid "Planet"
-msgstr "Planet"
-
-#: ../templates/menubox.html:14
-msgid "Forum"
-msgstr "Forum"
-
-#: ../templates/menubox.html:17
-msgid "Wiki"
-msgstr "Wiki"
-
-#: ../templates/menubox.html:20
-msgid "Web Chat"
-msgstr "Webchat"
-
-#: ../templates/menubox.html:23
-msgid "Press Documentation"
-msgstr "Persdocumentatie"
-
-#: ../templates/menubox.html:26
-msgid "Sabayon Roadmap"
-msgstr "Sabayon Roadmap"
-
-#: ../templates/menubox.html:31
-msgid "Get involved"
-msgstr "Raak betrokken"
-
-#: ../templates/menubox.html:34
-msgid "PixPastebin"
-msgstr "PixPastebin"
-
-#: ../templates/menubox.html:37
-msgid "Community"
-msgstr "Community"
-
-#: ../templates/menubox.html:40
-msgid "Packages and UGC"
-msgstr "Packages en UGC"
-
-#: ../templates/menubox.html:43
-#, fuzzy
-msgid "Entropy API documentation"
-msgstr "Persdocumentatie"
-
-#: ../templates/menubox.html:46
-msgid "Report a bug"
-msgstr "Rapporteer een bug"
-
-#: ../templates/menubox.html:49
-msgid "Browse Git"
-msgstr "Browse Git"
-
-#: ../templates/menubox.html:52
-msgid "Mailing Lists"
-msgstr "Emaillijsten"
-
-#: ../templates/menubox.html:55
-msgid "Funding"
-msgstr "Fondsen"
-
-#: ../templates/menubox.html:60
-#, fuzzy
-msgid "Enjoy Sabayon"
-msgstr "Enjoy Sabayon"
-
-#: ../templates/menubox.html:63 ../templates/community/my/dashboard.html:33
-msgid "Screenshots"
-msgstr "Screenshots"
-
-#: ../templates/menubox.html:69
-msgid "CD/DVD Distributors"
-msgstr "CD/DVD-distributeurs"
-
-#: ../templates/page_error.html:29
+#: ../templates/page_error.html:28
 msgid "Houston, we've got a problem!"
 msgstr "Schiphol? Hallo Schiphol? We hebben 'n probleempje..."
 
-#: ../templates/page_error.html:32
+#: ../templates/page_error.html:31
 #, c-format
 msgid ""
 "Probably the page you are looking for <b>does not exist</b> anymore. You can "
@@ -1003,52 +756,32 @@ msgid ""
 "href=\"%s\">home page</a>?"
 msgstr ""
 
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "successfully"
-msgstr "succesvol"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Preview"
-msgstr "Preview"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "here"
-msgstr "hier"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Reload this page"
-msgstr "Deze pagina opnieuw laden"
-
-#: ../templates/page_template.html:18
+#: ../templates/page_template.html:17
 msgid "text goes here"
 msgstr ""
 
-#: ../templates/password_activation_successful.html:18
+#: ../templates/password_activation_successful.html:17
 msgid "Your Password is now updated"
 msgstr "Uw wachtwoord is ge-update"
 
-#: ../templates/password_activation_successful.html:22
+#: ../templates/password_activation_successful.html:21
 msgid "confirmation code"
 msgstr "Bevestigingscode"
 
-#: ../templates/password_activation_successful.html:23
+#: ../templates/password_activation_successful.html:22
 msgid "validation id"
 msgstr "Validatie-id"
 
-#: ../templates/password_activation_successful.html:24
+#: ../templates/password_activation_successful.html:23
 msgid "user id"
 msgstr "gebruikers-id"
 
 # ?? [ReemZ]
-#: ../templates/register.html:22
+#: ../templates/register.html:21
 msgid "(Sabayon leader)"
 msgstr ""
 
-#: ../templates/register.html:27
+#: ../templates/register.html:26
 msgid ""
 "<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your own "
 "<b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and file "
@@ -1066,7 +799,7 @@ msgstr ""
 "één naam te vatten: <b>Sabayon</b>, <i>de \"2.0\" (two-point-oh) "
 "distributie</i>"
 
-#: ../templates/register.html:30
+#: ../templates/register.html:29
 msgid ""
 "Please note that you will need to enter a valid e-mail address before your "
 "account is activated. You will receive an e-mail at the address you provide "
@@ -1144,32 +877,6 @@ msgstr ""
 msgid "<a href='%s'>Click here</a> to come back to the source page"
 msgstr "Klik hier</a> om terug te gaan naar de bronpagina"
 
-#: ../templates/show_page.html:25
-#, c-format
-msgid "Publisher: <b>%s</b>, around <i>%s</i>"
-msgstr ""
-
-#: ../templates/show_page.html:38
-#: ../templates/community/my/dashboard_pages_edit_inner.html:8
-msgid "Introduction"
-msgstr "Introductie"
-
-#: ../templates/show_page.html:47
-msgid "Thank you for voting !"
-msgstr "Bedankt voor uw stem!"
-
-#: ../templates/show_page.html:49
-msgid "Sorreey, it seems you already voted"
-msgstr "Sorry, het lijkt erop dat u al gestemd heeft"
-
-#: ../templates/show_page.html:51
-msgid "Try again tomorrow, or the day after"
-msgstr "Probeert u het morgen nog eens, of overmorgen..."
-
-#: ../templates/show_page_navigation.html:4
-msgid "Pages navigation"
-msgstr "Pagina-navigatie"
-
 #: ../templates/packages/advisories_desc.html:1
 msgid ""
 "Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
@@ -1190,19 +897,21 @@ msgstr ""
 msgid "full feed here"
 msgstr "Volledige feed"
 
-#: ../templates/packages/advisories.html:3 ../templates/packages/menu.html:2
+#: ../templates/packages/advisories_inner.html:3
+#: ../templates/packages/menu.html:2
 msgid "Security Advisories"
 msgstr "Security Advisories"
 
-#: ../templates/packages/advisories.html:10
+#: ../templates/packages/advisories_inner.html:10
 msgid "You can get the complete list on the"
 msgstr "U kunt de complete lijst verkrijgen via de"
 
-#: ../templates/packages/advisories.html:10
+#: ../templates/packages/advisories_inner.html:10
 msgid "Gentoo Linux Security Advisories feed"
 msgstr "Gentoo Linux Security Advisories feed"
 
-#: ../templates/packages/categories.html:3 ../templates/packages/menu.html:2
+#: ../templates/packages/categories_inner.html:3
+#: ../templates/packages/menu.html:2
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -1226,8 +935,6 @@ msgid "Add documents <b>gain scores</b> !"
 msgstr "Voeg documenten toe, <b>verhoog uw score</b>!"
 
 #: ../templates/packages/do_document_page.html:19
-#: ../templates/community/my/dashboard_pinboard_edit.html:4
-#: ../templates/community/my/dashboard_screenshots_add.html:5
 msgid "Title"
 msgstr "Titel"
 
@@ -1236,7 +943,6 @@ msgid "Length must be between 10 and 160"
 msgstr "Lengte moet tussen 10 en 160 zijn"
 
 #: ../templates/packages/do_document_page.html:35
-#: ../templates/community/my/dashboard_pinboard_edit.html:14
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -1256,8 +962,6 @@ msgid "Space separated, minimum length: 4 chars each"
 msgstr "Gescheiden door spaties, elk minimaal 4 karakters lang"
 
 #: ../templates/packages/do_document_page.html:58
-#: ../templates/community/my/dashboard_pages_new.html:12
-#: ../templates/pastebin/pastebin_submit_header.html:4
 msgid "Document type"
 msgstr "Documenttype"
 
@@ -1285,6 +989,14 @@ msgstr "Selecteer het bestand dat u wilt uploaden"
 #: ../templates/packages/do_document_page.html:120
 msgid "You need to be logged in to add documents"
 msgstr "U moet ingelogd zijn om documenten toe te voegen"
+
+#: ../templates/packages/do_document_page.html:121
+msgid "Login?"
+msgstr "Login?"
+
+#: ../templates/packages/do_document_page.html:121
+msgid "Register?"
+msgstr "Registreer?"
 
 #: ../templates/packages/extrainfo.html:19
 #: ../templates/packages/searchparams_args.html:19
@@ -1319,67 +1031,83 @@ msgid "Slot"
 msgstr "Slot"
 
 #: ../templates/packages/extrainfo.html:103
-msgid "Dependencies"
+#, fuzzy
+msgid "Runtime dependencies"
 msgstr "Dependencies"
 
 #: ../templates/packages/extrainfo.html:123
+#, fuzzy
+msgid "Build dependencies"
+msgstr "Dependencies"
+
+#: ../templates/packages/extrainfo.html:143
+#, fuzzy
+msgid "Post dependencies"
+msgstr "Dependencies"
+
+#: ../templates/packages/extrainfo.html:163
+#, fuzzy
+msgid "Manual dependencies"
+msgstr "Dependencies"
+
+#: ../templates/packages/extrainfo.html:183
 msgid "Conflicts"
 msgstr "Conflicten"
 
-#: ../templates/packages/extrainfo.html:140
+#: ../templates/packages/extrainfo.html:200
 msgid "Required by"
 msgstr "Vereist door"
 
-#: ../templates/packages/extrainfo.html:145
+#: ../templates/packages/extrainfo.html:205
 msgid "view packages list"
 msgstr "Bekijk lijst van packages"
 
-#: ../templates/packages/extrainfo.html:158
+#: ../templates/packages/extrainfo.html:218
 msgid "homepage"
 msgstr "Homepage"
 
-#: ../templates/packages/extrainfo.html:167
+#: ../templates/packages/extrainfo.html:227
 msgid "License"
 msgstr "License"
 
-#: ../templates/packages/extrainfo.html:180
+#: ../templates/packages/extrainfo.html:240
 msgid "CHOST"
 msgstr "CHOST"
 
-#: ../templates/packages/extrainfo.html:190
+#: ../templates/packages/extrainfo.html:250
 msgid "CFLAGS"
 msgstr "CFLAGS"
 
-#: ../templates/packages/extrainfo.html:201
+#: ../templates/packages/extrainfo.html:261
 msgid "USE flags"
 msgstr "USE flags"
 
-#: ../templates/packages/extrainfo.html:215
+#: ../templates/packages/extrainfo.html:275
 msgid "Content"
 msgstr "Inhoud"
 
-#: ../templates/packages/extrainfo.html:220
+#: ../templates/packages/extrainfo.html:280
 msgid "View content"
 msgstr "Bekijk inhoud"
 
-#: ../templates/packages/extrainfo.html:229
+#: ../templates/packages/extrainfo.html:289
 msgid "Space required"
 msgstr "Spatie vereist"
 
-#: ../templates/packages/extrainfo.html:239
+#: ../templates/packages/extrainfo.html:299
 #: ../templates/packages/shortinfo.html:3
 msgid "Checksum"
 msgstr "Checksum"
 
-#: ../templates/packages/extrainfo.html:249
+#: ../templates/packages/extrainfo.html:309
 msgid "Creation date"
 msgstr "Datum aanmaken"
 
-#: ../templates/packages/extrainfo.html:259
+#: ../templates/packages/extrainfo.html:319
 msgid "Security"
 msgstr "Security"
 
-#: ../templates/packages/extrainfo.html:264
+#: ../templates/packages/extrainfo.html:324
 msgid "show security advisories"
 msgstr "toon security advisories"
 
@@ -1401,7 +1129,8 @@ msgstr "Doorzoek User Generated Content"
 msgid "Statistics"
 msgstr "Statistieken"
 
-#: ../templates/packages/menu.html:2 ../templates/packages/releases.html:3
+#: ../templates/packages/menu.html:2
+#: ../templates/packages/releases_inner.html:3
 msgid "Releases"
 msgstr "Uitgaves"
 
@@ -1423,7 +1152,7 @@ msgid "Branch"
 msgstr "Branch"
 
 #: ../templates/packages/searchparams_args.html:43
-#: ../templates/packages/stats.html:14
+#: ../templates/packages/stats_inner.html:14
 msgid "Architecture"
 msgstr "Architectuur"
 
@@ -1482,28 +1211,28 @@ msgstr "U kijkt naar"
 msgid "User Generated Content"
 msgstr "User Generated Content"
 
-#: ../templates/packages/stats.html:3
+#: ../templates/packages/stats_inner.html:3
 msgid "Current status"
 msgstr "Huidige status"
 
-#: ../templates/packages/stats.html:22
+#: ../templates/packages/stats_inner.html:22
 msgid "Branches"
 msgstr "Branches"
 
-#: ../templates/packages/stats.html:30
+#: ../templates/packages/stats_inner.html:30
 msgid "Number of packages"
 msgstr "Aantal packages"
 
-#: ../templates/packages/stats.html:38
+#: ../templates/packages/stats_inner.html:38
 msgid "Number of categories"
 msgstr "Aantal categorieën"
 
-#: ../templates/packages/stats.html:46
-#: ../templates/community/users/public_profile.html:239
+#: ../templates/packages/stats_inner.html:46
+#: ../templates/community/users/public_profile.html:238
 msgid "Number of files"
 msgstr "Aantal bestanden"
 
-#: ../templates/packages/stats.html:54
+#: ../templates/packages/stats_inner.html:54
 msgid "Overall size"
 msgstr "Totale grootte"
 
@@ -1511,6 +1240,14 @@ msgstr "Totale grootte"
 #: ../templates/packages/ugc_doc_desc_keywords.html:6
 msgid "no keywords"
 msgstr "Geen keywords"
+
+#: ../templates/packages/ugc_doc_handling_links.html:15
+msgid "Delete"
+msgstr "Verwijder"
+
+#: ../templates/packages/ugc_doc_handling_links.html:17
+msgid "Edit"
+msgstr "Bewerken"
 
 #: ../templates/packages/ugc_doc_header.html:4
 #, c-format
@@ -1525,16 +1262,17 @@ msgstr "Gebruikersscore"
 msgid "Size"
 msgstr "Grootte"
 
+#: ../templates/packages/ugc_generic_file.html:4
+msgid "Download"
+msgstr "Download"
+
 # Context? [ReemZ]
 #: ../templates/packages/ugc_search_item.html:21
-#: ../templates/community/my/dashboard_pinboard_item.html:14
-#: ../templates/pastebin/show_pastie_header.html:7
 msgid "by"
 msgstr ""
 
 # Context? [ReemZ]
 #: ../templates/packages/ugc_search_item.html:21
-#: ../templates/community/my/dashboard_pinboard_item.html:14
 msgid "on"
 msgstr ""
 
@@ -1553,47 +1291,14 @@ msgid "Seeking %s of %s"
 msgstr ""
 
 #: ../templates/packages/ugc_shortinfo.html:11
-#: ../templates/community/my/stats.html:73
-#: ../templates/community/users/public_profile.html:207
+#: ../templates/community/my/stats.html:72
+#: ../templates/community/users/public_profile.html:206
 msgid "Documents"
 msgstr "Documenten"
 
 #: ../templates/packages/voted.html:12
 msgid "Vote error"
 msgstr "Stemfout"
-
-#: ../templates/donate/thanks.html:16
-msgid "**Hugs** **Hugs** **Hugs**"
-msgstr "*knuffeldeknuffeldeknuffoooool*"
-
-#: ../templates/donate/thanks.html:17
-msgid ""
-"Thanks a lot, we appreciate your effort. Your donation will help us keeping "
-"up the good work. We are sure you want to get back to the <a href=\"/"
-"\">Front Page</a> now"
-msgstr ""
-"OK dan, bedankt voor de moeite! Uw donatie helpt ons ons goede werk voor te "
-"zetten. U wilt nu zeker terug naar de <a href=\"/\">Voorpagina</a>?"
-
-#: ../templates/donate/thanks.html:18
-msgid ":-* kisses kisses kisses"
-msgstr ":-* kusjes kusjes kusjes"
-
-#: ../templates/polls/poll_options_results.html:33
-msgid "Total votes"
-msgstr "Totaal aantal stemmen"
-
-#: ../templates/polls/poll_options_results.html:35
-msgid "not voted yet?"
-msgstr "Nog niet gestemd?"
-
-#: ../templates/polls/poll_voting_form_small.html:10
-msgid "You, liar!"
-msgstr "Jij.......leugenaar!"
-
-#: ../templates/polls/poll_voting_form_small.html:24
-msgid "See results"
-msgstr "Zie resultaten"
 
 #: ../templates/community/home.html:7
 msgid "Being part of <b>our Community</b> is what make us proud of ourselves"
@@ -1668,360 +1373,7 @@ msgstr "Op dit moment tellen we"
 msgid "users... and <b>growing</b>"
 msgstr "gebruikers...en <b>groeiende</b>"
 
-#: ../templates/community/my/dashboard.html:27
-#: ../templates/community/my/dashboard_profile_tab.html:1
-msgid "Profile"
-msgstr "Profiel"
-
-#: ../templates/community/my/dashboard.html:28
-#: ../templates/community/my/dashboard_pinboard_tab.html:1
-msgid "Pinboard"
-msgstr "Prikbord"
-
-#: ../templates/community/my/dashboard.html:29
-#: ../templates/community/my/dashboard.html:45
-msgid "Messages"
-msgstr "Berichten"
-
-#: ../templates/community/my/dashboard.html:31
-#: ../templates/community/my/dashboard_pages_tab.html:1
-msgid "News / Pages"
-msgstr "Nieuws / Pagina's"
-
-#: ../templates/community/my/dashboard.html:32
-#: ../templates/community/my/dashboard_mirrors_tab.html:1
-msgid "Mirrors"
-msgstr "Mirrors"
-
-#: ../templates/community/my/dashboard.html:34
-msgid "Polls"
-msgstr "Peilingen"
-
-#: ../templates/community/my/dashboard.html:47
-msgid "Not implemented yet. Sorrey!"
-msgstr "Nog niet geïmplementeerd, sorry!"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:12
-msgid "Mirror name"
-msgstr "Mirrornaam"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:14
-msgid "Do I have to explain the concept?"
-msgstr "Moet ik dit nog uitleggen?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:22
-msgid "Mirror speed"
-msgstr "Mirror-snelheid"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:24
-msgid "Again, don't be dumb, why are you reading here?"
-msgstr "Nogmaals, denk eens na, waarom lees je dit eigenlijk?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:40
-msgid "Mirror country"
-msgstr "Mirror-land"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:42
-msgid "Where is it located?"
-msgstr "Waar bevindt het zich?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:58
-msgid "Notes"
-msgstr "Notities"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:60
-msgid "Important (internal) notes"
-msgstr "Belangrijke (interne) notities"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:69
-msgid "Mirror Link #1"
-msgstr "Mirror Link #1"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:71
-#: ../templates/community/my/dashboard_mirrors_edit.html:81
-#: ../templates/community/my/dashboard_mirrors_edit.html:91
-msgid "Give me an URL"
-msgstr "Geef me een URL"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:79
-msgid "Mirror Link #2"
-msgstr "Mirror Link #2"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:89
-msgid "Mirror Link #3"
-msgstr "Mirror Link #3"
-
-#: ../templates/community/my/dashboard_mirrors_item.html:35
-msgid "Add link"
-msgstr "Voeg link toe"
-
-#: ../templates/community/my/dashboard_mirrors_link_item.html:4
-msgid "Delete link"
-msgstr "Verwijder link"
-
-#: ../templates/community/my/dashboard_mirrors_tab.html:3
-msgid "Ok, once again, you are an admin. This is the Download Mirrors manager"
-msgstr ""
-"OK, nog één keer: jij bent een admin. Dit is de Download Mirrors Manager"
-
-#: ../templates/community/my/dashboard_mirrors_tab.html:15
-msgid "New Mirror"
-msgstr "Nieuwe mirror"
-
-#: ../templates/community/my/dashboard_pages_add_document_link.html:13
-#: ../templates/community/my/dashboard_pages_add_document_link.html:15
-msgid "One more page"
-msgstr "Nog één pagina"
-
-#: ../templates/community/my/dashboard_pages_edit_inner.html:18
-msgid "Body"
-msgstr "Body"
-
-#: ../templates/community/my/dashboard_pages_edit_inner.html:29
-msgid "Tags"
-msgstr "Tags"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-msgid "Type"
-msgstr "Type"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-msgid "Published on"
-msgstr "Gepubliceerd op"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:16
-msgid "Actions"
-msgstr "Acties"
-
-#: ../templates/community/my/dashboard_pages_new.html:36
-msgid "Page state"
-msgstr "Paginastatus"
-
-#: ../templates/community/my/dashboard_pages_page_item.html:6
-#, fuzzy
-msgid "Reload pages navigation"
-msgstr "Pagina-navigatie"
-
-#: ../templates/community/my/dashboard_pages_poll_option_edit.html:6
-msgid "Rename"
-msgstr "Hernoemen"
-
-#: ../templates/community/my/dashboard_pages_poll_option_edit.html:9
-msgid "Remove"
-msgstr "Verwijderen"
-
-#: ../templates/community/my/dashboard_pages_tab.html:3
-msgid ""
-"Ok, you are an admin. So, you know what to do here. All the bells and "
-"whistles, like someone said"
-msgstr ""
-"OK, je bent een admin. Dus, je weet wel wat je hier moet doen. Alle toeters "
-"en bellen, zoals iemand ooit zei..."
-
-#: ../templates/community/my/dashboard_pages_tab.html:16
-msgid "New Document"
-msgstr "Nieuw document"
-
-#: ../templates/community/my/dashboard_pinboard_edit.html:6
-msgid "This is the Pin title"
-msgstr "Dit is de prikkertitel"
-
-#: ../templates/community/my/dashboard_pinboard_edit.html:16
-msgid "Write a brief description"
-msgstr "Geef een korte omschrijving"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:5
-#: ../templates/community/my/dashboard_polls_tab.html:21
-msgid "Note"
-msgstr "Notitie"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:7
-msgid "Write your note here"
-msgstr "Schrijf hier uw notitie"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:15
-msgid "Status"
-msgstr "Status"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:17
-msgid "Come on, you are lazy"
-msgstr "Kom op, luie flikker!"
-
-#: ../templates/community/my/dashboard_pinboard_element_inner.html:17
-msgid "Show"
-msgstr "Toon"
-
-#: ../templates/community/my/dashboard_pinboard_item.html:125
-msgid "Share this Pin"
-msgstr "Deel deze prikker"
-
-#: ../templates/community/my/dashboard_pinboard_item.html:149
-msgid "Active shares"
-msgstr "Actieve shares"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:3
-msgid ""
-"Welcome to your personal Pinboard. Write your thoughts here. Organize your "
-"tasks. Share with friends."
-msgstr ""
-"Welkom op uw persoonlijke prikbord. Zeg hier wat u denkt. Organiseer uw "
-"taken. Deel met vrienden."
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:15
-msgid "My Pins"
-msgstr "Mijn Prikkers"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:18
-#, fuzzy
-msgid "New Pin"
-msgstr "Nieuwe peiling"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:49
-msgid ""
-"No elements here. You can't blame <u>aliens</u>. You might want to add "
-"something someday, huh?"
-msgstr ""
-"Geen elementen. En het is niet de schuld van <u>buitenaardse wezens</u>. "
-"Misschien wil je wat toevoegen, hmm?"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:54
-msgid "Connected Pins"
-msgstr "Verbonden Prikkers"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:68
-msgid ""
-"No elements here. Nobody loves you. Errr.. I am joking! We love you! No, you "
-"can't blame <u>aliens</u>, again"
-msgstr ""
-"Geen elementen. Niemand houdt van je! Geintje, we houden écht wel van je "
-"hoor! Maar nee, het is, nog steeds, niet de schuld van <u>buitenaardse "
-"wezens</b>."
-
-# Translated first full sentence, ignored 'Do et' at end of line.
-# Can't find this particular instance on site, context? [ReemZ]
-#: ../templates/community/my/dashboard_polls_tab.html:3
-#, fuzzy
-msgid "Polls management, you can enable how many you want. Do et"
-msgstr "Peilingonderhoud, hier kunt u aangeven hoeveel u er wilt."
-
-#: ../templates/community/my/dashboard_polls_tab.html:16
-msgid "New Poll"
-msgstr "Nieuwe peiling"
-
-#: ../templates/community/my/dashboard_polls_tab.html:21
-msgid ""
-"the poll will start with no options and disabled. You must create it first"
-msgstr ""
-"de peiling start zonder opties en disabled. U dient het eerst aan te maken"
-
-#: ../templates/community/my/dashboard_profile_tab.html:3
-msgid ""
-"Of course, this is your profile and the place you can change how you are "
-"shown to the World. Style matters, remember this"
-msgstr ""
-"Uiteraard is dit uw profiel, waar u kunt bepalen hoe de wereld u ziet. "
-"Bedenk, stijl is belangrijk ;)"
-
-#: ../templates/community/my/dashboard_profile_tab.html:49
-msgid "E-mail configuration"
-msgstr "Emailconfiguratie"
-
-#: ../templates/community/my/dashboard_profile_tab.html:54
-msgid "Your e-mail"
-msgstr "Uw emailadres"
-
-#: ../templates/community/my/dashboard_profile_tab.html:62
-msgid "E-mail confirm"
-msgstr "Bevestig emailadres"
-
-#: ../templates/community/my/dashboard_profile_tab.html:64
-msgid "Confirm your e-mail"
-msgstr "Bevestig uw emailadres"
-
-#: ../templates/community/my/dashboard_profile_tab.html:76
-msgid "Password configuration"
-msgstr "Wachtwoordconfiguratie"
-
-#: ../templates/community/my/dashboard_profile_tab.html:79
-msgid "Current Password"
-msgstr "Huidig wachtwoord"
-
-#: ../templates/community/my/dashboard_profile_tab.html:81
-msgid "Your current password"
-msgstr "Uw huidige wachtwoord"
-
-#: ../templates/community/my/dashboard_profile_tab.html:89
-msgid "New password"
-msgstr "Nieuw wachtwoord"
-
-#: ../templates/community/my/dashboard_profile_tab.html:91
-msgid "Type your new password"
-msgstr "Type uw nieuwe wachtwoord in"
-
-#: ../templates/community/my/dashboard_profile_tab.html:99
-msgid "Repeat new password"
-msgstr "Herhaal nieuw wachtwoord"
-
-#: ../templates/community/my/dashboard_profile_tab.html:101
-msgid "Type again your new password"
-msgstr "Type nogmaals uw nieuwe wachtwoord in"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:7
-msgid "Will be used as directory name"
-msgstr "Wordt gebruikt als directorynaam"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:15
-msgid "Compressed archive"
-msgstr "Gecomprimeerd archief"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:17
-msgid "Valid are .zip, .tar.bz2, .tar.gz. Inside: root dir and just files"
-msgstr ""
-"Geldig zijn .zip, .tar.bz2, .tar.gz, binnen: rootdirectory en enkel bestanden"
-
-#: ../templates/community/my/dashboard_screenshots_tab.html:3
-msgid "Ok, good you are an admin. This is the Screenshots manager"
-msgstr "OK, mooi, je bent admin. Dit is de Screenshots Manager"
-
-#: ../templates/community/my/dashboard_screenshots_tab.html:14
-msgid "New Screenshots"
-msgstr "Nieuwe screenshots"
-
-#: ../templates/community/my/pinboard_share_success.html:16
-msgid "Ok <b>ladies</b> and <b>gentlemen</b>. We have a <u>winner</u> here!"
-msgstr "Ennnnnnnnnnnn we hebben een winnaarrrrrrrrrrrrrrrrrrrrrr!"
-
-#: ../templates/community/my/pinboard_share_success.html:18
-#, fuzzy, c-format
-msgid "You are now connected with %s's Pinboard titled \"<i>%s</i>\"."
-msgstr "U bent nu verbonden met"
-
-#: ../templates/community/my/pinboard_share_success.html:19
-#, fuzzy, c-format
-msgid "Click %shere%s to get to your personal Dashboard and <b>have fun</b>."
-msgstr "om in uw persoonlijke Dashboard te komen, <b>veel plezier</b>"
-
-#: ../templates/community/my/pinboard_share_success.html:22
-msgid "We are <b>sorry</b>, the System encountered an error"
-msgstr "<b>Sorry</b>, er is een fout opgetreden"
-
-#: ../templates/community/my/pinboard_share_success.html:24
-#, fuzzy
-msgid ""
-"Thus, <b>we cannot satisfy</b> your request. You can get to our <b><a "
-"href='/'>front page</a></b> and be happy anyway."
-msgstr ""
-"Aldus <b>kunnen wij uw verzoek niet inwilligen</b>. Evengoed veel plezier op "
-"onze <b><a href=\"/\">voorpagina</a></b>"
-
-# Untranslatable, just not funny in Dutch :p
-# [ReemZ]
-#: ../templates/community/my/pinboard_share_success.html:27
-#, fuzzy
-msgid "...Beeee happy! Don't worry, beeeee happy!"
-msgstr "...Beeee happy! Don't worry, beeeee happy!"
-
-#: ../templates/community/my/stats.html:16
+#: ../templates/community/my/stats.html:15
 msgid ""
 "In this page you will find all your statistics regarding your Entropy/Web "
 "account"
@@ -2029,103 +1381,108 @@ msgstr ""
 "Op deze pagina vindt u alle statistieken met betrekking tot uw Entropy/Web "
 "account"
 
-#: ../templates/community/my/stats.html:25
+#: ../templates/community/my/stats.html:24
 msgid "this is the name other people will reference you"
 msgstr "Dit is de naam waaronder u bekend bent bij anderen"
 
-#: ../templates/community/my/stats.html:33
+#: ../templates/community/my/stats.html:32
 msgid "User id"
 msgstr "User-id"
 
-#: ../templates/community/my/stats.html:35
+#: ../templates/community/my/stats.html:34
 msgid "this is your user account number"
 msgstr "Dit is uw gebruikersaccountnummer"
 
-#: ../templates/community/my/stats.html:43
-#: ../templates/community/users/public_profile.html:179
+#: ../templates/community/my/stats.html:42
+#: ../templates/community/users/public_profile.html:178
 msgid "Entropy role"
 msgstr "Rol in Entropy"
 
-#: ../templates/community/my/stats.html:45
+#: ../templates/community/my/stats.html:44
 msgid "your role inside the Community"
 msgstr "Welke functie vervult u binnen de Community"
 
-#: ../templates/community/my/stats.html:55
+#: ../templates/community/my/stats.html:54
 msgid "number of times you voted"
 msgstr "Aantal keren dat u gestemd heeft"
 
-#: ../templates/community/my/stats.html:58
-#: ../templates/community/my/stats.html:88
-#: ../templates/community/my/stats.html:98
-#: ../templates/community/my/stats.html:108
-#: ../templates/community/my/stats.html:118
+#: ../templates/community/my/stats.html:57
+#: ../templates/community/my/stats.html:87
+#: ../templates/community/my/stats.html:97
+#: ../templates/community/my/stats.html:107
+#: ../templates/community/my/stats.html:117
 #, fuzzy, c-format
 msgid "weight: %s points each"
 msgstr "punten per stem"
 
-#: ../templates/community/my/stats.html:63
-#: ../templates/community/users/public_profile.html:199
+#: ../templates/community/my/stats.html:62
+#: ../templates/community/users/public_profile.html:198
 msgid "Vote average"
 msgstr "Stemgemiddelde"
 
-#: ../templates/community/my/stats.html:65
+#: ../templates/community/my/stats.html:64
 msgid "this is kinda self explanatory"
 msgstr "Dit behoeft weinig uitleg..."
 
-#: ../templates/community/my/stats.html:75
+#: ../templates/community/my/stats.html:74
 msgid "how many documents you uploaded (comments,images,etc)"
 msgstr ""
 "Aantal door u ge-uploade documenten (commentaren, beeldbestanden, etc.)"
 
-#: ../templates/community/my/stats.html:85
+#: ../templates/community/my/stats.html:84
 msgid "how many comments you wrote"
 msgstr "Aantal door u geschreven commentaren"
 
-#: ../templates/community/my/stats.html:93
-#: ../templates/community/users/public_profile.html:227
+#: ../templates/community/my/stats.html:92
+#: ../templates/community/users/public_profile.html:226
 msgid "Images"
 msgstr "Beeldbestanden"
 
-#: ../templates/community/my/stats.html:95
+#: ../templates/community/my/stats.html:94
 msgid "how many images you uploaded"
 msgstr "Aantal door u ge-uploade beeldbestanden"
 
-#: ../templates/community/my/stats.html:105
+#: ../templates/community/my/stats.html:104
 msgid "how many files you uploaded"
 msgstr "Aantal door u ge-uploade bestanden"
 
-#: ../templates/community/my/stats.html:113
-#: ../templates/community/users/public_profile.html:247
+#: ../templates/community/my/stats.html:112
+#: ../templates/community/users/public_profile.html:246
 msgid "YouTube(tm) Videos"
 msgstr "YouTube(tm) Video's"
 
-#: ../templates/community/my/stats.html:115
+#: ../templates/community/my/stats.html:114
 msgid "how many videos you uploaded"
 msgstr "Aantal door u ge-uploade video's"
 
-#: ../templates/community/my/stats.html:123
-#: ../templates/community/users/public_profile.html:257
+#: ../templates/community/my/stats.html:122
+#: ../templates/community/users/public_profile.html:256
 msgid "Ranking"
 msgstr "Rang"
 
-#: ../templates/community/my/stats.html:125
+#: ../templates/community/my/stats.html:124
 msgid "how good you are in our Community"
 msgstr "Uw positie binnen onze Community"
 
-#: ../templates/community/my/stats.html:128
-#: ../templates/community/users/public_profile.html:262
+#: ../templates/community/my/stats.html:127
+#: ../templates/community/users/public_profile.html:261
 msgid "position"
 msgstr "plaats"
 
-#: ../templates/community/my/stats.html:135
+#: ../templates/community/my/stats.html:132
+#: ../templates/community/users/public_profile.html:266
+msgid "Score"
+msgstr "Score"
+
+#: ../templates/community/my/stats.html:134
 msgid "your resulting Entropy score"
 msgstr "Uw totale Entropy-score"
 
-#: ../templates/community/my/stats.html:144
+#: ../templates/community/my/stats.html:143
 msgid "Not logged in"
 msgstr "Niet ingelogd"
 
-#: ../templates/community/my/ugc.html:19
+#: ../templates/community/my/ugc.html:18
 msgid ""
 "In this page you will be able to browse through your submitted documents on "
 "all the repositories we host"
@@ -2133,119 +1490,119 @@ msgstr ""
 "Op deze pagina kunt u zoeken in de door u ingezonden documenten, in alle "
 "door ons gehoste repositories"
 
-#: ../templates/community/my/ugc.html:59
+#: ../templates/community/my/ugc.html:58
 msgid "View"
 msgstr "Bekijken"
 
-#: ../templates/community/users/public_profile.html:26
+#: ../templates/community/users/public_profile.html:25
 msgid "This is just"
 msgstr "Dit is slechts"
 
-#: ../templates/community/users/public_profile.html:26
+#: ../templates/community/users/public_profile.html:25
 msgid "hello !"
 msgstr "hallo!"
 
-#: ../templates/community/users/public_profile.html:39
+#: ../templates/community/users/public_profile.html:38
 msgid "Just a nickname, what did you expect?"
 msgstr "Slechts 'n nickname, verwacht je dan weer niet..."
 
-#: ../templates/community/users/public_profile.html:48
+#: ../templates/community/users/public_profile.html:47
 msgid "User identifier"
 msgstr "User identifier"
 
-#: ../templates/community/users/public_profile.html:50
+#: ../templates/community/users/public_profile.html:49
 msgid "This is the account number"
 msgstr "Dit is het accountnummer"
 
-#: ../templates/community/users/public_profile.html:59
+#: ../templates/community/users/public_profile.html:58
 msgid "Website role"
 msgstr "Rol op website"
 
-#: ../templates/community/users/public_profile.html:61
+#: ../templates/community/users/public_profile.html:60
 msgid "User's role inside our Website"
 msgstr "De functie van deze gebruiker op onze website"
 
-#: ../templates/community/users/public_profile.html:71
+#: ../templates/community/users/public_profile.html:70
 msgid "Avatar"
 msgstr "Avatar"
 
-#: ../templates/community/users/public_profile.html:73
+#: ../templates/community/users/public_profile.html:72
 msgid "User's virtual Alter-Ego"
 msgstr "Gebruiker's virtuele alter ego"
 
-#: ../templates/community/users/public_profile.html:85
+#: ../templates/community/users/public_profile.html:84
 msgid "User comes from..."
 msgstr "Waar de gebruiker vandaan komt"
 
-#: ../templates/community/users/public_profile.html:94
+#: ../templates/community/users/public_profile.html:93
 msgid "Age"
 msgstr "Leeftijd"
 
-#: ../templates/community/users/public_profile.html:96
+#: ../templates/community/users/public_profile.html:95
 msgid "How many years are past, huh!"
 msgstr "Of je er al aan mag komen, duh :p"
 
-#: ../templates/community/users/public_profile.html:107
+#: ../templates/community/users/public_profile.html:106
 msgid "User's current job"
 msgstr "Gebruiker's huidige baan"
 
-#: ../templates/community/users/public_profile.html:118
+#: ../templates/community/users/public_profile.html:117
 msgid "User's interests, kinda self explanatory"
 msgstr "Spreekt voor zich..."
 
-#: ../templates/community/users/public_profile.html:127
+#: ../templates/community/users/public_profile.html:126
 msgid "Contacts"
 msgstr "Contacten"
 
-#: ../templates/community/users/public_profile.html:129
+#: ../templates/community/users/public_profile.html:128
 msgid "User's E-mail and IM"
 msgstr "Gebruiker's emailadres en IM"
 
-#: ../templates/community/users/public_profile.html:159
+#: ../templates/community/users/public_profile.html:158
 msgid "User's Website"
 msgstr "Website van deze gebruiker"
 
-#: ../templates/community/users/public_profile.html:162
+#: ../templates/community/users/public_profile.html:161
 msgid "Click here to get there"
 msgstr "Klik hier om er te komen"
 
-#: ../templates/community/users/public_profile.html:168
+#: ../templates/community/users/public_profile.html:167
 msgid "Groups"
 msgstr "Groepen"
 
-#: ../templates/community/users/public_profile.html:170
+#: ../templates/community/users/public_profile.html:169
 msgid "Website groups user is in"
 msgstr "Websitegroepen waar deze gebruiker lid van is"
 
-#: ../templates/community/users/public_profile.html:181
+#: ../templates/community/users/public_profile.html:180
 msgid "User's role inside Entropy"
 msgstr "Functie van deze gebruiker in Entropy"
 
-#: ../templates/community/users/public_profile.html:191
+#: ../templates/community/users/public_profile.html:190
 msgid "Number of times the User voted"
 msgstr "Aantal door deze gebruiker uitgebrachte stemmen"
 
-#: ../templates/community/users/public_profile.html:209
+#: ../templates/community/users/public_profile.html:208
 msgid "Total number of documents"
 msgstr "Totaal aantal documenten"
 
-#: ../templates/community/users/public_profile.html:219
+#: ../templates/community/users/public_profile.html:218
 msgid "Number of comments"
 msgstr "Aantal commentaren"
 
-#: ../templates/community/users/public_profile.html:229
+#: ../templates/community/users/public_profile.html:228
 msgid "Number of images"
 msgstr "Aantal beeldbestanden"
 
-#: ../templates/community/users/public_profile.html:249
+#: ../templates/community/users/public_profile.html:248
 msgid "Number of videos belonging"
 msgstr "Aantal video's, toebehorend aan"
 
-#: ../templates/community/users/public_profile.html:259
+#: ../templates/community/users/public_profile.html:258
 msgid "User rank inside our Community"
 msgstr "Rang van deze gebruiker binnen onze Community"
 
-#: ../templates/community/users/public_profile.html:269
+#: ../templates/community/users/public_profile.html:268
 msgid "User's Community Score"
 msgstr "Community Score van deze gebruiker"
 
@@ -2278,253 +1635,673 @@ msgstr "Punten en Rang"
 msgid "No users found. Go out and blame cows"
 msgstr "Geen gebruikers gevonden. Geef de koei'n maer de schuld!"
 
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Mirror"
-msgstr "Mirror"
+#~ msgid "as easy as an abacus, as fast as a segway"
+#~ msgstr "Zo simpel als een telraam, zo snel als een Segway"
 
-#: ../templates/mirrors/show.html:23
-msgid ""
-"Sabayon, free of charge, batteries included and on your own Computer. What "
-"are you waiting for? <b>Select the location closer to you</b> and start "
-"downloading a new experience"
-msgstr ""
-"Sabayon, kostenloos, batterijen meegeleverd en op je eigen computer. Waar "
-"wacht je nog op? <b>Selecteer de geografisch dichtsbijzijnde locatie</b> en "
-"download de nieuwe ervaring!"
+#~ msgid "Be active"
+#~ msgstr "Wees actief!"
 
-#: ../templates/mirrors/show.html:24
-msgid "No Internet? Slow Internet?"
-msgstr "Geen internet? Traag internet? Inbellen?"
+#~ msgid "Join us"
+#~ msgstr "Kom erbij :)"
 
-#: ../templates/mirrors/show.html:25
-msgid "Have a look at our <a href='#'>official online vendors list</a>"
-msgstr "Werp een blik op onze <a href='#'>Official Online Vendors List</a>"
+#~ msgid "Administrative messages"
+#~ msgstr "Huishoudelijke mededelingen"
 
-#: ../templates/mirrors/show.html:30
-msgid "Metalinks"
-msgstr "Metalinks"
+#~ msgid "We are looking for funds, give us 2 minutes"
+#~ msgstr "Twee minuutjes, even wat fondsen zoeken..."
+
+#~ msgid "Join Sabayon Linux on Facebook"
+#~ msgstr "Voeg Sabayon Linux toe op Facebook"
+
+#~ msgid ""
+#~ "There is no way in the entire World we wouldn't had our Facebook Group! "
+#~ "Like it or not, we are there. So, what are you waiting for?"
+#~ msgstr ""
+#~ "Het kan gewoon niet bestaan dat wij geen eigen Facebook-groep hebben! Of "
+#~ "je 't leuk vindt of niet, we hebben er een. Dus...waar wacht je nog op?"
+
+#, fuzzy
+#~ msgid "Sabayon 5.4 GNOME and KDE are HERE"
+#~ msgstr "Sabayon 4.2 Gnome is HIER!</a>"
+
+#, fuzzy
+#~ msgid ""
+#~ "On the behalf of the Sabayon Linux team, we are pleased to announce that "
+#~ "the next big thing is here"
+#~ msgstr ""
+#~ "Namens het Sabayon Linux team, verheugen wij ons te berichten dat <i>the "
+#~ "next big thing</i> er is!"
+
+#, fuzzy
+#~ msgid "Go get it"
+#~ msgstr "Pak 'm dan!"
+
+#~ msgid "Distribution news"
+#~ msgstr "Distributienieuws"
+
+#~ msgid "Forum activity"
+#~ msgstr "Forumactiviteit"
+
+#~ msgid "Planet activity"
+#~ msgstr "Planetactiviteit"
+
+#, fuzzy
+#~ msgid "Code activity"
+#~ msgstr "Programmeeractiviteit"
+
+#~ msgid "Overlay activity"
+#~ msgstr "Overlay-activiteit"
+
+#~ msgid "Edit your comment"
+#~ msgstr "Wijzig uw commentaar"
+
+#~ msgid "You need to be logged in to edit a comment"
+#~ msgstr "U moet ingelogd zijn om een commentaar te wijzigen"
+
+#, fuzzy
+#~ msgid "Comment error"
+#~ msgstr "Fout in commentaar"
+
+#~ msgid "comments"
+#~ msgstr "commentaar"
+
+#~ msgid "Write your new comment below"
+#~ msgstr "Plaats uw commentaar hieronder"
+
+#~ msgid "You need to be logged in to post a comment"
+#~ msgstr "U moet ingelogd zijn om commentaar te plaatsen"
+
+#~ msgid "Your IP address has been banned for-EVA! Poor you... POOR you!"
+#~ msgstr "Je IP-adres is voor EEUWIG gebanned! Och arme jij...ARREME jij..."
+
+#~ msgid "My Sabayon"
+#~ msgstr "Mijn Sabayon"
+
+#~ msgid "My Dashboard"
+#~ msgstr "Mijn Dashboard"
+
+#~ msgid "My Pastebin"
+#~ msgstr "Mijn Pastebin"
+
+#~ msgid "Communicate"
+#~ msgstr "Communiceer"
+
+#~ msgid "Organisation"
+#~ msgstr "Organisatie"
+
+#~ msgid "Planet"
+#~ msgstr "Planet"
+
+#~ msgid "Forum"
+#~ msgstr "Forum"
+
+#~ msgid "Wiki"
+#~ msgstr "Wiki"
+
+#~ msgid "Web Chat"
+#~ msgstr "Webchat"
+
+#~ msgid "Press Documentation"
+#~ msgstr "Persdocumentatie"
+
+#~ msgid "Sabayon Roadmap"
+#~ msgstr "Sabayon Roadmap"
+
+#~ msgid "Get involved"
+#~ msgstr "Raak betrokken"
+
+#~ msgid "PixPastebin"
+#~ msgstr "PixPastebin"
+
+#~ msgid "Community"
+#~ msgstr "Community"
+
+#~ msgid "Packages and UGC"
+#~ msgstr "Packages en UGC"
+
+#, fuzzy
+#~ msgid "Entropy API documentation"
+#~ msgstr "Persdocumentatie"
+
+#~ msgid "Report a bug"
+#~ msgstr "Rapporteer een bug"
+
+#~ msgid "Browse Git"
+#~ msgstr "Browse Git"
+
+#~ msgid "Mailing Lists"
+#~ msgstr "Emaillijsten"
+
+#~ msgid "Funding"
+#~ msgstr "Fondsen"
+
+#, fuzzy
+#~ msgid "Enjoy Sabayon"
+#~ msgstr "Enjoy Sabayon"
+
+#~ msgid "Screenshots"
+#~ msgstr "Screenshots"
+
+#~ msgid "CD/DVD Distributors"
+#~ msgstr "CD/DVD-distributeurs"
+
+#~ msgid "successfully"
+#~ msgstr "succesvol"
+
+#~ msgid "Preview"
+#~ msgstr "Preview"
+
+#~ msgid "here"
+#~ msgstr "hier"
+
+#~ msgid "Reload this page"
+#~ msgstr "Deze pagina opnieuw laden"
+
+#~ msgid "Introduction"
+#~ msgstr "Introductie"
+
+#~ msgid "Thank you for voting !"
+#~ msgstr "Bedankt voor uw stem!"
+
+#~ msgid "Sorreey, it seems you already voted"
+#~ msgstr "Sorry, het lijkt erop dat u al gestemd heeft"
+
+#~ msgid "Try again tomorrow, or the day after"
+#~ msgstr "Probeert u het morgen nog eens, of overmorgen..."
+
+#~ msgid "Pages navigation"
+#~ msgstr "Pagina-navigatie"
+
+#~ msgid "**Hugs** **Hugs** **Hugs**"
+#~ msgstr "*knuffeldeknuffeldeknuffoooool*"
+
+#~ msgid ""
+#~ "Thanks a lot, we appreciate your effort. Your donation will help us "
+#~ "keeping up the good work. We are sure you want to get back to the <a href="
+#~ "\"/\">Front Page</a> now"
+#~ msgstr ""
+#~ "OK dan, bedankt voor de moeite! Uw donatie helpt ons ons goede werk voor "
+#~ "te zetten. U wilt nu zeker terug naar de <a href=\"/\">Voorpagina</a>?"
+
+#~ msgid ":-* kisses kisses kisses"
+#~ msgstr ":-* kusjes kusjes kusjes"
+
+#~ msgid "Total votes"
+#~ msgstr "Totaal aantal stemmen"
+
+#~ msgid "not voted yet?"
+#~ msgstr "Nog niet gestemd?"
+
+#~ msgid "You, liar!"
+#~ msgstr "Jij.......leugenaar!"
+
+#~ msgid "See results"
+#~ msgstr "Zie resultaten"
+
+#~ msgid "Profile"
+#~ msgstr "Profiel"
+
+#~ msgid "Pinboard"
+#~ msgstr "Prikbord"
+
+#~ msgid "Messages"
+#~ msgstr "Berichten"
+
+#~ msgid "News / Pages"
+#~ msgstr "Nieuws / Pagina's"
+
+#~ msgid "Mirrors"
+#~ msgstr "Mirrors"
+
+#~ msgid "Polls"
+#~ msgstr "Peilingen"
+
+#~ msgid "Not implemented yet. Sorrey!"
+#~ msgstr "Nog niet geïmplementeerd, sorry!"
+
+#~ msgid "Mirror name"
+#~ msgstr "Mirrornaam"
+
+#~ msgid "Do I have to explain the concept?"
+#~ msgstr "Moet ik dit nog uitleggen?"
+
+#~ msgid "Mirror speed"
+#~ msgstr "Mirror-snelheid"
+
+#~ msgid "Again, don't be dumb, why are you reading here?"
+#~ msgstr "Nogmaals, denk eens na, waarom lees je dit eigenlijk?"
+
+#~ msgid "Mirror country"
+#~ msgstr "Mirror-land"
+
+#~ msgid "Where is it located?"
+#~ msgstr "Waar bevindt het zich?"
+
+#~ msgid "Notes"
+#~ msgstr "Notities"
+
+#~ msgid "Important (internal) notes"
+#~ msgstr "Belangrijke (interne) notities"
+
+#~ msgid "Mirror Link #1"
+#~ msgstr "Mirror Link #1"
+
+#~ msgid "Give me an URL"
+#~ msgstr "Geef me een URL"
+
+#~ msgid "Mirror Link #2"
+#~ msgstr "Mirror Link #2"
+
+#~ msgid "Mirror Link #3"
+#~ msgstr "Mirror Link #3"
+
+#~ msgid "Add link"
+#~ msgstr "Voeg link toe"
+
+#~ msgid "Delete link"
+#~ msgstr "Verwijder link"
+
+#~ msgid ""
+#~ "Ok, once again, you are an admin. This is the Download Mirrors manager"
+#~ msgstr ""
+#~ "OK, nog één keer: jij bent een admin. Dit is de Download Mirrors Manager"
+
+#~ msgid "New Mirror"
+#~ msgstr "Nieuwe mirror"
+
+#~ msgid "One more page"
+#~ msgstr "Nog één pagina"
+
+#~ msgid "Body"
+#~ msgstr "Body"
+
+#~ msgid "Tags"
+#~ msgstr "Tags"
+
+#~ msgid "Type"
+#~ msgstr "Type"
+
+#~ msgid "Published on"
+#~ msgstr "Gepubliceerd op"
+
+#~ msgid "Actions"
+#~ msgstr "Acties"
+
+#~ msgid "Page state"
+#~ msgstr "Paginastatus"
+
+#, fuzzy
+#~ msgid "Reload pages navigation"
+#~ msgstr "Pagina-navigatie"
+
+#~ msgid "Rename"
+#~ msgstr "Hernoemen"
+
+#~ msgid "Remove"
+#~ msgstr "Verwijderen"
+
+#~ msgid ""
+#~ "Ok, you are an admin. So, you know what to do here. All the bells and "
+#~ "whistles, like someone said"
+#~ msgstr ""
+#~ "OK, je bent een admin. Dus, je weet wel wat je hier moet doen. Alle "
+#~ "toeters en bellen, zoals iemand ooit zei..."
+
+#~ msgid "New Document"
+#~ msgstr "Nieuw document"
+
+#~ msgid "This is the Pin title"
+#~ msgstr "Dit is de prikkertitel"
+
+#~ msgid "Write a brief description"
+#~ msgstr "Geef een korte omschrijving"
+
+#~ msgid "Note"
+#~ msgstr "Notitie"
+
+#~ msgid "Write your note here"
+#~ msgstr "Schrijf hier uw notitie"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Come on, you are lazy"
+#~ msgstr "Kom op, luie flikker!"
+
+#~ msgid "Show"
+#~ msgstr "Toon"
+
+#~ msgid "Share this Pin"
+#~ msgstr "Deel deze prikker"
+
+#~ msgid "Active shares"
+#~ msgstr "Actieve shares"
+
+#~ msgid ""
+#~ "Welcome to your personal Pinboard. Write your thoughts here. Organize "
+#~ "your tasks. Share with friends."
+#~ msgstr ""
+#~ "Welkom op uw persoonlijke prikbord. Zeg hier wat u denkt. Organiseer uw "
+#~ "taken. Deel met vrienden."
+
+#~ msgid "My Pins"
+#~ msgstr "Mijn Prikkers"
+
+#, fuzzy
+#~ msgid "New Pin"
+#~ msgstr "Nieuwe peiling"
+
+#~ msgid ""
+#~ "No elements here. You can't blame <u>aliens</u>. You might want to add "
+#~ "something someday, huh?"
+#~ msgstr ""
+#~ "Geen elementen. En het is niet de schuld van <u>buitenaardse wezens</u>. "
+#~ "Misschien wil je wat toevoegen, hmm?"
+
+#~ msgid "Connected Pins"
+#~ msgstr "Verbonden Prikkers"
+
+#~ msgid ""
+#~ "No elements here. Nobody loves you. Errr.. I am joking! We love you! No, "
+#~ "you can't blame <u>aliens</u>, again"
+#~ msgstr ""
+#~ "Geen elementen. Niemand houdt van je! Geintje, we houden écht wel van je "
+#~ "hoor! Maar nee, het is, nog steeds, niet de schuld van <u>buitenaardse "
+#~ "wezens</b>."
+
+# Translated first full sentence, ignored 'Do et' at end of line.
+# Can't find this particular instance on site, context? [ReemZ]
+#, fuzzy
+#~ msgid "Polls management, you can enable how many you want. Do et"
+#~ msgstr "Peilingonderhoud, hier kunt u aangeven hoeveel u er wilt."
+
+#~ msgid "New Poll"
+#~ msgstr "Nieuwe peiling"
+
+#~ msgid ""
+#~ "the poll will start with no options and disabled. You must create it first"
+#~ msgstr ""
+#~ "de peiling start zonder opties en disabled. U dient het eerst aan te maken"
+
+#~ msgid ""
+#~ "Of course, this is your profile and the place you can change how you are "
+#~ "shown to the World. Style matters, remember this"
+#~ msgstr ""
+#~ "Uiteraard is dit uw profiel, waar u kunt bepalen hoe de wereld u ziet. "
+#~ "Bedenk, stijl is belangrijk ;)"
+
+#~ msgid "E-mail configuration"
+#~ msgstr "Emailconfiguratie"
+
+#~ msgid "Your e-mail"
+#~ msgstr "Uw emailadres"
+
+#~ msgid "E-mail confirm"
+#~ msgstr "Bevestig emailadres"
+
+#~ msgid "Confirm your e-mail"
+#~ msgstr "Bevestig uw emailadres"
+
+#~ msgid "Password configuration"
+#~ msgstr "Wachtwoordconfiguratie"
+
+#~ msgid "Current Password"
+#~ msgstr "Huidig wachtwoord"
+
+#~ msgid "Your current password"
+#~ msgstr "Uw huidige wachtwoord"
+
+#~ msgid "New password"
+#~ msgstr "Nieuw wachtwoord"
+
+#~ msgid "Type your new password"
+#~ msgstr "Type uw nieuwe wachtwoord in"
+
+#~ msgid "Repeat new password"
+#~ msgstr "Herhaal nieuw wachtwoord"
+
+#~ msgid "Type again your new password"
+#~ msgstr "Type nogmaals uw nieuwe wachtwoord in"
+
+#~ msgid "Will be used as directory name"
+#~ msgstr "Wordt gebruikt als directorynaam"
+
+#~ msgid "Compressed archive"
+#~ msgstr "Gecomprimeerd archief"
+
+#~ msgid "Valid are .zip, .tar.bz2, .tar.gz. Inside: root dir and just files"
+#~ msgstr ""
+#~ "Geldig zijn .zip, .tar.bz2, .tar.gz, binnen: rootdirectory en enkel "
+#~ "bestanden"
+
+#~ msgid "Ok, good you are an admin. This is the Screenshots manager"
+#~ msgstr "OK, mooi, je bent admin. Dit is de Screenshots Manager"
+
+#~ msgid "New Screenshots"
+#~ msgstr "Nieuwe screenshots"
+
+#~ msgid "Ok <b>ladies</b> and <b>gentlemen</b>. We have a <u>winner</u> here!"
+#~ msgstr "Ennnnnnnnnnnn we hebben een winnaarrrrrrrrrrrrrrrrrrrrrr!"
+
+#, fuzzy
+#~ msgid "You are now connected with %s's Pinboard titled \"<i>%s</i>\"."
+#~ msgstr "U bent nu verbonden met"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click %shere%s to get to your personal Dashboard and <b>have fun</b>."
+#~ msgstr "om in uw persoonlijke Dashboard te komen, <b>veel plezier</b>"
+
+#~ msgid "We are <b>sorry</b>, the System encountered an error"
+#~ msgstr "<b>Sorry</b>, er is een fout opgetreden"
+
+#, fuzzy
+#~ msgid ""
+#~ "Thus, <b>we cannot satisfy</b> your request. You can get to our <b><a "
+#~ "href='/'>front page</a></b> and be happy anyway."
+#~ msgstr ""
+#~ "Aldus <b>kunnen wij uw verzoek niet inwilligen</b>. Evengoed veel plezier "
+#~ "op onze <b><a href=\"/\">voorpagina</a></b>"
+
+# Untranslatable, just not funny in Dutch :p
+# [ReemZ]
+#, fuzzy
+#~ msgid "...Beeee happy! Don't worry, beeeee happy!"
+#~ msgstr "...Beeee happy! Don't worry, beeeee happy!"
+
+#~ msgid "Mirror"
+#~ msgstr "Mirror"
+
+#~ msgid ""
+#~ "Sabayon, free of charge, batteries included and on your own Computer. "
+#~ "What are you waiting for? <b>Select the location closer to you</b> and "
+#~ "start downloading a new experience"
+#~ msgstr ""
+#~ "Sabayon, kostenloos, batterijen meegeleverd en op je eigen computer. Waar "
+#~ "wacht je nog op? <b>Selecteer de geografisch dichtsbijzijnde locatie</b> "
+#~ "en download de nieuwe ervaring!"
+
+#~ msgid "No Internet? Slow Internet?"
+#~ msgstr "Geen internet? Traag internet? Inbellen?"
+
+#~ msgid "Have a look at our <a href='#'>official online vendors list</a>"
+#~ msgstr "Werp een blik op onze <a href='#'>Official Online Vendors List</a>"
+
+#~ msgid "Metalinks"
+#~ msgstr "Metalinks"
 
 # Could not translate the term 'max out', no idea what this means. [ReemZ]
-#: ../templates/mirrors/show.html:31
 #, fuzzy
-msgid ""
-"For people with faster Internet connections (DSL, Cable, Fiber), Metalink "
-"makes downloading easier, faster, and more reliable. If you're on an error "
-"prone connection, Metalinks with repair information can fix any errors you "
-"get in transfer. Most downloads probably don't max out your downstream "
-"bandwidth. Metalink will help"
-msgstr ""
-"Op een breedbandverbinding (DSL, kabel, glasvezel) maakt Metalink het "
-"downloaden nóg makkelijker, sneller én betrouwbaarder. Op een instabiele "
-"verbinding, waar tijdens de overdracht fouten kunnen optreden, kan Metalink "
-"met Repair Information deze fouten verhelpen. De meeste downloads zullen uw "
-"downstream bandbreedte niet MAX OUT (vertaling?). Metalink helpt."
+#~ msgid ""
+#~ "For people with faster Internet connections (DSL, Cable, Fiber), Metalink "
+#~ "makes downloading easier, faster, and more reliable. If you're on an "
+#~ "error prone connection, Metalinks with repair information can fix any "
+#~ "errors you get in transfer. Most downloads probably don't max out your "
+#~ "downstream bandwidth. Metalink will help"
+#~ msgstr ""
+#~ "Op een breedbandverbinding (DSL, kabel, glasvezel) maakt Metalink het "
+#~ "downloaden nóg makkelijker, sneller én betrouwbaarder. Op een instabiele "
+#~ "verbinding, waar tijdens de overdracht fouten kunnen optreden, kan "
+#~ "Metalink met Repair Information deze fouten verhelpen. De meeste "
+#~ "downloads zullen uw downstream bandbreedte niet MAX OUT (vertaling?). "
+#~ "Metalink helpt."
 
-#: ../templates/mirrors/show.html:31
-msgid "source"
-msgstr "Bron"
+#~ msgid "source"
+#~ msgstr "Bron"
 
-#: ../templates/mirrors/show.html:32
-msgid "Visit the official"
-msgstr "Bezoek de officiële"
+#~ msgid "Visit the official"
+#~ msgstr "Bezoek de officiële"
 
-#: ../templates/mirrors/show.html:32
-msgid "Sabayon Linux Metalinker Page"
-msgstr "Sabayon Linux Metalinker Pagina"
+#~ msgid "Sabayon Linux Metalinker Page"
+#~ msgstr "Sabayon Linux Metalinker Pagina"
 
-#: ../templates/mirrors/show.html:38
-msgid "Bittorrent"
-msgstr "BitTorrent"
+#~ msgid "Bittorrent"
+#~ msgstr "BitTorrent"
 
-#: ../templates/mirrors/show.html:39
 #, fuzzy
-msgid ""
-"Most people love it just because it makes your download fly. Now we have our "
-"Sabayon Linux Tracker"
-msgstr ""
-"Geliefd onder de meeste mensen, gewoon omdat het je download vleugels geeft. "
-"Linuxtracker.org host al onze torrents."
+#~ msgid ""
+#~ "Most people love it just because it makes your download fly. Now we have "
+#~ "our Sabayon Linux Tracker"
+#~ msgstr ""
+#~ "Geliefd onder de meeste mensen, gewoon omdat het je download vleugels "
+#~ "geeft. Linuxtracker.org host al onze torrents."
 
-#: ../templates/mirrors/show.html:40
-msgid "Visit the"
-msgstr "Bezoek de"
+#~ msgid "Visit the"
+#~ msgstr "Bezoek de"
 
-#: ../templates/mirrors/show.html:40
 #, fuzzy
-msgid "Sabayon Linux Tracker Page"
-msgstr "Sabayon Linux Metalinker Pagina"
+#~ msgid "Sabayon Linux Tracker Page"
+#~ msgstr "Sabayon Linux Metalinker Pagina"
 
-#: ../templates/mirrors/show.html:46
-msgid "HTTP, FTP, RSYNC mirrors"
-msgstr "HTTP, FTP, RSYNC mirrors"
+#~ msgid "HTTP, FTP, RSYNC mirrors"
+#~ msgstr "HTTP, FTP, RSYNC mirrors"
 
-#: ../templates/mirrors/show.html:47
-msgid ""
-"If you belong to the old generation or just want to use `wget` because it's "
-"the only download manager you trust. Here it is a list of official mirrors, "
-"alphabetically divided by countries"
-msgstr ""
-"Omdat u old skool bent en 'wget' wilt gebruiken, of omdat u nou eenmaal "
-"enkel dat vertrouwt. Hier is de lijst met officiële mirrors, alfabetisch "
-"gerankschikt op land"
+#~ msgid ""
+#~ "If you belong to the old generation or just want to use `wget` because "
+#~ "it's the only download manager you trust. Here it is a list of official "
+#~ "mirrors, alphabetically divided by countries"
+#~ msgstr ""
+#~ "Omdat u old skool bent en 'wget' wilt gebruiken, of omdat u nou eenmaal "
+#~ "enkel dat vertrouwt. Hier is de lijst met officiële mirrors, alfabetisch "
+#~ "gerankschikt op land"
 
-#: ../templates/mirrors/show.html:77
-msgid "Subscribe your Mirror today"
-msgstr "Schrijf uw mirror vandaag nog in!"
+#~ msgid "Subscribe your Mirror today"
+#~ msgstr "Schrijf uw mirror vandaag nog in!"
 
-#: ../templates/mirrors/show.html:78
-msgid "Do you have spare bandwidth? Are you a mirror maintainer?"
-msgstr "Heeft u bandbreedte over? Onderhoudt u (tóch al) een mirror?"
+#~ msgid "Do you have spare bandwidth? Are you a mirror maintainer?"
+#~ msgstr "Heeft u bandbreedte over? Onderhoudt u (tóch al) een mirror?"
 
-#: ../templates/mirrors/show.html:78
-msgid "Submit your request here"
-msgstr "Dien uw verzoek hier in"
+#~ msgid "Submit your request here"
+#~ msgstr "Dien uw verzoek hier in"
 
-#: ../templates/pastebin/pastebin_disclaimer.html:2
-msgid "Read carefully"
-msgstr "Lees dit goed"
+#~ msgid "Read carefully"
+#~ msgstr "Lees dit goed"
 
-#: ../templates/pastebin/pastebin_disclaimer.html:2
-msgid ""
-"do not paste sensitive data, it is not protected, this means that other "
-"people can read it. Use this tool only for exchanging stuff in public "
-"virtual places such as IRC, Forums and so forth. Your data will be removed "
-"once expired, we cannot guarantee the storage of the content here. Your IP "
-"is logged and you are invited to respect any existing law. No spamming, No "
-"porn, nothing! Allright?"
-msgstr ""
-"geef géén gevoelige gegevens in! Het is niet beveiligd, ofwel: anderen "
-"kunnen meelezen. Gebruik deze tool alleen om publiekelijk toegankelijk "
-"materiaal te plaatsen, zoals IRC-quotes, forumposts en dergelijke. Eenmaal "
-"verlopen worden uw gegevens verwijderd, wij kunnen de opslag niet "
-"garanderen. Uw IP-adres is gelogd en u wordt vriendelijk verzocht enige "
-"bestaande wet te respecteren. Geen gespam, geen porno, geen flauwekul. "
-"Gesnopen?"
+#~ msgid ""
+#~ "do not paste sensitive data, it is not protected, this means that other "
+#~ "people can read it. Use this tool only for exchanging stuff in public "
+#~ "virtual places such as IRC, Forums and so forth. Your data will be "
+#~ "removed once expired, we cannot guarantee the storage of the content "
+#~ "here. Your IP is logged and you are invited to respect any existing law. "
+#~ "No spamming, No porn, nothing! Allright?"
+#~ msgstr ""
+#~ "geef géén gevoelige gegevens in! Het is niet beveiligd, ofwel: anderen "
+#~ "kunnen meelezen. Gebruik deze tool alleen om publiekelijk toegankelijk "
+#~ "materiaal te plaatsen, zoals IRC-quotes, forumposts en dergelijke. "
+#~ "Eenmaal verlopen worden uw gegevens verwijderd, wij kunnen de opslag niet "
+#~ "garanderen. Uw IP-adres is gelogd en u wordt vriendelijk verzocht enige "
+#~ "bestaande wet te respecteren. Geen gespam, geen porno, geen flauwekul. "
+#~ "Gesnopen?"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:7
-msgid "Latest Pasties"
-msgstr "Meest recente pasties"
+#~ msgid "Latest Pasties"
+#~ msgstr "Meest recente pasties"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:10
-#: ../templates/pastebin/remove_pastie.html:28
-msgid "PixPastebin Home"
-msgstr "PixPastebin Home"
+#~ msgid "PixPastebin Home"
+#~ msgstr "PixPastebin Home"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:25
-#: ../templates/pastebin/pastebin_latest_pasties.html:47
-msgid "No Pasties"
-msgstr "Geen pasties"
+#~ msgid "No Pasties"
+#~ msgstr "Geen pasties"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:32
-msgid "My Latest"
-msgstr "Mijn meest recente"
+#~ msgid "My Latest"
+#~ msgstr "Mijn meest recente"
 
-#: ../templates/pastebin/pastebin_submit_body.html:19
-msgid ""
-"Choose <span id=\"pastebin-submit-type-name\">a file</span> and get ready to "
-"paste!"
-msgstr ""
-"Kies <span id=\"pastebin-submit-type-name\">een bestand</span> en paste!"
+#~ msgid ""
+#~ "Choose <span id=\"pastebin-submit-type-name\">a file</span> and get ready "
+#~ "to paste!"
+#~ msgstr ""
+#~ "Kies <span id=\"pastebin-submit-type-name\">een bestand</span> en paste!"
 
-#: ../templates/pastebin/pastebin_submit_body.html:20
-msgid "Important"
-msgstr "Belangrijk!"
+#~ msgid "Important"
+#~ msgstr "Belangrijk!"
 
-#: ../templates/pastebin/pastebin_submit_body.html:20
-msgid "you cannot send viruses, they are destroyed automatically"
-msgstr "u kunt geen virussen versturen, deze worden automatisch vernietigd"
+#~ msgid "you cannot send viruses, they are destroyed automatically"
+#~ msgstr "u kunt geen virussen versturen, deze worden automatisch vernietigd"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:3
-msgid "Expiration"
-msgstr "Verloopt na"
+#~ msgid "Expiration"
+#~ msgstr "Verloopt na"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:4
-msgid "One day"
-msgstr "een dag"
+#~ msgid "One day"
+#~ msgstr "een dag"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:5
-msgid "One month"
-msgstr "een maand"
+#~ msgid "One month"
+#~ msgstr "een maand"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:6
-msgid "One year"
-msgstr "een jaar"
+#~ msgid "One year"
+#~ msgstr "een jaar"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:9
-#, fuzzy, c-format
-msgid "as <b>%s</b> and permissions:"
-msgstr "en is toegankelijk voor"
-
-#: ../templates/pastebin/pastebin_submit_footer.html:42
-msgid "Wrong CAPTCHA !!! Take this, stupid spammer!"
-msgstr "Foutieve CAPTCHA!!! In je smoel, spammer!!"
-
-#: ../templates/pastebin/remove_pastie.html:21
-msgid "Ok fine, pastie removed"
-msgstr "OK, pastie verwijderd"
-
-#: ../templates/pastebin/remove_pastie.html:23
-msgid "Message"
-msgstr "Bericht"
-
-#: ../templates/pastebin/show_pastie_file.html:5
-#, fuzzy, c-format
-msgid "All the uploaded files are checked by %s"
-msgstr "Alle ge-uploade bestanden worden gecontroleerd door"
-
-#: ../templates/pastebin/show_pastie_header.html:7
 #, fuzzy
-msgid "expires in"
-msgstr "Verloopt na"
+#~ msgid "as <b>%s</b> and permissions:"
+#~ msgstr "en is toegankelijk voor"
 
-#: ../templates/pastebin/show_pastie_header.html:7
-msgid "days"
-msgstr ""
+#~ msgid "Wrong CAPTCHA !!! Take this, stupid spammer!"
+#~ msgstr "Foutieve CAPTCHA!!! In je smoel, spammer!!"
 
-#: ../templates/pastebin/show_pastie_image.html:16
-msgid "An image should pop up above this text"
-msgstr "Een beeldbestand zou boven deze tekst moeten verschijnen"
+#~ msgid "Ok fine, pastie removed"
+#~ msgstr "OK, pastie verwijderd"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:2
-msgid "Not found"
-msgstr "Niet gevonden"
+#~ msgid "Message"
+#~ msgstr "Bericht"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:4
-msgid "The pastie you are looking for is not available"
-msgstr "De pastie die u zoekt is niet beschikbaar"
+#, fuzzy
+#~ msgid "All the uploaded files are checked by %s"
+#~ msgstr "Alle ge-uploade bestanden worden gecontroleerd door"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:4
-msgid "Paste something?"
-msgstr "Iets te plakken?"
+#, fuzzy
+#~ msgid "expires in"
+#~ msgstr "Verloopt na"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:6
-#: ../templates/pastebin/show_pastie_submit_error.html:6
-msgid "Error message"
-msgstr "Foutmelding"
+#~ msgid "An image should pop up above this text"
+#~ msgstr "Een beeldbestand zou boven deze tekst moeten verschijnen"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:2
-msgid "Oops, Error"
-msgstr "Foutje, bedáánkt!"
+#~ msgid "Not found"
+#~ msgstr "Niet gevonden"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:4
-msgid "An error occured while pasting your data"
-msgstr "Tijdens het pasten van uw gegevens is een fout opgetreden"
+#~ msgid "The pastie you are looking for is not available"
+#~ msgstr "De pastie die u zoekt is niet beschikbaar"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:4
-msgid "Get back?"
-msgstr "Terug?"
+#~ msgid "Paste something?"
+#~ msgstr "Iets te plakken?"
 
-#: ../templates/pastebin/show_pastie_tools.html:2
-msgid "Make a fresh post"
-msgstr "Maak een nieuwe pastie aan"
+#~ msgid "Error message"
+#~ msgstr "Foutmelding"
 
-#: ../templates/pastebin/show_pastie_tools.html:4
-msgid "edit this"
-msgstr "pas deze aan"
+#~ msgid "Oops, Error"
+#~ msgstr "Foutje, bedáánkt!"
 
-#: ../templates/pastebin/show_pastie_tools.html:8
-msgid "delete this"
-msgstr "verwijder deze"
+#~ msgid "An error occured while pasting your data"
+#~ msgstr "Tijdens het pasten van uw gegevens is een fout opgetreden"
+
+#~ msgid "Get back?"
+#~ msgstr "Terug?"
+
+#~ msgid "Make a fresh post"
+#~ msgstr "Maak een nieuwe pastie aan"
+
+#~ msgid "edit this"
+#~ msgstr "pas deze aan"
+
+#~ msgid "delete this"
+#~ msgstr "verwijder deze"
 
 #~ msgid "Official Sabayon Linux Web Chat"
 #~ msgstr "Officiële Sabayon Linux Web Chat"

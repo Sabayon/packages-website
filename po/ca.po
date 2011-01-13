@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-13 11:54+0100\n"
+"POT-Creation-Date: 2011-01-13 23:57+0100\n"
 "PO-Revision-Date: 2009-12-07 09:01+0100\n"
 "Last-Translator: Roger Calvó <rcalvoi@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -49,8 +49,8 @@ msgstr "ID de Jabber"
 msgid "The Jabber.org Open Source Protocol"
 msgstr "El protocol de codi obert Jabber.org"
 
-#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:155
-#: ../templates/community/users/public_profile.html:157
+#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:215
+#: ../templates/community/users/public_profile.html:156
 msgid "Website"
 msgstr "Pagina web"
 
@@ -59,7 +59,7 @@ msgid "Do you have a website?"
 msgstr "Teniu una pàgina web?"
 
 #: ../controllers/community.py:47
-#: ../templates/community/users/public_profile.html:83
+#: ../templates/community/users/public_profile.html:82
 msgid "Location"
 msgstr "Situació"
 
@@ -68,7 +68,7 @@ msgid "Where do you live?"
 msgstr "On viviu?"
 
 #: ../controllers/community.py:54
-#: ../templates/community/users/public_profile.html:116
+#: ../templates/community/users/public_profile.html:115
 msgid "Interests"
 msgstr "Interessos"
 
@@ -77,7 +77,7 @@ msgid "What do you like most?"
 msgstr "Què us agrada més?"
 
 #: ../controllers/community.py:61
-#: ../templates/community/users/public_profile.html:105
+#: ../templates/community/users/public_profile.html:104
 msgid "Occupation"
 msgstr "Ocupació"
 
@@ -94,7 +94,6 @@ msgid "Your Community signature"
 msgstr "La signatura de la comunitat"
 
 #: ../controllers/community.py:75
-#: ../templates/community/my/dashboard_profile_tab.html:52
 msgid "E-mail"
 msgstr "Correu electrònic"
 
@@ -176,19 +175,19 @@ msgstr "El tauler"
 #: ../controllers/login.py:301 ../controllers/login.py:303
 #: ../controllers/login.py:305 ../controllers/login.py:308
 #: ../controllers/login.py:310 ../controllers/login.py:318
-#: ../controllers/login.py:324 ../controllers/packages.py:724
-#: ../controllers/packages.py:731 ../controllers/packages.py:737
-#: ../controllers/packages.py:743 ../controllers/packages.py:860
-#: ../controllers/packages.py:865 ../controllers/packages.py:872
-#: ../controllers/packages.py:876 ../controllers/packages.py:885
-#: ../controllers/packages.py:891 ../controllers/packages.py:893
-#: ../controllers/packages.py:905 ../controllers/packages.py:908
-#: ../controllers/packages.py:913 ../controllers/packages.py:920
-#: ../controllers/packages.py:925 ../controllers/packages.py:927
-#: ../controllers/packages.py:932 ../controllers/packages.py:937
-#: ../controllers/packages.py:947 ../controllers/packages.py:958
-#: ../controllers/packages.py:965 ../controllers/packages.py:978
-#: ../controllers/packages.py:988 ../controllers/packages.py:993
+#: ../controllers/login.py:324 ../controllers/packages.py:730
+#: ../controllers/packages.py:737 ../controllers/packages.py:743
+#: ../controllers/packages.py:749 ../controllers/packages.py:866
+#: ../controllers/packages.py:871 ../controllers/packages.py:878
+#: ../controllers/packages.py:882 ../controllers/packages.py:891
+#: ../controllers/packages.py:897 ../controllers/packages.py:899
+#: ../controllers/packages.py:911 ../controllers/packages.py:914
+#: ../controllers/packages.py:919 ../controllers/packages.py:926
+#: ../controllers/packages.py:931 ../controllers/packages.py:933
+#: ../controllers/packages.py:938 ../controllers/packages.py:943
+#: ../controllers/packages.py:953 ../controllers/packages.py:964
+#: ../controllers/packages.py:971 ../controllers/packages.py:984
+#: ../controllers/packages.py:994 ../controllers/packages.py:999
 msgid "Error"
 msgstr "Error"
 
@@ -206,7 +205,7 @@ msgid "invalid HTTP method"
 msgstr "el mètode HTTP no és vàlid"
 
 #: ../controllers/community.py:295 ../controllers/login.py:210
-#: ../controllers/login.py:287 ../controllers/packages.py:860
+#: ../controllers/login.py:287 ../controllers/packages.py:866
 msgid "not logged in"
 msgstr "no heu entrat"
 
@@ -340,196 +339,194 @@ msgid "Sabayon Linux Community Password Update Activation"
 msgstr ""
 "Activació de l'actualització de contrasenya de la comunitat Sabayon Linux"
 
-#: ../controllers/packages.py:37
+#: ../controllers/packages.py:38
 msgid "Packages"
 msgstr "Paquets"
 
-#: ../controllers/packages.py:38
+#: ../controllers/packages.py:39
 msgid "Packages match"
 msgstr "Paquets coincidents"
 
-#: ../controllers/packages.py:39
+#: ../controllers/packages.py:40
 msgid "Package descriptions"
 msgstr "Descripció de paquets"
 
-#: ../controllers/packages.py:40 ../templates/community/my/stats.html:103
-#: ../templates/community/users/public_profile.html:237
+#: ../controllers/packages.py:41 ../templates/community/my/stats.html:102
+#: ../templates/community/users/public_profile.html:236
 msgid "Files"
 msgstr "Fitxers"
 
-#: ../controllers/packages.py:41
+#: ../controllers/packages.py:42
 msgid "Libraries"
 msgstr "Llibreries"
 
-#: ../controllers/packages.py:44 ../controllers/packages.py:508
+#: ../controllers/packages.py:45 ../controllers/packages.py:513
 msgid "Alphabet"
 msgstr "Alfabet"
 
-#: ../controllers/packages.py:45 ../controllers/packages.py:510
-#: ../templates/comment_header.html:5
+#: ../controllers/packages.py:46 ../controllers/packages.py:515
 msgid "Vote"
 msgstr "Vot"
 
-#: ../controllers/packages.py:46 ../templates/loginbox_inner.html:29
-#: ../templates/loginbox_inner.html:91
+#: ../controllers/packages.py:47 ../templates/loginbox_inner.html:29
+#: ../templates/loginbox_inner.html:83
 #: ../templates/packages/ugc_shortinfo.html:11
 msgid "Downloads"
 msgstr "Baixades"
 
-#: ../controllers/packages.py:308 ../controllers/packages.py:516
+#: ../controllers/packages.py:313 ../controllers/packages.py:521
 msgid "vote"
 msgstr "vot"
 
-#: ../controllers/packages.py:309 ../controllers/packages.py:517
+#: ../controllers/packages.py:314 ../controllers/packages.py:522
 msgid "downloads"
 msgstr "baixades"
 
-#: ../controllers/packages.py:497
+#: ../controllers/packages.py:502
 msgid "Package name"
 msgstr "Nom del paquet"
 
-#: ../controllers/packages.py:498
+#: ../controllers/packages.py:503
 msgid "Content (text)"
 msgstr "Contingut (text)"
 
-#: ../controllers/packages.py:499
+#: ../controllers/packages.py:504
 msgid "Keyword (tag)"
 msgstr "Paraula clau (etiqueta)"
 
-#: ../controllers/packages.py:500 ../controllers/packages.py:509
+#: ../controllers/packages.py:505 ../controllers/packages.py:514
 #: ../templates/registration_form.html:7
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-#: ../templates/community/my/stats.html:23
-#: ../templates/community/users/public_profile.html:37
+#: ../templates/community/my/stats.html:22
+#: ../templates/community/users/public_profile.html:36
 msgid "Username"
 msgstr "Nom d'usuari"
 
-#: ../controllers/packages.py:501
+#: ../controllers/packages.py:506
 msgid "Document id."
 msgstr "Id. del document"
 
-#: ../controllers/packages.py:504
+#: ../controllers/packages.py:509
 msgid "No restrictions"
 msgstr "Sense restriccions"
 
-#: ../controllers/packages.py:511
+#: ../controllers/packages.py:516
 msgid "Number of downloads"
 msgstr "Nombre de baixades"
 
-#: ../controllers/packages.py:514
+#: ../controllers/packages.py:519
 msgid "key"
 msgstr "clau"
 
-#: ../controllers/packages.py:515
+#: ../controllers/packages.py:520
 msgid "username"
 msgstr "nom d'usuari"
 
-#: ../controllers/packages.py:610 ../controllers/packages.py:713
+#: ../controllers/packages.py:615 ../controllers/packages.py:719
 msgid "Sabayon Linux Packages Repository"
 msgstr "Repositori de Paquets Sabayon Linux"
 
-#: ../controllers/packages.py:724
+#: ../controllers/packages.py:730
 msgid "invalid search string"
 msgstr "cadena de cerca no vàlida"
 
-#: ../controllers/packages.py:731
+#: ../controllers/packages.py:737
 msgid "invalid search type"
 msgstr "tipus de cerca no vàlid"
 
-#: ../controllers/packages.py:737
+#: ../controllers/packages.py:743
 msgid "invalid search restriction type"
 msgstr "restricció de tipus de cerca no vàlida"
 
-#: ../controllers/packages.py:743
+#: ../controllers/packages.py:749
 msgid "invalid 'order by'"
 msgstr "'ordena per' no és vàlid"
 
-#: ../controllers/packages.py:865
+#: ../controllers/packages.py:871
 msgid "invalid document"
 msgstr "document no vàlid"
 
-#: ../controllers/packages.py:872
+#: ../controllers/packages.py:878
 msgid "invalid document specified"
 msgstr "document especificat no vàlid"
 
-#: ../controllers/packages.py:876
+#: ../controllers/packages.py:882
 msgid "permission denied, you suck!"
 msgstr "s'ha denegat el permís, l'heu cagat!"
 
-#: ../controllers/packages.py:885
+#: ../controllers/packages.py:891
 msgid "WTF? invalid document type!"
 msgstr "Què feu? tipus de document no vàlid!"
 
-#: ../controllers/packages.py:891
+#: ../controllers/packages.py:897
 msgid "you know what? I cannot handle this document"
 msgstr "Sabeu què? No puc gestionar aquest document"
 
-#: ../controllers/packages.py:895
+#: ../controllers/packages.py:901
 msgid "Document removed successfully, sigh :'-("
 msgstr "El document s'ha eliminat amb èxit, uf :'-("
 
-#: ../controllers/packages.py:905 ../controllers/packages.py:908
+#: ../controllers/packages.py:911 ../controllers/packages.py:914
 msgid "wrong username"
 msgstr "nom d'usuari incorrecte"
 
-#: ../controllers/packages.py:913
+#: ../controllers/packages.py:919
 msgid "no document specified"
 msgstr "no s'ha especificat el document"
 
-#: ../controllers/packages.py:920
+#: ../controllers/packages.py:926
 msgid "invalid document type"
 msgstr "el tipus de document no és vàlid"
 
-#: ../controllers/packages.py:925
+#: ../controllers/packages.py:931
 msgid "invalid package key"
 msgstr "la clau del paquet no és vàlida"
 
-#: ../controllers/packages.py:927
+#: ../controllers/packages.py:933
 msgid "invalid package string"
 msgstr "la cadena del paquet no és vàlida"
 
-#: ../controllers/packages.py:932
+#: ../controllers/packages.py:938
 msgid "title too short"
 msgstr "el títol és massa curt"
 
-#: ../controllers/packages.py:937
+#: ../controllers/packages.py:943
 msgid "description too short"
 msgstr "la descripció és massa curta"
 
-#: ../controllers/packages.py:947
+#: ../controllers/packages.py:953
 msgid "comment text too short"
 msgstr "el text de comentari és massa curt"
 
-#: ../controllers/packages.py:958
+#: ../controllers/packages.py:964
 msgid "no file? no party!"
 msgstr "no hi ha fitxer? cagada!"
 
-#: ../controllers/packages.py:978
+#: ../controllers/packages.py:984
 msgid "file too big"
 msgstr "el fitxer és massa gran"
 
-#: ../controllers/packages.py:993
+#: ../controllers/packages.py:999
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr ""
 "el document s'ha afegit, però no s'ha pogut determinar 'iddoc' correctament"
 
-#: ../controllers/packages.py:1125
+#: ../controllers/packages.py:1131
 msgid "user not authenticated"
 msgstr "usuari no autenticat"
 
-#: ../controllers/packages.py:1133
+#: ../controllers/packages.py:1139
 msgid "invalid vote"
 msgstr "vot no vàlid"
 
-#: ../controllers/packages.py:1136
+#: ../controllers/packages.py:1142
 msgid "invalid package"
 msgstr "paquet no vàlid"
 
-#: ../controllers/packages.py:1142
+#: ../controllers/packages.py:1148
 msgid "vote not in range"
 msgstr "vot fora de rang"
 
-#: ../controllers/packages.py:1147
+#: ../controllers/packages.py:1153
 msgid "you already voted this"
 msgstr "ja heu votat això"
 
@@ -541,106 +538,27 @@ msgstr "N/D"
 msgid "Public Profile"
 msgstr "Perfil públic"
 
-#: ../templates/activation_successful.html:18
-#: ../templates/email_activation_successful.html:18
-#: ../templates/password_activation_successful.html:18
+#: ../templates/activation_successful.html:17
+#: ../templates/email_activation_successful.html:17
+#: ../templates/password_activation_successful.html:17
 msgid "Activation successful"
 msgstr "Activació correcta"
 
-#: ../templates/activation_successful.html:18
+#: ../templates/activation_successful.html:17
 msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
 msgstr "Uau, gràcies! Ara podeu començar a gaudir de la Comunitat"
 
-#: ../templates/activation_successful.html:20
-#: ../templates/email_activation_successful.html:20
-#: ../templates/password_activation_successful.html:20
+#: ../templates/activation_successful.html:19
+#: ../templates/email_activation_successful.html:19
+#: ../templates/password_activation_successful.html:19
 msgid "Sorry"
 msgstr "Ho sento"
 
-#: ../templates/activation_successful.html:20
-#: ../templates/email_activation_successful.html:20
-#: ../templates/password_activation_successful.html:20
+#: ../templates/activation_successful.html:19
+#: ../templates/email_activation_successful.html:19
+#: ../templates/password_activation_successful.html:19
 msgid "There is no activation information available"
 msgstr "No hi ha informació d'activació disponible"
-
-#: ../templates/big_band.html:23
-msgid "the cutest, free Operating System"
-msgstr "el millor Sistema Operatiu lliure"
-
-#: ../templates/big_band.html:24
-msgid "as easy as an abacus, as fast as a segway"
-msgstr "fàcil com un àbac, ràpid com un Segway"
-
-#: ../templates/big_band.html:26
-msgid "Be active"
-msgstr "Estigues actiu"
-
-#: ../templates/big_band.html:28 ../templates/body_headlines.html:34
-msgid "Join us"
-msgstr "Uniu-vos"
-
-#: ../templates/big_band.html:30 ../templates/menubox.html:66
-#: ../templates/packages/ugc_generic_file.html:4
-msgid "Download"
-msgstr "Baixada"
-
-#: ../templates/body_headlines.html:5
-msgid "Administrative messages"
-msgstr "Missatges administratius"
-
-#: ../templates/body_headlines.html:20
-msgid "We are looking for funds, give us 2 minutes"
-msgstr "Estem cercant fons, dóna'ns 2 minuts"
-
-#: ../templates/body_headlines.html:33
-msgid "Join Sabayon Linux on Facebook"
-msgstr "Uniu-vos a Sabayon Linux en el Facebook"
-
-#: ../templates/body_headlines.html:34
-msgid ""
-"There is no way in the entire World we wouldn't had our Facebook Group! Like "
-"it or not, we are there. So, what are you waiting for?"
-msgstr ""
-"Com no podia ser d'una altra manera, tenim el nostre grup al Facebook! Us "
-"agradi o no, som a tot arreu. Doncs, què espereu?"
-
-#: ../templates/body_headlines.html:43
-#, fuzzy
-msgid "Sabayon 5.4 GNOME and KDE are HERE"
-msgstr "Sabayon 5.o GNOME i KDE ja són AQUÍ</a>"
-
-#: ../templates/body_headlines.html:44
-#, fuzzy
-msgid ""
-"On the behalf of the Sabayon Linux team, we are pleased to announce that the "
-"next big thing is here"
-msgstr ""
-"En representació de l'equip de Sabayon Linux, ens plau anunciar que <i>el "
-"proper èxit</i> ha <b>arribat</b>"
-
-#: ../templates/body_headlines.html:44
-msgid "Go get it"
-msgstr "Aconseguiu-lo"
-
-#: ../templates/body_left.html:11
-msgid "Distribution news"
-msgstr "Notícies de la distribució"
-
-#: ../templates/body_left.html:42
-msgid "Forum activity"
-msgstr "Activitat del fòrum"
-
-#: ../templates/body_left.html:81
-msgid "Planet activity"
-msgstr "Activitat del planeta"
-
-#: ../templates/body_left.html:116
-msgid "Code activity"
-msgstr "Activitat del codi"
-
-#: ../templates/body_left.html:135
-msgid "Overlay activity"
-msgstr "Activitat de l'Overlay"
 
 #: ../templates/body_right.html:8
 msgid "Sponsors"
@@ -699,76 +617,7 @@ msgstr "Cross Linux From Scratch"
 msgid "Ibiblio.org Hosting"
 msgstr "Ibiblio.org Hosting"
 
-#: ../templates/comment_edit.html:4
-msgid "Edit your comment"
-msgstr "Editeu el comentari"
-
-#: ../templates/comment_edit.html:11
-msgid "You need to be logged in to edit a comment"
-msgstr "Heu d'acreditar-vos per poder editar un comentari"
-
-#: ../templates/comment_edit.html:12 ../templates/do_comment_page.html:13
-#: ../templates/packages/do_document_page.html:121
-msgid "Login?"
-msgstr "Accés?"
-
-#: ../templates/comment_edit.html:12 ../templates/do_comment_page.html:13
-#: ../templates/packages/do_document_page.html:121
-msgid "Register?"
-msgstr "Registra?"
-
-#: ../templates/comment_header.html:3
-#, c-format
-msgid "written by <b>%s</b>, around %s"
-msgstr "escrit per <b>%s</b>, pels vols de %s"
-
-#: ../templates/comment_header.html:3 ../templates/community/my/stats.html:133
-#: ../templates/community/users/public_profile.html:267
-msgid "Score"
-msgstr "Puntuació"
-
-#: ../templates/comment_header.html:20
-#: ../templates/packages/ugc_doc_handling_links.html:15
-#: ../templates/community/my/dashboard_mirrors_item.html:11
-#: ../templates/community/my/dashboard_pages_page_navigation.html:13
-#: ../templates/community/my/dashboard_pinboard_element_inner.html:19
-msgid "Delete"
-msgstr "Esborra"
-
-#: ../templates/comment_header.html:22
-#: ../templates/packages/ugc_doc_handling_links.html:17
-#: ../templates/community/my/dashboard_mirrors_item.html:9
-#: ../templates/community/my/dashboard_pages_page_navigation.html:12
-msgid "Edit"
-msgstr "Edita"
-
-#: ../templates/comment.html:17
-msgid "Comment error"
-msgstr "Comentari d'error"
-
-#: ../templates/comments_page.html:3
-msgid "comments"
-msgstr "comentaris"
-
-#: ../templates/do_comment_page.html:5
-msgid "Write your new comment below"
-msgstr "Escriviu els vostres comentaris a baix"
-
-#: ../templates/do_comment_page.html:12
-msgid "You need to be logged in to post a comment"
-msgstr "Us heu d'acreditar per poder enviar un comentari"
-
-#: ../templates/donate_content.html:1
-msgid "This is what we need to cover our daily duties"
-msgstr ""
-
-#: ../templates/donate_content.html:10
-msgid ""
-"We would like to thank everybody who has donated in the past 2010. We all "
-"hope to see you back supporting us in this 2011."
-msgstr ""
-
-#: ../templates/email_activation_successful.html:18
+#: ../templates/email_activation_successful.html:17
 msgid "Your E-mail is now active"
 msgstr "La vostra adreça de correu està activada"
 
@@ -780,16 +629,11 @@ msgstr "Les marques comercials són dels seus respectius propietaris."
 msgid "Sabayon Linux Five Oh!"
 msgstr "Sabayon Linux Five Oh!"
 
-#: ../templates/ip_banned.html:2
-msgid "Your IP address has been banned for-EVA! Poor you... POOR you!"
-msgstr ""
-"La vostra adreça IP d'ha bandejat per sempre! Pobre de tu... POBRE de tu!"
-
 #: ../templates/loginbox_inner.html:4
 msgid "Entropy Web Dashboard Login"
 msgstr "Accés al tauler web d'Entropy"
 
-#: ../templates/loginbox_inner.html:11 ../templates/login.html:18
+#: ../templates/loginbox_inner.html:11 ../templates/login.html:17
 msgid "New user?"
 msgstr "Sou nou?"
 
@@ -797,23 +641,23 @@ msgstr "Sou nou?"
 msgid "What is all this ?"
 msgstr "Què és tot això?"
 
-#: ../templates/loginbox_inner.html:24 ../templates/login.html:23
+#: ../templates/loginbox_inner.html:24 ../templates/login.html:22
 msgid "Login error"
 msgstr "Error d'accés"
 
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:89
-#: ../templates/community/my/stats.html:83
-#: ../templates/community/users/public_profile.html:217
+#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
+#: ../templates/community/my/stats.html:82
+#: ../templates/community/users/public_profile.html:216
 msgid "Comments"
 msgstr "Comentaris"
 
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:89
+#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
 msgid "Docs"
 msgstr "Documents"
 
-#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:91
-#: ../templates/community/my/stats.html:53
-#: ../templates/community/users/public_profile.html:189
+#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:83
+#: ../templates/community/my/stats.html:52
+#: ../templates/community/users/public_profile.html:188
 msgid "Votes"
 msgstr "Vots"
 
@@ -830,126 +674,38 @@ msgstr "Desconnecta'm"
 msgid "My Entropy"
 msgstr "El meu Entropy"
 
-#: ../templates/loginbox_inner.html:60
-msgid "My Sabayon"
-msgstr "El meu Sabayon"
+#: ../templates/loginbox_inner.html:58
+#, fuzzy
+msgid "Community Menu"
+msgstr "Inici de la comunitat"
 
-#: ../templates/loginbox_inner.html:63
-msgid "My Dashboard"
-msgstr "El meu tauler"
-
-#: ../templates/loginbox_inner.html:66
-msgid "My Pastebin"
-msgstr "El meu pastebin"
-
-#: ../templates/loginbox_inner.html:79
-#: ../templates/community/my/stats.html:138
-#: ../templates/community/users/public_profile.html:272
+#: ../templates/loginbox_inner.html:71
+#: ../templates/community/my/stats.html:137
+#: ../templates/community/users/public_profile.html:271
 msgid "points"
 msgstr "punts"
 
-#: ../templates/loginbox_inner.html:83
+#: ../templates/loginbox_inner.html:75
 msgid "My Comments"
 msgstr "Els meus comentaris"
 
-#: ../templates/loginbox_inner.html:83
+#: ../templates/loginbox_inner.html:75
 msgid "My Docs"
 msgstr "Els meus documents"
 
-#: ../templates/loginbox_inner.html:84
+#: ../templates/loginbox_inner.html:76
 msgid "My Votes"
 msgstr "Els meus vots"
 
-#: ../templates/loginbox_inner.html:84
+#: ../templates/loginbox_inner.html:76
 msgid "My Avg"
 msgstr "Les meves mitjanes"
 
-#: ../templates/menubox.html:5
-msgid "Communicate"
-msgstr "Comunicació"
-
-#: ../templates/menubox.html:8
-msgid "Organisation"
-msgstr "Organització"
-
-#: ../templates/menubox.html:11
-msgid "Planet"
-msgstr "Planeta"
-
-#: ../templates/menubox.html:14
-msgid "Forum"
-msgstr "Fòrum"
-
-#: ../templates/menubox.html:17
-msgid "Wiki"
-msgstr "Wiki"
-
-#: ../templates/menubox.html:20
-msgid "Web Chat"
-msgstr "Xat web"
-
-#: ../templates/menubox.html:23
-msgid "Press Documentation"
-msgstr "Documentació de premsa"
-
-#: ../templates/menubox.html:26
-msgid "Sabayon Roadmap"
-msgstr "Full de ruta"
-
-#: ../templates/menubox.html:31
-msgid "Get involved"
-msgstr "Involucreu-vos"
-
-#: ../templates/menubox.html:34
-msgid "PixPastebin"
-msgstr "PixPastebin"
-
-#: ../templates/menubox.html:37
-msgid "Community"
-msgstr "Comunitat"
-
-#: ../templates/menubox.html:40
-msgid "Packages and UGC"
-msgstr "Paquets i CGU"
-
-#: ../templates/menubox.html:43
-#, fuzzy
-msgid "Entropy API documentation"
-msgstr "Documentació de premsa"
-
-#: ../templates/menubox.html:46
-msgid "Report a bug"
-msgstr "Informeu d'errors"
-
-#: ../templates/menubox.html:49
-msgid "Browse Git"
-msgstr "Navegació Git"
-
-#: ../templates/menubox.html:52
-msgid "Mailing Lists"
-msgstr "Llistes de correu"
-
-#: ../templates/menubox.html:55
-msgid "Funding"
-msgstr "Fons"
-
-#: ../templates/menubox.html:60
-msgid "Enjoy Sabayon"
-msgstr "Divertiu-vos"
-
-#: ../templates/menubox.html:63 ../templates/community/my/dashboard.html:33
-msgid "Screenshots"
-msgstr "Captures de pantalla"
-
-#: ../templates/menubox.html:69
-msgid "CD/DVD Distributors"
-msgstr "Distribuïdors de CD/DVDs"
-
-#: ../templates/page_error.html:29
+#: ../templates/page_error.html:28
 msgid "Houston, we've got a problem!"
 msgstr "Houston, tenim problemes!"
 
-#: ../templates/page_error.html:32
+#: ../templates/page_error.html:31
 #, c-format
 msgid ""
 "Probably the page you are looking for <b>does not exist</b> anymore. You can "
@@ -960,51 +716,31 @@ msgstr ""
 "els <u>aliens</u>. Ho sentim. Perquè no torneu a la <a href=\"%s\">pàgina "
 "d'inici</a>?"
 
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "successfully"
-msgstr "correctament"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Preview"
-msgstr "Vista prèvia"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "here"
-msgstr "aquí"
-
-#: ../templates/page_insert_success.html:1
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Reload this page"
-msgstr "Torna a carregar la pàgina"
-
-#: ../templates/page_template.html:18
+#: ../templates/page_template.html:17
 msgid "text goes here"
 msgstr "el text va aquí"
 
-#: ../templates/password_activation_successful.html:18
+#: ../templates/password_activation_successful.html:17
 msgid "Your Password is now updated"
 msgstr "La vostra contrasenya s'ha actualitzat"
 
-#: ../templates/password_activation_successful.html:22
+#: ../templates/password_activation_successful.html:21
 msgid "confirmation code"
 msgstr "codi de confirmació"
 
-#: ../templates/password_activation_successful.html:23
+#: ../templates/password_activation_successful.html:22
 msgid "validation id"
 msgstr "id de validació"
 
-#: ../templates/password_activation_successful.html:24
+#: ../templates/password_activation_successful.html:23
 msgid "user id"
 msgstr "id d'usuari"
 
-#: ../templates/register.html:22
+#: ../templates/register.html:21
 msgid "(Sabayon leader)"
 msgstr "(Cap de Sabayon)"
 
-#: ../templates/register.html:27
+#: ../templates/register.html:26
 msgid ""
 "<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your own "
 "<b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and file "
@@ -1022,7 +758,7 @@ msgstr ""
 "espai. Anomenem això: <b>Sabayon</b>, <i>la distribució \"2.0\" (dos-punt-oh)"
 "</i>"
 
-#: ../templates/register.html:30
+#: ../templates/register.html:29
 msgid ""
 "Please note that you will need to enter a valid e-mail address before your "
 "account is activated. You will receive an e-mail at the address you provide "
@@ -1101,32 +837,6 @@ msgstr ""
 msgid "<a href='%s'>Click here</a> to come back to the source page"
 msgstr "<a href='%s'>Feu clic aquí</a> per tornar a la pàgina de codi font"
 
-#: ../templates/show_page.html:25
-#, c-format
-msgid "Publisher: <b>%s</b>, around <i>%s</i>"
-msgstr "Publicat per: <b>%s</b>, pels vols de <i>%s</i>"
-
-#: ../templates/show_page.html:38
-#: ../templates/community/my/dashboard_pages_edit_inner.html:8
-msgid "Introduction"
-msgstr "Introducció"
-
-#: ../templates/show_page.html:47
-msgid "Thank you for voting !"
-msgstr "Gràcies per votar !"
-
-#: ../templates/show_page.html:49
-msgid "Sorreey, it seems you already voted"
-msgstr "Ho sento, sembla que ja heu votat"
-
-#: ../templates/show_page.html:51
-msgid "Try again tomorrow, or the day after"
-msgstr "Torneu-ho a intentar demà"
-
-#: ../templates/show_page_navigation.html:4
-msgid "Pages navigation"
-msgstr "Navegació per pàgines"
-
 #: ../templates/packages/advisories_desc.html:1
 msgid ""
 "Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
@@ -1147,19 +857,21 @@ msgstr ""
 msgid "full feed here"
 msgstr "Registre complet aquí"
 
-#: ../templates/packages/advisories.html:3 ../templates/packages/menu.html:2
+#: ../templates/packages/advisories_inner.html:3
+#: ../templates/packages/menu.html:2
 msgid "Security Advisories"
 msgstr "Avisos de Seguretat"
 
-#: ../templates/packages/advisories.html:10
+#: ../templates/packages/advisories_inner.html:10
 msgid "You can get the complete list on the"
 msgstr "Podeu obtenir la llista sencera de"
 
-#: ../templates/packages/advisories.html:10
+#: ../templates/packages/advisories_inner.html:10
 msgid "Gentoo Linux Security Advisories feed"
 msgstr "l'alimentador de Avisos de Seguretat de Gentoo Linux"
 
-#: ../templates/packages/categories.html:3 ../templates/packages/menu.html:2
+#: ../templates/packages/categories_inner.html:3
+#: ../templates/packages/menu.html:2
 msgid "Categories"
 msgstr "Categories"
 
@@ -1182,8 +894,6 @@ msgid "Add documents <b>gain scores</b> !"
 msgstr "afegiu documents <b>guanyeu punts</b>!"
 
 #: ../templates/packages/do_document_page.html:19
-#: ../templates/community/my/dashboard_pinboard_edit.html:4
-#: ../templates/community/my/dashboard_screenshots_add.html:5
 msgid "Title"
 msgstr "Títol"
 
@@ -1192,7 +902,6 @@ msgid "Length must be between 10 and 160"
 msgstr "La longitud ha de ser entre 10 i 160"
 
 #: ../templates/packages/do_document_page.html:35
-#: ../templates/community/my/dashboard_pinboard_edit.html:14
 msgid "Description"
 msgstr "descripció"
 
@@ -1211,8 +920,6 @@ msgid "Space separated, minimum length: 4 chars each"
 msgstr "Separades per espais, longitud mínima: 4 caracters cadascuna"
 
 #: ../templates/packages/do_document_page.html:58
-#: ../templates/community/my/dashboard_pages_new.html:12
-#: ../templates/pastebin/pastebin_submit_header.html:4
 msgid "Document type"
 msgstr "Tipus de document"
 
@@ -1239,6 +946,14 @@ msgstr "Seleccioneu el fitxer que voleu pujar"
 #: ../templates/packages/do_document_page.html:120
 msgid "You need to be logged in to add documents"
 msgstr "Heu d'estar acreditats per pujar documents"
+
+#: ../templates/packages/do_document_page.html:121
+msgid "Login?"
+msgstr "Accés?"
+
+#: ../templates/packages/do_document_page.html:121
+msgid "Register?"
+msgstr "Registra?"
 
 #: ../templates/packages/extrainfo.html:19
 #: ../templates/packages/searchparams_args.html:19
@@ -1272,67 +987,83 @@ msgid "Slot"
 msgstr "Slot"
 
 #: ../templates/packages/extrainfo.html:103
-msgid "Dependencies"
+#, fuzzy
+msgid "Runtime dependencies"
 msgstr "Dependències"
 
 #: ../templates/packages/extrainfo.html:123
+#, fuzzy
+msgid "Build dependencies"
+msgstr "Dependències"
+
+#: ../templates/packages/extrainfo.html:143
+#, fuzzy
+msgid "Post dependencies"
+msgstr "Dependències"
+
+#: ../templates/packages/extrainfo.html:163
+#, fuzzy
+msgid "Manual dependencies"
+msgstr "Dependències"
+
+#: ../templates/packages/extrainfo.html:183
 msgid "Conflicts"
 msgstr "Conflictes"
 
-#: ../templates/packages/extrainfo.html:140
+#: ../templates/packages/extrainfo.html:200
 msgid "Required by"
 msgstr "Requerit per"
 
-#: ../templates/packages/extrainfo.html:145
+#: ../templates/packages/extrainfo.html:205
 msgid "view packages list"
 msgstr "veure la llista de paquets"
 
-#: ../templates/packages/extrainfo.html:158
+#: ../templates/packages/extrainfo.html:218
 msgid "homepage"
 msgstr "pàgina principal"
 
-#: ../templates/packages/extrainfo.html:167
+#: ../templates/packages/extrainfo.html:227
 msgid "License"
 msgstr "Llicència"
 
-#: ../templates/packages/extrainfo.html:180
+#: ../templates/packages/extrainfo.html:240
 msgid "CHOST"
 msgstr "CHOST"
 
-#: ../templates/packages/extrainfo.html:190
+#: ../templates/packages/extrainfo.html:250
 msgid "CFLAGS"
 msgstr "CFLAGS"
 
-#: ../templates/packages/extrainfo.html:201
+#: ../templates/packages/extrainfo.html:261
 msgid "USE flags"
 msgstr "marcadors USE"
 
-#: ../templates/packages/extrainfo.html:215
+#: ../templates/packages/extrainfo.html:275
 msgid "Content"
 msgstr "Contingut"
 
-#: ../templates/packages/extrainfo.html:220
+#: ../templates/packages/extrainfo.html:280
 msgid "View content"
 msgstr "Mostra el contingut"
 
-#: ../templates/packages/extrainfo.html:229
+#: ../templates/packages/extrainfo.html:289
 msgid "Space required"
 msgstr "Espai necessari"
 
-#: ../templates/packages/extrainfo.html:239
+#: ../templates/packages/extrainfo.html:299
 #: ../templates/packages/shortinfo.html:3
 msgid "Checksum"
 msgstr "Suma de verificació"
 
-#: ../templates/packages/extrainfo.html:249
+#: ../templates/packages/extrainfo.html:309
 msgid "Creation date"
 msgstr "Data de creació"
 
-#: ../templates/packages/extrainfo.html:259
+#: ../templates/packages/extrainfo.html:319
 msgid "Security"
 msgstr "Seguretat"
 
-#: ../templates/packages/extrainfo.html:264
+#: ../templates/packages/extrainfo.html:324
 msgid "show security advisories"
 msgstr "mostra els avisos de seguretat"
 
@@ -1352,7 +1083,8 @@ msgstr "Contingut Generat per l'Usuari"
 msgid "Statistics"
 msgstr "Estadístiques"
 
-#: ../templates/packages/menu.html:2 ../templates/packages/releases.html:3
+#: ../templates/packages/menu.html:2
+#: ../templates/packages/releases_inner.html:3
 msgid "Releases"
 msgstr "Revisions"
 
@@ -1374,7 +1106,7 @@ msgid "Branch"
 msgstr "Branca"
 
 #: ../templates/packages/searchparams_args.html:43
-#: ../templates/packages/stats.html:14
+#: ../templates/packages/stats_inner.html:14
 msgid "Architecture"
 msgstr "Arquitectura"
 
@@ -1432,28 +1164,28 @@ msgstr "Esteu veient"
 msgid "User Generated Content"
 msgstr "Contingut Generat per Usuaris"
 
-#: ../templates/packages/stats.html:3
+#: ../templates/packages/stats_inner.html:3
 msgid "Current status"
 msgstr "Estat actual"
 
-#: ../templates/packages/stats.html:22
+#: ../templates/packages/stats_inner.html:22
 msgid "Branches"
 msgstr "Branques"
 
-#: ../templates/packages/stats.html:30
+#: ../templates/packages/stats_inner.html:30
 msgid "Number of packages"
 msgstr "Nombre de paquets"
 
-#: ../templates/packages/stats.html:38
+#: ../templates/packages/stats_inner.html:38
 msgid "Number of categories"
 msgstr "Nombre de categories"
 
-#: ../templates/packages/stats.html:46
-#: ../templates/community/users/public_profile.html:239
+#: ../templates/packages/stats_inner.html:46
+#: ../templates/community/users/public_profile.html:238
 msgid "Number of files"
 msgstr "Nombre de fitxers"
 
-#: ../templates/packages/stats.html:54
+#: ../templates/packages/stats_inner.html:54
 msgid "Overall size"
 msgstr "Mida total"
 
@@ -1461,6 +1193,14 @@ msgstr "Mida total"
 #: ../templates/packages/ugc_doc_desc_keywords.html:6
 msgid "no keywords"
 msgstr "no paraules clau"
+
+#: ../templates/packages/ugc_doc_handling_links.html:15
+msgid "Delete"
+msgstr "Esborra"
+
+#: ../templates/packages/ugc_doc_handling_links.html:17
+msgid "Edit"
+msgstr "Edita"
 
 #: ../templates/packages/ugc_doc_header.html:4
 #, c-format
@@ -1475,14 +1215,15 @@ msgstr "Puntuació de l'usuari"
 msgid "Size"
 msgstr "Mida"
 
+#: ../templates/packages/ugc_generic_file.html:4
+msgid "Download"
+msgstr "Baixada"
+
 #: ../templates/packages/ugc_search_item.html:21
-#: ../templates/community/my/dashboard_pinboard_item.html:14
-#: ../templates/pastebin/show_pastie_header.html:7
 msgid "by"
 msgstr "per"
 
 #: ../templates/packages/ugc_search_item.html:21
-#: ../templates/community/my/dashboard_pinboard_item.html:14
 msgid "on"
 msgstr "el"
 
@@ -1500,48 +1241,14 @@ msgid "Seeking %s of %s"
 msgstr "S'estan cercant %s de %s"
 
 #: ../templates/packages/ugc_shortinfo.html:11
-#: ../templates/community/my/stats.html:73
-#: ../templates/community/users/public_profile.html:207
+#: ../templates/community/my/stats.html:72
+#: ../templates/community/users/public_profile.html:206
 msgid "Documents"
 msgstr "Documents"
 
 #: ../templates/packages/voted.html:12
 msgid "Vote error"
 msgstr "Error de vot"
-
-#: ../templates/donate/thanks.html:16
-msgid "**Hugs** **Hugs** **Hugs**"
-msgstr "**ei** **ei** **ei**"
-
-#: ../templates/donate/thanks.html:17
-msgid ""
-"Thanks a lot, we appreciate your effort. Your donation will help us keeping "
-"up the good work. We are sure you want to get back to the <a href=\"/"
-"\">Front Page</a> now"
-msgstr ""
-"Gràcies, apreciem el vostre esforç. La vostra donació ens ajudarà a "
-"continuar la feina. Estem segurs que ara voleu tornar a la <a href=\"/"
-"\">Pàgina d'inici</a>"
-
-#: ../templates/donate/thanks.html:18
-msgid ":-* kisses kisses kisses"
-msgstr ":-* petons petons petons"
-
-#: ../templates/polls/poll_options_results.html:33
-msgid "Total votes"
-msgstr "Vots totals"
-
-#: ../templates/polls/poll_options_results.html:35
-msgid "not voted yet?"
-msgstr "no heu votat encara?"
-
-#: ../templates/polls/poll_voting_form_small.html:10
-msgid "You, liar!"
-msgstr "Mentider!"
-
-#: ../templates/polls/poll_voting_form_small.html:24
-msgid "See results"
-msgstr "Veure els resultats"
 
 #: ../templates/community/home.html:7
 msgid "Being part of <b>our Community</b> is what make us proud of ourselves"
@@ -1618,457 +1325,114 @@ msgstr "hi ha"
 msgid "users... and <b>growing</b>"
 msgstr "usuaris... i <b>creixent</b>"
 
-#: ../templates/community/my/dashboard.html:27
-#: ../templates/community/my/dashboard_profile_tab.html:1
-msgid "Profile"
-msgstr "Perfil"
-
-#: ../templates/community/my/dashboard.html:28
-#: ../templates/community/my/dashboard_pinboard_tab.html:1
-msgid "Pinboard"
-msgstr "Tauler de notícies"
-
-#: ../templates/community/my/dashboard.html:29
-#: ../templates/community/my/dashboard.html:45
-msgid "Messages"
-msgstr "Missatges"
-
-#: ../templates/community/my/dashboard.html:31
-#: ../templates/community/my/dashboard_pages_tab.html:1
-msgid "News / Pages"
-msgstr "Notícies / Pàgines"
-
-#: ../templates/community/my/dashboard.html:32
-#: ../templates/community/my/dashboard_mirrors_tab.html:1
-msgid "Mirrors"
-msgstr "Rèpliques"
-
-#: ../templates/community/my/dashboard.html:34
-msgid "Polls"
-msgstr "Enquestes"
-
-#: ../templates/community/my/dashboard.html:47
-msgid "Not implemented yet. Sorrey!"
-msgstr "Encara no està implementat!"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:12
-msgid "Mirror name"
-msgstr "Nom de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:14
-msgid "Do I have to explain the concept?"
-msgstr "Hem d'explicar el concepte?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:22
-msgid "Mirror speed"
-msgstr "Velocitat de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:24
-msgid "Again, don't be dumb, why are you reading here?"
-msgstr "No sigueu rucs, què voleu llegir aquí?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:40
-msgid "Mirror country"
-msgstr "País de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:42
-msgid "Where is it located?"
-msgstr "On està ubicat?"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:58
-msgid "Notes"
-msgstr "Notes"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:60
-msgid "Important (internal) notes"
-msgstr "Notes importants (internes)"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:69
-msgid "Mirror Link #1"
-msgstr "Enllaç #1 de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:71
-#: ../templates/community/my/dashboard_mirrors_edit.html:81
-#: ../templates/community/my/dashboard_mirrors_edit.html:91
-msgid "Give me an URL"
-msgstr "Escriviu una URL"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:79
-msgid "Mirror Link #2"
-msgstr "Enllaç #2 de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_edit.html:89
-msgid "Mirror Link #3"
-msgstr "Enllaç #3 de la rèplica"
-
-#: ../templates/community/my/dashboard_mirrors_item.html:35
-msgid "Add link"
-msgstr "Afegiu un enllaç"
-
-#: ../templates/community/my/dashboard_mirrors_link_item.html:4
-msgid "Delete link"
-msgstr "Esborreu un enllaç"
-
-#: ../templates/community/my/dashboard_mirrors_tab.html:3
-msgid "Ok, once again, you are an admin. This is the Download Mirrors manager"
-msgstr ""
-"D'acord, de nou, sou un administrador. Això és el gestor de Rèpliques de "
-"Baixades"
-
-#: ../templates/community/my/dashboard_mirrors_tab.html:15
-msgid "New Mirror"
-msgstr "Nova rèplica"
-
-#: ../templates/community/my/dashboard_pages_add_document_link.html:13
-#: ../templates/community/my/dashboard_pages_add_document_link.html:15
-msgid "One more page"
-msgstr "Una altra pàgina"
-
-#: ../templates/community/my/dashboard_pages_edit_inner.html:18
-msgid "Body"
-msgstr "Cos"
-
-#: ../templates/community/my/dashboard_pages_edit_inner.html:29
-msgid "Tags"
-msgstr "Etiquetes"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-msgid "Type"
-msgstr "Tipus"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:15
-msgid "Published on"
-msgstr "Publicat el"
-
-#: ../templates/community/my/dashboard_pages_generic_header.html:16
-msgid "Actions"
-msgstr "Accions"
-
-#: ../templates/community/my/dashboard_pages_new.html:36
-msgid "Page state"
-msgstr "Estat de la pàgina"
-
-#: ../templates/community/my/dashboard_pages_page_item.html:6
-msgid "Reload pages navigation"
-msgstr "Carrega de nou la navegació de la pàgina"
-
-#: ../templates/community/my/dashboard_pages_poll_option_edit.html:6
-msgid "Rename"
-msgstr "Anomena de nou"
-
-#: ../templates/community/my/dashboard_pages_poll_option_edit.html:9
-msgid "Remove"
-msgstr "Elimina"
-
-#: ../templates/community/my/dashboard_pages_tab.html:3
-msgid ""
-"Ok, you are an admin. So, you know what to do here. All the bells and "
-"whistles, like someone said"
-msgstr ""
-"D'acord, són un administrador. sabeu què heu de fer aquí. Tota la "
-"parafernàlia, com algú va dir"
-
-#: ../templates/community/my/dashboard_pages_tab.html:16
-msgid "New Document"
-msgstr "Nou document"
-
-#: ../templates/community/my/dashboard_pinboard_edit.html:6
-msgid "This is the Pin title"
-msgstr "Això és el títol del Pin"
-
-#: ../templates/community/my/dashboard_pinboard_edit.html:16
-msgid "Write a brief description"
-msgstr "Escriviu una minsa descripció"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:5
-#: ../templates/community/my/dashboard_polls_tab.html:21
-msgid "Note"
-msgstr "Nota"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:7
-msgid "Write your note here"
-msgstr "Escriviu l'anotació aquí"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:15
-msgid "Status"
-msgstr "Estat"
-
-#: ../templates/community/my/dashboard_pinboard_element_edit.html:17
-msgid "Come on, you are lazy"
-msgstr "Vinga, sou un manta"
-
-#: ../templates/community/my/dashboard_pinboard_element_inner.html:17
-msgid "Show"
-msgstr "Mostra"
-
-#: ../templates/community/my/dashboard_pinboard_item.html:125
-msgid "Share this Pin"
-msgstr "Comparteix aquest Pin"
-
-#: ../templates/community/my/dashboard_pinboard_item.html:149
-msgid "Active shares"
-msgstr "Compartits actius"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:3
-msgid ""
-"Welcome to your personal Pinboard. Write your thoughts here. Organize your "
-"tasks. Share with friends."
-msgstr ""
-"Benvingut al vostre tauler de notícies personal. escriviu els vostres "
-"pensaments aquí. Organitzeu-vos les tasques. Compartiu amb amics."
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:15
-msgid "My Pins"
-msgstr "Els meus Pins"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:18
-msgid "New Pin"
-msgstr "Nou Pin"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:49
-msgid ""
-"No elements here. You can't blame <u>aliens</u>. You might want to add "
-"something someday, huh?"
-msgstr ""
-"No hi ha elements. No podeu culpar els <u>aliens</u>. Potser voleu afegir-hi "
-"alguna cosa, algun dia?"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:54
-msgid "Connected Pins"
-msgstr "Pins connectats"
-
-#: ../templates/community/my/dashboard_pinboard_tab.html:68
-msgid ""
-"No elements here. Nobody loves you. Errr.. I am joking! We love you! No, you "
-"can't blame <u>aliens</u>, again"
-msgstr ""
-"No hi ha elements aquí. Ningú us estima. Errr... Estem fent broma! Us "
-"estimem! No, no podeu culpar els <u>aliens</u> altra vegada"
-
-#: ../templates/community/my/dashboard_polls_tab.html:3
-msgid "Polls management, you can enable how many you want. Do et"
-msgstr "Gestió d'enquestes, en podeu activar tantes com vulgueu. Feu-ho"
-
-#: ../templates/community/my/dashboard_polls_tab.html:16
-msgid "New Poll"
-msgstr "Nova enquesta"
-
-#: ../templates/community/my/dashboard_polls_tab.html:21
-msgid ""
-"the poll will start with no options and disabled. You must create it first"
-msgstr ""
-"l'enquesta començarà sense opcions i desactivada. L'heu de crear primer"
-
-#: ../templates/community/my/dashboard_profile_tab.html:3
-msgid ""
-"Of course, this is your profile and the place you can change how you are "
-"shown to the World. Style matters, remember this"
-msgstr ""
-"Efectivament, aquest és el vostre perfil i l'espai que podeu canviar per "
-"mostrar-vos al món. L'estil compta, recordeu-ho"
-
-#: ../templates/community/my/dashboard_profile_tab.html:49
-msgid "E-mail configuration"
-msgstr "Configuració del correu"
-
-#: ../templates/community/my/dashboard_profile_tab.html:54
-msgid "Your e-mail"
-msgstr "La vostra adreça de correu electrònic"
-
-#: ../templates/community/my/dashboard_profile_tab.html:62
-msgid "E-mail confirm"
-msgstr "Confirmació de l'adreça"
-
-#: ../templates/community/my/dashboard_profile_tab.html:64
-msgid "Confirm your e-mail"
-msgstr "Confirmeu la vostra adreça de correu electrònic"
-
-#: ../templates/community/my/dashboard_profile_tab.html:76
-msgid "Password configuration"
-msgstr "Configuració de la contrasenya"
-
-#: ../templates/community/my/dashboard_profile_tab.html:79
-msgid "Current Password"
-msgstr "Contrasenya actual"
-
-#: ../templates/community/my/dashboard_profile_tab.html:81
-msgid "Your current password"
-msgstr "La vostra contrasenya actual"
-
-#: ../templates/community/my/dashboard_profile_tab.html:89
-msgid "New password"
-msgstr "Nova contrasenya"
-
-#: ../templates/community/my/dashboard_profile_tab.html:91
-msgid "Type your new password"
-msgstr "Escriviu la vostra contrasenya nova"
-
-#: ../templates/community/my/dashboard_profile_tab.html:99
-msgid "Repeat new password"
-msgstr "Repetiu la nova contrasenya"
-
-#: ../templates/community/my/dashboard_profile_tab.html:101
-msgid "Type again your new password"
-msgstr "escriviu la vostra contrasenya de nou"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:7
-msgid "Will be used as directory name"
-msgstr "S'usarà com a nom del directori"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:15
-msgid "Compressed archive"
-msgstr "Fitxer comprimit"
-
-#: ../templates/community/my/dashboard_screenshots_add.html:17
-msgid "Valid are .zip, .tar.bz2, .tar.gz. Inside: root dir and just files"
-msgstr ""
-"Són vàlids .zip, .tar.bz2, .tar.gz. dins del directori root i només fitxers"
-
-#: ../templates/community/my/dashboard_screenshots_tab.html:3
-msgid "Ok, good you are an admin. This is the Screenshots manager"
-msgstr ""
-"D'acord, sou un administrador. Això és el gestor de captures de pantalla"
-
-#: ../templates/community/my/dashboard_screenshots_tab.html:14
-msgid "New Screenshots"
-msgstr "Noves captures de pantalla"
-
-#: ../templates/community/my/pinboard_share_success.html:16
-msgid "Ok <b>ladies</b> and <b>gentlemen</b>. We have a <u>winner</u> here!"
-msgstr ""
-"D'acord, <b>senyors</b> i <b>senyores</b>. Tenim un <u>guanyador</u> aquí!"
-
-#: ../templates/community/my/pinboard_share_success.html:18
-#, c-format
-msgid "You are now connected with %s's Pinboard titled \"<i>%s</i>\"."
-msgstr "Esteu connectat en el tauler de notícies de %s anomenat \"<i>%s</i>\"."
-
-#: ../templates/community/my/pinboard_share_success.html:19
-#, c-format
-msgid "Click %shere%s to get to your personal Dashboard and <b>have fun</b>."
-msgstr ""
-"Feu clic %saquí%s per accedir al vostre tauler de notícies personal i "
-"<b>passeu-ho bé</b>."
-
-#: ../templates/community/my/pinboard_share_success.html:22
-msgid "We are <b>sorry</b>, the System encountered an error"
-msgstr "Ho <b>sentim</b>, el sistema ha trobat un error"
-
-#: ../templates/community/my/pinboard_share_success.html:24
-msgid ""
-"Thus, <b>we cannot satisfy</b> your request. You can get to our <b><a "
-"href='/'>front page</a></b> and be happy anyway."
-msgstr ""
-"Tot i que <b>no podem satisfer</b> la vostra sol·licitud, podeu tornar a la "
-"<b><a href='/'>pàgina d'inici</a></b> i estar contents igualment."
-
-#: ../templates/community/my/pinboard_share_success.html:27
-msgid "...Beeee happy! Don't worry, beeeee happy!"
-msgstr "...Beeee happy! Don't worry, beeeee happy!"
-
-#: ../templates/community/my/stats.html:16
+#: ../templates/community/my/stats.html:15
 msgid ""
 "In this page you will find all your statistics regarding your Entropy/Web "
 "account"
 msgstr ""
 "Aquí trobareu les vostres estadístiques quant al vostre compte Entropy/Web"
 
-#: ../templates/community/my/stats.html:25
+#: ../templates/community/my/stats.html:24
 msgid "this is the name other people will reference you"
 msgstr "aquest és el nom amb el que us coneixerà l'altra gent"
 
-#: ../templates/community/my/stats.html:33
+#: ../templates/community/my/stats.html:32
 msgid "User id"
 msgstr "User id"
 
-#: ../templates/community/my/stats.html:35
+#: ../templates/community/my/stats.html:34
 msgid "this is your user account number"
 msgstr "aquest és el vostre número de compte"
 
-#: ../templates/community/my/stats.html:43
-#: ../templates/community/users/public_profile.html:179
+#: ../templates/community/my/stats.html:42
+#: ../templates/community/users/public_profile.html:178
 msgid "Entropy role"
 msgstr "rol d'Entropy"
 
-#: ../templates/community/my/stats.html:45
+#: ../templates/community/my/stats.html:44
 msgid "your role inside the Community"
 msgstr "el vostre rol dins de la Comunitat"
 
-#: ../templates/community/my/stats.html:55
+#: ../templates/community/my/stats.html:54
 msgid "number of times you voted"
 msgstr "número de vegades que heu votat"
 
-#: ../templates/community/my/stats.html:58
-#: ../templates/community/my/stats.html:88
-#: ../templates/community/my/stats.html:98
-#: ../templates/community/my/stats.html:108
-#: ../templates/community/my/stats.html:118
+#: ../templates/community/my/stats.html:57
+#: ../templates/community/my/stats.html:87
+#: ../templates/community/my/stats.html:97
+#: ../templates/community/my/stats.html:107
+#: ../templates/community/my/stats.html:117
 #, c-format
 msgid "weight: %s points each"
 msgstr "pes: %s punts cadascun"
 
-#: ../templates/community/my/stats.html:63
-#: ../templates/community/users/public_profile.html:199
+#: ../templates/community/my/stats.html:62
+#: ../templates/community/users/public_profile.html:198
 msgid "Vote average"
 msgstr "Mitjana de vot"
 
-#: ../templates/community/my/stats.html:65
+#: ../templates/community/my/stats.html:64
 msgid "this is kinda self explanatory"
 msgstr "això s'explica tot sol"
 
-#: ../templates/community/my/stats.html:75
+#: ../templates/community/my/stats.html:74
 msgid "how many documents you uploaded (comments,images,etc)"
 msgstr "quants documents heu pujat (comentaris,imatges,etc.)"
 
-#: ../templates/community/my/stats.html:85
+#: ../templates/community/my/stats.html:84
 msgid "how many comments you wrote"
 msgstr "quants comentaris heu escrit"
 
-#: ../templates/community/my/stats.html:93
-#: ../templates/community/users/public_profile.html:227
+#: ../templates/community/my/stats.html:92
+#: ../templates/community/users/public_profile.html:226
 msgid "Images"
 msgstr "Imatges"
 
-#: ../templates/community/my/stats.html:95
+#: ../templates/community/my/stats.html:94
 msgid "how many images you uploaded"
 msgstr "quantes imatges heu pujat"
 
-#: ../templates/community/my/stats.html:105
+#: ../templates/community/my/stats.html:104
 msgid "how many files you uploaded"
 msgstr "quants fitxers heu pujat"
 
-#: ../templates/community/my/stats.html:113
-#: ../templates/community/users/public_profile.html:247
+#: ../templates/community/my/stats.html:112
+#: ../templates/community/users/public_profile.html:246
 msgid "YouTube(tm) Videos"
 msgstr "Videos del YouTube(tm)"
 
-#: ../templates/community/my/stats.html:115
+#: ../templates/community/my/stats.html:114
 msgid "how many videos you uploaded"
 msgstr "quants videos heu pujat"
 
-#: ../templates/community/my/stats.html:123
-#: ../templates/community/users/public_profile.html:257
+#: ../templates/community/my/stats.html:122
+#: ../templates/community/users/public_profile.html:256
 msgid "Ranking"
 msgstr "Rànquing"
 
-#: ../templates/community/my/stats.html:125
+#: ../templates/community/my/stats.html:124
 msgid "how good you are in our Community"
 msgstr "Com sou de bons dins la Comunitat"
 
-#: ../templates/community/my/stats.html:128
-#: ../templates/community/users/public_profile.html:262
+#: ../templates/community/my/stats.html:127
+#: ../templates/community/users/public_profile.html:261
 msgid "position"
 msgstr "posició"
 
-#: ../templates/community/my/stats.html:135
+#: ../templates/community/my/stats.html:132
+#: ../templates/community/users/public_profile.html:266
+msgid "Score"
+msgstr "Puntuació"
+
+#: ../templates/community/my/stats.html:134
 msgid "your resulting Entropy score"
 msgstr "la vostra puntuació Entropy"
 
-#: ../templates/community/my/stats.html:144
+#: ../templates/community/my/stats.html:143
 msgid "Not logged in"
 msgstr "No us heu acreditat"
 
-#: ../templates/community/my/ugc.html:19
+#: ../templates/community/my/ugc.html:18
 msgid ""
 "In this page you will be able to browse through your submitted documents on "
 "all the repositories we host"
@@ -2076,119 +1440,119 @@ msgstr ""
 "Aquí podreu navegar per tots els documents enviats als repositoris que "
 "hostatgem"
 
-#: ../templates/community/my/ugc.html:59
+#: ../templates/community/my/ugc.html:58
 msgid "View"
 msgstr "Vista"
 
-#: ../templates/community/users/public_profile.html:26
+#: ../templates/community/users/public_profile.html:25
 msgid "This is just"
 msgstr "Aquest és en"
 
-#: ../templates/community/users/public_profile.html:26
+#: ../templates/community/users/public_profile.html:25
 msgid "hello !"
 msgstr "hola !"
 
-#: ../templates/community/users/public_profile.html:39
+#: ../templates/community/users/public_profile.html:38
 msgid "Just a nickname, what did you expect?"
 msgstr "Només un sobrenom, què esperàveu?"
 
-#: ../templates/community/users/public_profile.html:48
+#: ../templates/community/users/public_profile.html:47
 msgid "User identifier"
 msgstr "Identificador d'usuari"
 
-#: ../templates/community/users/public_profile.html:50
+#: ../templates/community/users/public_profile.html:49
 msgid "This is the account number"
 msgstr "això és el número de compte"
 
-#: ../templates/community/users/public_profile.html:59
+#: ../templates/community/users/public_profile.html:58
 msgid "Website role"
 msgstr "Rol a la web"
 
-#: ../templates/community/users/public_profile.html:61
+#: ../templates/community/users/public_profile.html:60
 msgid "User's role inside our Website"
 msgstr "Rol de l'usuari en la vostra web"
 
-#: ../templates/community/users/public_profile.html:71
+#: ../templates/community/users/public_profile.html:70
 msgid "Avatar"
 msgstr "Avatar"
 
-#: ../templates/community/users/public_profile.html:73
+#: ../templates/community/users/public_profile.html:72
 msgid "User's virtual Alter-Ego"
 msgstr "Alter-Ego virtual de l'usuari"
 
-#: ../templates/community/users/public_profile.html:85
+#: ../templates/community/users/public_profile.html:84
 msgid "User comes from..."
 msgstr "L'usuari ve de..."
 
-#: ../templates/community/users/public_profile.html:94
+#: ../templates/community/users/public_profile.html:93
 msgid "Age"
 msgstr "Edat"
 
-#: ../templates/community/users/public_profile.html:96
+#: ../templates/community/users/public_profile.html:95
 msgid "How many years are past, huh!"
 msgstr "Quants anys han passat, uf!"
 
-#: ../templates/community/users/public_profile.html:107
+#: ../templates/community/users/public_profile.html:106
 msgid "User's current job"
 msgstr "Feina actual de l'usuari"
 
-#: ../templates/community/users/public_profile.html:118
+#: ../templates/community/users/public_profile.html:117
 msgid "User's interests, kinda self explanatory"
 msgstr "Interessos de l'usuari, és autoexplicatiu"
 
-#: ../templates/community/users/public_profile.html:127
+#: ../templates/community/users/public_profile.html:126
 msgid "Contacts"
 msgstr "Contactes"
 
-#: ../templates/community/users/public_profile.html:129
+#: ../templates/community/users/public_profile.html:128
 msgid "User's E-mail and IM"
 msgstr "Correu electrònic i IM de l'usuari"
 
-#: ../templates/community/users/public_profile.html:159
+#: ../templates/community/users/public_profile.html:158
 msgid "User's Website"
 msgstr "Web de l'usuari"
 
-#: ../templates/community/users/public_profile.html:162
+#: ../templates/community/users/public_profile.html:161
 msgid "Click here to get there"
 msgstr "Feu clic aquí per accedir-hi"
 
-#: ../templates/community/users/public_profile.html:168
+#: ../templates/community/users/public_profile.html:167
 msgid "Groups"
 msgstr "Grups"
 
-#: ../templates/community/users/public_profile.html:170
+#: ../templates/community/users/public_profile.html:169
 msgid "Website groups user is in"
 msgstr "Grups en els que es troba l'usuari"
 
-#: ../templates/community/users/public_profile.html:181
+#: ../templates/community/users/public_profile.html:180
 msgid "User's role inside Entropy"
 msgstr "Rol de l'usuari dins de Entropy"
 
-#: ../templates/community/users/public_profile.html:191
+#: ../templates/community/users/public_profile.html:190
 msgid "Number of times the User voted"
 msgstr "Número de vegades que l'usuari ha votat"
 
-#: ../templates/community/users/public_profile.html:209
+#: ../templates/community/users/public_profile.html:208
 msgid "Total number of documents"
 msgstr "Número total de documents"
 
-#: ../templates/community/users/public_profile.html:219
+#: ../templates/community/users/public_profile.html:218
 msgid "Number of comments"
 msgstr "Número de comentaris"
 
-#: ../templates/community/users/public_profile.html:229
+#: ../templates/community/users/public_profile.html:228
 msgid "Number of images"
 msgstr "Número d'imatges"
 
-#: ../templates/community/users/public_profile.html:249
+#: ../templates/community/users/public_profile.html:248
 msgid "Number of videos belonging"
 msgstr "Número de videos"
 
-#: ../templates/community/users/public_profile.html:259
+#: ../templates/community/users/public_profile.html:258
 msgid "User rank inside our Community"
 msgstr "Rànquing d'usuari dins de la Comunitat"
 
-#: ../templates/community/users/public_profile.html:269
+#: ../templates/community/users/public_profile.html:268
 msgid "User's Community Score"
 msgstr "Puntuació d'usuari de la Comunitat"
 
@@ -2220,248 +1584,670 @@ msgstr "Punts i rànquing"
 msgid "No users found. Go out and blame cows"
 msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 
-#: ../templates/mirrors/mirror_insert_success.html:1
-msgid "Mirror"
-msgstr "Rèplica"
+#~ msgid "the cutest, free Operating System"
+#~ msgstr "el millor Sistema Operatiu lliure"
 
-#: ../templates/mirrors/show.html:23
-msgid ""
-"Sabayon, free of charge, batteries included and on your own Computer. What "
-"are you waiting for? <b>Select the location closer to you</b> and start "
-"downloading a new experience"
-msgstr ""
-"Sabayon, gratuït, amb bateries incloses i en el vostre ordinador. Ja "
-"tardeu... <b> Seleccioneu la ubicació més pròxima</b> i comenceu a gaudir "
-"d'una nova experiència"
+#~ msgid "as easy as an abacus, as fast as a segway"
+#~ msgstr "fàcil com un àbac, ràpid com un Segway"
 
-#: ../templates/mirrors/show.html:24
-msgid "No Internet? Slow Internet?"
-msgstr "No teniu internet? Connexió lenta?"
+#~ msgid "Be active"
+#~ msgstr "Estigues actiu"
 
-#: ../templates/mirrors/show.html:25
-msgid "Have a look at our <a href='#'>official online vendors list</a>"
-msgstr "Mireu la <a href='#'>llista en línia de venedors oficials</a>"
+#~ msgid "Join us"
+#~ msgstr "Uniu-vos"
 
-#: ../templates/mirrors/show.html:30
-msgid "Metalinks"
-msgstr "Metalink"
+#~ msgid "Administrative messages"
+#~ msgstr "Missatges administratius"
 
-#: ../templates/mirrors/show.html:31
-msgid ""
-"For people with faster Internet connections (DSL, Cable, Fiber), Metalink "
-"makes downloading easier, faster, and more reliable. If you're on an error "
-"prone connection, Metalinks with repair information can fix any errors you "
-"get in transfer. Most downloads probably don't max out your downstream "
-"bandwidth. Metalink will help"
-msgstr ""
-"Per gent amb connexions d'Internet ràpides (DSL, Cable, Fiber), Metalink us "
-"fa la baixada més senzilla, més ràpida i més fiable. Si teniu una connexió "
-"propensa a errors, Metalink amb informació de reparació pot solucionar "
-"problemes que tingueu en la transferència. La majoria de baixades "
-"probablement no ocupen tota la banda d'ampla de baixada. Metalink us ajudarà"
+#~ msgid "We are looking for funds, give us 2 minutes"
+#~ msgstr "Estem cercant fons, dóna'ns 2 minuts"
 
-#: ../templates/mirrors/show.html:31
-msgid "source"
-msgstr "origen"
+#~ msgid "Join Sabayon Linux on Facebook"
+#~ msgstr "Uniu-vos a Sabayon Linux en el Facebook"
 
-#: ../templates/mirrors/show.html:32
-msgid "Visit the official"
-msgstr "Visiteu la oficial"
+#~ msgid ""
+#~ "There is no way in the entire World we wouldn't had our Facebook Group! "
+#~ "Like it or not, we are there. So, what are you waiting for?"
+#~ msgstr ""
+#~ "Com no podia ser d'una altra manera, tenim el nostre grup al Facebook! Us "
+#~ "agradi o no, som a tot arreu. Doncs, què espereu?"
 
-#: ../templates/mirrors/show.html:32
-msgid "Sabayon Linux Metalinker Page"
-msgstr "Pàgina Metalinker Sabayon Linux"
+#, fuzzy
+#~ msgid "Sabayon 5.4 GNOME and KDE are HERE"
+#~ msgstr "Sabayon 5.o GNOME i KDE ja són AQUÍ</a>"
 
-#: ../templates/mirrors/show.html:38
-msgid "Bittorrent"
-msgstr "Bittorrent"
+#, fuzzy
+#~ msgid ""
+#~ "On the behalf of the Sabayon Linux team, we are pleased to announce that "
+#~ "the next big thing is here"
+#~ msgstr ""
+#~ "En representació de l'equip de Sabayon Linux, ens plau anunciar que <i>el "
+#~ "proper èxit</i> ha <b>arribat</b>"
 
-#: ../templates/mirrors/show.html:39
-msgid ""
-"Most people love it just because it makes your download fly. Now we have our "
-"Sabayon Linux Tracker"
-msgstr ""
-"A la majoria de gent li agrada perquè fa volar la vostra baixada. Ara tenim "
-"un seguidor Sabayon Linux"
+#~ msgid "Go get it"
+#~ msgstr "Aconseguiu-lo"
 
-#: ../templates/mirrors/show.html:40
-msgid "Visit the"
-msgstr "Visiteu la"
+#~ msgid "Distribution news"
+#~ msgstr "Notícies de la distribució"
 
-#: ../templates/mirrors/show.html:40
-msgid "Sabayon Linux Tracker Page"
-msgstr "Pàgina del seguidor Sabayon Linux"
+#~ msgid "Forum activity"
+#~ msgstr "Activitat del fòrum"
 
-#: ../templates/mirrors/show.html:46
-msgid "HTTP, FTP, RSYNC mirrors"
-msgstr "Rèpliques HTTP, FTP, RSYNC"
+#~ msgid "Planet activity"
+#~ msgstr "Activitat del planeta"
 
-#: ../templates/mirrors/show.html:47
-msgid ""
-"If you belong to the old generation or just want to use `wget` because it's "
-"the only download manager you trust. Here it is a list of official mirrors, "
-"alphabetically divided by countries"
-msgstr ""
-"Si sou de la vella escola o simplement voleu usar `wget` perquè és l'únic "
-"gestor de baixades en el que confieu, aquí teniu una llista de rèpliques "
-"oficials, dividides alfabèticament per països"
+#~ msgid "Code activity"
+#~ msgstr "Activitat del codi"
 
-#: ../templates/mirrors/show.html:77
-msgid "Subscribe your Mirror today"
-msgstr "Subscriviu la vostra rèplica avui"
+#~ msgid "Overlay activity"
+#~ msgstr "Activitat de l'Overlay"
 
-#: ../templates/mirrors/show.html:78
-msgid "Do you have spare bandwidth? Are you a mirror maintainer?"
-msgstr "Teniu ample de banda sobrant? Sou el mantenidor d'una rèplica?"
+#~ msgid "Edit your comment"
+#~ msgstr "Editeu el comentari"
 
-#: ../templates/mirrors/show.html:78
-msgid "Submit your request here"
-msgstr "Envieu la vostra sol·licitud aquí"
+#~ msgid "You need to be logged in to edit a comment"
+#~ msgstr "Heu d'acreditar-vos per poder editar un comentari"
 
-#: ../templates/pastebin/pastebin_disclaimer.html:2
-msgid "Read carefully"
-msgstr "Llegiu-ho atentament"
+#~ msgid "written by <b>%s</b>, around %s"
+#~ msgstr "escrit per <b>%s</b>, pels vols de %s"
 
-#: ../templates/pastebin/pastebin_disclaimer.html:2
-msgid ""
-"do not paste sensitive data, it is not protected, this means that other "
-"people can read it. Use this tool only for exchanging stuff in public "
-"virtual places such as IRC, Forums and so forth. Your data will be removed "
-"once expired, we cannot guarantee the storage of the content here. Your IP "
-"is logged and you are invited to respect any existing law. No spamming, No "
-"porn, nothing! Allright?"
-msgstr ""
-"no envieu dades sensibles, no està protegit de cap manera i això significa "
-"que tothom podrà llegir-ho. Useu aquesta eina només per intercanviar "
-"material en llocs virtuals com IRC o fòrums.Les vostres dades s'eliminaran "
-"quan hagin expirat, no us podem garantir l'emmagatzemament del contingut. es "
-"registra la vostra IP i us convidem a respectar totes les lleis. No feu "
-"spam, No envieu porno, res! D'acord?"
+#~ msgid "Comment error"
+#~ msgstr "Comentari d'error"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:7
-msgid "Latest Pasties"
-msgstr "Últims pasties"
+#~ msgid "comments"
+#~ msgstr "comentaris"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:10
-#: ../templates/pastebin/remove_pastie.html:28
-msgid "PixPastebin Home"
-msgstr "Inici de PixPastebin"
+#~ msgid "Write your new comment below"
+#~ msgstr "Escriviu els vostres comentaris a baix"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:25
-#: ../templates/pastebin/pastebin_latest_pasties.html:47
-msgid "No Pasties"
-msgstr "No hi ha pasties"
+#~ msgid "You need to be logged in to post a comment"
+#~ msgstr "Us heu d'acreditar per poder enviar un comentari"
 
-#: ../templates/pastebin/pastebin_latest_pasties.html:32
-msgid "My Latest"
-msgstr "Els meus últims"
+#~ msgid "Your IP address has been banned for-EVA! Poor you... POOR you!"
+#~ msgstr ""
+#~ "La vostra adreça IP d'ha bandejat per sempre! Pobre de tu... POBRE de tu!"
 
-#: ../templates/pastebin/pastebin_submit_body.html:19
-msgid ""
-"Choose <span id=\"pastebin-submit-type-name\">a file</span> and get ready to "
-"paste!"
-msgstr ""
-"Escolliu <span id=\"pastebin-submit-type-name\">un fitxer</span> i prepareu-"
-"vos per enganxar-lo!"
+#~ msgid "My Sabayon"
+#~ msgstr "El meu Sabayon"
 
-#: ../templates/pastebin/pastebin_submit_body.html:20
-msgid "Important"
-msgstr "Important"
+#~ msgid "My Dashboard"
+#~ msgstr "El meu tauler"
 
-#: ../templates/pastebin/pastebin_submit_body.html:20
-msgid "you cannot send viruses, they are destroyed automatically"
-msgstr "no podeu enviar virus, es destrueixen automàticament"
+#~ msgid "My Pastebin"
+#~ msgstr "El meu pastebin"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:3
-msgid "Expiration"
-msgstr "Expiració"
+#~ msgid "Communicate"
+#~ msgstr "Comunicació"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:4
-msgid "One day"
-msgstr "Un dia"
+#~ msgid "Organisation"
+#~ msgstr "Organització"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:5
-msgid "One month"
-msgstr "Un mes"
+#~ msgid "Planet"
+#~ msgstr "Planeta"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:6
-msgid "One year"
-msgstr "Un any"
+#~ msgid "Forum"
+#~ msgstr "Fòrum"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:9
-#, c-format
-msgid "as <b>%s</b> and permissions:"
-msgstr "com <b>%s</b> i permisos:"
+#~ msgid "Wiki"
+#~ msgstr "Wiki"
 
-#: ../templates/pastebin/pastebin_submit_footer.html:42
-msgid "Wrong CAPTCHA !!! Take this, stupid spammer!"
-msgstr "CAPTCHA erroni!!! Entoma aquesta, spammer estúpid!"
+#~ msgid "Web Chat"
+#~ msgstr "Xat web"
 
-#: ../templates/pastebin/remove_pastie.html:21
-msgid "Ok fine, pastie removed"
-msgstr "D'acord, el pastie s'ha eliminat"
+#~ msgid "Press Documentation"
+#~ msgstr "Documentació de premsa"
 
-#: ../templates/pastebin/remove_pastie.html:23
-msgid "Message"
-msgstr "Missatge"
+#~ msgid "Sabayon Roadmap"
+#~ msgstr "Full de ruta"
 
-#: ../templates/pastebin/show_pastie_file.html:5
-#, c-format
-msgid "All the uploaded files are checked by %s"
-msgstr "Tots els missatges enviats es comproven amb %s"
+#~ msgid "Get involved"
+#~ msgstr "Involucreu-vos"
 
-#: ../templates/pastebin/show_pastie_header.html:7
-msgid "expires in"
-msgstr "expira en "
+#~ msgid "PixPastebin"
+#~ msgstr "PixPastebin"
 
-#: ../templates/pastebin/show_pastie_header.html:7
-msgid "days"
-msgstr "dies"
+#~ msgid "Community"
+#~ msgstr "Comunitat"
 
-#: ../templates/pastebin/show_pastie_image.html:16
-msgid "An image should pop up above this text"
-msgstr "Una imatge hauria d'aparèixer sobre aquest text"
+#~ msgid "Packages and UGC"
+#~ msgstr "Paquets i CGU"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:2
-msgid "Not found"
-msgstr "No s'ha trobat"
+#, fuzzy
+#~ msgid "Entropy API documentation"
+#~ msgstr "Documentació de premsa"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:4
-msgid "The pastie you are looking for is not available"
-msgstr "El pastie que esteu buscant no està disponible"
+#~ msgid "Report a bug"
+#~ msgstr "Informeu d'errors"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:4
-msgid "Paste something?"
-msgstr "Enganxa alguna cosa?"
+#~ msgid "Browse Git"
+#~ msgstr "Navegació Git"
 
-#: ../templates/pastebin/show_pastie_not_found_error.html:6
-#: ../templates/pastebin/show_pastie_submit_error.html:6
-msgid "Error message"
-msgstr "Missatge d'error"
+#~ msgid "Mailing Lists"
+#~ msgstr "Llistes de correu"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:2
-msgid "Oops, Error"
-msgstr "Up, Error"
+#~ msgid "Funding"
+#~ msgstr "Fons"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:4
-msgid "An error occured while pasting your data"
-msgstr "S'ha produït un error mentre s'enganxaven les dades"
+#~ msgid "Enjoy Sabayon"
+#~ msgstr "Divertiu-vos"
 
-#: ../templates/pastebin/show_pastie_submit_error.html:4
-msgid "Get back?"
-msgstr "Endarrera?"
+#~ msgid "Screenshots"
+#~ msgstr "Captures de pantalla"
 
-#: ../templates/pastebin/show_pastie_tools.html:2
-msgid "Make a fresh post"
-msgstr "Fer un post nou"
+#~ msgid "CD/DVD Distributors"
+#~ msgstr "Distribuïdors de CD/DVDs"
 
-#: ../templates/pastebin/show_pastie_tools.html:4
-msgid "edit this"
-msgstr "edita aquest"
+#~ msgid "successfully"
+#~ msgstr "correctament"
 
-#: ../templates/pastebin/show_pastie_tools.html:8
-msgid "delete this"
-msgstr "esborra aquest"
+#~ msgid "Preview"
+#~ msgstr "Vista prèvia"
+
+#~ msgid "here"
+#~ msgstr "aquí"
+
+#~ msgid "Reload this page"
+#~ msgstr "Torna a carregar la pàgina"
+
+#~ msgid "Publisher: <b>%s</b>, around <i>%s</i>"
+#~ msgstr "Publicat per: <b>%s</b>, pels vols de <i>%s</i>"
+
+#~ msgid "Introduction"
+#~ msgstr "Introducció"
+
+#~ msgid "Thank you for voting !"
+#~ msgstr "Gràcies per votar !"
+
+#~ msgid "Sorreey, it seems you already voted"
+#~ msgstr "Ho sento, sembla que ja heu votat"
+
+#~ msgid "Try again tomorrow, or the day after"
+#~ msgstr "Torneu-ho a intentar demà"
+
+#~ msgid "Pages navigation"
+#~ msgstr "Navegació per pàgines"
+
+#~ msgid "**Hugs** **Hugs** **Hugs**"
+#~ msgstr "**ei** **ei** **ei**"
+
+#~ msgid ""
+#~ "Thanks a lot, we appreciate your effort. Your donation will help us "
+#~ "keeping up the good work. We are sure you want to get back to the <a href="
+#~ "\"/\">Front Page</a> now"
+#~ msgstr ""
+#~ "Gràcies, apreciem el vostre esforç. La vostra donació ens ajudarà a "
+#~ "continuar la feina. Estem segurs que ara voleu tornar a la <a href=\"/"
+#~ "\">Pàgina d'inici</a>"
+
+#~ msgid ":-* kisses kisses kisses"
+#~ msgstr ":-* petons petons petons"
+
+#~ msgid "Total votes"
+#~ msgstr "Vots totals"
+
+#~ msgid "not voted yet?"
+#~ msgstr "no heu votat encara?"
+
+#~ msgid "You, liar!"
+#~ msgstr "Mentider!"
+
+#~ msgid "See results"
+#~ msgstr "Veure els resultats"
+
+#~ msgid "Profile"
+#~ msgstr "Perfil"
+
+#~ msgid "Pinboard"
+#~ msgstr "Tauler de notícies"
+
+#~ msgid "Messages"
+#~ msgstr "Missatges"
+
+#~ msgid "News / Pages"
+#~ msgstr "Notícies / Pàgines"
+
+#~ msgid "Mirrors"
+#~ msgstr "Rèpliques"
+
+#~ msgid "Polls"
+#~ msgstr "Enquestes"
+
+#~ msgid "Not implemented yet. Sorrey!"
+#~ msgstr "Encara no està implementat!"
+
+#~ msgid "Mirror name"
+#~ msgstr "Nom de la rèplica"
+
+#~ msgid "Do I have to explain the concept?"
+#~ msgstr "Hem d'explicar el concepte?"
+
+#~ msgid "Mirror speed"
+#~ msgstr "Velocitat de la rèplica"
+
+#~ msgid "Again, don't be dumb, why are you reading here?"
+#~ msgstr "No sigueu rucs, què voleu llegir aquí?"
+
+#~ msgid "Mirror country"
+#~ msgstr "País de la rèplica"
+
+#~ msgid "Where is it located?"
+#~ msgstr "On està ubicat?"
+
+#~ msgid "Notes"
+#~ msgstr "Notes"
+
+#~ msgid "Important (internal) notes"
+#~ msgstr "Notes importants (internes)"
+
+#~ msgid "Mirror Link #1"
+#~ msgstr "Enllaç #1 de la rèplica"
+
+#~ msgid "Give me an URL"
+#~ msgstr "Escriviu una URL"
+
+#~ msgid "Mirror Link #2"
+#~ msgstr "Enllaç #2 de la rèplica"
+
+#~ msgid "Mirror Link #3"
+#~ msgstr "Enllaç #3 de la rèplica"
+
+#~ msgid "Add link"
+#~ msgstr "Afegiu un enllaç"
+
+#~ msgid "Delete link"
+#~ msgstr "Esborreu un enllaç"
+
+#~ msgid ""
+#~ "Ok, once again, you are an admin. This is the Download Mirrors manager"
+#~ msgstr ""
+#~ "D'acord, de nou, sou un administrador. Això és el gestor de Rèpliques de "
+#~ "Baixades"
+
+#~ msgid "New Mirror"
+#~ msgstr "Nova rèplica"
+
+#~ msgid "One more page"
+#~ msgstr "Una altra pàgina"
+
+#~ msgid "Body"
+#~ msgstr "Cos"
+
+#~ msgid "Tags"
+#~ msgstr "Etiquetes"
+
+#~ msgid "Type"
+#~ msgstr "Tipus"
+
+#~ msgid "Published on"
+#~ msgstr "Publicat el"
+
+#~ msgid "Actions"
+#~ msgstr "Accions"
+
+#~ msgid "Page state"
+#~ msgstr "Estat de la pàgina"
+
+#~ msgid "Reload pages navigation"
+#~ msgstr "Carrega de nou la navegació de la pàgina"
+
+#~ msgid "Rename"
+#~ msgstr "Anomena de nou"
+
+#~ msgid "Remove"
+#~ msgstr "Elimina"
+
+#~ msgid ""
+#~ "Ok, you are an admin. So, you know what to do here. All the bells and "
+#~ "whistles, like someone said"
+#~ msgstr ""
+#~ "D'acord, són un administrador. sabeu què heu de fer aquí. Tota la "
+#~ "parafernàlia, com algú va dir"
+
+#~ msgid "New Document"
+#~ msgstr "Nou document"
+
+#~ msgid "This is the Pin title"
+#~ msgstr "Això és el títol del Pin"
+
+#~ msgid "Write a brief description"
+#~ msgstr "Escriviu una minsa descripció"
+
+#~ msgid "Note"
+#~ msgstr "Nota"
+
+#~ msgid "Write your note here"
+#~ msgstr "Escriviu l'anotació aquí"
+
+#~ msgid "Status"
+#~ msgstr "Estat"
+
+#~ msgid "Come on, you are lazy"
+#~ msgstr "Vinga, sou un manta"
+
+#~ msgid "Show"
+#~ msgstr "Mostra"
+
+#~ msgid "Share this Pin"
+#~ msgstr "Comparteix aquest Pin"
+
+#~ msgid "Active shares"
+#~ msgstr "Compartits actius"
+
+#~ msgid ""
+#~ "Welcome to your personal Pinboard. Write your thoughts here. Organize "
+#~ "your tasks. Share with friends."
+#~ msgstr ""
+#~ "Benvingut al vostre tauler de notícies personal. escriviu els vostres "
+#~ "pensaments aquí. Organitzeu-vos les tasques. Compartiu amb amics."
+
+#~ msgid "My Pins"
+#~ msgstr "Els meus Pins"
+
+#~ msgid "New Pin"
+#~ msgstr "Nou Pin"
+
+#~ msgid ""
+#~ "No elements here. You can't blame <u>aliens</u>. You might want to add "
+#~ "something someday, huh?"
+#~ msgstr ""
+#~ "No hi ha elements. No podeu culpar els <u>aliens</u>. Potser voleu afegir-"
+#~ "hi alguna cosa, algun dia?"
+
+#~ msgid "Connected Pins"
+#~ msgstr "Pins connectats"
+
+#~ msgid ""
+#~ "No elements here. Nobody loves you. Errr.. I am joking! We love you! No, "
+#~ "you can't blame <u>aliens</u>, again"
+#~ msgstr ""
+#~ "No hi ha elements aquí. Ningú us estima. Errr... Estem fent broma! Us "
+#~ "estimem! No, no podeu culpar els <u>aliens</u> altra vegada"
+
+#~ msgid "Polls management, you can enable how many you want. Do et"
+#~ msgstr "Gestió d'enquestes, en podeu activar tantes com vulgueu. Feu-ho"
+
+#~ msgid "New Poll"
+#~ msgstr "Nova enquesta"
+
+#~ msgid ""
+#~ "the poll will start with no options and disabled. You must create it first"
+#~ msgstr ""
+#~ "l'enquesta començarà sense opcions i desactivada. L'heu de crear primer"
+
+#~ msgid ""
+#~ "Of course, this is your profile and the place you can change how you are "
+#~ "shown to the World. Style matters, remember this"
+#~ msgstr ""
+#~ "Efectivament, aquest és el vostre perfil i l'espai que podeu canviar per "
+#~ "mostrar-vos al món. L'estil compta, recordeu-ho"
+
+#~ msgid "E-mail configuration"
+#~ msgstr "Configuració del correu"
+
+#~ msgid "Your e-mail"
+#~ msgstr "La vostra adreça de correu electrònic"
+
+#~ msgid "E-mail confirm"
+#~ msgstr "Confirmació de l'adreça"
+
+#~ msgid "Confirm your e-mail"
+#~ msgstr "Confirmeu la vostra adreça de correu electrònic"
+
+#~ msgid "Password configuration"
+#~ msgstr "Configuració de la contrasenya"
+
+#~ msgid "Current Password"
+#~ msgstr "Contrasenya actual"
+
+#~ msgid "Your current password"
+#~ msgstr "La vostra contrasenya actual"
+
+#~ msgid "New password"
+#~ msgstr "Nova contrasenya"
+
+#~ msgid "Type your new password"
+#~ msgstr "Escriviu la vostra contrasenya nova"
+
+#~ msgid "Repeat new password"
+#~ msgstr "Repetiu la nova contrasenya"
+
+#~ msgid "Type again your new password"
+#~ msgstr "escriviu la vostra contrasenya de nou"
+
+#~ msgid "Will be used as directory name"
+#~ msgstr "S'usarà com a nom del directori"
+
+#~ msgid "Compressed archive"
+#~ msgstr "Fitxer comprimit"
+
+#~ msgid "Valid are .zip, .tar.bz2, .tar.gz. Inside: root dir and just files"
+#~ msgstr ""
+#~ "Són vàlids .zip, .tar.bz2, .tar.gz. dins del directori root i només "
+#~ "fitxers"
+
+#~ msgid "Ok, good you are an admin. This is the Screenshots manager"
+#~ msgstr ""
+#~ "D'acord, sou un administrador. Això és el gestor de captures de pantalla"
+
+#~ msgid "New Screenshots"
+#~ msgstr "Noves captures de pantalla"
+
+#~ msgid "Ok <b>ladies</b> and <b>gentlemen</b>. We have a <u>winner</u> here!"
+#~ msgstr ""
+#~ "D'acord, <b>senyors</b> i <b>senyores</b>. Tenim un <u>guanyador</u> aquí!"
+
+#~ msgid "You are now connected with %s's Pinboard titled \"<i>%s</i>\"."
+#~ msgstr ""
+#~ "Esteu connectat en el tauler de notícies de %s anomenat \"<i>%s</i>\"."
+
+#~ msgid ""
+#~ "Click %shere%s to get to your personal Dashboard and <b>have fun</b>."
+#~ msgstr ""
+#~ "Feu clic %saquí%s per accedir al vostre tauler de notícies personal i "
+#~ "<b>passeu-ho bé</b>."
+
+#~ msgid "We are <b>sorry</b>, the System encountered an error"
+#~ msgstr "Ho <b>sentim</b>, el sistema ha trobat un error"
+
+#~ msgid ""
+#~ "Thus, <b>we cannot satisfy</b> your request. You can get to our <b><a "
+#~ "href='/'>front page</a></b> and be happy anyway."
+#~ msgstr ""
+#~ "Tot i que <b>no podem satisfer</b> la vostra sol·licitud, podeu tornar a "
+#~ "la <b><a href='/'>pàgina d'inici</a></b> i estar contents igualment."
+
+#~ msgid "...Beeee happy! Don't worry, beeeee happy!"
+#~ msgstr "...Beeee happy! Don't worry, beeeee happy!"
+
+#~ msgid "Mirror"
+#~ msgstr "Rèplica"
+
+#~ msgid ""
+#~ "Sabayon, free of charge, batteries included and on your own Computer. "
+#~ "What are you waiting for? <b>Select the location closer to you</b> and "
+#~ "start downloading a new experience"
+#~ msgstr ""
+#~ "Sabayon, gratuït, amb bateries incloses i en el vostre ordinador. Ja "
+#~ "tardeu... <b> Seleccioneu la ubicació més pròxima</b> i comenceu a gaudir "
+#~ "d'una nova experiència"
+
+#~ msgid "No Internet? Slow Internet?"
+#~ msgstr "No teniu internet? Connexió lenta?"
+
+#~ msgid "Have a look at our <a href='#'>official online vendors list</a>"
+#~ msgstr "Mireu la <a href='#'>llista en línia de venedors oficials</a>"
+
+#~ msgid "Metalinks"
+#~ msgstr "Metalink"
+
+#~ msgid ""
+#~ "For people with faster Internet connections (DSL, Cable, Fiber), Metalink "
+#~ "makes downloading easier, faster, and more reliable. If you're on an "
+#~ "error prone connection, Metalinks with repair information can fix any "
+#~ "errors you get in transfer. Most downloads probably don't max out your "
+#~ "downstream bandwidth. Metalink will help"
+#~ msgstr ""
+#~ "Per gent amb connexions d'Internet ràpides (DSL, Cable, Fiber), Metalink "
+#~ "us fa la baixada més senzilla, més ràpida i més fiable. Si teniu una "
+#~ "connexió propensa a errors, Metalink amb informació de reparació pot "
+#~ "solucionar problemes que tingueu en la transferència. La majoria de "
+#~ "baixades probablement no ocupen tota la banda d'ampla de baixada. "
+#~ "Metalink us ajudarà"
+
+#~ msgid "source"
+#~ msgstr "origen"
+
+#~ msgid "Visit the official"
+#~ msgstr "Visiteu la oficial"
+
+#~ msgid "Sabayon Linux Metalinker Page"
+#~ msgstr "Pàgina Metalinker Sabayon Linux"
+
+#~ msgid "Bittorrent"
+#~ msgstr "Bittorrent"
+
+#~ msgid ""
+#~ "Most people love it just because it makes your download fly. Now we have "
+#~ "our Sabayon Linux Tracker"
+#~ msgstr ""
+#~ "A la majoria de gent li agrada perquè fa volar la vostra baixada. Ara "
+#~ "tenim un seguidor Sabayon Linux"
+
+#~ msgid "Visit the"
+#~ msgstr "Visiteu la"
+
+#~ msgid "Sabayon Linux Tracker Page"
+#~ msgstr "Pàgina del seguidor Sabayon Linux"
+
+#~ msgid "HTTP, FTP, RSYNC mirrors"
+#~ msgstr "Rèpliques HTTP, FTP, RSYNC"
+
+#~ msgid ""
+#~ "If you belong to the old generation or just want to use `wget` because "
+#~ "it's the only download manager you trust. Here it is a list of official "
+#~ "mirrors, alphabetically divided by countries"
+#~ msgstr ""
+#~ "Si sou de la vella escola o simplement voleu usar `wget` perquè és l'únic "
+#~ "gestor de baixades en el que confieu, aquí teniu una llista de rèpliques "
+#~ "oficials, dividides alfabèticament per països"
+
+#~ msgid "Subscribe your Mirror today"
+#~ msgstr "Subscriviu la vostra rèplica avui"
+
+#~ msgid "Do you have spare bandwidth? Are you a mirror maintainer?"
+#~ msgstr "Teniu ample de banda sobrant? Sou el mantenidor d'una rèplica?"
+
+#~ msgid "Submit your request here"
+#~ msgstr "Envieu la vostra sol·licitud aquí"
+
+#~ msgid "Read carefully"
+#~ msgstr "Llegiu-ho atentament"
+
+#~ msgid ""
+#~ "do not paste sensitive data, it is not protected, this means that other "
+#~ "people can read it. Use this tool only for exchanging stuff in public "
+#~ "virtual places such as IRC, Forums and so forth. Your data will be "
+#~ "removed once expired, we cannot guarantee the storage of the content "
+#~ "here. Your IP is logged and you are invited to respect any existing law. "
+#~ "No spamming, No porn, nothing! Allright?"
+#~ msgstr ""
+#~ "no envieu dades sensibles, no està protegit de cap manera i això "
+#~ "significa que tothom podrà llegir-ho. Useu aquesta eina només per "
+#~ "intercanviar material en llocs virtuals com IRC o fòrums.Les vostres "
+#~ "dades s'eliminaran quan hagin expirat, no us podem garantir "
+#~ "l'emmagatzemament del contingut. es registra la vostra IP i us convidem a "
+#~ "respectar totes les lleis. No feu spam, No envieu porno, res! D'acord?"
+
+#~ msgid "Latest Pasties"
+#~ msgstr "Últims pasties"
+
+#~ msgid "PixPastebin Home"
+#~ msgstr "Inici de PixPastebin"
+
+#~ msgid "No Pasties"
+#~ msgstr "No hi ha pasties"
+
+#~ msgid "My Latest"
+#~ msgstr "Els meus últims"
+
+#~ msgid ""
+#~ "Choose <span id=\"pastebin-submit-type-name\">a file</span> and get ready "
+#~ "to paste!"
+#~ msgstr ""
+#~ "Escolliu <span id=\"pastebin-submit-type-name\">un fitxer</span> i "
+#~ "prepareu-vos per enganxar-lo!"
+
+#~ msgid "Important"
+#~ msgstr "Important"
+
+#~ msgid "you cannot send viruses, they are destroyed automatically"
+#~ msgstr "no podeu enviar virus, es destrueixen automàticament"
+
+#~ msgid "Expiration"
+#~ msgstr "Expiració"
+
+#~ msgid "One day"
+#~ msgstr "Un dia"
+
+#~ msgid "One month"
+#~ msgstr "Un mes"
+
+#~ msgid "One year"
+#~ msgstr "Un any"
+
+#~ msgid "as <b>%s</b> and permissions:"
+#~ msgstr "com <b>%s</b> i permisos:"
+
+#~ msgid "Wrong CAPTCHA !!! Take this, stupid spammer!"
+#~ msgstr "CAPTCHA erroni!!! Entoma aquesta, spammer estúpid!"
+
+#~ msgid "Ok fine, pastie removed"
+#~ msgstr "D'acord, el pastie s'ha eliminat"
+
+#~ msgid "Message"
+#~ msgstr "Missatge"
+
+#~ msgid "All the uploaded files are checked by %s"
+#~ msgstr "Tots els missatges enviats es comproven amb %s"
+
+#~ msgid "expires in"
+#~ msgstr "expira en "
+
+#~ msgid "days"
+#~ msgstr "dies"
+
+#~ msgid "An image should pop up above this text"
+#~ msgstr "Una imatge hauria d'aparèixer sobre aquest text"
+
+#~ msgid "Not found"
+#~ msgstr "No s'ha trobat"
+
+#~ msgid "The pastie you are looking for is not available"
+#~ msgstr "El pastie que esteu buscant no està disponible"
+
+#~ msgid "Paste something?"
+#~ msgstr "Enganxa alguna cosa?"
+
+#~ msgid "Error message"
+#~ msgstr "Missatge d'error"
+
+#~ msgid "Oops, Error"
+#~ msgstr "Up, Error"
+
+#~ msgid "An error occured while pasting your data"
+#~ msgstr "S'ha produït un error mentre s'enganxaven les dades"
+
+#~ msgid "Get back?"
+#~ msgstr "Endarrera?"
+
+#~ msgid "Make a fresh post"
+#~ msgstr "Fer un post nou"
+
+#~ msgid "edit this"
+#~ msgstr "edita aquest"
+
+#~ msgid "delete this"
+#~ msgstr "esborra aquest"
 
 #~ msgid "Official Sabayon Linux Web Chat"
 #~ msgstr "Web xat oficial de Sabayon Linux"
