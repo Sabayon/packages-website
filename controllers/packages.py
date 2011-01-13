@@ -120,16 +120,16 @@ class PackagesController(BaseController,WebsiteController):
 
         try:
             dbconn = entropy._open_db(repoid, arch, product, branch)
-            dbconn.validateDatabase()
+            dbconn.validate()
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             try:
-                dbconn.closeDB()
+                dbconn.close()
             except:
                 pass
             return -1, None
 
         match_id = dbconn.atomMatch(dep)[0]
-        dbconn.closeDB()
+        dbconn.close()
         return match_id, repoid
 
     def _get_package_extrainfo(self, product, repoid, arch, ugc, idpackage, dbconn):
@@ -231,10 +231,10 @@ class PackagesController(BaseController,WebsiteController):
             while 1:
                 try:
                     dbconn = entropy._open_db(repoid, c.arch, c.product, branch)
-                    dbconn.validateDatabase()
+                    dbconn.validate()
                 except (ProgrammingError, OperationalError, SystemDatabaseError):
                     try:
-                        dbconn.closeDB()
+                        dbconn.close()
                     except:
                         pass
                     break
@@ -267,7 +267,7 @@ class PackagesController(BaseController,WebsiteController):
                         keyslot = data[0]+":"+data[1]
                         c.search_data['you_meant'].add(keyslot)
 
-                    dbconn.closeDB()
+                    dbconn.close()
                     break
 
                 c.search_data['misc']['releases'].add(branch)
@@ -300,7 +300,7 @@ class PackagesController(BaseController,WebsiteController):
                     owndata['idpackage'] = tdata['idpackage']
                     c.search_data['data'][branch][myatom] = owndata.copy()
 
-                dbconn.closeDB()
+                dbconn.close()
                 break
 
         # order by vote
@@ -1027,7 +1027,7 @@ class PackagesController(BaseController,WebsiteController):
                             dbconn = entropy._open_db(repoid, parch, pstring, branch)
                         except (ProgrammingError, OperationalError, SystemDatabaseError):
                             try:
-                                dbconn.closeDB()
+                                dbconn.close()
                             except:
                                 pass
                             continue
@@ -1047,11 +1047,11 @@ class PackagesController(BaseController,WebsiteController):
                                 cur = dbconn._cursor().execute('SELECT sum(size) FROM extrainfo')
                                 size += cur.fetchone()[0]
 
-                            dbconn.closeDB()
+                            dbconn.close()
 
                         except (ProgrammingError, OperationalError,):
                             try:
-                                dbconn.closeDB()
+                                dbconn.close()
                             except:
                                 pass
                             continue
@@ -1188,10 +1188,10 @@ class PackagesController(BaseController,WebsiteController):
             valid = True
             try:
                 dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validateDatabase()
+                dbconn.validate()
             except (ProgrammingError, OperationalError, SystemDatabaseError):
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
                 valid = False
@@ -1209,7 +1209,7 @@ class PackagesController(BaseController,WebsiteController):
                 pass
             if valid:
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
 
@@ -1238,10 +1238,10 @@ class PackagesController(BaseController,WebsiteController):
             valid = True
             try:
                 dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validateDatabase()
+                dbconn.validate()
             except (ProgrammingError, OperationalError,SystemDatabaseError):
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
                 valid = False
@@ -1254,7 +1254,7 @@ class PackagesController(BaseController,WebsiteController):
                     mydepends = dbconn.retrieveReverseDependencies(idpackage)
                 for mydepend in mydepends:
                     c.idpackages[mydepend] = dbconn.retrieveAtom(mydepend)
-                dbconn.closeDB()
+                dbconn.close()
         return render_mako('/packages/depends.html')
 
     def content(self):
@@ -1280,17 +1280,17 @@ class PackagesController(BaseController,WebsiteController):
             valid = True
             try:
                 dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validateDatabase()
+                dbconn.validate()
             except (ProgrammingError, OperationalError,SystemDatabaseError):
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
                 valid = False
 
             if valid:
                 c.files = dbconn.retrieveContent(idpackage, order_by = 'file')
-                dbconn.closeDB()
+                dbconn.close()
 
         return render_mako('/packages/content.html')
 
@@ -1380,10 +1380,10 @@ class PackagesController(BaseController,WebsiteController):
 
             try:
                 dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validateDatabase()
+                dbconn.validate()
             except (ProgrammingError, OperationalError, SystemDatabaseError):
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
                 continue
@@ -1394,7 +1394,7 @@ class PackagesController(BaseController,WebsiteController):
                 if s not in c.categories:
                     c.categories[s] = []
                 c.categories[s].append(category)
-            dbconn.closeDB()
+            dbconn.close()
 
         return render_mako('/packages/show_categories.html')
 
@@ -1439,10 +1439,10 @@ class PackagesController(BaseController,WebsiteController):
 
             try:
                 dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validateDatabase()
+                dbconn.validate()
             except (ProgrammingError, OperationalError, SystemDatabaseError):
                 try:
-                    dbconn.closeDB()
+                    dbconn.close()
                 except:
                     pass
                 continue
@@ -1473,7 +1473,7 @@ class PackagesController(BaseController,WebsiteController):
                 c.packages[branch][myatom]['description'] = dbconn.retrieveDescription(idpackage)
                 c.packages[branch][myatom]['idpackage'] = idpackage
 
-            dbconn.closeDB()
+            dbconn.close()
 
         return render_mako('/packages/category.html')
 
@@ -1557,10 +1557,10 @@ class PackagesController(BaseController,WebsiteController):
         valid = True
         try:
             dbconn = entropy._open_db(repo, arch, product, branch)
-            dbconn.validateDatabase()
+            dbconn.validate()
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             try:
-                dbconn.closeDB()
+                dbconn.close()
             except:
                 pass
             valid = False
@@ -1572,7 +1572,7 @@ class PackagesController(BaseController,WebsiteController):
                     c.atoms[myupper] = []
                     c.letters.add(myupper)
                 c.atoms[myupper].append((myatom,idpackage))
-            dbconn.closeDB()
+            dbconn.close()
 
         c.letters = sorted(c.letters)
         return render_mako('/packages/show_release.html')
