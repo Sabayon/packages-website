@@ -1,0 +1,47 @@
+## -*- coding: utf-8 -*-
+<%include file="/packages/searchbox_compact.html"/>
+%if c.search_data['atoms']:
+    <div id="packages-searchresults-inner">
+        % if not c.show_one_package:
+            <div style="text-align: right; font-size: 1.3em; margin-bottom: 20px">
+                ${_("Elements found: %s") % (c.search_data['entries_found'],)}
+            </div>
+        % endif
+        %for release in c.search_data['misc']['releases']:
+            <div style="margin-top: 20px; margin-bottom: 15px;">
+                <font style="font-size: 1.2em; border-bottom: 1px thin;"><b>${c.search_data['misc']['product']} ${release}</b></font>
+            </div>
+            %for atom in c.search_data['atoms'][release]:
+                <% 
+                    c.atominfo = c.search_data['data'][release][atom]
+                    c.miscinfo = c.search_data['misc']
+                    c.branch = release
+                    c.atom = atom
+                    if c.show_one_package is UNDEFINED:
+                        c.show_one_package = False
+                %>
+                <%include file="/packages/atom.html"/>
+                <br/>
+            %endfor
+        %endfor
+    </div>
+%else:
+    <div id="packages-searchresults-inner" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <h2>${_("Nothing found")}</h2><br/>
+        <% i_meant = c.search_data.get('you_meant') %>
+        % if i_meant:
+            ${_("Perhaps, you meant?")}<br/>
+            <div style="width: 80%; margin-left: auto; margin-right: auto;">
+                % for atom in i_meant:
+                    <a href="javascript:get_packages_home_string('packages-area','${atom}')">${atom}</a><br/>
+                % endfor
+            </div>
+            <br/>
+        %endif
+        <br/>
+        <h4>${_("Cannot find the software you are looking for?")}</h4>
+        <a href="http://bugs.sabayon.org/enter_bug.cgi?product=Entropy&format=packreq" target="_blank">${_("Submit a package request")}</a>!
+        <br/><br/>
+        [ <a href="javascript:get_packages_home('packages-area')">${_("Back to Search")}</a> ]
+    </div>
+%endif

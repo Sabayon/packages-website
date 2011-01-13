@@ -1,0 +1,9 @@
+<div style="clear:left; float: left; width: 70%;">
+    <div>${c.ugc_doc['description']}</div>
+    <div class="package-ugc-keywords" style="margin-top: 8px;">
+        <b>${_("Keywords")}</b>: ${', '.join(c.ugc_doc['keywords'])}
+        % if not c.ugc_doc['keywords']:
+            ${_("no keywords")}
+        % endif
+    </div>
+</div>

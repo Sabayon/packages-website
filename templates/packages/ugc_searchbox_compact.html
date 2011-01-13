@@ -1,0 +1,17 @@
+## -*- coding: utf-8 -*-
+<div class="packages-searchbox">
+    <form autocomplete="off" name="ugcsearch" id="ugcsearch" method="POST" action="javascript:ugc_search('ugcsearch','packages-searchstring-compact','packages-area','0',true,'search-spin','0');">
+        <div class="searchbox">
+            <input type="text" name="searchstring" id="packages-searchstring-compact" maxlength="160" 
+            % if c.search_string:
+                value="${c.search_string}"
+            % else:
+                value="Search here"
+            % endif
+             onclick="if (this.value=='${_("Search here")}') this.value=''" onblur="if (this.value=='') this.value='${_("Search here")}'"/>
+            <%include file="/packages/ugc_searchparams_compact.html"/>
+            <div id="search-spin"></div>
+            <hr id="spacer"/>
+        </div>
+    </form>
+</div>

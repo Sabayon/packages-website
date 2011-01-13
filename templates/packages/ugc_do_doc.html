@@ -1,0 +1,12 @@
+<div id="ugc-do-doc-new"></div>
+<hr style="border-bottom: 6px dotted #666666; margin-top: 30px; margin-bottom: 10px"/>
+<div class="ugc-do-doc" id="ugc-do-doc">
+    <hr style="margin-top: 20px; margin-bottom: 20px" />
+    <%
+        c.ugc_doctype = c.ugc_doctypes['comments']
+        c.pkgkey = c.atominfo['category']+'/'+c.atominfo['name']
+        c.atom = c.atominfo['atom']
+    %>
+    <%include file="/packages/do_document_page.html"/>
+    <hr/>
+</div>

@@ -1,0 +1,13 @@
+## -*- coding: utf-8 -*-
+<div style="height: 20px; border-bottom: 1px dotted"></div>
+<div style="text-align: right">
+    ${_("written by %s, around %s") % ('<b><a href="' + c.profile_uri + '/' + c.ugc_doc['username'] + '">' + c.ugc_doc['username'] + '</a></b>', c.ugc_doc['ts'],)} | ${_("User score")}: <b><span class="ugc_score_${c.ugc_doc['userid']}">${c.ugc_doc['score']}</span></b> | ${_("Size")}: <b>${c.ugc_doc['size']}</b>
+    <% 
+        c.iddoc = c.ugc_doc['iddoc']
+        c.error_div = "package-ugc-doc-error-%s" % (c.ugc_doc['iddoc'],)
+        c.destroy_div = "package-ugc-doc-%s" % (c.ugc_doc['iddoc'],)
+        c.edit_div = "package-ugc-doc-edit-%s" % (c.ugc_doc['iddoc'],)
+    %>
+    <%include file="/packages/ugc_doc_handling_links.html"/>
+</div>
+<div class="package-ugc-doc-title" style="font-weight: bold; margin-top: 8px; color: #089BEA">${c.ugc_doc['title']}</div>

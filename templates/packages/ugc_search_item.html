@@ -1,0 +1,49 @@
+<div id="list-ugc-doc-${c.ugc_doc['iddoc']}">
+    <div style="border-bottom: 1px dotted #666666; clear:both; float:left; width: 100%; margin-bottom: 20px; background-color: #2D2D2D" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';">
+        <div style="float: left; clear: left; width: 90%;">
+            <span style="font-size: 1.05em; font-weight: bold; color: #EFA5FF">${c.ugc_doc['key']}</span>
+            <br/>
+            <%
+                c.user_id = 0
+                if session.get('logged_in') and session.get('entropy'):
+                    c.user_id = session['entropy'].get('entropy_user_id')
+                c.myvote = int(c.ugc_doc['avg_vote'])
+                c.pkgkey = c.ugc_doc['key']
+                c.mycount = 5 - c.myvote
+                if not c.search_string: c.search_string = c.pkgkey
+                c.unique_id = "%s" % (c.ugc_doc['iddoc'],)
+                c.myredirect = "?redirect=/ugc/search/package/%s" % (c.search_string,)
+            %>
+            <%include file="/packages/ugc_stars_rating_inner.html"/> | 
+            <span style="font-size: 0.9em; color: #089BEA"> ${c.ugc_doc['title']}</span>
+            <br/>
+            <span style="font-size: 0.75em;">
+                <b>${c.ugc_doctypes_desc_singular.get(c.ugc_doc['iddoctype']).lower()}</b> ${_("by")} <a href="${c.profile_uri}/${c.ugc_doc['username']}">${c.ugc_doc['username']}</a> ${_("on")} <i>${c.ugc_doc['ts']}</i>, ${_("score")}: <b><span class="ugc_score_${c.ugc_doc['userid']}">${c.ugc_doc['score']}</span></b>
+                <% 
+                    c.iddoc = c.ugc_doc['iddoc']
+                    c.error_div = "list-ugc-doc-error-%s" % (c.ugc_doc['iddoc'],)
+                    c.destroy_div = "list-ugc-doc-%s" % (c.ugc_doc['iddoc'],)
+                    c.edit_div = "list-ugc-doc-edit-%s" % (c.ugc_doc['iddoc'],)
+                %>
+                <%include file="/packages/ugc_doc_handling_links.html"/>
+            </span>
+
+        </div>
+        <div style="float: left; clear: right; width: 10%; text-align: right;">
+            % if c.search_expand:
+                <img onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" onclick="div_toggle_slide('package-ugc-doc-body-wrap-${c.ugc_doc['iddoc']}'); if ((this.value == undefined) || (this.value == '0')) { this.src = '/images/packages/list-add.png'; this.value = '1'; } else { this.src = '/images/packages/list-remove.png';  this.value = '0'; }" src="/images/packages/list-remove.png"/>
+            % else:
+                <img onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" onclick="div_toggle_slide('package-ugc-doc-body-wrap-${c.ugc_doc['iddoc']}'); if ((this.value == undefined) || (this.value == '0')) { this.src = '/images/packages/list-remove.png'; this.value = '1'; } else { this.src = '/images/packages/list-add.png';  this.value = '0'; }" src="/images/packages/list-add.png"/>
+            % endif
+
+        </div>
+
+    </div>
+    <div style="
+        % if not c.search_expand:
+            display: none; 
+        % endif
+        margin-bottom: 20px;" id="package-ugc-doc-body-wrap-${c.ugc_doc['iddoc']}">
+        <%include file="/packages/ugc_show_doc_inner_body.html"/>
+    </div>
+</div>

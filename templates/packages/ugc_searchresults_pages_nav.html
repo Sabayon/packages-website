@@ -1,0 +1,21 @@
+<%
+    pages_r = float(c.found_results) / c.ugc_searchresults_limit
+    r = int(pages_r) % (pages_r)
+    pages = int(pages_r)
+    if r > 0.0: pages += 1
+    cur_page = int(c.offset*(pages_r)/c.found_results)
+
+%>
+% if pages:
+    Pages: 
+    % for x in range(pages):
+        <span style="font-size: 1.3em;">
+        % if x == cur_page:
+            <b>${x+1}</b>
+        % else:
+            <a href="javascript:ugc_search('ugcsearch','packages-searchstring-compact','packages-area','${(x)*c.ugc_searchresults_limit}',true,'pages-search-spin','0');">${x+1}</a>
+        % endif
+        </span>
+    % endfor
+    <span id="pages-search-spin"></span>
+% endif

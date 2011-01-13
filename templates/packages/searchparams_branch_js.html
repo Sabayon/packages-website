@@ -1,0 +1,21 @@
+<script type="text/javascript">
+
+    function switch_product_or_repo(product_select_id, repo_select_id, dest_div, submit_id, search_type) {
+
+        submit_obj = document.getElementById(submit_id);
+        submit_obj.disabled = true;
+
+        prod_select_obj = document.getElementById(product_select_id);
+        prod_new_status = prod_select_obj.options[prod_select_obj.selectedIndex].value;
+
+        repo_select_obj = document.getElementById(repo_select_id);
+        repo_new_status = repo_select_obj.options[repo_select_obj.selectedIndex].value;
+
+        function do_et_complete(valid, resp_txt, resp_code) {
+            submit_obj.disabled = false;
+        }
+
+        completeAHAH.ahah('/packages/get_search_args?product=' + prod_new_status + '&repo=' + repo_new_status + '&search_type=' + search_type, dest_div, null, 'get', null, undefined, do_et_complete, false, dest_div); 
+    }
+
+</script>

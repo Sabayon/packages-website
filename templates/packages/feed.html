@@ -1,0 +1,19 @@
+<ul>
+    % if c.feed['entries']:
+        % for item in c.feed['entries'][:c.entries]:
+            <li>
+                <a href="${item['links'][0]['href']}">
+                    % if not c.strip:
+                        ${item['title'].strip()}
+                    % else:
+                        ${item['title'][:strip].strip()}...
+                    %endif
+                </a>
+            </li>
+        % endfor
+    % else:
+        <li>
+            ${_("No entries exist")}
+        </li>
+    % endif
+</ul>

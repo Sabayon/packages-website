@@ -1,0 +1,13 @@
+<%
+    yt_vid = c.ugc_doc['ddata']
+    yt_width = 250
+    yt_height = yt_width*3/4
+    yt_vid_code = '<object width="%s" height="%s"><param name="movie" value="http://www.youtube.com/v/%s&hl=it&fs=1&rel=0"></param><param name="allowFullScreen" value="true"></param><embed src="http://www.youtube.com/v/%s&hl=it&fs=1&rel=0" type="application/x-shockwave-flash" allowfullscreen="true" width="%s" height="%s"></embed></object>' % (yt_width,yt_height,yt_vid,yt_vid,yt_width,yt_height,)
+%>
+
+<div class="package-ugc-data" >
+    <%include file="/packages/ugc_doc_desc_keywords.html"/>
+    <div style="text-align: right;">
+        ${yt_vid_code}
+    </div>
+</div>

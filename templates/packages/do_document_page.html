@@ -1,0 +1,124 @@
+## -*- coding: utf-8 -*-
+
+<div id="ugc-do-doc-page">
+
+    %if session.get('logged_in') and session.get('entropy'):
+        <div style="margin-bottom: 20px; font-size: 1.3em; text-align: right; font-style: italic;">
+            ${_("Add documents <b>gain scores</b> !")}
+        </div>
+        <form name="do-doc" id="do-doc" method="POST" action="/packages/ugc_add" onsubmit="return ugc_send_document('do-doc','ugc-do-doc-new','do-doc-error','do-doc-title','ugc_doc_amount_${c.pkgkey.replace('/','_')}','ugc_score_${session['entropy'].get('entropy_user_id')}')"
+        % if c.ugc_doctype != c.ugc_doctypes['comments']:
+            enctype="multipart/form-data"
+        % endif
+        >
+            <input type="hidden" value="${session['entropy'].get('entropy_user_id')}" name="user_id" id="ugc-user-id"/>
+            <input type="hidden" value="${c.pkgkey}" name="pkgkey" id="do-doc-pkgkey"/>
+
+            <dl class="form-line">
+                <dt class="form-left" style="width: 26em;">
+                    <label for="title"><b>${_("Title")}</b></label>
+                    <br />
+                    <span style="font-size: 0.8em">${_("Length must be between 10 and 160")}.</span>
+                </dt>
+                <dd>
+                    <input type="text" value="${c.title}" name="title" id="do-doc-title" size="43" maxlength="160" title="${_("Title")}"/>
+                </dd>
+            </dl>
+
+            <div id="do-doc-description" 
+                % if c.ugc_doctype == c.ugc_doctypes['comments']:
+                    style="display: none;"
+                % endif
+            >
+                <dl class="form-line">
+                    <dt class="form-left" style="width: 26em;">
+                        <label for="title"><b>${_("Description")}</b></label>
+                        <br />
+                        <span style="font-size: 0.8em">${_("Being descriptive, what a pain in the *ss")}.</span>
+                    </dt>
+                    <dd>
+                        <input type="text" value="${c.description}" name="description" id="do-doc-description" size="43" maxlength="400" title="${_("Description")}"/>
+                    </dd>
+                </dl>
+            </div>
+
+            <dl class="form-line">
+                <dt class="form-left" style="width: 26em;">
+                    <label for="keywords"><b>${_("Keywords")}</b></label>
+                    <br />
+                    <span style="font-size: 0.8em">${_("Space separated, minimum length: 4 chars each")}.</span>
+                </dt>
+                <dd>
+                    <input type="text" value="${c.keywords}" name="keywords" id="do-doc-keywords" size="43" maxlength="100" title="${_("Keywords")}"/>
+                </dd>
+            </dl>
+
+            <dl class="form-line">
+                <dt class="form-left" style="width: 26em;">
+                    <label for="keywords"><b>${_("Document type")}</b></label>
+                    <br />
+                    <span style="font-size: 0.8em">${_("Choose what kind of document you want to add")}</span>
+                </dt>
+                <dd>
+                    <select name="doctype" onchange="ugc_select_doctype(this,'${c.pkgkey}','${c.atom}','do-doc-title','do-doc-keywords','do-doc-description','${c.repoid}','${c.product}','${c.arch}','ugc-do-doc-page')">
+                        % for doctypeid in sorted(c.ugc_doctypes_desc_singular.keys()):
+                            <option value='${doctypeid}'
+                            % if doctypeid == c.ugc_doctype:
+                                selected="selected"
+                            %endif
+                            >${c.ugc_doctypes_desc_singular[doctypeid]}</option>
+                        % endfor
+                    </select>
+                </dd>
+            </dl>
+
+            <div id="do-doc-comment" 
+                % if c.ugc_doctype != c.ugc_doctypes['comments']:
+                    style="display: none;"
+                % endif
+            >
+                <dl class="form-line">
+                    <dt class="form-left" style="width: 26em;">
+                        <label for="ddata"><b><span id="do-doc-ddata-title">${_("Comment text")}</span></b></label>
+                        <br />
+                        <span style="font-size: 0.8em"><span id="do-doc-ddata-titledesc">${_("Insert your comment on this field")}</span></span>
+                    </dt>
+                    <dd>
+                        <textarea id="do-doc-ddata" style="width: 350px; height: 70px;" name="text" maxlength="4000" onkeypress='javascript:check_textarea_maxlength(this)'></textarea>
+                    </dd>
+                </dl>
+            </div>
+
+            <div id="do-doc-filechooser" 
+                % if c.ugc_doctype == c.ugc_doctypes['comments']:
+                    style="display: none;"
+                % endif
+            >
+                <dl class="form-line">
+                    <dt class="form-left" style="width: 26em;">
+                        <label for="ddata"><b><span id="do-doc-ddata-title">${_("File chooser")}</span></b></label>
+                        <br />
+                        <span style="font-size: 0.8em"><span id="do-doc-ddata-titledesc">${_("Select the file you want to upload")}</span></span>
+                    </dt>
+                    <dd>
+                        <input name="docfile" type="file">
+                    </dd>
+                </dl>
+                <div id="do-doc-filechooser-status"></div>
+            </div>
+
+            <input value="${_("Submit your document")}" type="submit"/><span id="do-doc-error" style="text-align: right; margin-left: 10px; color: #FF0000">${c.ugc_add_errors}</span>
+        </form>
+    %else:
+
+        <% 
+            search_string = c.search_string
+            if not search_string: search_string = pkgkey
+        %>
+
+        <div align="center">
+            ${_("You need to be logged in to add documents")}.<br/>
+            <a href="${c.login_uri}?redirect=/repository/search/${c.repoid}/${c.product}/${c.arch}/${c.branch}/${c.atom}">${_("Login?")}</a>, <a href="${c.register_uri}?redirect=/repository/search/${c.repoid}/${c.product}/${c.arch}/${c.branch}/${c.atom}">${_("Register?")}</a>
+        </div>
+    %endif
+</div>

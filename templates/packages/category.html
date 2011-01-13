@@ -1,0 +1,22 @@
+%if c.atoms:
+    <ul style="margin-top: 25px; margin-bottom: 25px;">
+        %for branch in sorted(c.atoms.keys(), reverse = True):
+            <div style="margin-bottom: 20px;">
+                <h4>${_("Release")} ${branch}</h4>
+            </div>
+            %for atom in c.atoms[branch]:
+                <li style="margin-left: 25px; margin-bottom: 10px">
+                        <a href="/repository/match/${c.miscinfo['repo']}/${c.miscinfo['idproduct']}/${c.miscinfo['idarch']}/${branch}/${atom}" target="_blank">${atom}</a>
+                        <br/>
+                        <font style="font-size: 0.8em">${c.packages[branch][atom]['description']}</font>
+                </li>
+            %endfor
+        %endfor
+    </ul>
+%else:
+    <ul>
+        <li>
+            ${_("No packages in this category")}
+        </li>
+    </ul>
+%endif

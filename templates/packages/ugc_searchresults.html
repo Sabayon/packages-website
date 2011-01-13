@@ -1,0 +1,30 @@
+## -*- coding: utf-8 -*-
+<%include file="/packages/ugc_searchbox_compact.html"/>
+%if c.ugc_searchresults:
+
+    <div id="packages-searchresults-inner">
+        <div style="margin-bottom: 20px">
+            <div style="text-align: right; font-size: 1.3em;">
+                ${_("Seeking %s of %s") % (len(c.ugc_searchresults)+c.offset, c.found_results,)}
+            </div>
+            <div class="ugc-search-pages-navigation">
+                <%include file="/packages/ugc_searchresults_pages_nav.html"/>
+            </div>
+        </div>
+        % for ugc_doc in c.ugc_searchresults:
+            <% c.ugc_doc = ugc_doc %>
+            <%include file="/packages/ugc_search_item.html"/>
+        % endfor
+        <div class="ugc-search-pages-navigation">
+            <%include file="/packages/ugc_searchresults_pages_nav.html"/>
+        </div>
+    </div>
+%else:
+
+    <div id="packages-searchresults-inner" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <h2>${_("Nothing found")}</h2>
+        <br/>
+        [ <a href="javascript:get_ugc_home('packages-area')">${_("Back to Search")}</a> ]
+    </div>
+
+%endif

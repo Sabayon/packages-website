@@ -1,0 +1,8 @@
+<span id="stars_${c.unique_id}" onmouseout="javascript:reset_stars_rating(this,'imgstar_${c.unique_id}_','${c.myvote}')">
+    %for x in range(int(c.myvote)):
+        <span id="star_${c.unique_id}_${x+1}"><img id="imgstar_${c.unique_id}_${x+1}" src="/images/packages/star.png" alt="${_("Star rating %s") % (x+1,)}" onmouseover="javascript:set_stars_rating(this,'imgstar_${c.unique_id}_','${x+1}')" onclick="javascript:submit_ugc_vote('${c.pkgkey}','${c.user_id}','${x+1}','${c.login_uri}?redirect=${c.this_uri}','stars_${c.unique_id}')" /></span>
+    %endfor
+    % for x in range(int(c.mycount)):
+        <span id="star_${c.unique_id}_${int(c.myvote)+x+1}"><img id="imgstar_${c.unique_id}_${int(c.myvote)+x+1}" src="/images/packages/star_empty.png" alt="${_("Star rating %s") % (int(c.myvote) + x + 1,)}" onmouseover="javascript:set_stars_rating(this,'imgstar_${c.unique_id}_','${int(c.myvote)+x+1}')" onclick="javascript:submit_ugc_vote('${c.pkgkey}','${c.user_id}','${x+1}','${c.login_uri}${c.myredirect}','stars_${c.unique_id}')" /></span>
+    %endfor
+</span>

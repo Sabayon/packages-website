@@ -1,0 +1,9 @@
+<select id="arch-selector" name="arch">
+    %for arch in sorted(c.arches):
+        <option value='${arch}'
+        % if arch == c.arch:
+            selected="selected"
+        %endif
+        >${c.arches[arch]}</option>
+    %endfor
+</select>

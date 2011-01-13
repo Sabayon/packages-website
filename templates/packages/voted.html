@@ -1,0 +1,13 @@
+## -*- coding: utf-8 -*-
+% if not c.error:
+    <%  myvote = int(c.new_vote) %>
+    %for x in range(myvote):
+        <span><img src="/images/packages/star_green.png"/></span>
+    %endfor
+    <%   mycount = 5 - myvote %>
+    % for x in range(mycount):
+        <span><img src="/images/packages/star_empty.png"/></span>
+    %endfor
+% else:
+    <font style="color:red; font-weight: bold;">${_("Vote error")}:</font> ${c.err_msg}
+% endif

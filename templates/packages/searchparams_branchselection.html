@@ -1,0 +1,9 @@
+<select name="branch">
+    %for branch in sorted(c.branches, reverse = True):
+        <option value='${branch}'
+        % if branch == c.branch:
+            selected="selected"
+        %endif
+        >${branch}</option>
+    %endfor
+</select>

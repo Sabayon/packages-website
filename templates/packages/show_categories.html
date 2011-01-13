@@ -1,0 +1,26 @@
+<hr id="spacer" />
+<div id="categories-area">
+    <div style="margin-bottom: 20px; text-align: right">
+        <h3>${c.miscinfo['product']} (${c.miscinfo['arch']})</h3>
+        ${_("Package Categories Navigation")}: |
+            %for category in c.categories:
+                <a href="#cat_${category.upper()}" style="font-size: 1.2em;"><b>${category.upper()}</b></a> |
+            %endfor
+    </div>
+    <div id="category">
+        %for category in c.categories:
+            <div style="margin-bottom: 50px">
+                <h2 id="cat_${category.upper()}">${category.upper()}</h2>
+                <ul style="padding-left: 50px; margin-top: 20px">
+                    %for item in c.categories[category]:
+                        <input type="hidden" value="" id="subtree_${item}"/>
+                        <li style="list-style-image: url('/images/packages/list-add-small.png')" onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" name="li_${item}" id="li_${item}" value="0" onclick="javascript:load_category('${item}','${c.miscinfo['idproduct']}','${c.miscinfo['repo']}','${c.miscinfo['idarch']}')">
+                            <span id="h4_kind">${item}</span>
+                        </li>
+                            <div id="info_${item}"></div>
+                    %endfor
+                </ul>
+            </div>
+        %endfor
+    </div>
+</div>

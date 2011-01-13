@@ -1,0 +1,17 @@
+<hr id="spacer" />
+<div style="margin-bottom: 20px; text-align: right">
+    <h3>${c.miscinfo['product']} (${c.miscinfo['arch']})</h3>
+    ${_("Quick navigation")}: |
+    %for branch in c.miscinfo['branches']:
+            <a href="#branchbrowse" onclick="javascript:load_release('${branch}','${c.miscinfo['idproduct']}','${c.miscinfo['repo']}','${c.miscinfo['idarch']}','packages-release');" style="font-size: 1.2em;"><b>${branch}</b></a> |
+    %endfor
+</div>
+<div id="packages-release">
+    <div style="width:100%; margin-left: auto; margin-right: auto; text-align: center">
+        % for branch in c.miscinfo['branches']:
+            <a href="#packages-release" onclick="javascript:load_release('${branch}','${c.miscinfo['idproduct']}','${c.miscinfo['repo']}','${c.miscinfo['idarch']}','packages-release');">
+                <div style="background-image: url('/images/packages/drive-optical-big.png'); width: 128px; height: 128px; text-align: center; float: left;"><h3 style="padding-left: 8px; padding-top: 30px; color: #666666;">${branch}</h3></div>
+            </a>
+        % endfor
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div style="margin-top: 10px; margin-bottom: 10px">
+    % if c.pages:
+        Pages: 
+        % for x in range(c.pages):
+            <span style="font-size: 1.3em;">
+            % if x == c.cur_page:
+                <b>${x+1}</b>
+            % else:
+                <a href="javascript:javascript:get_community_users_ranking('community-home','${(x)*c.divider}')">${x+1}</a>
+            % endif
+            </span>
+        % endfor
+        <span id="pages-search-spin"></span>
+    % endif
+</div>

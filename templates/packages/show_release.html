@@ -1,0 +1,24 @@
+<div id="packages-release-area">
+    <hr id="spacer" />
+    <div style="margin-bottom: 20px; text-align: right">
+        ${_("You are watching")}: <h3>${c.miscinfo['branch']}</h3>
+        ${_("Quick navigation")}:<br/> |
+        %for letter in c.letters:
+            <a href="#idx_${letter}" style="font-size: 1.0em;"><b>${letter}</b></a> |
+        %endfor
+    </div>
+    <div id="atomslist">
+        %for letter in c.letters:
+            <h3 id="idx_${letter}">${letter}</h3>
+            <div>
+                <ul>
+                    %for atom, idpackage in c.atoms[letter]:
+                        <li style="margin-left: 25px; margin-bottom: 10px">
+                            <a href="/repository/match/${c.miscinfo['repo']}/${c.miscinfo['idproduct']}/${c.miscinfo['idarch']}/${c.miscinfo['branch']}/${atom}" target="_blank">${atom}</a>
+                        </li>
+                    %endfor
+                </ul>
+            </div>
+        %endfor
+    </div>
+</div>

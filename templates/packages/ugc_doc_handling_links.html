@@ -1,0 +1,21 @@
+%if session.get('logged_in') and session.get('entropy'):
+    <%
+        can_change_doc = False
+        is_doc_admin = False
+        if (c.is_user_administrator or c.is_user_moderator):
+            can_change_doc = True
+            is_doc_admin = True
+        elif session.get('logged_in') and session.get('entropy'):
+            myuser_id = session['entropy'].get('entropy_user_id')
+            if myuser_id == c.ugc_doc.get('userid'):
+                can_change_doc = True
+    %>
+
+    %if can_change_doc:
+            | <a href="javascript:delete_ugc_doc('${c.iddoc}','${c.error_div}','${c.destroy_div}')">${_("Delete")}</a>
+            %if is_doc_admin:
+                <!-- | <a href="javascript:show_edit_ugc_doc('${c.iddoc}','${c.edit_div}')">${_("Edit")}</a> -->
+            %endif
+    %endif
+%endif
+<span id="${c.error_div}"></span>
