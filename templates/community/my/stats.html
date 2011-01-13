@@ -1,0 +1,154 @@
+## -*- coding: utf-8 -*-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<%include file="/head.html"/>
+<body>
+    <%include file="/wrapper.html"/>
+    <div id="small_band">
+        <%include file="/menu.html"/>
+        <%include file="/small_band.html"/>
+    </div>
+
+    <div id="body">
+        <div id="my-area">
+            <div style="margin-bottom: 20px">
+                ${_("In this page you will find all your statistics regarding your Entropy/Web account")}.
+            </div>
+
+            <div id="my-data" style="width: 85%; margin-left: auto; margin-right: auto;">
+                % if session.get('logged_in') and session.get('entropy'):
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Username")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("this is the name other people will reference you")}</span>
+                        </dt>
+                        <dd>
+                            ${session['entropy']['entropy_user']}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("User id")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("this is your user account number")}</span>
+                        </dt>
+                        <dd>
+                            ${session['entropy']['entropy_user_id']}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Entropy role")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("your role inside the Community")}</span>
+                        </dt>
+                        <dd>
+                            ${c.my_role}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Votes")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("number of times you voted")}</span>
+                        </dt>
+                        <dd>
+                            ${c.votes} <small>[${_("weight: %s points each") % (c.votes_weight,)}]</small>
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Vote average")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("this is kinda self explanatory")}</span>
+                        </dt>
+                        <dd>
+                            ${c.vote_avg}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Documents")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how many documents you uploaded (comments,images,etc)")}</span>
+                        </dt>
+                        <dd>
+                            ${c.total_docs}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Comments")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how many comments you wrote")}</span>
+                        </dt>
+                        <dd>
+                            ${c.total_comments} <small>[${_("weight: %s points each") % (c.comments_weight,)}]</small>
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Images")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how many images you uploaded")}</span>
+                        </dt>
+                        <dd>
+                            ${c.total_images} <small>[${_("weight: %s points each") % (c.docs_weight,)}]</small>
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Files")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how many files you uploaded")}</span>
+                        </dt>
+                        <dd>
+                            ${c.total_files} <small>[${_("weight: %s points each") % (c.docs_weight,)}]</small>
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("YouTube(tm) Videos")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how many videos you uploaded")}</span>
+                        </dt>
+                        <dd>
+                            ${c.total_videos} <small>[${_("weight: %s points each") % (c.docs_weight,)}]</small>
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Ranking")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("how good you are in our Community")}</span>
+                        </dt>
+                        <dd>
+                            ${c.my_ranking}° ${_("position")}
+                        </dd>
+                    </dl>
+                    <dl class="form-line" style="background-color: #242424">
+                        <dt class="form-left" style="width: 33em">
+                            <label><b>${_("Score")}</b></label>
+                            <br />
+                            <span style="font-size: 0.8em">${_("your resulting Entropy score")}</span>
+                        </dt>
+                        <dd>
+                            <span style="font-size: 1.5em">${c.score}</span> ${_("points")}
+                        </dd>
+                    </dl>
+                % else:
+
+                    <div style="margin-bottom: 20px; margin-top: 20px; font-size: 1.5em">
+                        ${_("Not logged in")}.
+                    </div>
+
+                % endif
+            </div>
+        </div>
+    </div>
+
+    <%include file="/footer.html"/>
+</body>
+</html>

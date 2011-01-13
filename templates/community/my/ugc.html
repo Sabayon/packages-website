@@ -1,0 +1,92 @@
+## -*- coding: utf-8 -*-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<%include file="/head.html"/>
+<link href="/css/packages.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript"><%include file="/../public/js/packages.js"/></script>
+
+<body>
+    <%include file="/wrapper.html"/>
+    <div id="small_band">
+        <%include file="/menu.html"/>
+        <%include file="/small_band.html"/>
+    </div>
+
+    <div id="body">
+        <div id="my-area">
+            <div style="margin-bottom: 20px">
+                ${_("In this page you will be able to browse through your submitted documents on all the repositories we host")}.
+            </div>
+
+            <%
+                img_ugc_dict = {
+                    1: 'text.png',
+                    3: 'image.png',
+                    4: 'generic.png',
+                    5: 'video.png',
+                }
+            %>
+
+            % for doctype in sorted(c.my_ugc_data.keys()):
+                <div style="margin-bottom: 25px; padding-bottom: 20px">
+                    <div style="font-size: 1.1em; font-weight: bold; color: #EFA5FF">
+                        <img src="/images/ugc/${img_ugc_dict.get(doctype)}" alt="${c.ugc_doctypes_desc_plural.get(doctype)} ${_("icon")}"/> ${c.ugc_doctypes_desc_plural.get(doctype)}
+                    </div>
+                    % for pkgkey in sorted(c.my_ugc_data[doctype].keys()):
+                        <div style="margin-top: 20px; margin-bottom: 20px;">
+                            <div onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background: #2D2D2D; clear:both; float:left; width: 100%; margin-bottom: 6px">
+                                <div style="float: left; width: 80%; clear: left;">
+                                    <h5 style="color: #FF60AD"><a href="/ugc/search/package/${pkgkey}">${pkgkey}</a></h5>
+                                    <span style="font-size: 0.9em">
+                                    <% mylen = len(c.my_ugc_data[doctype][pkgkey]) %>
+                                    % if mylen > 1:
+                                        ${mylen} elements
+                                    % else:
+                                        ${mylen} element
+                                    % endif
+                                    </span>
+                                </div>
+                                <div style="float: left; width: 20%; clear: right; text-align: right;">
+                                    <img  onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" onclick="div_toggle_slide('data-${doctype}-${pkgkey}'); if ((this.value == undefined) || (this.value == '0')) { this.src = '/images/packages/list-remove.png'; this.value = '1'; } else { this.src = '/images/packages/list-add.png';  this.value = '0'; }" src="/images/packages/list-add.png"/>
+                                </div>
+                            </div>
+                            <div id="data-${doctype}-${pkgkey}" style="display: none;">
+
+                                % for item in c.my_ugc_data[doctype][pkgkey]:
+                                    <div style="margin-top: 5px; margin-bottom: 5px; padding-left: 15px" onmouseover="this.style.background='#363636';" onmouseout="this.style.background='none';" id="list-ugc-doc-${item['iddoc']}">
+                                        <div style="padding-left: 10px">
+                                            <span style="color: #089BEA;">${item['title']}</span> [${item['ts']} | <a href="/ugc/search/iddoc/${item['iddoc']}">${_("View")}</a>
+
+                                            <% 
+                                                c.iddoc = item['iddoc']
+                                                c.error_div = "list-ugc-doc-error-%s" % (item['iddoc'],)
+                                                c.destroy_div = "list-ugc-doc-%s" % (item['iddoc'],)
+                                                c.edit_div = "list-ugc-doc-edit-%s" % (item['iddoc'],)
+                                                c.ugc_doc = item
+                                            %>
+                                            <%include file="/packages/ugc_doc_handling_links.html"/>
+                                            ]
+
+                                            % if item.get('description'):
+                                                <br/>
+                                                <i>${item['description']}</i>
+                                            % elif doctype == c.ugc_doctypes['comments']:
+                                                <br/>
+                                                <i>${item['ddata'][:160].strip()+"..."}</i>
+                                            % endif
+                                        </div>
+                                    </div>
+                                % endfor
+
+                            </div>
+                        </div>
+                    % endfor
+                </div>
+            % endfor
+        </div>
+    </div>
+
+    <%include file="/footer.html"/>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<%include file="/community/my/dashboard_pages_generic_header.html"/>
+<div style="margin-top: 20px; padding-bottom: 20px; display: none;" class="admin-page-doc-content" id="page-docs-content-${c.pages_id}">
+    <%include file="/community/my/dashboard_pages_edit.html"/>
+</div>
+<div style="padding-top: 20px; padding-bottom: 20px; padding-left: 20px" id="page-poll-options-${c.pages_id}">
+    <%
+        c.poll_options = c.polls.get(c.pages_id)
+        if not c.poll_options: c.poll_options = []
+    %>
+    % for item in c.poll_options:
+        <%
+            c.poll_options_id = item['poll_options_id']
+            c.option_name = item['option_name']
+            c.poll_pages_id = item['pages_id']
+            c.poll_page_state = c.page_item['state']
+            c.option_votes = c.poll_votes.get(c.poll_options_id)
+            if c.option_votes == None: c.option_votes = 0
+            else: c.option_votes = c.option_votes.get('votes')
+        %>
+        <%include file="/community/my/dashboard_pages_poll_option_edit.html"/>
+    % endfor
+    <div id="page-poll-options-add-${c.pages_id}-${c.poll_options_id}"></div>
+    % if c.page_item['state'] == c.page_states['disabled']:
+        <div style="margin-top: 20px">
+            <form autocomplete="off" action="javascript:add_poll_option('page-poll-options-add-form-${c.pages_id}-${c.poll_options_id}','${c.pages_id}','page-poll-options-add-${c.pages_id}-${c.poll_options_id}','page-poll-options-add-msg-${c.pages_id}-${c.poll_options_id}')" method="POST" id="page-poll-options-add-form-${c.pages_id}-${c.poll_options_id}">
+                <input type="hidden" name="pages_id" value="${c.pages_id}"/>
+                <input type="text" value="" name="option_name"/> <input type="submit" value="${_("Append")}"/>
+                <span id="page-poll-options-add-msg-${c.pages_id}-${c.poll_options_id}"></span>
+            </form>
+        </div>
+    % endif
+</div>
+

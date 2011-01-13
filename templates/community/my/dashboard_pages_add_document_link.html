@@ -1,0 +1,19 @@
+<% 
+    new_page_num = 1
+    if c.pages:
+        new_page_num = max(c.pages[c.pages_id].keys())+1
+    else:
+        new_page_num = c.page_num+1
+    this_div = "page-docs-one-more-%s-%s" % (c.pages_id,new_page_num,)
+%>
+<div id="${this_div}">
+    <ul class="fancylist">
+        <li>
+        % if c.pages:
+            <a href="javascript:add_document_page('${c.pages_id}','${new_page_num}','page-docs-new-master-','page-docs-new-dest-${c.pages_id}','${this_div}')">${_("One more page")}</a>
+        % else:
+            <a href="javascript:add_document_page('${c.pages_id}','${new_page_num}','page-docs-new-master-','page-docs-new-dest-${c.pages_id}','${this_div}')">${_("One more page")}</a>
+        % endif
+        </li>
+    </ul>
+</div>

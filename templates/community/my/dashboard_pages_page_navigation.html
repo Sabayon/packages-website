@@ -1,0 +1,20 @@
+<% 
+    c.number_of_pages = len(c.pages[c.pages_id])
+%>
+% for page_num in sorted(c.pages[c.pages_id].keys()):
+    <%
+        c.page_item = c.pages[c.pages_id][page_num]
+        c.page_num = page_num
+    %>
+    <div id="page-docs-content-${c.pages_id}-${c.page_num}">
+        [${c.page_num+1} of ${c.number_of_pages}]
+        [
+            <a href="#page-item-${c.pages_id}" onclick="javascript:div_toggle_slide('page-docs-edit-${c.pages_id}-${c.page_num}')">${_("Edit")}</a> |
+            <span id="page-docs-delete-${c.pages_id}-${c.page_num}"><a href="#page-item-${c.pages_id}" onclick="javascript:remove_document_page('${c.pages_id}','${c.page_num}','page-docs-content-${c.pages_id}-${c.page_num}','page-docs-delete-${c.pages_id}-${c.page_num}');">${_("Delete")}</a></span>
+        ]
+        <span style="color: #C05600">${c.page_item['title']}</span>
+        <div style="display: none; margin-top: 20px; margin-bottom: 20px" id="page-docs-edit-${c.pages_id}-${c.page_num}">
+            <%include file="/community/my/dashboard_pages_edit.html"/>
+        </div>
+    </div>
+% endfor

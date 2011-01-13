@@ -1,0 +1,225 @@
+<%
+    c.pin_read_only = False
+    if c.pinboard_share_status['ro'] == c.item.get('status'):
+        c.pin_read_only = True
+    c.external_pin = 0
+    if c.item.has_key('external_share'):
+        c.external_pin = 1
+%>
+<div class="pinboard-object" id="pinboard-object-${c.item['pinboards_id']}">
+    <div id="pinboard-object-headline-${c.item['pinboards_id']}" class="pinboard-object-headline" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';">
+        <div style="float: left; width: 85%; clear: left;">
+            <div id="pinboard-object-title-${c.item['pinboards_id']}">
+                <span class="pinboard-object-title">${c.item['title_clean']}</span>
+                <span class="pinboard-object-title-details">${_("on")} <i>${c.item['ts']}</i>, ${_("by")} <b><a href="${c.profile_uri}/${c.item['username']}" target="_blank">${c.item['username']}</a></b></span>
+            </div>
+            <div id="pinboard-object-description-${c.item['pinboards_id']}" class="pinboard-object-description">
+                ${c.item['description_clean']}
+            </div>
+            <div id="pinboard-object-error-header-box-${c.item['pinboards_id']}"></div>
+        </div>
+        <div style="float: left; width: 15%; clear: right; font-size: 0.8em; text-align: right; padding-top: 4px">
+
+            % if not c.pin_read_only:
+                <a href="javascript:div_toggle_slide('pinboard-object-edit-${c.item['pinboards_id']}');">
+                    <img src="/images/actions/format-justify-fill.png" title="${_("Edit")}" alt="${_("Edit")}"/>
+                </a>
+                <a href="javascript:delete_pinboard('${c.item['pinboards_id']}','show-pinboard-my-item-${c.pinboards_id}','pinboard-object-error-header-box-${c.item['pinboards_id']}')">
+                    <img src="/images/actions/edit-delete.png" title="${_("Remove")}" alt="${_("Remove")}"/>
+                </a>
+            % endif
+
+            % if not c.external_pin:
+                <a href="javascript:div_toggle_slide('pinboard-object-share-${c.item['pinboards_id']}');">
+                    <img src="/images/actions/mail-reply-all.png" alt="${_("Share")}" title="${_("Share")}"/>
+                </a>
+            % endif
+
+            % if not c.pin_read_only:
+                <a href="javascript:div_toggle_slide('pinboard-element-add-${c.item['pinboards_id']}')">
+                    <img src="/images/actions/list-add.png" title="${_("Add element")}" alt="${_("Add element")}"/>
+                </a>
+            % endif
+        </div>
+
+        <hr style="border-bottom: 1px dotted; clear: both"/>
+
+        % if not c.external_pin:
+
+            <div class="pinboard-object-share" id="pinboard-object-share-${c.item['pinboards_id']}" style="display: none;">
+
+                <script type="text/javascript">
+                    function search_results_select_cb_${c.item['pinboards_id']}(calling_div,user_id,username) {
+
+                        dest_div = 'pinboard-object-share-selected-users-${c.item['pinboards_id']}';
+                        error_div = 'pinboard-object-share-selected-msg-${c.item['pinboards_id']}';
+                        submit_button = 'pinboard-object-share-selected-submit-${c.item['pinboards_id']}';
+                        submit_button_obj = document.getElementById(submit_button);
+                        dest_obj = document.getElementById(dest_div);
+                        error_obj = document.getElementById(error_div);
+                        dest_obj.setAttribute('style','padding-bottom: 20px;');
+                        new_div_name = 'pinboard-object-share-selected-user-${c.item['pinboards_id']}-'+user_id;
+
+                        var myperms = new Array();
+                        myperms[0] = '${_("Read/Write")}';
+                        myperms[1] = '${_("Read only")}';
+
+                        if (! document.getElementById(new_div_name)) {
+
+                            function do_et_s(f_selected) {
+                                if (f_selected != false) {
+                                    error_obj.innerHTML = '';
+                                    submit_button_obj.disabled = false;
+                                    f_selected -= 1;
+                                    newdiv = document.createElement('div');
+                                    newdiv.setAttribute('id', new_div_name);
+                                    newdiv.setAttribute('class', 'pinboard-object-share-selected-user');
+                                    dest_obj.appendChild(newdiv);
+                                    mymode = 'read only';
+                                    if (f_selected == 0) { mymode = 'read/write'; }
+                                    mytxt = 'Will request to share this with <b>'+username+'</b> in <b>'+mymode+'</b> mode';
+                                    newdiv.innerHTML = mytxt+'<input type="hidden" name="'+user_id+'" value="'+f_selected+'">';
+                                    submit_obj = document.getElementById(submit_button).style.display = '';
+                                }
+                            }
+
+
+                            show_select_box('${_("Choose share options")}', '${_("Select the permissions you want to give the user")}', myperms, do_et_s);
+
+                        }
+
+
+                    }
+
+                    function shares_send_invite_${c.item['pinboards_id']}() {
+
+                        user_shares_div = 'pinboard-object-share-selected-users-${c.item['pinboards_id']}';
+                        form_name = 'pinboard-object-share-add-form-${c.item['pinboards_id']}';
+                        error_div = 'pinboard-object-share-selected-msg-${c.item['pinboards_id']}';
+                        send_invite_button = 'pinboard-object-share-selected-submit-${c.item['pinboards_id']}';
+                        error_obj = document.getElementById(error_div);
+                        user_shares_obj = document.getElementById(user_shares_div);
+                        send_invite_button_obj = document.getElementById(send_invite_button);
+
+                        function do_et_complete(valid, resp_txt, resp_code) {
+                            if ((!valid) || (string_startswith(resp_txt.toLowerCase(),"error"))) {
+                                error_obj.innerHTML = "<span style='color: red; font-weight: bold'>"+resp_txt+"</span>";
+                            } else {
+                                send_invite_button_obj.disabled = true;
+                                user_shares_obj.innerHTML = '';
+                            }
+                        }
+
+                        function do_et(valid) {
+                            if (valid) {
+                                completeAHAH.likeSubmit('/pinboard/shares_send_invite', 'POST', form_name, error_div, undefined, do_et_complete, true, error_div);
+                            }
+                        }
+
+                        show_confirm('${_("Are you sure?")}','${_("You want to <b>share</b> this Pin with the selected friends, are you sure?")}',do_et);
+
+                    }
+
+                </script>
+                <div style="font-weight: bold; margin-bottom: 10px;">
+                    ${_("Share this Pin")}
+                </div>
+                <% 
+                    c.results_div = 'pinboard-object-share-results-%s' % (c.item['pinboards_id'],)
+                    c.form_id = 'pinboard-object-share-form-%s' % (c.item['pinboards_id'],)
+                    c.spin_div = 'pinboard-object-share-messagediv-%s' % (c.item['pinboards_id'],)
+                    c.show_select_cb = True
+                    c.select_cb_name = "search_results_select_cb_%s" % (c.item['pinboards_id'],)
+                %>
+                <%include file="/community/users/search.html"/>
+                <div class="pinboard-object-share-results">
+                    <div id="pinboard-object-share-results-${c.item['pinboards_id']}" style="margin-bottom: 20px;"></div>
+                    <div id="pinboard-object-share-selected-results-${c.item['pinboards_id']}">
+                        <form action="javascript:shares_send_invite_${c.item['pinboards_id']}();" method="POST" id="pinboard-object-share-add-form-${c.item['pinboards_id']}" name="addshares-form">
+                            <input type="hidden" name="pinboards_id" value="${c.item['pinboards_id']}"/>
+                            <div id="pinboard-object-share-selected-users-${c.item['pinboards_id']}"></div>
+                            <input type="submit" value="${_("Send invite")}" id="pinboard-object-share-selected-submit-${c.item['pinboards_id']}" style="display: none; margin-bottom: 10px;"/><span id="pinboard-object-share-selected-msg-${c.item['pinboards_id']}" style="margin-left: 10px;"></span>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="pinboard-object-current-shares-${c.item['pinboards_id']}" style="margin-right: 20px">
+                    % if c.item['my_shared_pins']:
+                        <div class="pinboard-object-active-shares-headline">
+                            ${_("Active shares")}
+                            <span style="margin-left: 5px">
+                                <a href="javascript:remove_all_my_pinboard_shares('${c.item['pinboards_id']}','pinboard-object-current-shares-${c.item['pinboards_id']}','pinboard-object-active-shares-headline-msg-${c.item['pinboards_id']}')"><img src="/images/actions/edit-delete.png" title="${_("Remove all the shares")}" alt="${_("Remove all the shares")}"/></a><span id="pinboard-object-active-shares-headline-msg-${c.item['pinboards_id']}"></span>
+                            </span>
+                        </div>
+                        <div class="pinboard-object-share-item">
+                            % for item in c.item['my_shared_pins']:
+                                <div class="pinboard-object-share-user" id="pinboard-object-share-user-${item['pinboard_shares_id']}" style="margin-bottom: 3px; background-color: #890089">
+                                    <div style="float:left; width: 95%; clear: left;">
+                                        <span style="font-weight: bold; font-size: 1.05em"><a href="${c.profile_uri}/${item['username_shared']}" target="_blank">${item['username_shared']}</a></span> in <span style="font-style: underline;">
+                                            <select id="pinboard-object-share-status-${item['pinboard_shares_id']}" onchange="javascript:update_pinboard_share_status('${item['pinboard_shares_id']}','pinboard-object-share-status-${item['pinboard_shares_id']}','pinboard-object-share-user-msg-${item['pinboard_shares_id']}')">
+                                            % for status in sorted(c.pinboard_share_status_desc.keys()):
+                                                <option value="${status}"
+                                                % if status == item['status']:
+                                                    selected
+                                                % endif
+                                                >${c.pinboard_share_status_desc.get(status)}</option>
+                                            % endfor
+                                            </select>
+                                        </span> mode. <span id="pinboard-object-share-user-msg-${item['pinboard_shares_id']}" style="margin-left: 5px"></span>
+                                    </div>
+                                    <div style="float:left; width: 5%; clear:right; text-align: right; position: relative; top: 5px; right: 4px">
+                                        <a href="javascript:remove_my_pinboard_share('${item['pinboard_shares_id']}','${c.item['pinboards_id']}','pinboard-object-share-user-${item['pinboard_shares_id']}','pinboard-object-share-user-msg-${item['pinboard_shares_id']}','pinboard-object-current-shares-${c.item['pinboards_id']}');"><img src="/images/actions/edit-delete.png" title="${_("Remove this share")}" alt="${_("Remove this share")}"/></a>
+                                    </div>
+                                    <hr style="border-bottom: 1px dotted #666666; clear: both;"/>
+                                </div>
+                            % endfor
+                        </div>
+                    % endif
+                </div>
+            </div>
+        % endif
+
+        % if not c.pin_read_only:
+            <div class="pinboard-element-add" id="pinboard-element-add-${c.item['pinboards_id']}" style="display: none;">
+                <%
+                    c.pinboards_data_id = 0
+                    c.pinboards_id = c.item['pinboards_id']
+                    c.status = 0
+                %>
+                <form action="javascript:insert_pinboard_element('pinboard-element-edit-form-${c.pinboards_id}','new-pinboard-elements-${c.pinboards_id}','pinboard-element-error-box-${c.pinboards_id}','no-pinboard-elements-${c.pinboards_id}')" method="POST" id="pinboard-element-edit-form-${c.pinboards_id}">
+                    <%include file="/community/my/dashboard_pinboard_element_edit.html"/>
+                    <input type="submit" value="${_("Insert")}"/><span id="pinboard-element-error-box-${c.pinboards_id}" style="margin-left: 10px"></span>
+                </form>
+            </div>
+        % endif
+
+        <div class="pinboard-object-edit" id="pinboard-object-edit-${c.item['pinboards_id']}" style="display: none;">
+            <%
+                c.title = c.item['title']
+                c.pinboards_id = c.item['pinboards_id']
+                c.description = c.item['description']
+            %>
+            <form action="javascript:edit_pinboard('pinboard-object-edit-form-${c.pinboards_id}','show-pinboard-my-item-${c.pinboards_id}','pinboard-object-error-box-${c.pinboards_id}')" autocomplete="off" method="POST" name="edit_pin" id="pinboard-object-edit-form-${c.pinboards_id}">
+                <%include file="/community/my/dashboard_pinboard_edit.html"/>
+                % if not c.pin_read_only:
+                    <input type="submit" value="${_("Save")}"/>
+                % endif
+                <span id="pinboard-object-error-box-${c.pinboards_id}" style="margin-left: 10px"></span>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="pinboard-element">
+        <div class="no-pinboard-elements" id="no-pinboard-elements-${c.pinboards_id}">
+        % if not c.item['pinboard_elements']:
+                No elements
+        % endif
+        </div>
+        % for elem in c.item['pinboard_elements']:
+            <% c.elem = elem %>
+            <%include file="/community/my/dashboard_pinboard_element.html"/>
+        % endfor
+        <div id="new-pinboard-elements-${c.pinboards_id}"></div>
+    </div>
+</div>

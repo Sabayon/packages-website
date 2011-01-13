@@ -1,0 +1,73 @@
+<h2>${_("Pinboard")}</h2>
+<div style="margin-bottom: 20px">
+    ${_("Welcome to your personal Pinboard. Write your thoughts here. Organize your tasks. Share with friends.")}
+</div>
+<script type="text/javascript">
+function new_pin() {
+    div_toggle_slide('pinboard-object-add');
+    document.getElementById('pinboard-object-edit-title-0').value = '';
+    document.getElementById('pinboard-object-edit-description-0').innerHTML = '';
+}
+</script>
+<div id="show-pinboards">
+    % if isinstance(c.pinboard,dict):
+        <div style="margin-bottom: 20px">
+            <h4>${_("My Pins")}</h4>
+
+            <div style="text-align: right; margin-bottom: 10px">
+                <a href="javascript:new_pin()">${_("New Pin")}</a>
+            </div>
+
+            <div id="pinboard-object-add" class="pinboard-objects-add" style="margin-top: 20px; margin-bottom: 20px; padding-top: 20px; padding-bottom: 20px; padding-left: 20px; display: none;">
+
+                <form action="javascript:insert_pinboard('pinboard-object-add-form-0','show-pinboard-shared-pins-new','pinboard-object-error-box-0')" autocomplete="off" method="POST" name="add_pin" id="pinboard-object-add-form-0">
+                    <%
+                        c.pinboards_id = 0
+                    %>
+                    <%include file="/community/my/dashboard_pinboard_edit.html"/>
+                    <input type="submit" value="${_("Insert")}"/><span id="pinboard-object-error-box-0" style="margin-left: 10px"></span>
+                </form>
+
+            </div>
+
+            <div id="show-pinboard-shared-pins-new"></div>
+            % if c.pinboard['my_pins']:
+                <div id="show-pinboard-my-pins">
+                    % for item in c.pinboard['my_pins']:
+                        <%
+                            c.item = item
+                            c.item['my_shared_pins'] = c.pinboard['my_shared_pins'].get(item['pinboards_id'])
+                            c.pinboards_id = c.item['pinboards_id']
+                        %>
+                        <div id="show-pinboard-my-item-${c.pinboards_id}">
+                            <%include file="/community/my/dashboard_pinboard_item.html"/>
+                        </div>
+                    % endfor
+                </div>
+            % else:
+                <div id="show-pinboard-no-my-pins">
+                    ${_("No elements here. You can't blame <u>aliens</u>. You might want to add something someday, huh?")}
+                </div>
+            % endif
+        </div>
+        <div style="margin-bottom: 20px">
+            <h4>${_("Connected Pins")}</h4>
+            % if c.pinboard['shared_pins']:
+                <div id="show-pinboard-shared-pins" style="margin-top: 10px">
+                    % for item in c.pinboard['shared_pins']:
+                        <%
+                            c.item = item
+                            c.item['my_shared_pins'] = c.pinboard['my_shared_pins'].get(item['pinboards_id'])
+                            c.pinboards_id = c.item['pinboards_id']
+                        %>
+                        <%include file="/community/my/dashboard_pinboard_item.html"/>
+                    % endfor
+                </div>
+            % else:
+                <div id="show-pinboard-no-shared-pins">
+                    ${_("No elements here. Nobody loves you. Errr.. I am joking! We love you! No, you can't blame <u>aliens</u>, again")}.
+                </div>
+            % endif
+        </div>
+    % endif
+</div>

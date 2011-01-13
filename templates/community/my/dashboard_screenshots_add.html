@@ -1,0 +1,24 @@
+<form name="do-new-shots" id="do-new-shots" method="POST" action="/screenshots/insert" onsubmit="return insert_screenshot('do-new-shots','do-new-shots-error')" enctype="multipart/form-data">
+
+    <dl class="form-line">
+        <dt class="form-left">
+            <label><b>${_("Title")}</b></label>
+            <br />
+            <span style="font-size: 0.8em">${_("Will be used as directory name")}.</span>
+        </dt>
+        <dd>
+            <input type="text" value="" name="title" id="do-new-shots-title" size="45" maxlength="160"/>
+        </dd>
+    </dl>
+    <dl class="form-line">
+        <dt class="form-left">
+            <label><b>${_("Compressed archive")}</b></label>
+            <br />
+            <span style="font-size: 0.8em">${_("Valid are .zip, .tar.bz2, .tar.gz. Inside: root dir and just files")}</span>
+        </dt>
+        <dd>
+            <input name="shotsfile" type="file" id="do-new-shots-file" size="35"/>
+        </dd>
+    </dl>
+    <input value="${_("Insert screenshots")}" type="submit"/><span id="do-new-shots-error" style="margin-left: 10px;"/></span>
+</form>

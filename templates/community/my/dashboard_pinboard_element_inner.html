@@ -1,0 +1,40 @@
+<%
+    headline = c.elem['note_clean'][:80].strip()
+    if len(c.elem['note_clean']) > 80:
+        headline += "..."
+%>
+<div style="float: left; width: 85%; clear: left;">
+    <span class="pinboard-element-status" style="position: relative; top: 4px; padding-left: 5px;">
+        <%
+            c.el_status = c.elem['status']
+        %>
+        <%include file="/community/my/dashboard_pinboard_element_status_img.html"/>
+    </span>
+    <span class="pinboard-element-date" style="font-size: 0.8em;">[<i>${c.elem['ts']}</i>]</span>
+    <span class="pinboard-element-headline" style="font-size: 0.8em; color: #FF8000;">${headline}</span>
+</div>
+<div style="float: left; width: 15%; clear: right; text-align: right; font-size: 0.8em;">
+    [ <a href="javascript:div_toggle_slide('show-pinboard-element-${c.elem['pinboards_data_id']}')">${_("Show")}</a>
+    % if not c.pin_read_only:
+        | <a href="javascript:delete_pinboard_element('${c.pinboards_id}','${c.elem['pinboards_data_id']}','pinboard-element-${c.elem['pinboards_data_id']}','pinboard-element-delete-error-box-${c.elem['pinboards_data_id']}')">${_("Delete")}</a>
+    % endif
+    ]
+</div>
+<hr style="border-bottom: 1px dotted; clear: both"/>
+<div id="pinboard-element-delete-error-box-${c.elem['pinboards_data_id']}" style="text-align: right;"></div>
+
+<div id="show-pinboard-element-${c.elem['pinboards_data_id']}" style="display: none; padding-left: 20px; padding-top: 20px; padding-bottom: 20px">
+    <%
+        c.pinboards_data_id = c.elem['pinboards_data_id']
+        c.pinboards_id = c.elem['pinboards_id']
+        c.note = c.elem['note']
+        c.status = c.elem['status']
+    %>
+    <form action="javascript:edit_pinboard_element('pinboard-element-edit-form-${c.elem['pinboards_data_id']}','pinboard-element-${c.elem['pinboards_data_id']}','pinboard-element-error-box-${c.elem['pinboards_data_id']}')" method="POST" id="pinboard-element-edit-form-${c.elem['pinboards_data_id']}">
+        <%include file="/community/my/dashboard_pinboard_element_edit.html"/>
+        % if not c.pin_read_only:
+            <input type="submit" value="${_("Save")}"/>
+        % endif
+        <span id="pinboard-element-error-box-${c.elem['pinboards_data_id']}" style="margin-left: 10px"></span>
+    </form>
+</div>

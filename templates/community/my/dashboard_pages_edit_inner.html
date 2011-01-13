@@ -1,0 +1,32 @@
+<input type="hidden" name="pages_id" value="${c.pages_id}"/>
+<input type="hidden" name="page_num" value="${c.page_num}"/>
+<div style="width: 90%; margin-right: auto; margin-left: auto">
+    <input type="text" name="title" id="page-docs-title-${c.pages_id}-${c.page_num}" value="${c.page_item['title']}" style="width: 100%" maxlength="200"/>
+</div>
+
+<div style="width: 90%; margin-right: auto; margin-left: auto; margin-top: 20px; margin-bottom: 20px">
+    <span style="font-size: 1.1em; font-weight: bold; color: #B4FFA5">${_("Introduction")}</span>
+    <textarea name="intro" id="page-docs-intro-${c.pages_id}-${c.page_num}" style="width: 100%; height: 200px; margin-right: auto; margin-left: auto">${c.page_item['intro_encoded']}</textarea>
+    <script type="text/javascript">
+        tinyMCE.execCommand("mceAddControl", true, "page-docs-intro-${c.pages_id}-${c.page_num}");
+    </script>
+</div>
+<div style="width: 90%; margin-right: auto; margin-left: auto; margin-top: 20px">
+    % if c.static_page_body:
+        <input type="hidden" value="${c.static_page_body}" id="page-docs-body-${c.pages_id}-${c.page_num}" name="content"/>
+    % else:
+        <span style="font-size: 1.1em; font-weight: bold; color: #B4FFA5">${_("Body")}</span>
+        <textarea name="content" id="page-docs-body-${c.pages_id}-${c.page_num}" style="width: 100%; height: 400px;">${c.page_item['text_encoded']}</textarea>
+        <script type="text/javascript">
+            tinyMCE.execCommand("mceAddControl", true, "page-docs-body-${c.pages_id}-${c.page_num}");
+        </script>
+    % endif
+
+    % if c.static_tags:
+        <input type="hidden" name="tags" id="page-docs-tags-${c.pages_id}-${c.page_num}" value="${c.static_tags}"/>
+    % else:
+        <div style="width: 100%; margin-top: 10px; text-align: right;">
+            ${_("Tags")}: <input type="text" name="tags" id="page-docs-tags-${c.pages_id}-${c.page_num}" value="${', '.join(c.page_item['tags'])}" style="width: 75%"/>
+        </div>
+    % endif
+</div>

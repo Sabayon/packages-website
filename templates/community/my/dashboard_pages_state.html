@@ -1,0 +1,5 @@
+% if c.page_state == c.page_states['enabled']:
+    <img onclick="javascript:change_document_status('${c.pages_id}','${c.page_states['disabled']}','admin-page-doc-state-${c.pages_id}');" onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" onclick="" src="/images/admin/edit-undo.png" title="${_("Disable")}" alt="${_("Disable")}"/>
+% else:
+    <img onclick="javascript:change_document_status('${c.pages_id}','${c.page_states['enabled']}','admin-page-doc-state-${c.pages_id}');" onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" src="/images/admin/edit-redo.png" title="${_("Enable")}" alt="${_("Enable")}"/>
+% endif

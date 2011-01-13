@@ -1,0 +1,24 @@
+<h2>Screenshots</h2>
+<div style="margin-bottom: 20px">
+    ${_("Ok, good you are an admin. This is the Screenshots manager")}.
+</div>
+<script type="text/javascript">
+function new_shots() {
+    div_toggle_slide('do-new-shots-item');
+    document.getElementById('do-new-shots-title').value = '';
+    document.getElementById('do-new-shots-file').value = '';
+}
+</script>
+<div style="text-align: right; margin-bottom: 20px">
+    <a href="javascript:new_shots();" style="text-align: center;">
+        ${_("New Screenshots")}
+    </a>
+</div>
+<div id="do-new-shots-item" class="do-new-shots" style="display: none; margin-bottom: 30px">
+    <%include file="/community/my/dashboard_screenshots_add.html"/>
+</div>
+<hr style="border-bottom: 1px thin #666666"/>
+<div id="do-shots-show">
+    <% c.shots_cols = 3 %>
+    <%include file="/screenshots/show_shots.html"/>
+</div>

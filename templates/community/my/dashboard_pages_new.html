@@ -1,0 +1,55 @@
+<form autocomplete="off" action="javascript:insert_document('new-page-form-${c.pages_id}-${c.page_num}','document-save-messagebox-${c.pages_id}-${c.page_num}');" id="new-page-form-${c.pages_id}-${c.page_num}" name="new-page-form" method="POST">
+    <input type="hidden" value="${c.dashboard_tab}" name="dashboard_tab"/>
+    <%include file="/community/my/dashboard_pages_edit_inner.html"/>
+    <div style="width: 90%; margin-right: auto; margin-left: auto; margin-top: 10px">
+        % if isinstance(c.default_page_type,int):
+            <input type="hidden" value="${c.default_page_type}" name="pagetype"/>
+        % else:
+            <div style="text-align: right">
+                % if c.static_page_type:
+                    <input type="hidden" value="${c.static_page_type}" name="pagetype"/>
+                % else:
+                    <span>${_("Document type")}: 
+                        <select name="pagetype">
+                        <% first = True %>
+                        % for page_type in sorted(c.page_types_desc.keys()):
+                            <%
+                                if page_type in c.page_types_filter:
+                                    continue
+                            %>
+                            <option value="${page_type}"
+                            % if first:
+                                selected
+                            % endif
+                            >${c.page_types_desc.get(page_type)}</option>
+                            <% first = False %>
+                        % endfor
+                        </select>
+                    </span>
+                % endif
+            </div>
+        % endif
+        % if isinstance(c.default_page_state,int):
+            <input type="hidden" value="${c.default_page_state}" name="page_state"/>
+        % else:
+            <div style="text-align: right; margin-top: 3px">
+                <span>${_("Page state")}: 
+                    <select name="page_state">
+                    <% first = True %>
+                    % for page_state in sorted(c.page_states_desc.keys()):
+                        <option value="${page_state}"
+                        % if first:
+                            selected
+                        % endif
+                        >${c.page_states_desc.get(page_state)}</option>
+                        <% first = False %>
+                    % endfor
+                    </select>
+                </span>
+            </div>
+        % endif
+        <input type="hidden" value="0" name="page_num"/>
+        <input type="submit" value="${_("Submit Document")}" style="margin-top: 20px"/>
+        <span id="document-save-messagebox-${c.pages_id}-${c.page_num}" style="position: relative; left: 20px"></span>
+    </div>
+</form>

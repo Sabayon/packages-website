@@ -1,0 +1,108 @@
+<h2>${_("Profile")}</h2>
+<div style="margin-bottom: 20px">
+    ${_("Of course, this is your profile and the place you can change how you are shown to the World. Style matters, remember this")}.
+</div>
+<% 
+
+    c.user_profile['group'] = c.user_profile['groups'].get(c.user_profile['group'])
+    c.user_profile['groups'] = ', '.join([c.user_profile['groups'][x] for x in c.user_profile['groups']])
+    profile_items = {}
+    for profile_key in c.profile_items:
+        if "locked" not in c.profile_items[profile_key]:
+            c.profile_items[profile_key]['locked'] = c.form_locked
+
+%>
+
+<form method="POST" autocomplete="off" name="profile" id="profile" action="javascript:save_user_profile('profile','profile-save-messagebox','profile-submit-button')">
+    % for item in c.profile_items_order:
+        <% myitem = profile_items.get(item) %>
+        % if myitem:
+            <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+                <dt class="form-left" style="width: 23em;">
+                    <label><b>${myitem['title']}</b></label>
+                    <br/>
+                    <span style="font-size: 0.8em">${myitem['subtitle']}</span>
+                </dt>
+                <dd style="text-align: right;">
+                    % if myitem['locked']:
+                        ${c.user_profile.get(item)}
+                    % elif myitem['type'] == "input":
+                            <input type="text" class="form-input" onchange="javascript:document.getElementById('profile-submit-button').disabled=false;" value="${c.user_profile.get(item)}" name="${item}" size="${myitem['size']}" maxlength="${myitem['maxlength']}" title="${myitem['title']}"/>
+                    % elif myitem['type'] == "textarea":
+                        <textarea name="${item}" class="form-textarea" onchange="javascript:document.getElementById('profile-submit-button').disabled=false;" rows="${myitem['size'][0]}" cols="${myitem['size'][1]}" style="width: ${myitem['size'][2]}px; height: ${myitem['size'][3]}px; font-size: 0.95em"
+                        % if myitem['locked']:
+                            readonly
+                        % endif
+                        >${c.user_profile.get(item)}</textarea>
+                    % endif
+                </dd>
+            </dl>
+        % endif
+    % endfor
+    <input type="submit" value="${_("Save my Profile")}" style="height: 30px; margin-top: 10px; font-size: 1.2em; font-weight: bold" id="profile-submit-button" disabled/><span id="profile-save-messagebox" style="position: relative; left: 20px"></span>
+</form>
+
+<hr style="margin-top: 20px; margin-bottom: 20px"/>
+
+<form method="POST" autocomplete="off" name="email" id="email" action="javascript:javascript:save_user_email('email','email-save-messagebox','email-submit-button')">
+    <input type="hidden" value="${c.user_profile.get('user_email')}" name="old_email"/>
+    <h4 style="margin-bottom: 20px">${_("E-mail configuration")}</h4>
+    <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+        <dt class="form-left" style="width: 23em;">
+            <label><b>${_("E-mail")}</b></label>
+            <br/>
+            <span style="font-size: 0.8em">${_("Your e-mail")}</span>
+        </dt>
+        <dd style="text-align: right;">
+                <input type="text" class="form-input" onchange="javascript:document.getElementById('email-submit-button').disabled=false;" value="${c.user_profile.get('user_email')}" name="user_email" size="45" maxlength="100" title="${_("E-mail")}" />
+        </dd>
+    </dl>
+    <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+        <dt class="form-left" style="width: 23em;">
+            <label><b>${_("E-mail confirm")}</b></label>
+            <br/>
+            <span style="font-size: 0.8em">${_("Confirm your e-mail")}</span>
+        </dt>
+        <dd style="text-align: right;">
+                <input type="text" class="form-input" value="" name="user_email_confirm" size="45" maxlength="100" title="${_("E-mail")}" />
+        </dd>
+    </dl>
+    <input type="submit" value="${_("Update my E-mail")}" style="height: 30px; margin-top: 10px; font-size: 1.2em; font-weight: bold" id="email-submit-button" disabled/><span id="email-save-messagebox" style="position: relative; left: 20px"></span>
+</form>
+
+<hr style="margin-top: 20px; margin-bottom: 20px"/>
+
+<form method="POST" autocomplete="off" name="password" id="password" action="javascript:javascript:save_user_password('password','password-save-messagebox','password-submit-button')">
+    <h4 style="margin-bottom: 20px">${_("Password configuration")}</h4>
+    <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+        <dt class="form-left" style="width: 23em;">
+            <label><b>${_("Current Password")}</b></label>
+            <br/>
+            <span style="font-size: 0.8em">${_("Your current password")}</span>
+        </dt>
+        <dd style="text-align: right;">
+                <input type="password" class="form-input" value="" name="current_password" size="45" maxlength="255" title="${_("Current Password")}" onchange="javascript:document.getElementById('password-submit-button').disabled=false;" />
+        </dd>
+    </dl>
+    <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+        <dt class="form-left" style="width: 23em;">
+            <label><b>${_("New password")}</b></label>
+            <br/>
+            <span style="font-size: 0.8em">${_("Type your new password")}</span>
+        </dt>
+        <dd style="text-align: right;">
+                <input type="password" class="form-input" value="" name="new_password" size="45" maxlength="255" title="${_("New Password")}" onchange="javascript:document.getElementById('password-submit-button').disabled=false;" />
+        </dd>
+    </dl>
+    <dl class="form-line" onmouseover="this.style.background='#362E3D';" onmouseout="this.style.background='#2D2D2D';" style="background-color: #2D2D2D;">
+        <dt class="form-left" style="width: 23em;">
+            <label><b>${_("Repeat new password")}</b></label>
+            <br/>
+            <span style="font-size: 0.8em">${_("Type again your new password")}</span>
+        </dt>
+        <dd style="text-align: right;">
+                <input type="password" class="form-input" value="" name="new_password_repeat" size="45" maxlength="255" title="${_("Repeat new password")}" onchange="javascript:document.getElementById('password-submit-button').disabled=false;" />
+        </dd>
+    </dl>
+    <input type="submit" value="${_("Update my Password")}" style="height: 30px; margin-top: 10px; font-size: 1.2em; font-weight: bold" id="password-submit-button" disabled/><span id="password-save-messagebox" style="position: relative; left: 20px"></span>
+</form>
