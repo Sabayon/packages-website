@@ -89,6 +89,7 @@ random_encouraging_sentences = [
     _("All the best from our crew")
 ]
 
+repository_feeds_uri = "http://pkg.sabayon.org/"
 uri_path = "/"
 
 registration_agreement_text = _(u"""
