@@ -216,10 +216,7 @@ strong {
 
 #small_band {
     width: 100%;
-    height: 120px;
-    background-image:url(../images/small_band.png);
-    background-repeat: repeat-x;
-    background-position:bottom;
+    height: 30px;
     clear:both;
 }
 
