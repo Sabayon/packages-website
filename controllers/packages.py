@@ -112,8 +112,6 @@ class PackagesController(BaseController,WebsiteController):
         if mysize != None:
             data['size'] = entropy_tools.bytes_into_human(mysize)
         data['digest'] = dbconn.retrieveDigest(idpackage)
-        data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
-            dbconn.retrieveSignatures(idpackage)
         data['idpackage'] = idpackage
         return data
 
@@ -178,6 +176,8 @@ class PackagesController(BaseController,WebsiteController):
         data['slot'] = mydata[14]
         data['idpackage'] = idpackage
         data['repo'] = repoid
+        data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
+            dbconn.retrieveSignatures(idpackage)
         return data, depdata
 
     def _generate_search_data(self, entropy, ugc, search_string, product, repoid, arch, branch, searchtype, orderby):
