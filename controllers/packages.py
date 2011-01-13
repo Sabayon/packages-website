@@ -149,8 +149,8 @@ class PackagesController(BaseController,WebsiteController):
         data['license'] = mydata[10].split()
         data['homepage'] = mydata[9]
         data['description'] = mydata[4]
-        data['dependencies'] = dbconn.retrieveDependencies(idpackage, extended = True)
-        for dep, dep_type in data['dependencies']:
+        dependencies = dbconn.retrieveDependencies(idpackage, extended = True)
+        for dep, dep_type in dependencies:
             match_repo = repoid
             match_id = dbconn.atomMatch(dep)[0]
             if (match_id == -1) and (repoid != model.config.ETP_REPOSITORY): # search in official repo
@@ -158,6 +158,10 @@ class PackagesController(BaseController,WebsiteController):
                 if match_repo is None:
                     match_repo = repoid
             depdata[dep] = (match_id, match_repo)
+        data['build_deps'] = sorted([x for x, y in dependencies if y == etpConst['dependency_type_ids']['bdepend_id']])
+        data['run_deps'] = sorted([x for x, y in dependencies if y == etpConst['dependency_type_ids']['rdepend_id']])
+        data['post_deps'] = sorted([x for x, y in dependencies if y == etpConst['dependency_type_ids']['pdepend_id']])
+        data['manual_deps'] = sorted([x for x, y in dependencies if y == etpConst['dependency_type_ids']['mdepend_id']])
         data['conflicts'] = dbconn.retrieveConflicts(idpackage)
         data['category'] = mydata[5]
         data['download'] = mydata[12]
