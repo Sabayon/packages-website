@@ -15,6 +15,7 @@ except ImportError:
         DatabaseError
 import entropy.tools as entropy_tools
 import entropy.dump as entropy_dump
+import entropy.dep as entropy_dep
 
 import shutil, os, time
 
@@ -100,7 +101,7 @@ class PackagesController(BaseController,WebsiteController):
         data['name'] = dbconn.retrieveName(idpackage)
         data['category'] = dbconn.retrieveCategory(idpackage)
         if data['atom']:
-            data['ugc'] = self._get_ugc_info_summary(repoid, entropy_tools.dep_getkey(data['atom']), ugc)
+            data['ugc'] = self._get_ugc_info_summary(repoid, entropy_dep.dep_getkey(data['atom']), ugc)
         data['branch'] = dbconn.retrieveBranch(idpackage)
         data['description'] = dbconn.retrieveDescription(idpackage)
         data['download'] = dbconn.retrieveDownloadURL(idpackage)
@@ -140,7 +141,7 @@ class PackagesController(BaseController,WebsiteController):
         data['atom'] = mydata[0]
         data['ugc'] = {}
         if data['atom']:
-            data['ugc'] = self._get_ugc_info(repoid, entropy_tools.dep_getkey(data['atom']), ugc)
+            data['ugc'] = self._get_ugc_info(repoid, entropy_dep.dep_getkey(data['atom']), ugc)
         data['branch'] = mydata[11]
         data['cflags'] = mydata[7]
         data['chost'] = mydata[6]
@@ -1307,7 +1308,7 @@ class PackagesController(BaseController,WebsiteController):
             return ''
         c.repoid = repo
 
-        key = entropy_tools.dep_getkey(atom)
+        key = entropy_dep.dep_getkey(atom)
         if not key: return ''
 
         name = key.split("/")[1]
