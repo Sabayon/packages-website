@@ -47,6 +47,7 @@ MY_ETP_PKGDIR = "packages"
 # XXX hacky thing to support old URLs
 default_branch = "5"
 default_product = "standard"
+default_arch = "amd64"
 available_products = {
     "standard": _("Sabayon Linux Standard"),
 }

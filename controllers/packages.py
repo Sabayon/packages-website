@@ -185,6 +185,12 @@ class PackagesController(BaseController,WebsiteController):
         not_found = False
         if repoid is None:
             repoid = model.config.ETP_REPOSITORY
+        if product is None:
+            product = model.config.default_product
+        if branch is None:
+            branch = model.config.default_branch
+        if arch is None:
+            arch = model.config.default_arch
         c.repoid = repoid
         c.products = model.config.available_products
         c.arches = self._get_available_arches(entropy, repoid, product)
