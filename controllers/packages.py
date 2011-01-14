@@ -833,9 +833,12 @@ class PackagesController(BaseController,WebsiteController):
         arch = request.params.get('arch') or None
         product = request.params.get('product') or None
         branch = request.params.get('branch') or None
+
         category = ''
-        if name.find("/") != -1:
-            category, name = name.split("/", 1)
+        if name is not None:
+            name = name.lstrip("/")
+            if name.find("/") != -1:
+                category, name = name.split("/", 1)
         return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
 
     def show_ugc_add(self):
