@@ -27,6 +27,7 @@ def make_map(config):
     map.connect('/categories', controller='packages', action='categories')
     map.connect('/releases', controller='packages', action='releases')
     map.connect('/advisories', controller='packages', action='advisories')
+    map.connect('/search', controller='packages', action='search')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='search_pkg')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgcat}/{pkgnamever}', controller='packages', action='search_pkg_atom')
     map.connect('/repository/match/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='match_pkg')
@@ -39,7 +40,6 @@ def make_map(config):
     map.connect('/{controller}/{action}')
     map.connect('/{controller}', action='index')
     map.connect('/{category}/{name}', controller='packages', action='catname')
-    map.connect('/{name}', controller='packages', action='name')
     map.connect('*url', controller='template', action='view')
 
     return map

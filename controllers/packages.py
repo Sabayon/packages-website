@@ -52,6 +52,9 @@ class PackagesController(BaseController,WebsiteController):
         self.Entropy = www.model.Entropy.Entropy
         etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 
+    def _render(self, page):
+        return render_mako(page)
+
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
 
@@ -621,7 +624,7 @@ class PackagesController(BaseController,WebsiteController):
         self._generate_packages_home(index = True)
         c.show_search_order = True
         c.page_title = _('Sabayon Linux Packages Repository')
-        return render_mako('/packages/index.html')
+        return self._render('/packages/index.html')
 
     def get_search_args(self):
 
@@ -669,17 +672,17 @@ class PackagesController(BaseController,WebsiteController):
         c.dependency_type_ids = etpConst['dependency_type_ids']
 
         if search_type == "expanded":
-            return render_mako('/packages/searchparams_args.html')
-        return render_mako('/packages/searchparams_compact_args.html')
+            return self._render('/packages/searchparams_args.html')
+        return self._render('/packages/searchparams_compact_args.html')
 
     def home(self):
         self._generate_packages_home()
         c.show_search_order = True
-        return render_mako('/packages/searchbox.html')
+        return self._render('/packages/searchbox.html')
 
     def ugc(self):
         self._generate_packages_ugc()
-        return render_mako('/packages/ugc.html')
+        return self._render('/packages/ugc.html')
 
     def search_ugc_package(self, search_type = None, search_string = None, search_string2 = None):
 
@@ -725,7 +728,7 @@ class PackagesController(BaseController,WebsiteController):
 
         c.show_search_results = True
         c.page_title = _('Sabayon Linux Packages Repository')
-        return render_mako('/packages/ugc.html')
+        return self._render('/packages/ugc.html')
 
     def ugc_search(self):
         if request.method != "POST":
@@ -778,7 +781,7 @@ class PackagesController(BaseController,WebsiteController):
         c.ugc_searchresults, c.found_results = search_func(searchstring, doctypes, orderby, offset, c.ugc_searchresults_limit)
         c.search_string = searchstring
 
-        return render_mako('/packages/ugc_searchresults.html')
+        return self._render('/packages/ugc_searchresults.html')
 
     def _do_query_pkg(self, repoid, pkgstring, product, arch, branch, search_type):
         self._generate_packages_home(index = True)
@@ -789,7 +792,7 @@ class PackagesController(BaseController,WebsiteController):
         del ugc
         c.show_search_results = True
         c.show_search_order = True
-        return render_mako('/packages/index.html')
+        return self._render('/packages/index.html')
 
     def _do_query_pkg_atom(self, repoid, pkgcat, pkgnamever, product, arch, branch, search_type):
         self._generate_packages_home(index = True)
@@ -806,7 +809,7 @@ class PackagesController(BaseController,WebsiteController):
         del ugc
         c.show_search_results = True
         c.show_search_order = True
-        return render_mako('/packages/index.html')
+        return self._render('/packages/index.html')
 
     # http://URL/repository/search/repoid/product/arch/branch/pkgstring
     def search_pkg(self, repoid = None, pkgstring = None, product = None, arch = None, branch = None):
@@ -826,19 +829,6 @@ class PackagesController(BaseController,WebsiteController):
         arch = request.params.get('arch') or None
         product = request.params.get('product') or None
         branch = request.params.get('branch') or None
-        return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
-
-    def name(self, name = None):
-        repoid = request.params.get('repo') or None
-        arch = request.params.get('arch') or None
-        product = request.params.get('product') or None
-        branch = request.params.get('branch') or None
-
-        category = ''
-        if name is not None:
-            name = name.lstrip("/")
-            if name.find("/") != -1:
-                category, name = name.split("/", 1)
         return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
 
     def show_ugc_add(self):
@@ -884,7 +874,7 @@ class PackagesController(BaseController,WebsiteController):
         c.atom = atom
         c.pkgkey = pkgkey
 
-        return render_mako('/packages/do_document_page.html')
+        return self._render('/packages/do_document_page.html')
 
     def ugc_delete(self):
         model.config.setup_internal(model, c, session, request)
@@ -1032,7 +1022,7 @@ class PackagesController(BaseController,WebsiteController):
         self._expand_ugc_doc_info(ugc, c.ugc_doc)
         ugc.disconnect()
         del ugc
-        return render_mako('/packages/ugc_show_doc.html')
+        return self._render('/packages/ugc_show_doc.html')
 
     def stats(self):
 
@@ -1102,9 +1092,9 @@ class PackagesController(BaseController,WebsiteController):
 
         c.repoid = repoid
         c.overview = overview
-        return render_mako('/packages/stats.html')
+        return self._render('/packages/stats.html')
 
-    def search(self):
+    def htsearch(self):
 
         if request.method != "POST":
             return self.index()
@@ -1145,7 +1135,75 @@ class PackagesController(BaseController,WebsiteController):
         c.show_search_order = True
         ugc.disconnect()
         del ugc
-        return render_mako('/packages/searchresults.html')
+        return self._render('/packages/searchresults.html')
+
+    def search(self):
+        """
+        Public API for searching, answering to: http://host/search
+        GET parameters:
+        q=<query>: search keyword [mandatory]
+        a=<arch>: architecture [default: amd64]
+        t=<type>: search type (pkg, match, desc, file. lib) [default: pkg]
+        r=<repo>: repository id [default: sabayonlinux.org]
+        b=<branch>: repository branch [default: 5]
+        p=<product>: product [default: standard]
+        o=<order by>: order packages by (alphabet, vote, download)
+        """
+        q = request.params.get('q')
+        if not q:
+            return self.index()
+
+        model.config.setup_internal(model, c, session, request)
+        entropy = self.Entropy()
+        search_types = {
+            'pkg': "0",
+            'match': "1",
+            'desc': "2",
+            'lib': "4",
+            'file': "3",
+        }
+        order_by_types = {
+            'alphabet': "0",
+            'vote': "1",
+            'download': "2",
+        }
+
+        # arch
+        a = request.params.get('a') or model.config.default_arch
+        if a not in model.config.available_arches:
+            a = model.config.default_arch
+
+        # product
+        p = request.params.get('p') or model.config.default_product
+        if p not in model.config.available_products:
+            p = model.config.default_product
+
+        avail_repos = self._get_available_repositories(entropy, p, a)
+
+        # search type
+        t = request.params.get('t') or "pkg"
+        t = search_types.get(t, search_types.get("pkg"))
+
+        # repository
+        r = request.params.get('r') or model.config.ETP_REPOSITORY
+        if r not in avail_repos:
+            return self.index()
+
+        # validate arch
+        avail_arches = self._get_available_arches(entropy, r, p)
+        if a not in avail_arches:
+            return self.index()
+
+        # branch
+        b = request.params.get('b') or model.config.default_branch
+        if b not in self._get_available_branches(entropy, r, p):
+            return self.index()
+
+        # order by
+        o = request.params.get('o') or "alphabet"
+        o = order_by_types.get(o, order_by_types.get("alphabet"))
+
+        return self._do_query_pkg(r, q, p, a, b, t)
 
     def vote(self):
 
@@ -1187,7 +1245,7 @@ class PackagesController(BaseController,WebsiteController):
 
         c.error = error
         c.err_msg = err_msg
-        return render_mako('/packages/voted.html')
+        return self._render('/packages/voted.html')
 
     def extrainfo(self):
         model.config.setup_internal(model, c, session, request)
@@ -1251,7 +1309,7 @@ class PackagesController(BaseController,WebsiteController):
         c.depdata = depdata
         ugc.disconnect()
         del ugc
-        return render_mako("/packages/extrainfo.html")
+        return self._render("/packages/extrainfo.html")
 
     def depends(self):
 
@@ -1289,7 +1347,7 @@ class PackagesController(BaseController,WebsiteController):
                 for mydepend in mydepends:
                     c.idpackages[mydepend] = dbconn.retrieveAtom(mydepend)
                 dbconn.close()
-        return render_mako('/packages/depends.html')
+        return self._render('/packages/depends.html')
 
     def content(self):
 
@@ -1326,7 +1384,7 @@ class PackagesController(BaseController,WebsiteController):
                 c.files = dbconn.retrieveContent(idpackage, order_by = 'file')
                 dbconn.close()
 
-        return render_mako('/packages/content.html')
+        return self._render('/packages/content.html')
 
     def getadvisory(self):
 
@@ -1359,7 +1417,7 @@ class PackagesController(BaseController,WebsiteController):
         c.strip = strip
         c.entries = entries
         c.feed = myfeed
-        return render_mako('/packages/feed.html')
+        return self._render('/packages/feed.html')
 
     def advisories(self):
         c.entries = 50
@@ -1371,12 +1429,12 @@ class PackagesController(BaseController,WebsiteController):
             self._save_cached('advisories', c.feed)
         else:
             c.feed = feed_data
-        return render_mako('/packages/advisories.html')
+        return self._render('/packages/advisories.html')
 
     def categories(self):
         self._generate_packages_home()
         c.hide_search_type = True
-        return render_mako('/packages/categories.html')
+        return self._render('/packages/categories.html')
 
     def show_categories(self):
 
@@ -1430,7 +1488,7 @@ class PackagesController(BaseController,WebsiteController):
                 c.categories[s].append(category)
             dbconn.close()
 
-        return render_mako('/packages/show_categories.html')
+        return self._render('/packages/show_categories.html')
 
     def category(self):
 
@@ -1497,12 +1555,12 @@ class PackagesController(BaseController,WebsiteController):
 
             dbconn.close()
 
-        return render_mako('/packages/category.html')
+        return self._render('/packages/category.html')
 
     def releases(self):
         self._generate_packages_home()
         c.hide_search_type = True
-        return render_mako('/packages/releases.html')
+        return self._render('/packages/releases.html')
 
     def show_release(self):
 
@@ -1535,7 +1593,7 @@ class PackagesController(BaseController,WebsiteController):
         c.miscinfo['idproduct'] = product
         c.miscinfo['branches'] = branches
 
-        return render_mako('/packages/release.html')
+        return self._render('/packages/release.html')
 
     def release(self):
 
@@ -1597,4 +1655,4 @@ class PackagesController(BaseController,WebsiteController):
             dbconn.close()
 
         c.letters = sorted(c.letters)
-        return render_mako('/packages/show_release.html')
+        return self._render('/packages/show_release.html')

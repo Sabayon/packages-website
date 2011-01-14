@@ -1,7 +1,7 @@
 
 function package_search(form_name,search_input,dest_div) {
     if (document.getElementById(search_input).value.length > 1) {
-        completeAHAH.likeSubmit('/packages/search', 'POST', form_name, dest_div, packages_loading_html);
+        completeAHAH.likeSubmit('/packages/htsearch', 'POST', form_name, dest_div, packages_loading_html);
     }
 }
 
