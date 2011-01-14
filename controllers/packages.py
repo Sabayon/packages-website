@@ -828,6 +828,16 @@ class PackagesController(BaseController,WebsiteController):
         branch = request.params.get('branch') or None
         return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
 
+    def name(self, name = None):
+        repoid = request.params.get('repo') or None
+        arch = request.params.get('arch') or None
+        product = request.params.get('product') or None
+        branch = request.params.get('branch') or None
+        category = ''
+        if name.find("/") != -1:
+            category, name = name.split("/", 1)
+        return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
+
     def show_ugc_add(self):
         model.config.setup_internal(model, c, session, request)
 
