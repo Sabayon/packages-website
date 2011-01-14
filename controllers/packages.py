@@ -321,8 +321,8 @@ class PackagesController(BaseController,WebsiteController):
 
         # order by vote
         orderby_dict = {
-            "1": _("vote"),
-            "2": _("downloads"),
+            "1": "vote",
+            "2": "downloads",
         }
         if orderby in orderby_dict:
             myitem = orderby_dict.get(orderby)
@@ -1165,7 +1165,7 @@ class PackagesController(BaseController,WebsiteController):
         order_by_types = {
             'alphabet': "0",
             'vote': "1",
-            'download': "2",
+            'downloads': "2",
         }
 
         # arch

@@ -8,9 +8,6 @@
             </div>
         % endif
         %for release in c.search_data['misc']['releases']:
-            <div style="margin-top: 20px; margin-bottom: 15px;">
-                <font style="font-size: 1.2em; border-bottom: 1px thin;"><b>${c.search_data['misc']['product']} ${release}</b></font>
-            </div>
             %for atom in c.search_data['atoms'][release]:
                 <% 
                     c.atominfo = c.search_data['data'][release][atom]
