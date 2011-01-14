@@ -73,12 +73,15 @@ class PackagesController(BaseController,WebsiteController):
         if not isinstance(c.search_data, dict):
             return ''
 
-        json_public_map = {}
-        for release in c.search_data['misc']['releases']:
-            obj = json_public_map.setdefault(release, [])
-            for atom in c.search_data['atoms']['release']:
-                obj.append(c.search_data['data'][release][atom])
-        json_public_map['__misc__'] = c.search_data['misc']
+        try:
+            json_public_map = {}
+            for release in c.search_data['misc']['releases']:
+                obj = json_public_map.setdefault(release, [])
+                for atom in c.search_data['atoms'][release]:
+                    obj.append(c.search_data['data'][release][atom])
+            json_public_map['__misc__'] = c.search_data['misc']
+        except KeyError:
+            return ''
 
         return json.dumps(json_public_map)
 
