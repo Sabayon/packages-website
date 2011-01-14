@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import json
 log = logging.getLogger(__name__)
 
 from www.lib.base import *
@@ -53,7 +54,33 @@ class PackagesController(BaseController,WebsiteController):
         etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 
     def _render(self, page):
+        rendering_map = {
+            'json': self._render_json,
+            'html': self._render_mako,
+        }
+        try:
+            renderer = request.params.get('render')
+        except AttributeError:
+            renderer = None
+        return rendering_map.get(renderer, self._render_mako)
+
+    def _render_mako(self, page):
         return render_mako(page)
+
+    def _render_json(self, page):
+        if not c.search_data:
+            return ''
+        if not isinstance(c.search_data, dict):
+            return ''
+
+        json_public_map = {}
+        for release in c.search_data['misc']['releases']:
+            obj = json_public_map.setdefault(release, [])
+            for atom in c.search_data['atoms']['release']:
+                obj.append(c.search_data['data'][release][atom])
+        json_public_map['__misc__'] = c.search_data['misc']
+
+        return json.dumps(json_public_map)
 
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
