@@ -783,18 +783,18 @@ class PackagesController(BaseController,WebsiteController):
 
         return self._render('/packages/ugc_searchresults.html')
 
-    def _do_query_pkg(self, repoid, pkgstring, product, arch, branch, search_type):
+    def _do_query_pkg(self, repoid, pkgstring, product, arch, branch, search_type, orderby):
         self._generate_packages_home(index = True)
         entropy = self.Entropy()
         ugc = self.UGC()
-        self._generate_search_data(entropy, ugc, pkgstring, product, repoid, arch, branch, "0", search_type)
+        self._generate_search_data(entropy, ugc, pkgstring, product, repoid, arch, branch, search_type, orderby)
         ugc.disconnect()
         del ugc
         c.show_search_results = True
         c.show_search_order = True
         return self._render('/packages/index.html')
 
-    def _do_query_pkg_atom(self, repoid, pkgcat, pkgnamever, product, arch, branch, search_type):
+    def _do_query_pkg_atom(self, repoid, pkgcat, pkgnamever, product, arch, branch, search_type, orderby):
         self._generate_packages_home(index = True)
         entropy = self.Entropy()
         ugc = self.UGC()
@@ -802,9 +802,9 @@ class PackagesController(BaseController,WebsiteController):
         if not pkgcat: pkgcat = ''
         atom = pkgcat+"/"+pkgnamever
         if (not pkgcat) and (not pkgnamever): atom = None
-        entries_found = self._generate_search_data(entropy, ugc, atom, product, repoid, arch, branch, search_type, "0")
+        entries_found = self._generate_search_data(entropy, ugc, atom, product, repoid, arch, branch, search_type, orderby)
         if not entries_found:
-            self._generate_search_data(entropy, ugc, atom, product, repoid, arch, branch, "1", "0") # package match
+            self._generate_search_data(entropy, ugc, atom, product, repoid, arch, branch, "1", orderby) # package match
         ugc.disconnect()
         del ugc
         c.show_search_results = True
@@ -813,23 +813,23 @@ class PackagesController(BaseController,WebsiteController):
 
     # http://URL/repository/search/repoid/product/arch/branch/pkgstring
     def search_pkg(self, repoid = None, pkgstring = None, product = None, arch = None, branch = None):
-        return self._do_query_pkg(repoid, pkgstring, product, arch, branch, "0")
+        return self._do_query_pkg(repoid, pkgstring, product, arch, branch, "0", "0")
 
     def search_pkg_atom(self, repoid = None, pkgcat = None, pkgnamever = None, product = None, arch = None, branch = None):
-        return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "0")
+        return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "0", "0")
 
     def match_pkg(self, repoid = None, pkgstring = None, product = None, arch = None, branch = None):
-        return self._do_query_pkg(repoid, pkgstring, product, arch, branch, "1")
+        return self._do_query_pkg(repoid, pkgstring, product, arch, branch, "1", "0")
 
     def match_pkg_atom(self, repoid = None, pkgcat = None, pkgnamever = None, product = None, arch = None, branch = None):
-        return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "1")
+        return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "1", "0")
 
     def catname(self, category = None, name = None):
         repoid = request.params.get('repo') or None
         arch = request.params.get('arch') or None
         product = request.params.get('product') or None
         branch = request.params.get('branch') or None
-        return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
+        return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1", "0")
 
     def show_ugc_add(self):
         model.config.setup_internal(model, c, session, request)
@@ -1203,7 +1203,7 @@ class PackagesController(BaseController,WebsiteController):
         o = request.params.get('o') or "alphabet"
         o = order_by_types.get(o, order_by_types.get("alphabet"))
 
-        return self._do_query_pkg(r, q, p, a, b, t)
+        return self._do_query_pkg(r, q, p, a, b, t, o)
 
     def vote(self):
 
