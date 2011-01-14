@@ -815,6 +815,9 @@ class PackagesController(BaseController,WebsiteController):
     def match_pkg_atom(self, repoid = None, pkgcat = None, pkgnamever = None, product = None, arch = None, branch = None):
         return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "1")
 
+    def catname(self, category = None, name = None):
+        return self._do_query_pkg_atom(None, category, name, None, None, None, "1")
+
     def show_ugc_add(self):
         model.config.setup_internal(model, c, session, request)
 

@@ -38,6 +38,7 @@ def make_map(config):
     map.connect('/{controller}/{action}/{id}')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}', action='index')
+    map.connect('/{category}/{name}', controller='packages', action='catname')
     map.connect('*url', controller='template', action='view')
 
     return map
