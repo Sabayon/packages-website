@@ -62,7 +62,7 @@ class PackagesController(BaseController,WebsiteController):
             renderer = request.params.get('render')
         except AttributeError:
             renderer = None
-        return rendering_map.get(renderer, self._render_mako)()
+        return rendering_map.get(renderer, self._render_mako)(page)
 
     def _render_mako(self, page):
         return render_mako(page)
