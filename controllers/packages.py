@@ -1177,7 +1177,7 @@ class PackagesController(BaseController,WebsiteController):
         r=<repo>: repository id [default: sabayonlinux.org]
         b=<branch>: repository branch [default: 5]
         p=<product>: product [default: standard]
-        o=<order by>: order packages by (alphabet, vote, download)
+        o=<order by>: order packages by (alphabet, vote, downloads)
         """
         q = request.params.get('q')
         if not q:
