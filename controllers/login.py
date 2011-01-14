@@ -60,16 +60,7 @@ class LoginController(BaseController, WebsiteController):
             model.config.setup_all(model, c, session, request)
             return render_mako('/home.html')
 
-        # check ip ban
-        portal = self.Portal()
-        banned = portal.check_ip_ban(request.environ['REMOTE_ADDR'])
-        portal.disconnect()
-        del portal
         c.page_title = _('Sabayon Linux Community registration')
-        if banned:
-            c.ip_banned = request.environ['REMOTE_ADDR']
-            return render_mako('/register.html')
-
         self._new_captcha()
 
         c.login_redirect = self._get_redirect()
