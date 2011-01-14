@@ -822,7 +822,11 @@ class PackagesController(BaseController,WebsiteController):
         return self._do_query_pkg_atom(repoid, pkgcat, pkgnamever, product, arch, branch, "1")
 
     def catname(self, category = None, name = None):
-        return self._do_query_pkg_atom(None, category, name, None, None, None, "1")
+        repoid = request.params.get('repo') or None
+        arch = request.params.get('arch') or None
+        product = request.params.get('product') or None
+        branch = request.params.get('branch') or None
+        return self._do_query_pkg_atom(repoid, category, name, product, arch, branch, "1")
 
     def show_ugc_add(self):
         model.config.setup_internal(model, c, session, request)
