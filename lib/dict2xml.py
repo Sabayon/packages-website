@@ -6,9 +6,9 @@ def list_to_xml(name, l, stream):
     for element in l:
         if isinstance(element, dict):
             dict_to_xml(element, name, stream)
-        elif isinstance(value, (list, tuple, set, frozenset)):
+        elif isinstance(element, (list, tuple, set, frozenset)):
             list_to_xml(element, name, stream)
-        elif isinstance(value, basestring):
+        elif isinstance(element, basestring):
             stream.write('\n  %s="%s" ' % (name, element))
 
 def dict_to_xml(d, root_node_name, stream):
