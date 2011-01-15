@@ -57,6 +57,8 @@ class PackagesController(BaseController,WebsiteController):
         rendering_map = {
             'json': self._render_json,
             'html': self._render_mako,
+            'jsonp': self._render_jsonp,
+            'xml': self._render_xml,
         }
         try:
             renderer = request.params.get('render')
@@ -67,6 +69,15 @@ class PackagesController(BaseController,WebsiteController):
     def _render_mako(self, page):
         return render_mako(page)
 
+    def _get_renderer_public_data_map(self):
+        json_public_map = {}
+        for release in c.search_data['misc']['releases']:
+            obj = json_public_map.setdefault(release, [])
+            for atom in c.search_data['atoms'][release]:
+                obj.append(c.search_data['data'][release][atom])
+        json_public_map['__misc__'] = c.search_data['misc']
+        return json_public_map
+
     def _render_json(self, page):
         if not c.search_data:
             return ''
@@ -74,16 +85,28 @@ class PackagesController(BaseController,WebsiteController):
             return ''
 
         try:
-            json_public_map = {}
-            for release in c.search_data['misc']['releases']:
-                obj = json_public_map.setdefault(release, [])
-                for atom in c.search_data['atoms'][release]:
-                    obj.append(c.search_data['data'][release][atom])
-            json_public_map['__misc__'] = c.search_data['misc']
+            json_public_map = self._get_renderer_public_data_map()
         except KeyError:
             return ''
 
         return json.dumps(json_public_map)
+
+    def render_jsonp(self, page):
+        callback = "callback"
+        try:
+            callback = request.params.get('callback') or callback
+        except AttributeError:
+            callback = "callback"
+
+        json_str = self._render_json(page)
+        return callback + "(" + json_str + ");"
+
+    def _render_xml(self, page):
+        try:
+            json_public_map = self._get_renderer_public_data_map()
+        except KeyError:
+            return ''
+        return entropy_tools.xml_from_dict(json_public_map)
 
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
