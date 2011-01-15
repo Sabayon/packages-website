@@ -60,7 +60,8 @@ class PackagesController(BaseController,WebsiteController):
             'json': self._render_json,
             'html': self._render_mako,
             'jsonp': self._render_jsonp,
-            'xml': self._render_xml,
+            # broken
+            #'xml': self._render_xml,
         }
         try:
             renderer = request.params.get('render')
