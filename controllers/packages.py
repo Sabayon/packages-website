@@ -5,6 +5,7 @@ log = logging.getLogger(__name__)
 
 from www.lib.base import *
 from www.lib.website import *
+from www.lib.dict2xml import createXML
 
 from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
@@ -107,7 +108,7 @@ class PackagesController(BaseController,WebsiteController):
         except KeyError:
             return ''
         try:
-            return entropy_tools.xml_from_dict(json_public_map)
+            return createXML(json_public_map, "")
         except TypeError:
             return ''
 
