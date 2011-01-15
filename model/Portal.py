@@ -16,7 +16,6 @@ import entropy.tools as entropy_tools
 
 class Portal(DistributionAuthInterface, RemoteDbSkelInterface):
 
-
     SQL_TABLES = {
         'registration_validation': """
             CREATE TABLE registration_validation (
