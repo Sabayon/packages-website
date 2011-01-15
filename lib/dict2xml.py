@@ -3,21 +3,25 @@ from cStringIO import StringIO
 from xml.parsers import expat
 
 def list_to_xml(name, l, stream):
-   for d in l:
-      dict_to_xml(d, name, stream)
+    for element in l:
+        if isinstance(element, dict):
+            dict_to_xml(element, name, stream)
+        elif isinstance(value, (list, tuple, set, frozenset)):
+            list_to_xml(element, name, stream)
+        elif isinstance(value, basestring):
+            stream.write('\n  %s="%s" ' % (name, element))
 
 def dict_to_xml(d, root_node_name, stream):
    """ Transform a dict into a XML, writing to a stream """
    stream.write('\n<' + root_node_name)
-   attributes = StringIO() 
+   attributes = StringIO()
    nodes = StringIO()
-   for item in d.items():
-      key, value = item
+   for key, value in d.items():
       if isinstance(value, dict):
          dict_to_xml(value, key, nodes)
-      elif isinstance(value, list):
+      elif isinstance(value, (list, tuple, set, frozenset)):
          list_to_xml(key, value, nodes)
-      elif isinstance(value, str) or isinstance(value, unicode):
+      elif isinstance(value, basestring):
          attributes.write('\n  %s="%s" ' % (key, value))
       else:
          raise TypeError('sorry, we support only dicts, lists and strings')
