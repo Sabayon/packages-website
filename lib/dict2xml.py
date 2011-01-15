@@ -8,7 +8,7 @@ def list_to_xml(name, l, stream):
             dict_to_xml(element, name, stream)
         elif isinstance(element, (list, tuple, set, frozenset)):
             list_to_xml(element, name, stream)
-        elif isinstance(element, basestring):
+        elif isinstance(element, (basestring, int, float)):
             stream.write('\n  %s="%s" ' % (name, element))
 
 def dict_to_xml(d, root_node_name, stream):
@@ -21,7 +21,7 @@ def dict_to_xml(d, root_node_name, stream):
          dict_to_xml(value, key, nodes)
       elif isinstance(value, (list, tuple, set, frozenset)):
          list_to_xml(key, value, nodes)
-      elif isinstance(value, basestring):
+      elif isinstance(value, (basestring, int, float)):
          attributes.write('\n  %s="%s" ' % (key, value))
       else:
          raise TypeError('sorry, we support only dicts, lists and strings')
