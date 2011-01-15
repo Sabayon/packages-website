@@ -109,9 +109,9 @@ class PackagesController(BaseController,WebsiteController):
         except KeyError:
             return ''
 
-       s = StringIO()
-       dict_to_xml(json_public_map, 'entropy', s)
-       return s.getvalue()
+        s = StringIO()
+        dict_to_xml(json_public_map, 'entropy', s)
+        return s.getvalue()
 
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
