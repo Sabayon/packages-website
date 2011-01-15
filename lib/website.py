@@ -31,7 +31,7 @@ class WebsiteController:
             user_agent = request.environ['HTTP_USER_AGENT']
         except (AttributeError, KeyError):
             user_agent = None
-        if user_agent in USER_AGENT_BLACKLIST:
+        if user_agent in WebsiteController.USER_AGENT_BLACKLIST:
             abort(503)
 
         c.ugc_doctypes = etpConst['ugc_doctypes'].copy()
