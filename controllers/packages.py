@@ -106,7 +106,10 @@ class PackagesController(BaseController,WebsiteController):
             json_public_map = self._get_renderer_public_data_map()
         except KeyError:
             return ''
-        return entropy_tools.xml_from_dict(json_public_map)
+        try:
+            return entropy_tools.xml_from_dict(json_public_map)
+        except TypeError:
+            return ''
 
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
