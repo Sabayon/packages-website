@@ -91,7 +91,7 @@ class PackagesController(BaseController,WebsiteController):
 
         return json.dumps(json_public_map)
 
-    def render_jsonp(self, page):
+    def _render_jsonp(self, page):
         callback = "callback"
         try:
             callback = request.params.get('callback') or callback
