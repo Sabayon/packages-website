@@ -23,7 +23,17 @@ import entropy.tools as entropy_tools
 
 class WebsiteController:
 
+    USER_AGENT_BLACKLIST = ["Mediapartners-Google"]
+
     def __init__(self):
+
+        try:
+            user_agent = request.environ['HTTP_USER_AGENT']
+        except (AttributeError, KeyError):
+            user_agent = None
+        if user_agent in USER_AGENT_BLACKLIST:
+            abort(503)
+
         c.ugc_doctypes = etpConst['ugc_doctypes'].copy()
         # disabled
         disabled_types = [c.ugc_doctypes.get('bbcode_doc')]
