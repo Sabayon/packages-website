@@ -23,7 +23,7 @@ import entropy.tools as entropy_tools
 
 class WebsiteController:
 
-    USER_AGENT_BLACKLIST = ["Mediapartners-Google"]
+    USER_AGENT_BLACKLIST = []
 
     def __init__(self):
 
