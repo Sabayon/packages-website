@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 import json
+from cStringIO import StringIO
 log = logging.getLogger(__name__)
 
 from www.lib.base import *
 from www.lib.website import *
-from www.lib.dict2xml import createXML
+from www.lib.dict2xml import dict_to_xml
 
 from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
@@ -107,10 +108,10 @@ class PackagesController(BaseController,WebsiteController):
             json_public_map = self._get_renderer_public_data_map()
         except KeyError:
             return ''
-        try:
-            return createXML(json_public_map, "")
-        except TypeError:
-            return ''
+
+       s = StringIO()
+       dict_to_xml(json_public_map, 'entropy', s)
+       return s.getvalue()
 
     def __get_cache_item_key(self, cache_item):
         return os.path.join(PackagesController.CACHE_DIR, cache_item)
