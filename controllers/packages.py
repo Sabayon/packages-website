@@ -81,7 +81,7 @@ class PackagesController(BaseController,WebsiteController):
         misc_dict = {}
         for k, v in c.search_data['misc'].items():
             if isinstance(v, set):
-                v = frozenset(v)
+                v = list(v)
             misc_dict[k] = v
         json_public_map['__misc__'] = misc_dict
         return json_public_map
