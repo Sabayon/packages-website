@@ -78,7 +78,12 @@ class PackagesController(BaseController,WebsiteController):
             obj = json_public_map.setdefault(release, [])
             for atom in c.search_data['atoms'][release]:
                 obj.append(c.search_data['data'][release][atom])
-        json_public_map['__misc__'] = c.search_data['misc']
+        misc_dict = {}
+        for k, v in c.search_data['misc'].items():
+            if isinstance(v, set):
+                v = frozenset(v)
+            misc_dict[k] = v
+        json_public_map['__misc__'] = misc_dict
         return json_public_map
 
     def _render_json(self, page):
