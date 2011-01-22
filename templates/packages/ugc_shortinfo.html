@@ -6,7 +6,7 @@
         if not isinstance(mydocs_count,int):
             mydocs_count = len(mydocs_count)
      %>
-    <a href="${c.site_uri}/repository/search/${c.repoid}/${c.product}/${c.arch}/${c.branch}/${c.atominfo['atom']}" target="_blank"><img src="/images/packages/ugc.png" alt="${_("Permalink")}" title="${_("Permalink")}"/></a> | 
+    <a href="/search?q=${c.atominfo['atom']}&a=${c.arch}&t=match&r=${c.repoid}&b=${c.branch}&p=${c.product}" target="_blank"><img src="/images/packages/ugc.png" alt="${_("Permalink")}" title="${_("Permalink")}"/></a> | 
     <%include file="/packages/ugc_stars_rating.html"/> 
     | ${_("Downloads")}: <b>${int(c.atominfo['ugc']['downloads'])}</b> | ${_("Documents")}: <b><span class="ugc_doc_amount_${c.atominfo['category']}_${c.atominfo['name']}">${mydocs_count}</span></b>
 % endif
