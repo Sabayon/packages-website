@@ -446,7 +446,8 @@ class ApiController(BaseController, WebsiteController):
             etpConst['dependency_type_ids']['pdepend_id']])
         pkg_data['manual_deps'] = sorted([x for x, y in dependencies if y == \
             etpConst['dependency_type_ids']['mdepend_id']])
-        pkg_data['conflicts'] = entropy_repository.retrieveConflicts(package_id)
+        pkg_data['conflicts'] = sorted(
+            entropy_repository.retrieveConflicts(package_id))
 
         pkg_data['sha1'], pkg_data['sha256'], pkg_data['sha512'], \
             pkg_data['gpg'] = entropy_repository.retrieveSignatures(package_id)
