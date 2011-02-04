@@ -97,37 +97,32 @@ class ApiController(BaseController, WebsiteController):
         arch, branch, product, entropy_repository) using given order_by directive,
         can be either alphabet, vote, downloads
         """
-        def _alphabet_order():
-            key_sorter = lambda x: x[5].retrieveAtom(x[0])
-            return sorted(pkgs_data, key = key_sorter)
+        ugc = self.UGC()
+        try:
+            def _alphabet_order():
+                key_sorter = lambda x: x[5].retrieveAtom(x[0])
+                return sorted(pkgs_data, key = key_sorter)
 
-        def _downloads_order():
-            ugc = self.UGC()
-            try:
+            def _downloads_order():
                 key_sorter = lambda x: ugc.get_ugc_vote(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter)
-            finally:
-                ugc.disconnect()
-                del ugc
 
-        def _vote_order():
-            ugc = self.UGC()
-            try:
+            def _vote_order():
                 key_sorter = lambda x: ugc.get_ugc_downloads(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
-            finally:
-                ugc.disconnect()
-                del ugc
 
-        order_map = {
-            "alphabet": _alphabet_order,
-            "downloads": _downloads_order,
-            "vote": _vote_order
-        }
-        func = order_map.get(order_by, _alphabet_order)
-        return func()
+            order_map = {
+                "alphabet": _alphabet_order,
+                "downloads": _downloads_order,
+                "vote": _vote_order
+            }
+            func = order_map.get(order_by, _alphabet_order)
+            return func()
+        finally:
+            ugc.disconnect()
+            del ugc
 
     def _api_error(self, renderer, code = 404):
         """
@@ -237,7 +232,6 @@ class ApiController(BaseController, WebsiteController):
             # drop dbconn
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
                 ordered_pkgs]
-            
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except:
             return self._api_error(renderer, 503)
