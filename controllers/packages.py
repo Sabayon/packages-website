@@ -1292,21 +1292,30 @@ class PackagesController(BaseController,WebsiteController):
             return arg0, arg1, None
         return arg0, arg1, arg2
 
+    def _api_get_repo(self, repository_id, arch, product, branch):
+        """
+        Internal method, stay away.
+        """
+        entropy = self.Entropy()
+        try:
+            dbconn = entropy._open_db(repository_id, arch, product, branch)
+            dbconn.validate()
+            return dbconn
+        except (ProgrammingError, OperationalError, SystemDatabaseError):
+            try:
+                dbconn.close()
+            except:
+                pass
+            return None
+
     def _api_categories(self, repository_id, arch, branch, product, order_by,
         renderer):
         """
         Return a list of available entropy categories for given repository.
         NOTE: order_by doesn't have any effect here.
         """
-        entropy = self.Entropy()
-        try:
-            dbconn = entropy._open_db(repository_id, arch, product, branch)
-            dbconn.validate()
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            try:
-                dbconn.close()
-            except:
-                pass
+        dbconn = self._api_get_repo(repository_id, arch, product, branch)
+        if dbconn is None:
             return self._api_error(renderer, 503)
 
         try:
@@ -1330,11 +1339,8 @@ class PackagesController(BaseController,WebsiteController):
         """
         entropy = self.Entropy()
         spm_class = entropy.Spm_class()
-        try:
-            dbconn = entropy._open_db(repository_id, arch, product, branch)
-            dbconn.validate()
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            dbconn.close()
+        dbconn = self._api_get_repo(repository_id, arch, product, branch)
+        if dbconn is None:
             return self._api_error(renderer, 503)
 
         try:
