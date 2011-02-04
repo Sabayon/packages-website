@@ -1340,10 +1340,10 @@ class PackagesController(BaseController,WebsiteController):
                         x.startswith(g_cat)])
                 data['categories'] = sorted(exp_cats)
             response['r'] = data
-        finally:
-            dbconn.close()
         except:
             self._api_error(renderer, 503)
+        finally:
+            dbconn.close()
 
         response['r'] = entropy.get_package_groups()
         return self._api_render(response, renderer)
