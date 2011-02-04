@@ -1206,6 +1206,7 @@ class PackagesController(BaseController,WebsiteController):
         """
         Return a tuple composed by repository, arch, branch, product
         """
+        entropy = self.Entropy()
         # arch
         a = request.params.get('a') or model.config.default_arch
         if a not in model.config.available_arches:
@@ -1382,7 +1383,6 @@ class PackagesController(BaseController,WebsiteController):
             return self.index()
 
         model.config.setup_internal(model, c, session, request)
-        entropy = self.Entropy()
         search_types = {
             'pkg': "0",
             'match': "1",
