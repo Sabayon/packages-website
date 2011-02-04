@@ -1236,6 +1236,11 @@ class PackagesController(BaseController,WebsiteController):
             if b not in self._get_available_branches(entropy, r, p):
                 b = None
 
+        order_by_types = {
+            'alphabet': "0",
+            'vote': "1",
+            'downloads': "2",
+        }
         # order by
         o = request.params.get('o') or "alphabet"
         o = order_by_types.get(o, order_by_types.get("alphabet"))
@@ -1423,11 +1428,6 @@ class PackagesController(BaseController,WebsiteController):
             'desc': "2",
             'lib': "4",
             'file': "3",
-        }
-        order_by_types = {
-            'alphabet': "0",
-            'vote': "1",
-            'downloads': "2",
         }
 
         r, a, b, p, o = self._get_api_params()
