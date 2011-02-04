@@ -1306,10 +1306,10 @@ class PackagesController(BaseController,WebsiteController):
         try:
             response = self._api_base_response(200)
             response['r'] = sorted(dbconn.listAllCategories())
-        finally:
-            dbconn.close()
         except:
             return self._api_error(renderer, 503)
+        finally:
+            dbconn.close()
 
         return self._api_render(response, renderer)
 
