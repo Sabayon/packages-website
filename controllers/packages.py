@@ -1236,7 +1236,11 @@ class PackagesController(BaseController,WebsiteController):
             if b not in self._get_available_branches(entropy, r, p):
                 b = None
 
-        return r, a, b, p
+        # order by
+        o = request.params.get('o') or "alphabet"
+        o = order_by_types.get(o, order_by_types.get("alphabet"))
+
+        return r, a, b, p, o
 
     def _api_base_response(self, code):
         response = {
@@ -1283,9 +1287,11 @@ class PackagesController(BaseController,WebsiteController):
             return arg0, arg1, None
         return arg0, arg1, arg2
 
-    def _api_categories(self, repository_id, arch, branch, product, renderer):
+    def _api_categories(self, repository_id, arch, branch, product, order_by,
+        renderer):
         """
         Return a list of available entropy categories for given repository.
+        NOTE: order_by doesn't have any effect here.
         """
         entropy = self.Entropy()
         try:
@@ -1305,6 +1311,18 @@ class PackagesController(BaseController,WebsiteController):
             dbconn.close()
         return self._api_render(response, renderer)
 
+    def _api_groups(self, repository_id, arch, branch, product, order_by,
+        renderer):
+        """
+        Return Package Groups for given repository as returned by:
+        entropy.client.interfaces.Client.get_package_groups()
+        NOTE: order_by doesn't have any effect here.
+        """
+        entropy = self.Entropy()
+        response = self._api_base_response(200)
+        response['r'] = entropy.get_package_groups()
+        return self._api_render(response, renderer)
+
     def api(self):
         """
         Public API, only supporting json or jsonp.
@@ -1312,7 +1330,12 @@ class PackagesController(BaseController,WebsiteController):
         GET parameters:
         q=<query type>: type of API request [mandatory]
             supported:
-            - categories(null)
+            - <list> categories()
+            - <dict> groups()
+            - <list> packages_in_group()
+            - <list> packages_in_category()
+            - <list of dict> get_packages(packages<string separated package ids>)
+            - <list of dict> get_packages_details(packages<string separated package ids>)
         arg0=<query argument>: argument 0 to use in combination with query type
         arg1=<query argument>: argument 1 to use in combination with query type
         arg2=<query argument>: argument 2 to use in combination with query type
@@ -1321,6 +1344,8 @@ class PackagesController(BaseController,WebsiteController):
         a=<arch>: architecture [default: amd64]
         b=<branch>: repository branch [default: 5]
         p=<product>: product [default: standard]
+        o=<order by>: order packages by (alphabet, vote, downloads)
+            [default: alphabet]
 
         Response will be printed in form of json or jsonp objects and data
         will be contained inside 'r' dict value.
@@ -1331,6 +1356,7 @@ class PackagesController(BaseController,WebsiteController):
         """
         api_map = {
             "categories": self._api_categories,
+            "groups": self._api_groups,
         }
 
         q = request.params.get("q")
@@ -1344,7 +1370,11 @@ class PackagesController(BaseController,WebsiteController):
         except AttributeError:
             renderer = "json"
 
-        r, a, b, p = self._get_api_params()
+        if q is None:
+            # no need to go further
+            return self._api_error(renderer)
+
+        r, a, b, p, o = self._get_api_params()
         if r is None:
             q = None
         if a is None:
@@ -1353,10 +1383,12 @@ class PackagesController(BaseController,WebsiteController):
             q = None
         if p is None:
             q = None
+        if o is None:
+            q = None
 
         args = self._get_api_args()
         args = [x for x in args if x is not None]
-        args.extend([r, a, b, p, renderer])
+        args.extend([r, a, b, p, o, renderer])
 
         callback = api_map.get(q)
         if callback is None:
@@ -1398,7 +1430,7 @@ class PackagesController(BaseController,WebsiteController):
             'downloads': "2",
         }
 
-        r, a, b, p = self._get_api_params()
+        r, a, b, p, o = self._get_api_params()
         if r is None:
             return self.index()
         if a is None:
@@ -1411,10 +1443,6 @@ class PackagesController(BaseController,WebsiteController):
         # search type
         t = request.params.get('t') or "pkg"
         t = search_types.get(t, search_types.get("pkg"))
-
-        # order by
-        o = request.params.get('o') or "alphabet"
-        o = order_by_types.get(o, order_by_types.get("alphabet"))
 
         return self._do_query_pkg(r, q, p, a, b, t, o)
 
