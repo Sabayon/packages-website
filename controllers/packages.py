@@ -1339,7 +1339,7 @@ class PackagesController(BaseController,WebsiteController):
                     exp_cats.update([x for x in categories if \
                         x.startswith(g_cat)])
                 data['categories'] = sorted(exp_cats)
-            response['r'] = data
+            response['r'] = groups
         except:
             self._api_error(renderer, 503)
         finally:
