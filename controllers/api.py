@@ -7,6 +7,7 @@ from www.lib.dict2xml import dict_to_xml
 from entropy.exceptions import SystemDatabaseError
 from entropy.db.exceptions import ProgrammingError, OperationalError, \
     DatabaseError
+import entropy.dep
 
 class ApiController(BaseController, WebsiteController):
 
@@ -53,8 +54,80 @@ class ApiController(BaseController, WebsiteController):
             return arg0, arg1, None
         return arg0, arg1, arg2
 
-    def _api_encode_package(self, repository_id, arch, branch, product, package_id):
-        pass
+    def _api_encode_package(self, package_id, repository_id, a, b, p):
+        """
+        Encode a full blown package tuple into a serializable string, base64
+        is using as encoder.
+
+        @param package_id: package identifier
+        @type package_id: int
+        @param repository_id: repository identifier
+        @type repository_id: string
+        @param a: arch string
+        @type a: string
+        @param b: branch string
+        @type b: string
+        @param p: product string
+        @type p: string
+        """
+        id_str = " ".join((str(package_id), repository_id, a, b, p))
+        return base64.b64encode(id_str)
+
+    def _api_decode_package(self, encoded_id_str):
+        """
+        Decode a base64 encoded package hash back into a full blown package
+        tuple.
+
+        @param encoded_id_str: package hash base64 encoded
+        @type: string
+        @return: tuple composed by (package_id, repository_id, arch, branch, product)
+        @rtype: tuple
+        """
+        id_str = base64.b64decode(encoded_id_str)
+        try:
+            package_id, repository_id, a, b, p = id_str.split()
+            package_id = int(package_id)
+        except ValueError:
+            return None
+        return package_id, repository_id, a, b, p
+
+    def _api_order_by(self, pkgs_data, order_by):
+        """
+        Order a list of tuples composed by (package_id, repository_id,
+        arch, branch, product, entropy_repository) using given order_by directive,
+        can be either alphabet, vote, downloads
+        """
+        def _alphabet_order():
+            key_sorter = lambda x: x[5].retrieveAtom(x[0])
+            return sorted(pkgs_data, key = key_sorter)
+
+        def _downloads_order():
+            ugc = self.UGC()
+            try:
+                key_sorter = lambda x: ugc.get_ugc_vote(
+                    entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
+                return sorted(pkgs_data, key = key_sorter)
+            finally:
+                ugc.disconnect()
+                del ugc
+
+        def _vote_order():
+            ugc = self.UGC()
+            try:
+                key_sorter = lambda x: ugc.get_ugc_downloads(
+                    entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
+                return sorted(pkgs_data, key = key_sorter, reverse = True)
+            finally:
+                ugc.disconnect()
+                del ugc
+
+        order_map = {
+            "alphabet": _alphabet_order,
+            "downloads": _downloads_order,
+            "vote": _vote_order
+        }
+        func = order_map.get(order_by, _alphabet_order)
+        return func()
 
     def _api_error(self, renderer, code = 404):
         """
@@ -69,13 +142,13 @@ class ApiController(BaseController, WebsiteController):
         Return a list of available entropy categories for given repository.
         NOTE: order_by doesn't have any effect here.
         """
+        response = self._api_base_response(200)
         dbconn = self._api_get_repo(self.Entropy(), repository_id, arch,
             product, branch)
         if dbconn is None:
             return self._api_error(renderer, 503)
 
         try:
-            response = self._api_base_response(200)
             response['r'] = sorted(dbconn.listAllCategories())
         except:
             return self._api_error(renderer, 503)
@@ -93,6 +166,7 @@ class ApiController(BaseController, WebsiteController):
         name<string>, categories<list>, description<string>.
         NOTE: order_by doesn't have any effect here.
         """
+        response = self._api_base_response(200)
         entropy = self.Entropy()
         spm_class = entropy.Spm_class()
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
@@ -101,7 +175,6 @@ class ApiController(BaseController, WebsiteController):
             return self._api_error(renderer, 503)
 
         try:
-            response = self._api_base_response(200)
             categories = sorted(dbconn.listAllCategories())
             groups = spm_class.get_package_groups().copy()
             for data in groups.values():
@@ -118,12 +191,13 @@ class ApiController(BaseController, WebsiteController):
 
         return self._api_render(response, renderer)
 
-    def _api_packages_is_groups(self, groups_str, repository_id, arch, branch,
+    def _api_packages_in_groups(self, groups_str, repository_id, arch, branch,
         product, order_by, renderer):
         """
         Return a list of packages in given Package Groups. Results are returned
-        in dict form, where key is the group name, value is list of packages
-        ordered by order_by.
+        in list form, ordered by order_by directive. Package ids are encoded
+        in base64.
+        http://url/api?q=packages_in_groups&arg0=development%20lxde
         """
         requested_groups = frozenset(groups_str.split())
 
@@ -137,13 +211,15 @@ class ApiController(BaseController, WebsiteController):
             # invalid
             return self._api_error(renderer, 400)
 
+        response = self._api_base_response(200)
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
         if dbconn is None:
             return self._api_error(renderer, 503)
+
         try:
-            response = self._api_base_response(200)
             categories = sorted(dbconn.listAllCategories())
+            pkg_ids = set()
             for group in requested_groups:
                 group_data = groups[group]
                 # expand category
@@ -153,12 +229,22 @@ class ApiController(BaseController, WebsiteController):
                         x.startswith(g_cat)])
                 for my_category in my_categories:
                     # now get packages belonging to this category
-                    pkg_ids = dbconn.listPackageIdsInCategory(my_category)
-
+                    pkg_ids |= dbconn.listPackageIdsInCategory(my_category)
+            pkgs_data = [
+                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                    pkg_id in pkg_ids]
+            ordered_pkgs = self._api_order_by(pkgs_data, order_by)
+            # drop dbconn
+            ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
+                ordered_pkgs]
+            
+            response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except:
             return self._api_error(renderer, 503)
         finally:
             dbconn.close()
+
+        return self._api_render(response, renderer)
 
     def execute(self):
         """
@@ -196,7 +282,7 @@ class ApiController(BaseController, WebsiteController):
         api_map = {
             "categories": self._api_categories,
             "groups": self._api_groups,
-            "packages_in_groups": self._api_packages_is_groups,
+            "packages_in_groups": self._api_packages_in_groups,
         }
 
         q = request.params.get("q")
