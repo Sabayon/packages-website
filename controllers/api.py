@@ -1,3 +1,4 @@
+import base64
 
 import json
 from www.lib.base import *
