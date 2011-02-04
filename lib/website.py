@@ -62,6 +62,19 @@ class WebsiteController:
         self.UGC = www.model.UGC.UGC
         self.Entropy = www.model.Entropy.Entropy
 
+    def _get_available_branches(self, entropy, repoid, product):
+        arches = self._get_available_arches(entropy, repoid, product)
+        branches = set()
+        for arch in arches:
+            branches |= set(entropy._get_branches(repoid, arch, product))
+        return sorted(branches, reverse = True)
+
+    def _get_available_repositories(self, entropy, product, arch):
+        return sorted(entropy._get_repositories(product, arch))
+
+    def _get_available_arches(self, entropy, repoid, product):
+        return entropy._get_arches(repoid, product)
+
     def _api_get_repo(self, entropy, repository_id, arch, product, branch):
         """
         Internal method, stay away.

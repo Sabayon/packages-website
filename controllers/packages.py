@@ -514,19 +514,6 @@ class PackagesController(BaseController,WebsiteController):
                     feeds[pstring][parch+" %s (light)" % (branch,)] = model.config.repository_feeds_uri+pstring+"/"+repoid+"/database/"+parch+"/"+branch+"/"+etpConst['rss-light-name']
         return feeds
 
-    def _get_available_branches(self, entropy, repoid, product):
-        arches = self._get_available_arches(entropy, repoid, product)
-        branches = set()
-        for arch in arches:
-            branches |= set(entropy._get_branches(repoid, arch, product))
-        return sorted(branches, reverse = True)
-
-    def _get_available_repositories(self, entropy, product, arch):
-        return sorted(entropy._get_repositories(product, arch))
-
-    def _get_available_arches(self, entropy, repoid, product):
-        return entropy._get_arches(repoid, product)
-
     def _generate_packages_home(self, index = False):
         model.config.setup_internal(model, c, session, request)
 
