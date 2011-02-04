@@ -19,6 +19,14 @@ import entropy.exceptions as etp_exceptions
 from htmlentitydefs import name2codepoint
 from entropy.const import *
 etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
+from entropy.exceptions import SystemDatabaseError
+try:
+    from entropy.db.exceptions import ProgrammingError, OperationalError, \
+        DatabaseError
+except ImportError:
+    from sqlite3.dbapi2 import ProgrammingError, OperationalError, \
+        DatabaseError
+
 import entropy.tools as entropy_tools
 
 class WebsiteController:
@@ -49,6 +57,70 @@ class WebsiteController:
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
         import www.model.Portal
         self.Portal = www.model.Portal.Portal
+        import www.model.Entropy
+        import www.model.UGC
+        self.UGC = www.model.UGC.UGC
+        self.Entropy = www.model.Entropy.Entropy
+
+    def _api_get_repo(self, entropy, repository_id, arch, product, branch):
+        """
+        Internal method, stay away.
+        """
+        try:
+            dbconn = entropy._open_db(repository_id, arch, product, branch)
+            dbconn.validate()
+            return dbconn
+        except (ProgrammingError, OperationalError, SystemDatabaseError):
+            try:
+                dbconn.close()
+            except:
+                pass
+            return None
+
+    def _api_get_params(self):
+        """
+        Return a tuple composed by repository, arch, branch, product
+        """
+        entropy = self.Entropy()
+        # arch
+        a = request.params.get('a') or model.config.default_arch
+        if a not in model.config.available_arches:
+            a = model.config.default_arch
+
+        # product
+        p = request.params.get('p') or model.config.default_product
+        if p not in model.config.available_products:
+            p = model.config.default_product
+
+        avail_repos = self._get_available_repositories(entropy, p, a)
+        # repository
+        r = request.params.get('r') or model.config.ETP_REPOSITORY
+        if r not in avail_repos:
+            r = None
+
+        # validate arch
+        if r is not None:
+            avail_arches = self._get_available_arches(entropy, r, p)
+            if a not in avail_arches:
+                a = None
+
+        # validate branch
+        b = None
+        if r is not None:
+            b = request.params.get('b') or model.config.default_branch
+            if b not in self._get_available_branches(entropy, r, p):
+                b = None
+
+        order_by_types = {
+            'alphabet': "0",
+            'vote': "1",
+            'downloads': "2",
+        }
+        # order by
+        o = request.params.get('o') or "alphabet"
+        o = order_by_types.get(o, order_by_types.get("alphabet"))
+
+        return r, a, b, p, o
 
     def _store_vote_in_session(self, pages_id, session):
         session['poll_vote_%s' % (pages_id,)] = True
