@@ -9,6 +9,7 @@ from entropy.exceptions import SystemDatabaseError
 from entropy.db.exceptions import ProgrammingError, OperationalError, \
     DatabaseError
 import entropy.dep
+import entropy.tools
 
 class ApiController(BaseController, WebsiteController):
 
@@ -145,15 +146,16 @@ class ApiController(BaseController, WebsiteController):
         response = self._api_base_response(200)
         dbconn = self._api_get_repo(self.Entropy(), repository_id, arch,
             product, branch)
-        if dbconn is None:
-            return self._api_error(renderer, 503, "repository not available")
 
         try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
             response['r'] = sorted(dbconn.listAllCategories())
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
+            return self._api_error(renderer, 503, err)
         finally:
-            dbconn.close()
+            if dbconn is not None:
+                dbconn.close()
 
         return self._api_render(response, renderer)
 
@@ -171,10 +173,10 @@ class ApiController(BaseController, WebsiteController):
         spm_class = entropy.Spm_class()
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
-        if dbconn is None:
-            return self._api_error(renderer, 503, "repository not available")
 
         try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
             categories = sorted(dbconn.listAllCategories())
             groups = spm_class.get_package_groups().copy()
             for data in groups.values():
@@ -185,9 +187,10 @@ class ApiController(BaseController, WebsiteController):
                 data['categories'] = sorted(exp_cats)
             response['r'] = groups
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
+            return self._api_error(renderer, 503, err)
         finally:
-            dbconn.close()
+            if dbconn is not None:
+                dbconn.close()
 
         return self._api_render(response, renderer)
 
@@ -214,10 +217,10 @@ class ApiController(BaseController, WebsiteController):
         response = self._api_base_response(200)
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
-        if dbconn is None:
-            return self._api_error(renderer, 503, "repository not available")
 
         try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
             categories = sorted(dbconn.listAllCategories())
             pkg_ids = set()
             for group in requested_groups:
@@ -239,9 +242,10 @@ class ApiController(BaseController, WebsiteController):
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
+            return self._api_error(renderer, 503, err)
         finally:
-            dbconn.close()
+            if dbconn is not None:
+                dbconn.close()
 
         return self._api_render(response, renderer)
 
@@ -259,10 +263,10 @@ class ApiController(BaseController, WebsiteController):
         response = self._api_base_response(200)
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
-        if dbconn is None:
-            return self._api_error(renderer, 503, "repository not available")
 
         try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
             categories = dbconn.listAllCategories()
             # validate categories
             categories_validation = requested_categories - set(categories)
@@ -282,9 +286,176 @@ class ApiController(BaseController, WebsiteController):
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
+            return self._api_error(renderer, 503, err)
         finally:
-            dbconn.close()
+            if dbconn is not None:
+                dbconn.close()
+
+        return self._api_render(response, renderer)
+
+    def _api_categories_in_groups(self, groups_str, repository_id, arch,
+        branch, product, order_by, renderer):
+        """
+        Return a list of package categories contained in given package groups.
+        """
+        requested_groups = frozenset(groups_str.split())
+
+        entropy = self.Entropy()
+        spm_class = entropy.Spm_class()
+        groups = spm_class.get_package_groups()
+        # validate groups
+        avail_groups = set(groups.keys())
+        group_validation = requested_groups - avail_groups
+        if group_validation:
+            # invalid
+            return self._api_error(renderer, 400, "bad request")
+
+        response = self._api_base_response(200)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
+            branch)
+
+        try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
+            categories = sorted(dbconn.listAllCategories())
+            out_cats = set()
+            for group in requested_groups:
+                group_data = groups[group]
+                # expand category
+                for g_cat in group_data['categories']:
+                    out_cats.update([x for x in categories if \
+                        x.startswith(g_cat)])
+            response['r'] = sorted(out_cats)
+        except Exception as err:
+            return self._api_error(renderer, 503, err)
+        finally:
+            if dbconn is not None:
+                dbconn.close()
+
+        return self._api_render(response, renderer)
+
+    def _api_package_to_hash(self, package_id_str, repository_id, arch,
+        branch, product, order_by, renderer):
+        """
+        Given package_id, repository id, arch, branch, product, return
+        its base64 encoded hash.
+        NOTE: this method doesn't use order_by.
+        """
+        try:
+            package_id = int(package_id_str)
+        except ValueError:
+            return self._api_error(renderer, 400, "bad request")
+
+        pkg_hash = self._api_encode_package(package_id, repository_id, arch,
+            branch, product)
+
+        response = self._api_base_response(200)
+        response['r'] = pkg_hash
+
+        return self._api_render(response, renderer)
+
+    def _get_api_package_basic_info(self, entropy_repository, ugc, package_id,
+        repository_id, arch, branch, product):
+        """
+        Internal method. Return a dict containing all the basic info of a
+        package.
+        atom, name, category, branch, description, download, revision
+        homepage, size, digest (md5), package_id, repository_id, vote, downloads,
+        number of documents.
+        NOTE: can return None!
+        """
+        base_data = entropy_repository.getBaseData(package_id)
+        if base_data is None:
+            return None
+        atom, name, version, tag, desc, cat, chost, cflags, cxxflags, \
+            homepage, license, branch, download, digest, slot, api, \
+            date, size, rev = base_data
+        if size is None:
+            size = "0b"
+        else:
+            size = entropy.tools.bytes_into_human(size)
+        pkg_key = entropy.dep.dep_getkey(atom)
+
+        docs_number = len(ugc.get_ugc_metadata_doctypes(pkg_key,
+            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]))
+
+        pkg_data = {
+            'atom': atom,
+            'key': pkg_key,
+            'name': name,
+            'category': cat,
+            'branch': branch,
+            'description': desc,
+            'download': download,
+            'revision': rev,
+            'repository_id': repository_id,
+            'arch': arch,
+            'product': product,
+            'package_id': package_id,
+            'homepage': homepage,
+            'size': size,
+            'md5': digest,
+            'slot': slot,
+            'api': api,
+            'date': date,
+            'vote': round(ugc.get_ugc_vote(pkg_key), 2),
+            'downloads': int(ugc.get_ugc_downloads(pkg_key)),
+            'docs_number': docs_number,
+        }
+        return pkg_data
+
+    def _api_get_packages(self, package_hashes, repository_id, arch,
+        branch, product, order_by, renderer):
+        """
+        Get basic information for given package hashes. Please see:
+        _get_api_package_basic_info() for more info.
+        key is package hash, value is dict containing keys above.
+        """
+        package_hashes = package_hashes.split()
+        packages = set()
+        # validate hashes
+        for package_hash in package_hashes:
+            decoded = self._api_decode_package(package_hash)
+            if decoded is None:
+                return self._api_error(renderer, 400, "bad request")
+            package_id, hash_repository_id, a, b, p = decoded
+            # validate single elements
+            if hash_repository_id != repository_id:
+                return self._api_error(renderer, 400, "invalid repository")
+            if a != arch:
+                return self._api_error(renderer, 400, "invalid arch")
+            if b != branch:
+                return self._api_error(renderer, 400, "invalid branch")
+            if p != product:
+                return self._api_error(renderer, 400, "invalid product")
+
+            packages.add((package_hash, decoded))
+
+        response = self._api_base_response(200)
+        entropy = self.Entropy()
+        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
+            branch)
+        try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
+            ugc = self.UGC()
+            try:
+                pkgs_data = {}
+                for package_hash, (package_id, repository_id, a, b, p) in packages:
+                    pkg_data = self._get_api_package_basic_info(
+                        dbconn, ugc, package_id, repository_id, a, b, p)
+                    if pkg_data is None:
+                        return self._api_error(renderer, 503,
+                            "package not available")
+                    pkgs_data[package_hash] = pkg_data
+                response['r'] = pkgs_data
+            finally:
+                ugc.disconnect()
+        except Exception as err:
+            return self._api_error(renderer, 503, err)
+        finally:
+            if dbconn is not None:
+                dbconn.close()
 
         return self._api_render(response, renderer)
 
@@ -300,8 +471,10 @@ class ApiController(BaseController, WebsiteController):
             - <list> packages_in_groups(groups<space separated list of groups>)
             - <list> categories_in_groups(groups<space separated list of groups>)
             - <list> packages_in_categories(categories<space separated list of categories>)
-            - <list of dict> get_packages(packages<string separated package ids>)
-            - <list of dict> get_packages_details(packages<string separated package ids>)
+            - <dict> get_packages(packages<string separated package hashes>)
+            - <dict> get_packages_details(packages<string separated package ids>)
+                get detailed information for given package hashes.
+            - <string> package_to_hash(package_id) [other parameters given via r,a,b,p HTTP GET]
         arg0=<query argument>: argument 0 to use in combination with query type
         arg1=<query argument>: argument 1 to use in combination with query type
         arg2=<query argument>: argument 2 to use in combination with query type
@@ -327,6 +500,9 @@ class ApiController(BaseController, WebsiteController):
             "groups": self._api_groups,
             "packages_in_groups": self._api_packages_in_groups,
             "packages_in_categories": self._api_packages_in_categories,
+            "categories_in_groups": self._api_categories_in_groups,
+            "package_to_hash": self._api_package_to_hash,
+            "get_packages": self._api_get_packages,
         }
 
         q = request.params.get("q")
