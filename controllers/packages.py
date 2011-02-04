@@ -1301,6 +1301,7 @@ class PackagesController(BaseController,WebsiteController):
         entropy = self.Entropy()
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
+            dbconn.validate()
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             try:
                 dbconn.close()
@@ -1331,6 +1332,7 @@ class PackagesController(BaseController,WebsiteController):
         spm_class = entropy.Spm_class()
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
+            dbconn.validate()
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             dbconn.close()
             return self._api_error(renderer, 503)
