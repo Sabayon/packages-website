@@ -1287,6 +1287,7 @@ class PackagesController(BaseController,WebsiteController):
         """
         Return a list of available entropy categories for given repository.
         """
+        entropy = self.Entropy()
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
             dbconn.validate()
