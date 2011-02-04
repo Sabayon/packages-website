@@ -1345,7 +1345,6 @@ class PackagesController(BaseController,WebsiteController):
         finally:
             dbconn.close()
 
-        response['r'] = entropy.get_package_groups()
         return self._api_render(response, renderer)
 
     def api(self):
