@@ -1301,7 +1301,6 @@ class PackagesController(BaseController,WebsiteController):
         entropy = self.Entropy()
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
-            dbconn.validate()
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             try:
                 dbconn.close()
@@ -1309,22 +1308,49 @@ class PackagesController(BaseController,WebsiteController):
                 pass
             return self._api_error(renderer, 503)
 
-        response = self._api_base_response(200)
         try:
+            response = self._api_base_response(200)
             response['r'] = sorted(dbconn.listAllCategories())
         finally:
             dbconn.close()
+        except:
+            return self._api_error(renderer, 503)
+
         return self._api_render(response, renderer)
 
     def _api_groups(self, repository_id, arch, branch, product, order_by,
         renderer):
         """
-        Return Package Groups for given repository as returned by:
-        entropy.client.interfaces.Client.get_package_groups()
+        Return Package Groups for given repository.
+        The returned object is a dict, key is the name of the package group,
+        value is a dict containing metadata related to that group, such as:
+        name<string>, categories<list>, description<string>.
         NOTE: order_by doesn't have any effect here.
         """
         entropy = self.Entropy()
-        response = self._api_base_response(200)
+        spm_class = entropy.Spm_class()
+        try:
+            dbconn = entropy._open_db(repository_id, arch, product, branch)
+        except (ProgrammingError, OperationalError, SystemDatabaseError):
+            dbconn.close()
+            return self._api_error(renderer, 503)
+
+        try:
+            response = self._api_base_response(200)
+            categories = sorted(dbconn.listAllCategories())
+            groups = spm_class.get_package_groups().copy()
+            for data in groups.values():
+                exp_cats = set()
+                for g_cat in data['categories']:
+                    exp_cats.update([x for x in categories if \
+                        x.startswith(g_cat)])
+                data['categories'] = sorted(exp_cats)
+            response['r'] = data
+        finally:
+            dbconn.close()
+        except:
+            self._api_error(renderer, 503)
+
         response['r'] = entropy.get_package_groups()
         return self._api_render(response, renderer)
 
