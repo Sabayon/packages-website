@@ -413,6 +413,7 @@ class ApiController(BaseController, WebsiteController):
             size = entropy.tools.bytes_into_human(size)
         on_disk_size = entropy_repository.retrieveOnDiskSize(package_id)
         pkg_key = entropy.dep.dep_getkey(atom)
+        t_time = float(date)
 
         pkg_data = {
             'version': version,
@@ -430,7 +431,8 @@ class ApiController(BaseController, WebsiteController):
             'tag': tag,
             'ondisksize': entropy.tools.bytes_into_human(on_disk_size),
             'use': sorted(entropy_repository.retrieveUseflags(package_id)),
-            'date': entropy.tools.convert_unix_time_to_human_time(float(date)),
+            'date': entropy.tools.convert_unix_time_to_human_time(t_time),
+            'time': t_time,
             'repository_id': repository_id,
             'arch': arch,
             'product': product,
