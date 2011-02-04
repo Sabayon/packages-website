@@ -28,6 +28,7 @@ def make_map(config):
     map.connect('/releases', controller='packages', action='releases')
     map.connect('/advisories', controller='packages', action='advisories')
     map.connect('/search', controller='packages', action='search')
+    map.connect('/api', controller='packages', action='api')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='search_pkg')
     map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgcat}/{pkgnamever}', controller='packages', action='search_pkg_atom')
     map.connect('/repository/match/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='match_pkg')
