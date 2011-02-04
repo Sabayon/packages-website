@@ -1303,6 +1303,7 @@ class PackagesController(BaseController,WebsiteController):
             response['r'] = sorted(dbconn.listAllCategories())
         finally:
             dbconn.close()
+        return self._api_render(response, renderer)
 
     def api(self):
         """
