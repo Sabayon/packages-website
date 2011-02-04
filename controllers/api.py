@@ -5,6 +5,7 @@ from www.lib.base import *
 from www.lib.website import *
 from www.lib.dict2xml import dict_to_xml
 
+from entropy.const import etpConst
 from entropy.exceptions import SystemDatabaseError
 from entropy.db.exceptions import ProgrammingError, OperationalError, \
     DatabaseError
@@ -359,9 +360,45 @@ class ApiController(BaseController, WebsiteController):
         """
         Internal method. Return a dict containing all the basic info of a
         package.
-        atom, name, category, branch, description, download, revision
-        homepage, size, digest (md5), package_id, repository_id, vote, downloads,
-        number of documents.
+        atom, key, name, category, branch, description, revision
+        package_id, repository_id, vote, downloads, number of documents,
+        arch, product.
+        NOTE: can return None!
+        """
+        base_data = entropy_repository.getBaseData(package_id)
+        if base_data is None:
+            return None
+        atom, name, version, tag, desc, cat, chost, cflags, cxxflags, \
+            homepage, license, branch, download, digest, slot, api, \
+            date, size, rev = base_data
+        pkg_key = entropy.dep.dep_getkey(atom)
+
+        docs_number = len(ugc.get_ugc_metadata_doctypes(pkg_key,
+            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]))
+
+        pkg_data = {
+            'atom': atom,
+            'key': pkg_key,
+            'slot': slot,
+            'name': name,
+            'category': cat,
+            'branch': branch,
+            'description': desc,
+            'repository_id': repository_id,
+            'arch': arch,
+            'product': product,
+            'package_id': package_id,
+            'vote': round(ugc.get_ugc_vote(pkg_key), 2),
+            'downloads': int(ugc.get_ugc_downloads(pkg_key)),
+            'docs_number': docs_number,
+        }
+        return pkg_data
+
+    def _get_api_package_detailed_info(self, entropy_repository, ugc, package_id,
+        repository_id, arch, branch, product):
+        """
+        Internal method. Return a dict containing all the detailed info of a
+        package. See below.
         NOTE: can return None!
         """
         base_data = entropy_repository.getBaseData(package_id)
@@ -374,43 +411,78 @@ class ApiController(BaseController, WebsiteController):
             size = "0b"
         else:
             size = entropy.tools.bytes_into_human(size)
-        pkg_key = entropy.dep.dep_getkey(atom)
-
-        docs_number = len(ugc.get_ugc_metadata_doctypes(pkg_key,
-            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]))
+        on_disk_size = entropy_repository.retrieveOnDiskSize(package_id)
 
         pkg_data = {
-            'atom': atom,
-            'key': pkg_key,
-            'name': name,
-            'category': cat,
-            'branch': branch,
-            'description': desc,
-            'download': download,
+            'version': version,
             'revision': rev,
+            'homepage': homepage,
+            'size': size,
+            'md5': digest,
+            'api': api,
+            'date': date,
+            'download': download,
+            'cflags': cflags,
+            'chost': chost,
+            'cxxflags': cxxflags,
+            'license': license.split(),
+            'tag': tag,
+            'ondisksize': entropy.tools.bytes_into_human(on_disk_size),
+            'use': sorted(entropy_repository.retrieveUseflags(package_id)),
+            'date': entropy.tools.convert_unix_time_to_human_time(float(date)),
             'repository_id': repository_id,
             'arch': arch,
             'product': product,
             'package_id': package_id,
-            'homepage': homepage,
-            'size': size,
-            'md5': digest,
-            'slot': slot,
-            'api': api,
-            'date': date,
-            'vote': round(ugc.get_ugc_vote(pkg_key), 2),
-            'downloads': int(ugc.get_ugc_downloads(pkg_key)),
-            'docs_number': docs_number,
         }
+
+        dependencies = entropy_repository.retrieveDependencies(package_id,
+            extended = True)
+        pkg_data['build_deps'] = sorted([x for x, y in dependencies if y == \
+            etpConst['dependency_type_ids']['bdepend_id']])
+        pkg_data['run_deps'] = sorted([x for x, y in dependencies if y == \
+            etpConst['dependency_type_ids']['rdepend_id']])
+        pkg_data['post_deps'] = sorted([x for x, y in dependencies if y == \
+            etpConst['dependency_type_ids']['pdepend_id']])
+        pkg_data['manual_deps'] = sorted([x for x, y in dependencies if y == \
+            etpConst['dependency_type_ids']['mdepend_id']])
+        pkg_data['conflicts'] = entropy_repository.retrieveConflicts(package_id)
+
+        pkg_data['sha1'], pkg_data['sha256'], pkg_data['sha512'], \
+            pkg_data['gpg'] = entropy_repository.retrieveSignatures(package_id)
+
         return pkg_data
 
     def _api_get_packages(self, package_hashes, repository_id, arch,
         branch, product, order_by, renderer):
         """
         Get basic information for given package hashes. Please see:
+        _get_api_package_basic_info() and _get_api_package_detailed_info()
+        for more info.
+        key is package hash, value is dict containing keys above.
+        NOTE: order_by is ignored
+        """
+        return self._api_get_packages_impl(package_hashes, repository_id, arch,
+            branch, product, order_by, renderer, False)
+
+    def _api_get_packages_details(self, package_hashes, repository_id, arch,
+        branch, product, order_by, renderer):
+        """
+        Get detailed information for given package hashes. Please see:
         _get_api_package_basic_info() for more info.
         key is package hash, value is dict containing keys above.
+        NOTE: order_by is ignored
         """
+        return self._api_get_packages_impl(package_hashes, repository_id, arch,
+            branch, product, order_by, renderer, True)
+
+    def _api_get_packages_impl(self, package_hashes, repository_id, arch,
+        branch, product, order_by, renderer, details):
+        """
+        Internal.
+        Get basic or detailed information for given package hashes.
+        """
+
         package_hashes = package_hashes.split()
         packages = set()
         # validate hashes
@@ -442,8 +514,12 @@ class ApiController(BaseController, WebsiteController):
             try:
                 pkgs_data = {}
                 for package_hash, (package_id, repository_id, a, b, p) in packages:
-                    pkg_data = self._get_api_package_basic_info(
-                        dbconn, ugc, package_id, repository_id, a, b, p)
+                    if details:
+                        pkg_data = self._get_api_package_detailed_info(
+                            dbconn, ugc, package_id, repository_id, a, b, p)
+                    else:
+                        pkg_data = self._get_api_package_basic_info(
+                            dbconn, ugc, package_id, repository_id, a, b, p)
                     if pkg_data is None:
                         return self._api_error(renderer, 503,
                             "package not available")
@@ -472,7 +548,7 @@ class ApiController(BaseController, WebsiteController):
             - <list> categories_in_groups(groups<space separated list of groups>)
             - <list> packages_in_categories(categories<space separated list of categories>)
             - <dict> get_packages(packages<string separated package hashes>)
-            - <dict> get_packages_details(packages<string separated package ids>)
+            - <dict> get_packages_details(packages<string separated package hashes>)
                 get detailed information for given package hashes.
             - <string> package_to_hash(package_id) [other parameters given via r,a,b,p HTTP GET]
         arg0=<query argument>: argument 0 to use in combination with query type
@@ -503,6 +579,7 @@ class ApiController(BaseController, WebsiteController):
             "categories_in_groups": self._api_categories_in_groups,
             "package_to_hash": self._api_package_to_hash,
             "get_packages": self._api_get_packages,
+            "get_packages_details": self._api_get_packages_details,
         }
 
         q = request.params.get("q")
