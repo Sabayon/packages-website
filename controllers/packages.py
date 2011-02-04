@@ -55,7 +55,7 @@ class PackagesController(BaseController,WebsiteController):
         self.Entropy = www.model.Entropy.Entropy
         etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 
-    def _render(self, page):
+    def _render(self, page, renderer = None):
         rendering_map = {
             'json': self._render_json,
             'html': self._render_mako,
@@ -63,10 +63,11 @@ class PackagesController(BaseController,WebsiteController):
             # broken
             #'xml': self._render_xml,
         }
-        try:
-            renderer = request.params.get('render')
-        except AttributeError:
-            renderer = None
+        if renderer is None:
+            try:
+                renderer = request.params.get('render')
+            except AttributeError:
+                renderer = None
         return rendering_map.get(renderer, self._render_mako)(page)
 
     def _render_mako(self, page):
@@ -1201,6 +1202,169 @@ class PackagesController(BaseController,WebsiteController):
         del ugc
         return self._render('/packages/searchresults.html')
 
+    def _get_api_params(self):
+        """
+        Return a tuple composed by repository, arch, branch, product
+        """
+        # arch
+        a = request.params.get('a') or model.config.default_arch
+        if a not in model.config.available_arches:
+            a = model.config.default_arch
+
+        # product
+        p = request.params.get('p') or model.config.default_product
+        if p not in model.config.available_products:
+            p = model.config.default_product
+
+        avail_repos = self._get_available_repositories(entropy, p, a)
+        # repository
+        r = request.params.get('r') or model.config.ETP_REPOSITORY
+        if r not in avail_repos:
+            r = None
+
+        # validate arch
+        if r is not None:
+            avail_arches = self._get_available_arches(entropy, r, p)
+            if a not in avail_arches:
+                a = None
+
+        # validate branch
+        b = None
+        if r is not None:
+            b = request.params.get('b') or model.config.default_branch
+            if b not in self._get_available_branches(entropy, r, p):
+                b = None
+
+        return r, a, b, p
+
+    def _api_base_response(self, code):
+        response = {
+            'code': code,
+            'api_rev': 1,
+        }
+        return response
+
+    def _api_render(self, response, renderer):
+        if renderer == "json":
+            return json.dumps(response)
+        elif renderer == "jsonp":
+            callback = "callback"
+            try:
+                callback = request.params.get('callback') or callback
+            except AttributeError:
+                callback = "callback"
+            return callback + "(" + json.dumps(response) + ");"
+        else:
+            raise AttributeError("programming error: invalid renderer")
+
+
+    def _api_error(self, renderer, code = 404):
+        """
+        API request error, build response and return
+        """
+        response = self._api_base_response(code)
+        return self._api_render(response, renderer)
+
+    def _get_api_args(self):
+        """
+        Return API arguments, as passed in arg0, arg1 and arg2
+        """
+        arg1 = None
+        arg2 = None
+        arg0 = request.params.get("arg0")
+        if arg0 is None:
+            return None, None, None
+        arg1 = request.params.get("arg1")
+        if arg1 is None:
+            return arg0, None, None
+        arg2 = request.params.get("arg2")
+        if arg2 is None:
+            return arg0, arg1, None
+        return arg0, arg1, arg2
+
+    def _api_categories(self, repository_id, arch, branch, product, renderer):
+        """
+        Return a list of available entropy categories for given repository.
+        """
+        try:
+            dbconn = entropy._open_db(repository_id, arch, product, branch)
+            dbconn.validate()
+        except (ProgrammingError, OperationalError, SystemDatabaseError):
+            try:
+                dbconn.close()
+            except:
+                pass
+            return self._api_error(renderer, 503)
+
+        response = self._api_base_response(200)
+        try:
+            response['r'] = sorted(dbconn.listAllCategories())
+        finally:
+            dbconn.close()
+
+    def api(self):
+        """
+        Public API, only supporting json or jsonp.
+
+        GET parameters:
+        q=<query type>: type of API request [mandatory]
+            supported:
+            - categories(null)
+        arg0=<query argument>: argument 0 to use in combination with query type
+        arg1=<query argument>: argument 1 to use in combination with query type
+        arg2=<query argument>: argument 2 to use in combination with query type
+
+        r=<repo>: repository id [default: sabayonlinux.org]
+        a=<arch>: architecture [default: amd64]
+        b=<branch>: repository branch [default: 5]
+        p=<product>: product [default: standard]
+
+        Response will be printed in form of json or jsonp objects and data
+        will be contained inside 'r' dict value.
+        Moreover, client must check 'code' value, which contains an HTTP-alike
+        code int (200 is OK, 404 is invalid api call, 503 is server error).
+        'code' will be always there, as well as 'api_rev', representing the
+        API response revision (current is: 1).
+        """
+        api_map = {
+            "categories": self._api_categories,
+        }
+
+        q = request.params.get("q")
+        if q not in api_map:
+            q = None
+
+        try:
+            renderer = request.params.get('render')
+            if renderer not in ("json", "jsonp"):
+                raise AttributeError()
+        except AttributeError:
+            renderer = "json"
+
+        r, a, b, p = self._get_api_params()
+        if r is None:
+            q = None
+        if a is None:
+            q = None
+        if b is None:
+            q = None
+        if p is None:
+            q = None
+
+        args = self._get_api_args()
+        args = [x for x in args if x is not None]
+        args.extend([r, a, b, p, renderer])
+
+        callback = api_map.get(q)
+        if callback is None:
+            # unsupported q=
+            return self._api_error(renderer)
+        try:
+            return callback(*args)
+        except TypeError:
+            return self._api_error(renderer)
+
+
     def search(self):
         """
         Public API for searching, answering to: http://host/search
@@ -1232,36 +1396,19 @@ class PackagesController(BaseController,WebsiteController):
             'downloads': "2",
         }
 
-        # arch
-        a = request.params.get('a') or model.config.default_arch
-        if a not in model.config.available_arches:
-            a = model.config.default_arch
-
-        # product
-        p = request.params.get('p') or model.config.default_product
-        if p not in model.config.available_products:
-            p = model.config.default_product
-
-        avail_repos = self._get_available_repositories(entropy, p, a)
+        r, a, b, p = self._get_api_params()
+        if r is None:
+            return self.index()
+        if a is None:
+            return self.index()
+        if b is None:
+            return self.index()
+        if p is None:
+            return self.index()
 
         # search type
         t = request.params.get('t') or "pkg"
         t = search_types.get(t, search_types.get("pkg"))
-
-        # repository
-        r = request.params.get('r') or model.config.ETP_REPOSITORY
-        if r not in avail_repos:
-            return self.index()
-
-        # validate arch
-        avail_arches = self._get_available_arches(entropy, r, p)
-        if a not in avail_arches:
-            return self.index()
-
-        # branch
-        b = request.params.get('b') or model.config.default_branch
-        if b not in self._get_available_branches(entropy, r, p):
-            return self.index()
 
         # order by
         o = request.params.get('o') or "alphabet"
