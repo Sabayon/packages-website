@@ -245,6 +245,49 @@ class ApiController(BaseController, WebsiteController):
 
         return self._api_render(response, renderer)
 
+    def _api_packages_in_categories(self, categories_str, repository_id, arch,
+        branch, product, order_by, renderer):
+        """
+        Return a list of packages in given Package Categories. Results are
+        returned in list form, ordered by order_by directive.
+        Package ids are encoded in base64.
+        http://url/api?q=packages_in_categories&arg0=x11-apps%20app-misc
+        """
+        requested_categories = frozenset(categories_str.split())
+        entropy = self.Entropy()
+
+        response = self._api_base_response(200)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
+            branch)
+        if dbconn is None:
+            return self._api_error(renderer, 503, "repository not available")
+
+        try:
+            categories = dbconn.listAllCategories()
+            # validate categories
+            categories_validation = requested_categories - set(categories)
+            if categories_validation:
+                # invalid
+                return self._api_error(renderer, 400, "bad request")
+            pkg_ids = set()
+            for category in categories:
+                # now get packages belonging to this category
+                pkg_ids |= dbconn.listPackageIdsInCategory(category)
+            pkgs_data = [
+                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                    pkg_id in pkg_ids]
+            ordered_pkgs = self._api_order_by(pkgs_data, order_by)
+            # drop dbconn
+            ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
+                ordered_pkgs]
+            response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
+        except Exception as err:
+            return self._api_error(renderer, 503, repr(err))
+        finally:
+            dbconn.close()
+
+        return self._api_render(response, renderer)
+
     def execute(self):
         """
         Public API, only supporting json or jsonp.
@@ -283,6 +326,7 @@ class ApiController(BaseController, WebsiteController):
             "categories": self._api_categories,
             "groups": self._api_groups,
             "packages_in_groups": self._api_packages_in_groups,
+            "packages_in_categories": self._api_packages_in_categories,
         }
 
         q = request.params.get("q")
