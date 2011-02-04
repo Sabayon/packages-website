@@ -412,6 +412,7 @@ class ApiController(BaseController, WebsiteController):
         else:
             size = entropy.tools.bytes_into_human(size)
         on_disk_size = entropy_repository.retrieveOnDiskSize(package_id)
+        pkg_key = entropy.dep.dep_getkey(atom)
 
         pkg_data = {
             'version': version,
@@ -434,7 +435,11 @@ class ApiController(BaseController, WebsiteController):
             'arch': arch,
             'product': product,
             'package_id': package_id,
+            'docs': ugc.get_ugc_metadata_doctypes(pkg_key,
+                [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
         }
+        for mydoc in mydata['docs']:
+            self._expand_ugc_doc_info(ugc, mydoc)
 
         dependencies = entropy_repository.retrieveDependencies(package_id,
             extended = True)
