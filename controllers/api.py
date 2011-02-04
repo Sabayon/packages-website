@@ -482,7 +482,6 @@ class ApiController(BaseController, WebsiteController):
         Internal.
         Get basic or detailed information for given package hashes.
         """
-
         package_hashes = package_hashes.split()
         packages = set()
         # validate hashes
@@ -619,5 +618,5 @@ class ApiController(BaseController, WebsiteController):
             return self._api_error(renderer, 400, "bad request")
         try:
             return callback(*args)
-        except TypeError:
-            return self._api_error(renderer, 400, "bad request")
+        except TypeError as err:
+            return self._api_error(renderer, 400, err)
