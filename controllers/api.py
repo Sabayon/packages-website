@@ -438,7 +438,7 @@ class ApiController(BaseController, WebsiteController):
             'docs': ugc.get_ugc_metadata_doctypes(pkg_key,
                 [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
         }
-        for mydoc in mydata['docs']:
+        for mydoc in pkg_data['docs']:
             self._expand_ugc_doc_info(ugc, mydoc)
 
         dependencies = entropy_repository.retrieveDependencies(package_id,
