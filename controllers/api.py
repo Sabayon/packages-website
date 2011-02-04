@@ -17,10 +17,11 @@ class ApiController(BaseController, WebsiteController):
         BaseController.__init__(self)
         WebsiteController.__init__(self)
 
-    def _api_base_response(self, code):
+    def _api_base_response(self, code, message = None):
         response = {
             'code': code,
             'api_rev': 1,
+            'message': message or "",
         }
         return response
 
@@ -127,11 +128,11 @@ class ApiController(BaseController, WebsiteController):
         func = order_map.get(order_by, _alphabet_order)
         return func()
 
-    def _api_error(self, renderer, code = 404):
+    def _api_error(self, renderer, code, message):
         """
         API request error, build response and return
         """
-        response = self._api_base_response(code)
+        response = self._api_base_response(code, message = message)
         return self._api_render(response, renderer)
 
     def _api_categories(self, repository_id, arch, branch, product, order_by,
@@ -144,12 +145,12 @@ class ApiController(BaseController, WebsiteController):
         dbconn = self._api_get_repo(self.Entropy(), repository_id, arch,
             product, branch)
         if dbconn is None:
-            return self._api_error(renderer, 503)
+            return self._api_error(renderer, 503, "repository not available")
 
         try:
             response['r'] = sorted(dbconn.listAllCategories())
-        except:
-            return self._api_error(renderer, 503)
+        except Exception as err:
+            return self._api_error(renderer, 503, repr(err))
         finally:
             dbconn.close()
 
@@ -170,7 +171,7 @@ class ApiController(BaseController, WebsiteController):
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
         if dbconn is None:
-            return self._api_error(renderer, 503)
+            return self._api_error(renderer, 503, "repository not available")
 
         try:
             categories = sorted(dbconn.listAllCategories())
@@ -182,8 +183,8 @@ class ApiController(BaseController, WebsiteController):
                         x.startswith(g_cat)])
                 data['categories'] = sorted(exp_cats)
             response['r'] = groups
-        except:
-            return self._api_error(renderer, 503)
+        except Exception as err:
+            return self._api_error(renderer, 503, repr(err))
         finally:
             dbconn.close()
 
@@ -207,13 +208,13 @@ class ApiController(BaseController, WebsiteController):
         group_validation = requested_groups - avail_groups
         if group_validation:
             # invalid
-            return self._api_error(renderer, 400)
+            return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
         dbconn = self._api_get_repo(entropy, repository_id, arch, product,
             branch)
         if dbconn is None:
-            return self._api_error(renderer, 503)
+            return self._api_error(renderer, 503, "repository not available")
 
         try:
             categories = sorted(dbconn.listAllCategories())
@@ -236,8 +237,8 @@ class ApiController(BaseController, WebsiteController):
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
-        except:
-            return self._api_error(renderer, 503)
+        except Exception as err:
+            return self._api_error(renderer, 503, repr(err))
         finally:
             dbconn.close()
 
@@ -274,7 +275,8 @@ class ApiController(BaseController, WebsiteController):
         code int (200 is OK, 404 is invalid api call, 503 is server error, 400
         is bad request).
         'code' will be always there, as well as 'api_rev', representing the
-        API response revision (current is: 1).
+        API response revision (current is: 1), and 'message', which is bound
+        to 'code' value.
         """
         api_map = {
             "categories": self._api_categories,
@@ -295,7 +297,7 @@ class ApiController(BaseController, WebsiteController):
 
         if q is None:
             # no need to go further
-            return self._api_error(renderer)
+            return self._api_error(renderer, 400, "bad request")
 
         r, a, b, p, o = self._api_get_params()
         if r is None:
@@ -316,8 +318,8 @@ class ApiController(BaseController, WebsiteController):
         callback = api_map.get(q)
         if callback is None:
             # unsupported q=
-            return self._api_error(renderer)
+            return self._api_error(renderer, 400, "bad request")
         try:
             return callback(*args)
         except TypeError:
-            return self._api_error(renderer)
+            return self._api_error(renderer, 400, "bad request")
