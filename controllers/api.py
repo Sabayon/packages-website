@@ -97,32 +97,35 @@ class ApiController(BaseController, WebsiteController):
         arch, branch, product, entropy_repository) using given order_by directive,
         can be either alphabet, vote, downloads
         """
-        ugc = self.UGC()
-        try:
-            def _alphabet_order():
-                key_sorter = lambda x: x[5].retrieveAtom(x[0])
-                return sorted(pkgs_data, key = key_sorter)
+        def _alphabet_order():
+            key_sorter = lambda x: x[5].retrieveAtom(x[0])
+            return sorted(pkgs_data, key = key_sorter)
 
-            def _downloads_order():
+        def _downloads_order():
+            ugc = self.UGC()
+            try:
                 key_sorter = lambda x: ugc.get_ugc_vote(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter)
+            finally:
+                ugc.disconnect()
 
-            def _vote_order():
+        def _vote_order():
+            ugc = self.UGC()
+            try:
                 key_sorter = lambda x: ugc.get_ugc_downloads(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
+            finally:
+                ugc.disconnect()
 
-            order_map = {
-                "alphabet": _alphabet_order,
-                "downloads": _downloads_order,
-                "vote": _vote_order
-            }
-            func = order_map.get(order_by, _alphabet_order)
-            return func()
-        finally:
-            ugc.disconnect()
-            del ugc
+        order_map = {
+            "alphabet": _alphabet_order,
+            "downloads": _downloads_order,
+            "vote": _vote_order
+        }
+        func = order_map.get(order_by, _alphabet_order)
+        return func()
 
     def _api_error(self, renderer, code = 404):
         """
