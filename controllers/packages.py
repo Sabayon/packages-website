@@ -187,14 +187,8 @@ class PackagesController(BaseController,WebsiteController):
         entropy = self.Entropy()
         repoid = model.config.ETP_REPOSITORY
 
-        try:
-            dbconn = entropy._open_db(repoid, arch, product, branch)
-            dbconn.validate()
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            try:
-                dbconn.close()
-            except:
-                pass
+        dbconn = self._api_get_repo(entropy, repoid, arch, product, branch)
+        if dbconn is None:
             return -1, None
 
         match_id = dbconn.atomMatch(dep)[0]
@@ -310,14 +304,10 @@ class PackagesController(BaseController,WebsiteController):
         if branch in entropy._get_branches(repoid, c.arch, c.product):
 
             while 1:
-                try:
-                    dbconn = entropy._open_db(repoid, c.arch, c.product, branch)
-                    dbconn.validate()
-                except (ProgrammingError, OperationalError, SystemDatabaseError):
-                    try:
-                        dbconn.close()
-                    except:
-                        pass
+
+                dbconn = self._api_get_repo(entropy, repoid, c.arch, c.product,
+                    branch)
+                if dbconn is None:
                     break
 
                 func = self.valid_search_types.get(c.searchtype)
@@ -1112,13 +1102,8 @@ class PackagesController(BaseController,WebsiteController):
                     size = 0
 
                     for branch in branches:
-                        try:
-                            dbconn = entropy._open_db(repoid, parch, pstring, branch)
-                        except (ProgrammingError, OperationalError, SystemDatabaseError):
-                            try:
-                                dbconn.close()
-                            except:
-                                pass
+                        dbconn = self._api_get_repo(entropy, repoid, parch, pstring, branch)
+                        if dbconn is None:
                             continue
                         try:
 
@@ -1292,11 +1277,10 @@ class PackagesController(BaseController,WebsiteController):
             return arg0, arg1, None
         return arg0, arg1, arg2
 
-    def _api_get_repo(self, repository_id, arch, product, branch):
+    def _api_get_repo(self, entropy, repository_id, arch, product, branch):
         """
         Internal method, stay away.
         """
-        entropy = self.Entropy()
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
             dbconn.validate()
@@ -1314,7 +1298,8 @@ class PackagesController(BaseController,WebsiteController):
         Return a list of available entropy categories for given repository.
         NOTE: order_by doesn't have any effect here.
         """
-        dbconn = self._api_get_repo(repository_id, arch, product, branch)
+        dbconn = self._api_get_repo(self.Entropy(), repository_id, arch,
+            product, branch)
         if dbconn is None:
             return self._api_error(renderer, 503)
 
@@ -1339,7 +1324,8 @@ class PackagesController(BaseController,WebsiteController):
         """
         entropy = self.Entropy()
         spm_class = entropy.Spm_class()
-        dbconn = self._api_get_repo(repository_id, arch, product, branch)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
+            branch)
         if dbconn is None:
             return self._api_error(renderer, 503)
 
@@ -1552,33 +1538,18 @@ class PackagesController(BaseController,WebsiteController):
 
             c.repo_mirrors = entropy._compile_mirror_download_paths(repo, product, model.config.ETP_REPOSITORY_DOWNLOAD_MIRRORS)
 
-            valid = True
-            try:
-                dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validate()
-            except (ProgrammingError, OperationalError, SystemDatabaseError):
-                try:
-                    dbconn.close()
-                except:
-                    pass
-                valid = False
-
-            try:
+            dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+            if dbconn is not None:
                 if hasattr(dbconn, 'isIDPackageAvailable'):
                     pkg_id_avail = dbconn.isIDPackageAvailable(idpackage)
                 else:
                     pkg_id_avail = dbconn.isPackageIdAvailable(idpackage)
 
-                if valid and pkg_id_avail:
-                    mydata, depdata = self._get_package_extrainfo(product, repo, arch, ugc, idpackage, dbconn)
+                if pkg_id_avail:
+                    mydata, depdata = self._get_package_extrainfo(product, repo,
+                        arch, ugc, idpackage, dbconn)
                     atominfo.update(mydata)
-            except: # trap DatabaseError and other sync shit
-                pass
-            if valid:
-                try:
-                    dbconn.close()
-                except:
-                    pass
+                dbconn.close()
 
         c.atominfo = atominfo
         c.depdata = depdata
@@ -1602,18 +1573,8 @@ class PackagesController(BaseController,WebsiteController):
 
         if not not_found:
 
-            valid = True
-            try:
-                dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validate()
-            except (ProgrammingError, OperationalError,SystemDatabaseError):
-                try:
-                    dbconn.close()
-                except:
-                    pass
-                valid = False
-
-            if valid:
+            dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+            if dbconn is not None:
                 if hasattr(dbconn, 'retrieveDepends'):
                     # backward compatibility
                     mydepends = dbconn.retrieveDepends(idpackage)
@@ -1622,6 +1583,7 @@ class PackagesController(BaseController,WebsiteController):
                 for mydepend in mydepends:
                     c.idpackages[mydepend] = dbconn.retrieveAtom(mydepend)
                 dbconn.close()
+
         return self._render('/packages/depends.html')
 
     def content(self):
@@ -1644,18 +1606,8 @@ class PackagesController(BaseController,WebsiteController):
 
         if not not_found:
 
-            valid = True
-            try:
-                dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validate()
-            except (ProgrammingError, OperationalError,SystemDatabaseError):
-                try:
-                    dbconn.close()
-                except:
-                    pass
-                valid = False
-
-            if valid:
+            dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+            if dbconn is not None:
                 c.files = dbconn.retrieveContent(idpackage, order_by = 'file')
                 dbconn.close()
 
@@ -1745,14 +1697,8 @@ class PackagesController(BaseController,WebsiteController):
 
         for branch in branches:
 
-            try:
-                dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validate()
-            except (ProgrammingError, OperationalError, SystemDatabaseError):
-                try:
-                    dbconn.close()
-                except:
-                    pass
+            dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+            if dbconn is None:
                 continue
 
             categories = dbconn.listAllCategories(order_by = 'category')
@@ -1804,14 +1750,8 @@ class PackagesController(BaseController,WebsiteController):
 
         for branch in branches:
 
-            try:
-                dbconn = entropy._open_db(repo, arch, product, branch)
-                dbconn.validate()
-            except (ProgrammingError, OperationalError, SystemDatabaseError):
-                try:
-                    dbconn.close()
-                except:
-                    pass
+            dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+            if dbconn is None:
                 continue
 
             c.packages[branch] = {}
@@ -1909,18 +1849,8 @@ class PackagesController(BaseController,WebsiteController):
         c.atoms = {}
         c.letters = set()
 
-        valid = True
-        try:
-            dbconn = entropy._open_db(repo, arch, product, branch)
-            dbconn.validate()
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            try:
-                dbconn.close()
-            except:
-                pass
-            valid = False
-
-        if valid:
+        dbconn = self._api_get_repo(entropy, repo, arch, product, branch)
+        if dbconn is not None:
             for myatom, idpackage, branch in dbconn.listAllPackages(order_by="atom"):
                 myupper = myatom[0].upper()
                 if not c.atoms.has_key(myupper):
