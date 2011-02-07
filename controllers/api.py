@@ -153,7 +153,7 @@ class ApiController(BaseController, WebsiteController):
                 return self._api_error(renderer, 503, "repository not available")
             response['r'] = sorted(dbconn.listAllCategories())
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -188,7 +188,7 @@ class ApiController(BaseController, WebsiteController):
                 data['categories'] = sorted(exp_cats)
             response['r'] = groups
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -243,7 +243,7 @@ class ApiController(BaseController, WebsiteController):
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -287,7 +287,7 @@ class ApiController(BaseController, WebsiteController):
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -328,7 +328,7 @@ class ApiController(BaseController, WebsiteController):
                         x.startswith(g_cat)])
             response['r'] = sorted(out_cats)
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -535,7 +535,7 @@ class ApiController(BaseController, WebsiteController):
             finally:
                 ugc.disconnect()
         except Exception as err:
-            return self._api_error(renderer, 503, err)
+            return self._api_error(renderer, 503, repr(err))
         finally:
             if dbconn is not None:
                 dbconn.close()
@@ -627,4 +627,4 @@ class ApiController(BaseController, WebsiteController):
         try:
             return callback(*args)
         except TypeError as err:
-            return self._api_error(renderer, 400, err)
+            return self._api_error(renderer, 400, repr(err))
