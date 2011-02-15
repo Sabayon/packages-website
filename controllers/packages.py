@@ -1572,7 +1572,7 @@ class PackagesController(BaseController,WebsiteController):
 
         entropy = self.Entropy()
         arches = self._get_available_arches(entropy, repo, product)
-        if arch not in model.config.available_arches:
+        if arch not in arches:
             return ''
         branch = request.params.get('branch')
 

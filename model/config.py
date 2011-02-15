@@ -54,6 +54,7 @@ available_products = {
 available_arches = {
     "amd64": "amd64",
     "x86": "x86",
+    "arch": "arch",
 }
 disabled_repositories = [
     "itsme",
