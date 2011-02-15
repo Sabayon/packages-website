@@ -364,6 +364,7 @@ class PackagesController(BaseController,WebsiteController):
                     owndata['download'] = tdata['download']
                     owndata['revision'] = tdata['revision']
                     owndata['homepage'] = tdata['homepage']
+                    owndata['spm_repo'] = tdata['spm_repo']
                     owndata['size'] = tdata['size']
                     owndata['digest'] = tdata['digest']
                     owndata['idpackage'] = tdata['idpackage']
