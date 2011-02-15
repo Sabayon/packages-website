@@ -281,6 +281,7 @@ class PackagesController(BaseController,WebsiteController):
         c.arch = arch
         c.branches = self._get_available_branches(entropy, repoid, product)
         c.repositories = self._get_available_repositories(entropy, product, arch)
+        c.source_repositories = model.config.source_repositories
 
         c.searchtype = searchtype
         c.searchtypes = self.search_types_strings
@@ -535,6 +536,7 @@ class PackagesController(BaseController,WebsiteController):
         c.source_repositories = model.config.source_repositories
         c.branches = self._get_available_branches(entropy, c.repoid, c.product)
         c.repositories = self._get_available_repositories(entropy, c.product, None)
+        c.source_repositories = model.config.source_repositories
         c.searchtype = "0"
         c.searchtypes = self.search_types_strings
         c.order_by = "0"
@@ -705,6 +707,7 @@ class PackagesController(BaseController,WebsiteController):
         arches = self._get_available_arches(entropy, repoid, product)
         c.arches = arches
         c.repositories = repos
+        c.source_repositories = model.config.source_repositories
         c.branches = self._get_available_branches(entropy, repoid, product)
         c.products = model.config.available_products
         c.repoid = repoid
