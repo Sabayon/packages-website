@@ -1273,6 +1273,7 @@ class PackagesController(BaseController,WebsiteController):
         if (repo and product):
             c.arches = self._get_available_arches(entropy, repo, product)
         c.repoid = repo
+        c.source_repositories = model.config.source_repositories
 
         atominfo = {}
         atominfo['idproduct'] = product
