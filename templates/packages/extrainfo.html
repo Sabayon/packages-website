@@ -53,15 +53,17 @@
         </dd>
     </dl>
 
-    <!-- revision -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("Entropy revision")}</label>
-        </dt>
-        <dd>
-            ${c.atominfo.get('revision')}
-        </dd>
-    </dl>
+    % if c.repoid not in c.source_repositories:
+        <!-- revision -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("Entropy revision")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('revision')}
+            </dd>
+        </dl>
+    % endif
 
     % if c.atominfo.get('tag'):
         <!-- tag -->
@@ -75,15 +77,17 @@
         </dl>
     % endif
 
-    <!-- branch -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("Release")}</label>
-        </dt>
-        <dd>
-            ${c.atominfo.get('branch')}
-        </dd>
-    </dl>
+    % if c.repoid not in c.source_repositories:
+        <!-- branch -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("Release")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('branch')}
+            </dd>
+        </dl>
+    % endif
 
     <!-- slot -->
     <dl class="form-line" id="form-line-packages-search">
@@ -234,25 +238,27 @@
         </dl>
     %endif
 
-    <!-- chost -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("CHOST")}</label>
-        </dt>
-        <dd>
-            ${c.atominfo.get('chost') | h,trim}
-        </dd>
-    </dl>
+    % if c.repoid not in c.source_repositories:
+        <!-- chost -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("CHOST")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('chost') | h,trim}
+            </dd>
+        </dl>
 
-    <!-- cflags -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("CFLAGS")}</label>
-        </dt>
-        <dd>
-            ${c.atominfo.get('cflags') | h,trim}
-        </dd>
-    </dl>
+        <!-- cflags -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("CFLAGS")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('cflags') | h,trim}
+            </dd>
+        </dl>
+    % endif
 
     % if c.atominfo['useflags']:
         <!-- useflags -->
@@ -269,49 +275,51 @@
         </dl>
     % endif
 
-    <!-- content -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("Content")}</label>
-        </dt>
-        <dd>
-            <br/>
-            <div style="position: relative; left: 16em; top: -1em; width: 450px">
-                <a href="#content_${c.atominfo['idpackage']}_${c.atominfo['branch']}" id="link" onclick="javascript:load_content('${c.atominfo.get('idpackage')}','${c.atominfo.get('arch')}','${c.atominfo.get('idproduct')}','${c.atominfo.get('repo')}','${c.atominfo.get('branch')}','content_${c.atominfo.get('idpackage')}_${c.atominfo.get('branch')}');"/>${_("View content")}</a>
-                <div id="content_${c.atominfo.get('idpackage')}_${c.atominfo.get('branch')}"></div>
-            </div>
-        </dd>
-    </dl>
-
-    <!-- ondisksize -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("Space required")}</label>
-        </dt>
-        <dd>
-            ${c.atominfo.get('ondisksize')}
-        </dd>
-    </dl>
-
-    <!-- checksum -->
-    <dl class="form-line" id="form-line-packages-search">
-        <dt class="form-left">
-            <label>${_("Checksum")}</label>
-        </dt>
-        <dd>
-            <a href="${c.repo_mirrors[0]}/${c.atominfo['download'] | u}.md5">${c.atominfo.get('digest')}</a>
-        </dd>
-    </dl>
-    %if c.atominfo.get('sha256'):
+    % if c.repoid not in c.source_repositories:
+        <!-- content -->
         <dl class="form-line" id="form-line-packages-search">
             <dt class="form-left">
-                <label>${_("SHA 256")}</label>
+                <label>${_("Content")}</label>
             </dt>
             <dd>
-                ${c.atominfo.get('sha256')}
+                <br/>
+                <div style="position: relative; left: 16em; top: -1em; width: 450px">
+                    <a href="#content_${c.atominfo['idpackage']}_${c.atominfo['branch']}" id="link" onclick="javascript:load_content('${c.atominfo.get('idpackage')}','${c.atominfo.get('arch')}','${c.atominfo.get('idproduct')}','${c.atominfo.get('repo')}','${c.atominfo.get('branch')}','content_${c.atominfo.get('idpackage')}_${c.atominfo.get('branch')}');"/>${_("View content")}</a>
+                    <div id="content_${c.atominfo.get('idpackage')}_${c.atominfo.get('branch')}"></div>
+                </div>
             </dd>
         </dl>
-    %endif
+
+        <!-- ondisksize -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("Space required")}</label>
+            </dt>
+            <dd>
+                ${c.atominfo.get('ondisksize')}
+            </dd>
+        </dl>
+
+        <!-- checksum -->
+        <dl class="form-line" id="form-line-packages-search">
+            <dt class="form-left">
+                <label>${_("Checksum")}</label>
+            </dt>
+            <dd>
+                <a href="${c.repo_mirrors[0]}/${c.atominfo['download'] | u}.md5">${c.atominfo.get('digest')}</a>
+            </dd>
+        </dl>
+        %if c.atominfo.get('sha256'):
+            <dl class="form-line" id="form-line-packages-search">
+                <dt class="form-left">
+                    <label>${_("SHA 256")}</label>
+                </dt>
+                <dd>
+                    ${c.atominfo.get('sha256')}
+                </dd>
+            </dl>
+        %endif
+    % endif
 
     <!-- creationdate -->
     <dl class="form-line" id="form-line-packages-search">
