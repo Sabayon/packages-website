@@ -16,10 +16,27 @@
     <!-- category -->
     <dl class="form-line" id="form-line-packages-search">
         <dt class="form-left">
-            <label>${_("Repository")}</label>
+            % if c.repoid not in c.source_repositories:
+                <label>${_("Repository")}</label>
+            % else:
+                <label>${_("Source Repository")}</label>
+            % endif
         </dt>
         <dd>
             ${c.atominfo.get('repo')}
+        </dd>
+    </dl>
+    <!-- category -->
+    <dl class="form-line" id="form-line-packages-search">
+        <dt class="form-left">
+            % if c.repoid not in c.source_repositories:
+                <label>${_("Source Repository")}</label>
+            % else:
+                <label>${_("Overlay")}</label>
+            % endif
+        </dt>
+        <dd>
+            ${c.atominfo.get('spm_repo')}
         </dd>
     </dl>
 
