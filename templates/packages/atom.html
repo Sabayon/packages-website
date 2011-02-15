@@ -15,9 +15,11 @@
         </div>
         <div style="float: left; clear: right; width: 34%; text-align: right;">
             ${c.atominfo['size']}
-            % for source in c.repo_mirrors:
-                <a href="${source}/${c.atominfo['download']}" onmouseover="this.style.background='#FFFFFF';" onmouseout="this.style.background='none';"><img src="/images/packages/document-save.png"/></a>
-            % endfor
+            % if c.repoid not in c.source_repositories:
+                % for source in c.repo_mirrors:
+                    <a href="${source}/${c.atominfo['download']}" onmouseover="this.style.background='#FFFFFF';" onmouseout="this.style.background='none';"><img src="/images/packages/document-save.png"/></a>
+                % endfor
+            % endif
             <img onmouseover="javascript:inItem(this)" onmouseout="javascript:outItem(this)" 
             %if c.show_one_package:
                 src="/images/packages/list-remove.png" 

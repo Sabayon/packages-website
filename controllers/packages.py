@@ -170,6 +170,7 @@ class PackagesController(BaseController,WebsiteController):
         data['download'] = dbconn.retrieveDownloadURL(idpackage)
         data['revision'] = dbconn.retrieveRevision(idpackage)
         data['homepage'] = dbconn.retrieveHomepage(idpackage)
+        data['spm_repo'] = dbconn.retrieveSpmRepository(idpackage) or "n/a"
         mysize = dbconn.retrieveSize(idpackage)
         data['size'] = "0b"
         if mysize != None:
@@ -235,6 +236,7 @@ class PackagesController(BaseController,WebsiteController):
         data['repo'] = repoid
         data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
             dbconn.retrieveSignatures(idpackage)
+        data['spm_repo'] = dbconn.retrieveSpmRepository(idpackage) or "n/a"
         return data, depdata
 
     def _generate_search_data(self, entropy, ugc, search_string, product, repoid, arch, branch, searchtype, orderby):
@@ -530,6 +532,7 @@ class PackagesController(BaseController,WebsiteController):
 
         entropy = self.Entropy()
         c.arches = self._get_available_arches(entropy, c.repoid, c.product)
+        c.source_repositories = model.config.source_repositories
         c.branches = self._get_available_branches(entropy, c.repoid, c.product)
         c.repositories = self._get_available_repositories(entropy, c.product, None)
         c.searchtype = "0"

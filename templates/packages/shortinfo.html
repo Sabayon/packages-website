@@ -1,5 +1,10 @@
 ## -*- coding: utf-8 -*-
 <div id="extradata_${c.atominfo['idpackage']}_${c.branch}_${c.repoid}" style="clear:both">
-    ${_("Repository")}: <b>${c.repoid}</b> | ${_("Release")}: <b>${c.branch}</b> | ${_("Revision")}: <b>${c.atominfo['revision']}</b> | ${_("Checksum")}: <a href="${c.repo_mirrors[0]}/${c.atominfo['download']}.md5" target="_blank">${c.atominfo['digest']}</a>
+    % if c.repoid in c.source_repositories:
+        ${_("Source Repository")}: <b>${c.repoid}</b>, ${_("overlay")}: ${c.atominfo['spm_repo']}
+    % else:
+        ${_("Repository")}: <b>${c.repoid}</b>
+    % endif
+    | ${_("Release")}: <b>${c.branch}</b> | ${_("Revision")}: <b>${c.atominfo['revision']}</b> | ${_("Checksum")}: <a href="${c.repo_mirrors[0]}/${c.atominfo['download']}.md5" target="_blank">${c.atominfo['digest']}</a>
     <%include file="/packages/ugc_shortinfo.html"/>
 </div>

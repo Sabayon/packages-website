@@ -62,6 +62,7 @@ disabled_repositories = [
     "community1",
     "jenna",
 ]
+source_repositories = ["portage"]
 
 # UGC #
 community_repos_ugc_connection_data = {}
