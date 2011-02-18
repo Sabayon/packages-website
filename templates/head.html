@@ -7,39 +7,18 @@
         <title>${_("Sabayon Linux Packages")}</title>
     %endif
 
-    <meta name="keywords" content="sabayon, linux, operating systems, operating system, usb, liveusb, linux web, kernel, linux live"/>
-    <meta name="description" content="${_("Sabayon Linux Packages")}"/>
+    <meta name="keywords" content="sabayon, linux, operating systems, operating system, usb, liveusb, linux web, kernel, linux live, sabayon packages"/>
+    <meta name="description" content="Sabayon Linux Packages"/>
+    <link rel="stylesheet" href="http://static.sabayon.org/site/css/reset-min.css" type="text/css" />
+    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global.css" type="text/css" />
+    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global_menu.css" type="text/css" />
+    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global_styles.css" type="text/css" />
+    <link rel="stylesheet" href="http://static.sabayon.org/site/css/style.css" type="text/css"/>
+
     <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css"/>
+
     <link rel="stylesheet" type="text/css" media="screen" href="/css/lytebox.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/css/sexyalertbox.css"/>
-
-    <!-- mobile support -->
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-    <link media="only screen and (max-device-width: 480px) and (min-device-width: 320px)" href="/css/mobile.css" type="text/css" rel="stylesheet" />
-    <link media="handheld, only screen and (max-device-width: 319px)" href="/css/mobile_simple.css" type="text/css" rel="stylesheet" />
-
-    % if c.browser_user_agent.lower().find(" msie ") != -1:
-        <!-- IE 7 fixes -->
-        <style type="text/css">
-            #band {
-                margin-bottom: 5px;
-            }
-            .col {
-                margin-bottom: -10px;
-            }
-            #body-headlines {
-                margin-top: -20px;
-            }
-        </style>
-    % elif c.browser_user_agent.find("Opera") != -1:
-        <!-- Opera fixes -->
-        <style type="text/css">
-            .loginform-right-links {
-                position: relative;
-                left: 16px;
-            }
-        </style>
-    % endif
 
     <script type="text/javascript" src="/js/aim.js"></script>
     <script type="text/javascript" src="/js/mootools-b62.js"></script>
@@ -48,7 +27,6 @@
     <script type="text/javascript" src="/js/sexyalertbox.v1.1-b62.js"></script>
     <script type="text/javascript" src="/js/lytebox-b62.js"></script>
     <script type="text/javascript"><%include file="/../public/js/sabayon.js"/></script>
-
 
     <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
 

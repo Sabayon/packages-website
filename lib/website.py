@@ -31,16 +31,7 @@ import entropy.tools as entropy_tools
 
 class WebsiteController:
 
-    USER_AGENT_BLACKLIST = []
-
     def __init__(self):
-
-        try:
-            user_agent = request.environ['HTTP_USER_AGENT']
-        except (AttributeError, KeyError):
-            user_agent = None
-        if user_agent in WebsiteController.USER_AGENT_BLACKLIST:
-            abort(503)
 
         c.ugc_doctypes = etpConst['ugc_doctypes'].copy()
         # disabled
@@ -57,83 +48,6 @@ class WebsiteController:
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
         import www.model.Portal
         self.Portal = www.model.Portal.Portal
-        import www.model.Entropy
-        import www.model.UGC
-        self.UGC = www.model.UGC.UGC
-        self.Entropy = www.model.Entropy.Entropy
-
-    def _get_available_branches(self, entropy, repoid, product):
-        arches = self._get_available_arches(entropy, repoid, product)
-        branches = set()
-        for arch in arches:
-            branches |= set(entropy._get_branches(repoid, arch, product))
-        return sorted(branches, reverse = True)
-
-    def _get_available_repositories(self, entropy, product, arch):
-        return sorted(entropy._get_repositories(product, arch))
-
-    def _get_available_arches(self, entropy, repoid, product):
-        return entropy._get_arches(repoid, product)
-
-    def _api_get_repo(self, entropy, repository_id, arch, product, branch):
-        """
-        Internal method, stay away.
-        """
-        try:
-            dbconn = entropy._open_db(repository_id, arch, product, branch)
-            dbconn.validate()
-            return dbconn
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            try:
-                dbconn.close()
-            except:
-                pass
-            return None
-
-    def _api_get_params(self):
-        """
-        Return a tuple composed by repository, arch, branch, product
-        """
-        entropy = self.Entropy()
-        # arch
-        a = request.params.get('a') or model.config.default_arch
-        if a not in model.config.available_arches:
-            a = model.config.default_arch
-
-        # product
-        p = request.params.get('p') or model.config.default_product
-        if p not in model.config.available_products:
-            p = model.config.default_product
-
-        avail_repos = self._get_available_repositories(entropy, p, a)
-        # repository
-        r = request.params.get('r') or model.config.ETP_REPOSITORY
-        if r not in avail_repos:
-            r = None
-
-        # validate arch
-        if r is not None:
-            avail_arches = self._get_available_arches(entropy, r, p)
-            if a not in avail_arches:
-                a = None
-
-        # validate branch
-        b = None
-        if r is not None:
-            b = request.params.get('b') or model.config.default_branch
-            if b not in self._get_available_branches(entropy, r, p):
-                b = None
-
-        order_by_types = {
-            'alphabet': "0",
-            'vote': "1",
-            'downloads': "2",
-        }
-        # order by
-        o = request.params.get('o') or "alphabet"
-        o = order_by_types.get(o, order_by_types.get("alphabet"))
-
-        return r, a, b, p, o
 
     def _store_vote_in_session(self, pages_id, session):
         session['poll_vote_%s' % (pages_id,)] = True
@@ -217,86 +131,6 @@ class WebsiteController:
         elif portal.check_moderator(user_id):
             c.is_moderator = True
             c.my_role = _("Moderator")
-
-    def _get_generic_activation_parameters(self):
-        error = False
-        try:
-            user_id = int(request.params.get('u'))
-        except (ValueError,TypeError,):
-            user_id = 0
-            error = True
-        try:
-            validation_id = int(request.params.get('r'))
-        except (ValueError,TypeError,):
-            validation_id = 0
-            error = True
-        try:
-            confirmation_code = str(request.params.get('c'))
-        except:
-            confirmation_code = '0'
-            error = True
-
-        return error, user_id, validation_id, confirmation_code
-
-    def _load_pages_id(self, pages_id, page_num):
-        pages = self.Portal()
-        found = False
-        if pages._is_pages_id_page_num_available(pages_id, page_num):
-            c.pages_id = pages_id
-            c.page_num = page_num
-            c.page_types = pages.PAGE_TYPES
-            c.page_data = pages.get_generic_page(pages_id, page_num)
-            c_status, comments_data = pages.get_comments(pages_id, comment_state = pages.COMMENT_STATES['enabled'])
-            if c_status: c.comments = comments_data
-            if pages._is_pages_id_a_poll(pages_id):
-                c.poll = pages.get_poll(pages_id)
-            found = True
-        pages.disconnect()
-        del pages
-        return found
-
-    def _format_mirrors_result(self, m_data):
-        mirrors_grouped = {}
-        for mirror in m_data:
-            mirror['note_clear'] = model.config.remove_html_tags(mirror['note'])
-            m_c = mirror['country_name']
-            m_n = mirror['mirror_name']
-            if not mirrors_grouped.has_key(m_c):
-                mirrors_grouped[m_c] = {}
-            if not mirrors_grouped[m_c].has_key(m_n):
-                mirrors_grouped[m_c][m_n] = []
-            mirrors_grouped[m_c][m_n].append(mirror)
-        return mirrors_grouped
-
-    def _format_pages_result(self, pages):
-        data = {}
-        order = []
-        for item in pages:
-            item['intro_clear'] = model.config.remove_html_tags(item['intro'])
-            item['intro_encoded'] = self._htmlencode(item['intro'])
-            item['text_encoded'] = self._htmlencode(item['text'])
-            if item['pages_id'] not in order:
-                order.append(item['pages_id'])
-            if not data.has_key(item['pages_id']):
-                data[item['pages_id']] = {}
-            data[item['pages_id']][item['page_num']] = item
-        return data, order
-
-    def _validate_email(self, email):
-        # ascii test
-        try:
-            email = str(email)
-        except:
-            return False
-        return entropy_tools.is_valid_email(email)
-
-    def _send_text_email(self, recipients, subject, message):
-        from entropy.misc import EmailSender
-        sender = EmailSender()
-        sender.smtphost = model.config.smtp_host
-        sender.smtpport = model.config.smtp_port
-        sender.send_text_email(model.config.registration_mail, recipients,
-            subject, message)
 
     def _uncompress_zip(self, file_path, extract_path):
 
@@ -478,40 +312,5 @@ class WebsiteController:
         args += [filepath]
         rc = os.system(' '.join(args)+" &> /dev/null")
         if rc == 1:
-            return True
-        return False
-
-    def _get_recaptcha(self):
-        try:
-            from recaptcha.client import captcha
-            return captcha
-        except ImportError:
-            return None
-
-    def _new_captcha(self):
-        captcha = self._get_recaptcha()
-        if captcha == None: return
-        myhtml = captcha.displayhtml(model.config.recaptcha_public_key)
-        c.recaptcha_html = myhtml
-        return myhtml
-
-    def _validate_captcha_submit(self):
-        challenge = request.params.get('recaptcha_challenge_field')
-        response = request.params.get('recaptcha_response_field')
-        remoteip = request.environ.get('REMOTE_ADDR')
-        captcha = self._get_recaptcha()
-        if captcha == None: return True
-        tries = 10
-        valid_response = False
-        while tries:
-            tries -= 1
-            try:
-                captcha_response = captcha.submit(challenge, response, model.config.recaptcha_private_key, remoteip)
-            except urllib2.URLError:
-                time.sleep(2)
-                continue
-            valid_response = captcha_response.is_valid
-            break
-        if valid_response:
             return True
         return False

@@ -22,25 +22,15 @@ def make_map(config):
     # CUSTOM ROUTES HERE
 
     map.connect('/', controller='packages', action='index')
-    map.connect('/ugc', controller='packages', action='ugc')
-    map.connect('/stats', controller='packages', action='stats')
-    map.connect('/categories', controller='packages', action='categories')
-    map.connect('/releases', controller='packages', action='releases')
-    map.connect('/advisories', controller='packages', action='advisories')
     map.connect('/search', controller='packages', action='search')
+    map.connect('/quicksearch', controller='packages', action='quicksearch')
+
     map.connect('/api', controller='api', action='execute')
-    map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='search_pkg')
-    map.connect('/repository/search/{repoid}/{product}/{arch}/{branch}/{pkgcat}/{pkgnamever}', controller='packages', action='search_pkg_atom')
-    map.connect('/repository/match/{repoid}/{product}/{arch}/{branch}/{pkgstring}', controller='packages', action='match_pkg')
-    map.connect('/repository/match/{repoid}/{product}/{arch}/{branch}/{pkgcat}/{pkgnamever}', controller='packages', action='match_pkg_atom')
-    map.connect('/ugc/search/{search_type}/{search_string}', controller='packages', action='search_ugc_package')
-    map.connect('/ugc/search/{search_type}/{search_string}/{search_string2}', controller='packages', action='search_ugc_package')
-    map.connect('/users/profile/{user}', controller='users', action='users_profile')
-    map.connect('/community/my/{item}', controller='community', action='my_dispatcher')
+    map.connect('/logout', controller='login', action='logout')
+    map.connect('/connect', controller='login', action='submit')
     map.connect('/{controller}/{action}/{id}')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}', action='index')
-    map.connect('/{category}/{name}', controller='packages', action='catname')
     map.connect('*url', controller='template', action='view')
 
     return map

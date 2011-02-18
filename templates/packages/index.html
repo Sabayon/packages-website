@@ -13,21 +13,19 @@
 %endif
 <script type="text/javascript"><%include file="/../public/js/packages.js"/></script>
 <body>
-    <%include file="/wrapper.html"/>
-    <div id="small_band">
-        <%include file="/menu.html"/>
-    </div>
-
+    <%include file="/top_wrapper.html"/>
     <div id="body">
-        <div align="center" style="margin-bottom: 10px"><%include file="/adsense/728x15.html"/></div>
-        <%include file="/packages/menu.html"/>
-        <div id="packages-area">
-            % if c.show_search_results:
-                <%include file="/packages/searchresults.html"/>
-            % else:
-                <%include file="/packages/searchbox.html"/>
-            % endif
+        <!-- <div id="packages-area-header" class="inside"> -->
         </div>
+        <div id="packages-area" class="inside">
+            <div id="left-area">
+                <%include file="/left_area.html"/>
+            </div>
+            <div id="right-area">
+                <%include file="/right_area.html"/>
+            </div>
+        </div>
+
     </div>
 
     <%include file="/footer.html"/>

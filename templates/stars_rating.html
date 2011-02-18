@@ -1,0 +1,11 @@
+## -*- coding: utf-8 -*-
+<%
+    c.user_id = 0
+    if session.get('logged_in') and session.get('entropy'):
+        c.user_id = session['entropy'].get('entropy_user_id')
+    c.myvote = c.pkg_data['ugc']['vote']
+    c.pkgkey = c.pkg_data['key']
+    c.mycount = 5 - int(c.myvote)
+    c.unique_id = c.pkg_data['hash_id']
+%>
+<%include file="/stars_rating_inner.html"/>

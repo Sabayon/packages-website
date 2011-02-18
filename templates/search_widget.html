@@ -1,0 +1,11 @@
+<div id="searchbox" class="widget">
+    <form id="search-form" action="/quicksearch" method="POST">
+        <fieldset id="search-fields">
+            <input id="search-term" type="text" maxlength="30" name="q" value="${c.quick_search_string}"/>
+            <input id="search-img" type="image" alt="S" value="S" src="/images/search-icon.png">
+        </fieldset>
+    </form>
+    <div class="search-tips konafilter">
+        @setname, /path/to/something, *.so*, application/*
+    </div>
+</div>

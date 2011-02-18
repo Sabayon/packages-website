@@ -3,6 +3,7 @@ import base64
 import json
 from www.lib.base import *
 from www.lib.website import *
+from www.lib.apibase import ApibaseController
 from www.lib.dict2xml import dict_to_xml
 
 from entropy.const import etpConst
@@ -12,13 +13,14 @@ from entropy.db.exceptions import ProgrammingError, OperationalError, \
 import entropy.dep
 import entropy.tools
 
-class ApiController(BaseController, WebsiteController):
+class ApiController(BaseController, WebsiteController, ApibaseController):
 
     CACHE_DIR = "www/packages_cache"
 
     def __init__(self):
         BaseController.__init__(self)
         WebsiteController.__init__(self)
+        ApibaseController.__init__(self)
 
     def _api_base_response(self, code, message = None):
         response = {
@@ -58,43 +60,6 @@ class ApiController(BaseController, WebsiteController):
             return arg0, arg1, None
         return arg0, arg1, arg2
 
-    def _api_encode_package(self, package_id, repository_id, a, b, p):
-        """
-        Encode a full blown package tuple into a serializable string, base64
-        is using as encoder.
-
-        @param package_id: package identifier
-        @type package_id: int
-        @param repository_id: repository identifier
-        @type repository_id: string
-        @param a: arch string
-        @type a: string
-        @param b: branch string
-        @type b: string
-        @param p: product string
-        @type p: string
-        """
-        id_str = " ".join((str(package_id), repository_id, a, b, p))
-        return base64.b64encode(id_str)
-
-    def _api_decode_package(self, encoded_id_str):
-        """
-        Decode a base64 encoded package hash back into a full blown package
-        tuple.
-
-        @param encoded_id_str: package hash base64 encoded
-        @type: string
-        @return: tuple composed by (package_id, repository_id, arch, branch, product)
-        @rtype: tuple
-        """
-        id_str = base64.b64decode(encoded_id_str)
-        try:
-            package_id, repository_id, a, b, p = id_str.split()
-            package_id = int(package_id)
-        except ValueError:
-            return None
-        return package_id, repository_id, a, b, p
-
     def _api_order_by(self, pkgs_data, order_by):
         """
         Order a list of tuples composed by (package_id, repository_id,
@@ -106,7 +71,7 @@ class ApiController(BaseController, WebsiteController):
             return sorted(pkgs_data, key = key_sorter)
 
         def _downloads_order():
-            ugc = self.UGC()
+            ugc = self._ugc()
             try:
                 key_sorter = lambda x: ugc.get_ugc_vote(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
@@ -115,7 +80,7 @@ class ApiController(BaseController, WebsiteController):
                 ugc.disconnect()
 
         def _vote_order():
-            ugc = self.UGC()
+            ugc = self._ugc()
             try:
                 key_sorter = lambda x: ugc.get_ugc_downloads(
                     entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
@@ -145,8 +110,8 @@ class ApiController(BaseController, WebsiteController):
         NOTE: order_by doesn't have any effect here.
         """
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(self.Entropy(), repository_id, arch,
-            product, branch)
+        dbconn = self._api_get_repo(self._entropy(), repository_id, arch,
+            branch, product)
 
         try:
             if dbconn is None:
@@ -170,10 +135,10 @@ class ApiController(BaseController, WebsiteController):
         NOTE: order_by doesn't have any effect here.
         """
         response = self._api_base_response(200)
-        entropy = self.Entropy()
+        entropy = self._entropy()
         spm_class = entropy.Spm_class()
-        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
-            branch)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
 
         try:
             if dbconn is None:
@@ -205,7 +170,7 @@ class ApiController(BaseController, WebsiteController):
         """
         requested_groups = frozenset(groups_str.split())
 
-        entropy = self.Entropy()
+        entropy = self._entropy()
         spm_class = entropy.Spm_class()
         groups = spm_class.get_package_groups()
         # validate groups
@@ -216,8 +181,8 @@ class ApiController(BaseController, WebsiteController):
             return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
-            branch)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
 
         try:
             if dbconn is None:
@@ -259,11 +224,11 @@ class ApiController(BaseController, WebsiteController):
         http://url/api?q=packages_in_categories&arg0=x11-apps%20app-misc
         """
         requested_categories = frozenset(categories_str.split())
-        entropy = self.Entropy()
+        entropy = self._entropy()
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
-            branch)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
 
         try:
             if dbconn is None:
@@ -301,7 +266,7 @@ class ApiController(BaseController, WebsiteController):
         """
         requested_groups = frozenset(groups_str.split())
 
-        entropy = self.Entropy()
+        entropy = self._entropy()
         spm_class = entropy.Spm_class()
         groups = spm_class.get_package_groups()
         # validate groups
@@ -312,8 +277,8 @@ class ApiController(BaseController, WebsiteController):
             return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
-            branch)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
 
         try:
             if dbconn is None:
@@ -511,13 +476,13 @@ class ApiController(BaseController, WebsiteController):
             packages.add((package_hash, decoded))
 
         response = self._api_base_response(200)
-        entropy = self.Entropy()
-        dbconn = self._api_get_repo(entropy, repository_id, arch, product,
-            branch)
+        entropy = self._entropy()
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
         try:
             if dbconn is None:
                 return self._api_error(renderer, 503, "repository not available")
-            ugc = self.UGC()
+            ugc = self._ugc()
             try:
                 pkgs_data = {}
                 for package_hash, (package_id, repository_id, a, b, p) in packages:

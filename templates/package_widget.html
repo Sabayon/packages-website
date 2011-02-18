@@ -1,0 +1,90 @@
+<div class="package-widget">
+    <div class="package-widget-top">
+        <%
+            icon_url = c.pkg_data['ugc']['icon']
+            if icon_url is None:
+                icon_url = c.group_icon_url_64 + "/" + c.pkg_data['ugc']['category_icon']
+            if c.pkg_data['is_source_repo']:
+                css_class = "package-widget-title-area-source"
+                css_meta_info_class = "package-widget-meta-info-source"
+            else:
+                css_class = "package-widget-title-area-binary"
+                css_meta_info_class = "package-widget-meta-info-binary"
+        %>
+        <div class="package-widget-title-area ${css_class}">
+            <div class="package-widget-first-area">
+                <div class="package-widget-icon-area">
+                    <img class="package-widget-icon" src="${icon_url}" alt="package icon"/>
+                </div>
+                <div class="package-widget-text-area">
+                    <div class="package-widget-stats-area">
+                        <%include file="/stars_rating.html"/>
+                        <div>
+                            <b>${c.pkg_data['ugc']['downloads']}</b> ${_("downloads")}
+                        </div>
+                    </div>
+                    <div class="package-widget-meta-atom">
+                        <a href="${c.base_package_show_url}/${c.pkg_data['hash_id']}">${c.pkg_data['atom']}</a>
+                    </div>
+                    <div class="package-widget-meta-description">
+                        ${c.pkg_data['description'] | h,trim}
+                    </div>
+                </div>
+            </div>
+            <div class="package-widget-base-meta-area">
+                % if c.pkg_data['is_source_repo']:
+                    <b>${_("source")}</b> &rarr;
+                % else:
+                    <b>${_("binary")}</b> &rarr;
+                    <b>${c.pkg_data['product']}</b> &rarr;
+                % endif
+                <b>${c.pkg_data['repository_id']}</b>
+                % if not c.pkg_data['is_source_repo']:
+                     &rarr; <b>${c.pkg_data['arch']}</b> &rarr;
+                    <b>${c.pkg_data['branch']}</b> |
+                    ${_("revision")}: <b>${c.pkg_data['revision']}</b> |
+                % else:
+                    |
+                % endif
+                ${_("date")}: <b>${c.pkg_data['date']}</b>
+            </div>
+        </div>
+        <div class="package-widget-meta-info ${css_meta_info_class}">
+            % if c.pkg_data['change']:
+                <div class="package-widget-meta-recent-change">
+                    <span class="package-widget-meta-recent-change-title">
+                        ${_("Recent Changes")}:
+                    </span>
+                    <span class="package-widget-meta-recent-change-data">
+                        ${c.pkg_data['change'] | h,trim}
+                    </span>
+                </div>
+            %endif
+            <%
+                max_cols = 5
+                count = 0
+            %>
+            <div class="package-widget-meta-list">
+                % for item in c.pkg_data['meta_items']:
+                    % if count == 0:
+                        <div class="package-widget-meta-list-row">
+                    % endif
+                    <span class="package-widget-meta-list-item">
+                        % if item['icon']:
+                            <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
+                        % endif
+                        <a href="${item['url']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
+                    </span>
+                    <% count += 1 %>
+                    % if count == max_cols:
+                        <% count = 0 %>
+                        </div>
+                    % endif
+                % endfor
+                % if count != 0:
+                    </div>
+                % endif
+            </div>
+        </div>
+    </div>
+</div>
