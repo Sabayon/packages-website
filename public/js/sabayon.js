@@ -106,3 +106,29 @@ function reset_field(obj, val) {
         obj.value = "";
     }
 }
+
+
+function packages_search_more(total, url, target, counter_div, counter_step, self_destroy_div) {
+    target_div = document.getElementById(target);
+    var started_from = parseInt(document.getElementById(counter_div).innerHTML);
+    var cnt_step = parseInt(document.getElementById(counter_step).innerHTML);
+    var total_cnt = parseInt(total);
+    started_from = started_from + cnt_step;
+    document.getElementById(counter_div).innerHTML = started_from;
+
+    function do_et_complete(valid, resp_txt, resp_code) {
+        if ((started_from + cnt_step) >= total_cnt) {
+            mydiv = document.getElementById(self_destroy_div);
+            mydiv.innerHTML = "";
+            mydiv.style.display = 'none';
+        }
+    }
+
+    // create new div
+    newdiv = document.createElement('div');
+    real_target_div = 'packages-results-more-inside-' + started_from;
+    newdiv.setAttribute('id', real_target_div);
+    target_div.appendChild(newdiv);
+
+    completeAHAH.ahah(url + '&from=' + started_from, real_target_div, null, 'get', null, packages_loading_html, on_complete = do_et_complete);
+}

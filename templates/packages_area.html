@@ -1,0 +1,40 @@
+% if c.search_pkgs:
+    % if c.total_search_results:
+        <div class="packages-results-info">
+            ${_("Results found")}: ${c.total_search_results} (zarro ${_("seconds")})
+        </div>
+    % endif
+    % if c.did_you_mean:
+        <div class="did-you-mean">
+            ${_("Found <b>nothing</b> while searching for")}: <b class="very-bold">${c.quick_search_string | h,trim}</b>, ${_("you probably mispelled it")}.
+        </div>
+        <hr class="packages-separator"/>
+    % endif
+    <%include file="/search_results_area.html"/>
+    % if c.search_there_is_more:
+        <%
+            total = c.search_there_is_more_total
+            shown = c.max_results
+            to_go = c.search_there_is_more
+            started_from = c.from_pkg
+            chunks = total / shown
+            max_results = c.max_results
+        %>
+        <div id="packages-results-more-hot">
+            <div id="packages-results-more-from-counter" style="display: none">${started_from}</div>
+            <div id="packages-results-more-from-counter-step" style="display: none">${max_results}</div>
+            <div id="packages-results-more-inside"></div>
+            <div id="packages-result-more-link">
+                <input type="button" id="packages-result-more-link-button" onclick="this.blur();packages_search_more('${c.total_search_results}', '${c.base_search_url}?q=${c.quick_search_string | h,trim}&more=1', 'packages-results-more-inside', 'packages-results-more-from-counter', 'packages-results-more-from-counter-step', 'packages-result-more-link')" value="${_("more results")}"/>
+            </div>
+        </div>
+    % endif
+% elif c.search_nothing_found:
+    <div class="packages-search-nothing-found">
+        Found nothing !
+    </div>
+% else:
+    <div class="nothing-to-show">
+        Sorry, aliens kidnapped the President.
+    </div>
+% endif

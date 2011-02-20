@@ -1,11 +1,25 @@
 <div id="searchbox" class="widget">
-    <form id="search-form" action="/quicksearch" method="POST">
+    <form id="search-form" action="/quicksearch" method="GET">
         <fieldset id="search-fields">
-            <input id="search-term" type="text" maxlength="30" name="q" value="${c.quick_search_string}"/>
+            <input id="search-term" type="text" maxlength="30" name="q" value="${c.quick_search_string | h,trim}"/>
             <input id="search-img" type="image" alt="S" value="S" src="/images/search-icon.png">
         </fieldset>
     </form>
     <div class="search-tips konafilter">
-        @setname, /path/to/something, *.so*, application/*
+        <div class="widget-title navigation-title">
+            <b>${_("Special searches")}</b>
+        </div>
+        <div>
+            ${_("Package Sets")}: <b>@setname</b>
+        </div>
+        <div>
+            ${_("Files")}: <b>/path/to/something</b>
+        </div>
+        <div>
+            ${_("Libraries")}: <b>*.so*</b>
+        </div>
+        <div>
+            ${_("Mime")}: <b>application/*</b>, <b>mime:text/plain</b>
+        </div>
     </div>
 </div>

@@ -1,20 +1,3 @@
 <div>
-    % if c.search_pkgs:
-        % for binary in (True, False):
-        <div>
-            % for pkg_tuple in c.search_pkgs:
-                <%
-                c.pkg_data = c.packages_data.get(pkg_tuple)
-                c.pkg_tuple = pkg_tuple
-                %>
-                % if c.pkg_data:
-                    % if (binary and not c.pkg_data['is_source_repo']) or (not binary and c.pkg_data['is_source_repo']):
-                        <%include file="/package_widget.html"/>
-                        <hr class="packages-separator"/>
-                    % endif
-                % endif
-            % endfor
-        </div>
-        % endfor
-    % endif
+    <%include file="/packages_area.html"/>
 </div>

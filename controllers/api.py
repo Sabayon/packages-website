@@ -160,6 +160,39 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
 
         return self._api_render(response, renderer)
 
+    def _api_search_packages(self, search_term, repository_id, arch, branch,
+        product, order_by, renderer):
+        """
+        Search inside repository the given search term.
+        """
+        if len(search_term) < 3:
+            # invalid
+            return self._api_error(renderer, 400, "bad request")
+
+        response = self._api_base_response(200)
+        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
+
+        try:
+            if dbconn is None:
+                return self._api_error(renderer, 503, "repository not available")
+            pkg_ids = dbconn.searchPackages(search_term)
+            pkgs_data = [
+                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                    pkg_id in pkg_ids]
+            ordered_pkgs = self._api_order_by(pkgs_data, order_by)
+            # drop dbconn
+            ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
+                ordered_pkgs]
+            response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
+        except Exception as err:
+            return self._api_error(renderer, 503, repr(err))
+        finally:
+            if dbconn is not None:
+                dbconn.close()
+
+        return self._api_render(response, renderer)
+
     def _api_packages_in_groups(self, groups_str, repository_id, arch, branch,
         product, order_by, renderer):
         """
@@ -514,6 +547,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         GET parameters:
         q=<query type>: type of API request [mandatory]
             supported:
+            - <list> search()
             - <list> categories()
             - <dict> groups()
             - <list> packages_in_groups(groups<space separated list of groups>)
@@ -544,6 +578,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         to 'code' value.
         """
         api_map = {
+            "search": self._api_search_packages,
             "categories": self._api_categories,
             "groups": self._api_groups,
             "packages_in_groups": self._api_packages_in_groups,

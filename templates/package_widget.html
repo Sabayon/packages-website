@@ -1,3 +1,4 @@
+## -*- coding: utf-8 -*-
 <div class="package-widget">
     <div class="package-widget-top">
         <%
@@ -44,11 +45,15 @@
                     <b>${c.pkg_data['branch']}</b> |
                     ${_("revision")}: <b>${c.pkg_data['revision']}</b> |
                 % else:
+                    % if c.pkg_data['spm_repo']:
+                        &rarr; <b>${c.pkg_data['spm_repo']}</b>
+                    % endif
                     |
                 % endif
                 ${_("date")}: <b>${c.pkg_data['date']}</b>
             </div>
         </div>
+
         <div class="package-widget-meta-info ${css_meta_info_class}">
             % if c.pkg_data['change']:
                 <div class="package-widget-meta-recent-change">
@@ -60,31 +65,65 @@
                     </span>
                 </div>
             %endif
-            <%
-                max_cols = 5
-                count = 0
-            %>
-            <div class="package-widget-meta-list">
-                % for item in c.pkg_data['meta_items']:
-                    % if count == 0:
-                        <div class="package-widget-meta-list-row">
-                    % endif
-                    <span class="package-widget-meta-list-item">
-                        % if item['icon']:
-                            <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
-                        % endif
-                        <a href="${item['url']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
-                    </span>
-                    <% count += 1 %>
-                    % if count == max_cols:
-                        <% count = 0 %>
-                        </div>
-                    % endif
-                % endfor
-                % if count != 0:
+            % if c.show_detailed_view:
+                <div class="package-widget-meta-list package-widget-meta-list-extended">
+                    <div class="package-widget-meta-list-left">
+                        % for obj in c.pkg_data['brief_list']:
+                            <% key = obj['key'] %>
+                            % if key in c.pkg_data:
+                                <div class="package-widget-meta-list-left-item package-widget-meta-list-left-${key}">
+                                    ${obj['name']}:
+                                    % if obj['url']:
+                                        <a href="${obj['url']}" ${obj['extra_url_meta']}>${c.pkg_data[key]}</a>
+                                    % else:
+                                        ${c.pkg_data[key]}
+                                    % endif
+                                </div>
+                            % endif
+                        % endfor
                     </div>
-                % endif
-            </div>
+                    <div class="package-widget-meta-list-right">
+
+                    </div>
+                    ${c.pkg_data['meta_items']}
+                    <br/>
+                    <br/>
+                    ${c.pkg_data}
+                </div>
+            % else:
+                <%
+                    max_cols = 5
+                    count = 0
+                %>
+                <div class="package-widget-meta-list">
+                    <% do_close = False %>
+                    % for item in c.pkg_data['meta_items']:
+                        % if count == 0:
+                            <div class="package-widget-meta-list-row">
+                            <% do_close = True %>
+                        % endif
+                        <span class="package-widget-meta-list-item">
+                            % if item['icon']:
+                                <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
+                            % endif
+                            <a href="${item['url']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
+                        </span>
+                        <% count += 1 %>
+                        % if count == max_cols:
+                            <% count = 0 %>
+                            % if do_close:
+                                </div>
+                                <% do_close = False %>
+                            % endif
+                        % endif
+                    % endfor
+                    % if do_close:
+                        </div>
+                        <% do_close = False %>
+                    % endif
+                </div>
+            % endif
         </div>
+
     </div>
 </div>

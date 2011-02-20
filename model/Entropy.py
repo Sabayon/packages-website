@@ -116,17 +116,8 @@ class Entropy(Client):
         if os.path.isfile(db_path_lock):
             # temporarily not available
             raise SystemDatabaseError("temporarily not available")
-        if hasattr(self, 'open_generic_database'):
-            # backward compatibility
-            return self.open_generic_database(db_path, xcache = True,
-                readOnly = True, indexing_override = False)
-        else:
-            return self.open_generic_repository(db_path, xcache = True,
-                read_only = True, indexing_override = False)
-
-    def updateProgress(*myargs, **mykwargs):
-        """ @deprecated """
-        pass
+        return self.open_generic_repository(db_path, xcache = True,
+            read_only = True, indexing_override = False)
 
     def output(*myargs, **mykwargs):
         pass

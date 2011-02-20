@@ -21,9 +21,10 @@ DEFAULT_WEB_UID = 1001
 DEFAULT_WEB_GROUP = "entropy"
 DEFAULT_WEB_GID = 1000
 GLSA_URI = "http://www.gentoo.org/rdf/en/glsa-index.rdf"
-MY_ETP_DIR = "/home/sabayonlinux/public_html/rsync.sabayonlinux.org/entropy/"
+MY_ETP_DIR = "/home/sabayonlinux/entropy/"
 ETP_PATH = '/home/sabayonlinux/public_html/packages2.sabayon.org/www/entropy/libraries'
 WEBSITE_TMP_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/temp'
+WEBSITE_CACHE_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/cache'
 COMMUNITY_REPOS_DIR = "/home/sabayonlinux/public_html/community.sabayon.org/repos/"
 PHPBB_DBNAME = "phpbb3"
 PORTAL_DBNAME = "portal"
@@ -95,7 +96,6 @@ def setup_login_data(model, c, session):
     import www.model.UGC as ugc
     myugc = ugc.UGC()
     try:
-        c.front_page_distro_stats = myugc.get_distribution_stats()
         if session.get('logged_in') and session.get('entropy'):
             if session['entropy'].get('entropy_user_id'):
                 c.front_page_user_stats = myugc.get_user_stats(
@@ -134,10 +134,6 @@ def setup_misc_vars(c, request):
     c.login_uri = LOGIN_URI
 
     c.www_current_url = construct_url(request.environ)
-    try:
-        c.browser_user_agent = request.environ['HTTP_USER_AGENT']
-    except KeyError:
-        pass
 
     c.this_uri = request.environ.get('PATH_INFO')
     if request.environ.get('QUERY_STRING'):

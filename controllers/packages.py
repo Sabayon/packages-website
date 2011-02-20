@@ -20,8 +20,10 @@ except ImportError:
 import entropy.tools as entropy_tools
 import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
+from entropy.cache import EntropyCacher
 
 import shutil, os, time
+import hashlib
 
 class PackagesController(BaseController, WebsiteController, ApibaseController):
 
@@ -49,30 +51,16 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         return render_mako(page)
 
     def _get_renderer_public_data_map(self):
-        json_public_map = {}
-        for release in c.search_data['misc']['releases']:
-            obj = json_public_map.setdefault(release, [])
-            for atom in c.search_data['atoms'][release]:
-                obj.append(c.search_data['data'][release][atom])
-        misc_dict = {}
-        for k, v in c.search_data['misc'].items():
-            if isinstance(v, set):
-                v = list(v)
-            misc_dict[k] = v
-        json_public_map['__misc__'] = misc_dict
+        json_public_map = []
+        if c.search_pkgs:
+            for pkg_tuple in c.search_pkgs:
+                pkg_data = c.packages_data.get(pkg_tuple)
+                if pkg_data is not None:
+                    json_public_map.append(pkg_data)
         return json_public_map
 
     def _render_json(self, page):
-        if not c.search_data:
-            return ''
-        if not isinstance(c.search_data, dict):
-            return ''
-
-        try:
-            json_public_map = self._get_renderer_public_data_map()
-        except KeyError:
-            return ''
-
+        json_public_map = self._get_renderer_public_data_map()
         return json.dumps(json_public_map)
 
     def _render_jsonp(self, page):
@@ -81,117 +69,233 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             callback = request.params.get('callback') or callback
         except AttributeError:
             callback = "callback"
-
         json_str = self._render_json(page)
         return callback + "(" + json_str + ");"
 
     def _render_xml(self, page):
-        try:
-            json_public_map = self._get_renderer_public_data_map()
-        except KeyError:
-            return ''
-
+        json_public_map = self._get_renderer_public_data_map()
         s = StringIO()
         dict_to_xml(json_public_map, 'entropy', s)
         return s.getvalue()
 
-    def search(self):
+    def _parse_hash_id(self, hash_id):
+        decoded_data = self._api_human_decode_package(hash_id)
+        if decoded_data is None:
+            return
+
+        name, package_id, repository_id, arch, branch, product = decoded_data
+        # name is ignored
+        if package_id < 1:
+            return
+        if product not in model.config.available_products:
+            return
+        if arch not in model.config.available_arches:
+            return
+
+        return decoded_data
+
+    def show(self, hash_id):
         """
-        Public API for searching, answering to: http://host/search
-        GET parameters:
-        q=<query>: search keyword [mandatory]
-        a=<arch>: architecture [default: amd64]
-        t=<type>: search type (pkg, match, desc, file. lib) [default: pkg]
-        r=<repo>: repository id [default: sabayonlinux.org]
-        b=<branch>: repository branch [default: 5]
-        p=<product>: product [default: standard]
-        o=<order by>: order packages by (alphabet, vote, downloads)
+        Show package details.
         """
-        q = request.params.get('q')
-        if not q:
-            return self.index()
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
 
-        model.config.setup_internal(model, c, session, request)
-        search_types = {
-            'pkg': "0",
-            'match': "1",
-            'desc': "2",
-            'lib': "4",
-            'file': "3",
-        }
-
-        r, a, b, p, o = self._api_get_params()
-        if r is None:
-            return self.index()
-        if a is None:
-            return self.index()
-        if b is None:
-            return self.index()
-        if p is None:
-            return self.index()
-
-        # search type
-        t = request.params.get('t') or "pkg"
-        t = search_types.get(t, search_types.get("pkg"))
-
-        return self._do_query_pkg(r, q, p, a, b, t, o)
-
-    def quicksearch(self):
-
-        q = request.params.get('q')
-        if not q:
-            return self.index()
-        if len(q) > 32:
-            return self.index()
-        elif len(q) < 3:
-            return self.index()
-
-        max_results = 50
-        # TODO: validate q using regexp
-
-
-        c.quick_search_string = q
-        self._generate_metadata()
         entropy = self._entropy()
 
-        search_map = {
-            'default': self._api_search_pkg,
-            'description': self._api_search_desc,
-            'library': self._api_search_lib,
-            'path': self._api_search_path,
-            'match': self._api_search_match,
-            'sets': self._api_search_sets,
-            'mime': self._api_search_mime,
-        }
-        default_searches = ["match", "default", "description"]
+        avail_repos = self._get_available_repositories(entropy, product, arch)
+        # repository_id
+        if repository_id not in avail_repos:
+            return redirect(url("/"))
 
-        # try to understand string
-        if q.startswith("/"):
-            default_searches = ["path"]
-        elif q.find(".so") != -1:
-            default_searches = ["library"]
-        elif q.startswith("@"):
-            default_searches = ["sets"]
-        elif q.startswith("application/"):
-            default_searches = ["mime"]
+        avail_branches = self._get_available_branches(entropy, repository_id,
+            product)
+        # branch
+        if branch not in avail_branches:
+            return redirect(url("/"))
 
-        results = []
-        for search in default_searches:
-            results.extend([x for x in search_map.get(search)(entropy, q) \
-                if x not in results])
-            if len(results) > max_results:
-                break
+        self._generate_metadata()
+        results = [(package_id, repository_id, arch, branch, product)]
         c.search_pkgs = results
 
         ugc = self._ugc()
         try:
-            data_map = self._get_packages_base_metadata(entropy, ugc,
+            data_map = self._get_packages_extended_metadata(entropy, ugc,
                 results)
         finally:
             ugc.disconnect()
             del ugc
-
         c.packages_data = data_map
+
+        c.show_detailed_view = True
+
+        return self._render('/packages/index.html')
+
+    def _show_similar(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        provided_mime = None
+        try:
+            if repo is not None:
+                provided_mime = sorted(repo.retrieveProvidedMime(package_id))
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if provided_mime is None:
+            return self.show(hash_id)
+
+        query = "mime:" + " ".join(provided_mime)
+        return self.quicksearch(q = query)
+
+    def show_what(self, hash_id, what):
+        """
+        Show package details, and given metadatum (what).
+        """
+
+        what_map = {
+            "similar": self._show_similar,
+            "__fallback__": self.show,
+        }
+
+        func = what_map.get(what, what_map.get("__fallback__"))
+        return func(hash_id)
+
+    def quicksearch(self, q = None):
+        """
+        Search packages in repositories.
+        """
+
+        if q is None:
+            q = request.params.get('q')
+        if not q:
+            return redirect(url("/"))
+        if len(q) > 64:
+            return redirect(url("/"))
+        elif len(q) < 2:
+            return redirect(url("/"))
+
+        from_pkg = request.params.get('from') or 0
+        if from_pkg:
+            try:
+                from_pkg = int(from_pkg)
+            except ValueError:
+                from_pkg = 0
+
+        # max results in a page !
+        max_results = 20
+        c.max_results = max_results
+        c.quick_search_string = q
+        self._generate_metadata()
+        entropy = self._entropy()
+
+        # caching
+        sha = hashlib.sha1()
+        sha.update(const_convert_to_rawstring(q))
+        mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
+        sha.update(mtime_hash)
+        cache_key = "quicksearch_" + sha.hexdigest()
+        cacher = EntropyCacher()
+        results = cacher.pop(cache_key,
+            cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if results is None:
+            search_map = {
+                'default': self._api_search_pkg,
+                'description': self._api_search_desc,
+                'library': self._api_search_lib,
+                'path': self._api_search_path,
+                'match': self._api_search_match,
+                'sets': self._api_search_sets,
+                'mime': self._api_search_mime,
+            }
+            default_searches = ["match", "default", "description"]
+            searching_default = True
+
+            # try to understand string
+            if q.startswith("/"):
+                default_searches = ["path"]
+                searching_default = False
+            elif q.find(".so") != -1:
+                default_searches = ["library"]
+                searching_default = False
+            elif q.startswith("@"):
+                default_searches = ["sets"]
+                searching_default = False
+            elif q.startswith("application/"):
+                default_searches = ["mime"]
+                searching_default = False
+            elif q.startswith("mime:") and len(q) > 8:
+                default_searches = ["mime"]
+                searching_default = False
+                q = q[5:]
+
+            results = []
+            for search in default_searches:
+                for q_split in q.split():
+                    results.extend([x for x in search_map.get(search)(entropy,
+                        q_split) if x not in results])
+
+            # caching
+            # NOTE: EntropyCacher is not started, so cannot use push()
+            cacher.save(cache_key,
+                results, cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        results_len = len(results)
+        if from_pkg > results_len:
+            # invalid !
+            return redirect(url("/"))
+
+        if results_len > max_results:
+            results = results[from_pkg:]
+            results = results[:max_results]
+            search_there_is_more = results_len - max_results - from_pkg
+            if search_there_is_more > 0:
+                c.search_there_is_more = search_there_is_more
+                c.search_there_is_more_total = results_len
+                c.from_pkg = from_pkg
+
+        c.search_pkgs = results
+        c.total_search_results = results_len
+
+        if results:
+            ugc = self._ugc()
+            try:
+                data_map = self._get_packages_base_metadata(entropy, ugc,
+                    results)
+            finally:
+                ugc.disconnect()
+                del ugc
+            c.packages_data = data_map
+        elif searching_default:
+            results = self._api_get_similar_packages(entropy, q)
+            if results:
+                if results_len > max_results:
+                    results = results[:max_results]
+                ugc = self._ugc()
+                try:
+                    data_map = self._get_packages_base_metadata(entropy, ugc,
+                        results)
+                finally:
+                    ugc.disconnect()
+                    del ugc
+                c.search_pkgs = results
+                c.packages_data = data_map
+                c.did_you_mean = True
+            else:
+                c.search_nothing_found = True
+        else:
+            c.search_nothing_found = True
+
+        if request.params.get('more'):
+            return self._render('/search_results_area.html')
         return self._render('/packages/index.html')
 
     def index(self):
@@ -213,18 +317,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.packages_data = data_map
 
         return self._render('/packages/index.html')
-
-    def __atom_match_official_repo(self, dep, product, arch, branch):
-        entropy = self._entropy()
-        repoid = model.config.ETP_REPOSITORY
-
-        dbconn = self._api_get_repo(entropy, repoid, arch, branch, product)
-        if dbconn is None:
-            return -1, None
-
-        match_id = dbconn.atomMatch(dep)[0]
-        dbconn.close()
-        return match_id, repoid
 
     def _get_ugc_info(self, repoid, pkgkey, ugc = None):
 
@@ -315,6 +407,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.group_icon_url_48 = "/images/packages/groups/48x48"
         c.meta_list_url = "/images/packages/metalist"
         c.base_package_show_url = model.config.PACKAGE_SHOW_URL
+        c.base_search_url = "/quicksearch"
         model.config.setup_internal(model, c, session, request)
 
     def _get_post_get_idpackage_product_arch_branch(self, entropy):

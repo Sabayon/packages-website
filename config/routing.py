@@ -22,8 +22,11 @@ def make_map(config):
     # CUSTOM ROUTES HERE
 
     map.connect('/', controller='packages', action='index')
-    map.connect('/search', controller='packages', action='search')
+    map.connect('/search', controller='packages', action='quicksearch')
     map.connect('/quicksearch', controller='packages', action='quicksearch')
+    map.connect('/show/{hash_id}', controller='packages', action='show')
+    map.connect('/show/{hash_id}/{what}', controller='packages',
+        action='show_what')
 
     map.connect('/api', controller='api', action='execute')
     map.connect('/logout', controller='login', action='logout')
