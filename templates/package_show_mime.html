@@ -1,0 +1,18 @@
+% if c.package_show_what['data']:
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Mime types")}
+            </div>
+            % for mime in c.package_show_what['data']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${c.search_prefixes['mime'] | u}${mime | u}" rel="nofollow">${mime | h,trim}</a></div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No mime types handled by package")}
+            </div>
+        </div>
+% endif

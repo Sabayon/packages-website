@@ -1,0 +1,18 @@
+% if c.package_show_what['data']:
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Files belonging to package")}
+            </div>
+            % for path in c.package_show_what['data']:
+                <div class="package-widget-show-deps-item">${path | h,trim}</div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No files belonging to package")}
+            </div>
+        </div>
+% endif 

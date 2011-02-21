@@ -67,63 +67,106 @@
             %endif
             % if c.show_detailed_view:
                 <div class="package-widget-meta-list package-widget-meta-list-extended">
-                    <div class="package-widget-meta-list-left">
+                    <div class="package-widget-meta-list-left konafilter">
                         % for obj in c.pkg_data['brief_list']:
                             <% key = obj['key'] %>
-                            % if key in c.pkg_data:
-                                <div class="package-widget-meta-list-left-item package-widget-meta-list-left-${key}">
-                                    ${obj['name']}:
-                                    % if obj['url']:
-                                        <a href="${obj['url']}" ${obj['extra_url_meta']}>${c.pkg_data[key]}</a>
-                                    % else:
-                                        ${c.pkg_data[key]}
-                                    % endif
-                                </div>
+                            % if c.pkg_data.get(key):
+                                <%
+                                    dd_css_class = "binary"
+                                    if c.pkg_data['is_source_repo']:
+                                        dd_css_class = "source"
+                                %>
+                                <dl class="package-widget-meta-list-left-item package-widget-meta-list-left-item-${dd_css_class} package-widget-meta-list-left-${key}">
+                                    <dt>
+                                        ${obj['name']}
+                                    </dt>
+                                    <dd>
+                                        % if obj['split']:
+                                            % if not isinstance(c.pkg_data[key], (tuple, list, dict, set, frozenset)):
+                                                <% split_item = c.pkg_data[key].split() %>
+                                            % else:
+                                                <% split_item = c.pkg_data[key] %>
+                                            % endif
+                                            % for item in split_item:
+                                                % if obj['url']:
+                                                    <a href="${obj['url'].replace("--item--", item)}" ${obj['extra_url_meta']}>${item | h}</a>
+                                                % else:
+                                                    ${item | h}
+                                                % endif
+                                            % endfor
+                                        % else:
+                                            % if obj['url']:
+                                                <a href="${obj['url']}" ${obj['extra_url_meta']}>${c.pkg_data[key] | h}</a>
+                                            % else:
+                                                ${c.pkg_data[key] | h}
+                                            % endif
+                                        % endif
+                                    </dd>
+                                </dl>
                             % endif
                         % endfor
                     </div>
-                    <div class="package-widget-meta-list-right">
-
-                    </div>
-                    ${c.pkg_data['meta_items']}
-                    <br/>
-                    <br/>
-                    ${c.pkg_data}
                 </div>
-            % else:
-                <%
-                    max_cols = 5
-                    count = 0
-                %>
-                <div class="package-widget-meta-list">
+            % endif
+            <%
+                max_cols = 5
+                count = 0
+            %>
+            <div class="package-widget-meta-list">
+                <% do_close = False %>
+                % for item in c.pkg_data['meta_items']:
+                    % if c.show_detailed_view and item['id'] in ("details",):
+                        <% continue %>
+                    % endif
+                    % if count == 0:
+                        <div class="package-widget-meta-list-row">
+                        <% do_close = True %>
+                    % endif
+                    <span class="package-widget-meta-list-item">
+                        % if item['icon']:
+                            <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
+                        % endif
+                        <a href="${item['url']}" title="${item['alt']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
+                    </span>
+                    <% count += 1 %>
+                    % if count == max_cols:
+                        <% count = 0 %>
+                        % if do_close:
+                            </div>
+                            <% do_close = False %>
+                        % endif
+                    % endif
+                % endfor
+                % if do_close:
+                    </div>
                     <% do_close = False %>
-                    % for item in c.pkg_data['meta_items']:
-                        % if count == 0:
-                            <div class="package-widget-meta-list-row">
-                            <% do_close = True %>
-                        % endif
-                        <span class="package-widget-meta-list-item">
-                            % if item['icon']:
-                                <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
-                            % endif
-                            <a href="${item['url']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
-                        </span>
-                        <% count += 1 %>
-                        % if count == max_cols:
-                            <% count = 0 %>
-                            % if do_close:
-                                </div>
-                                <% do_close = False %>
-                            % endif
-                        % endif
-                    % endfor
-                    % if do_close:
-                        </div>
-                        <% do_close = False %>
+                % endif
+            </div>
+            % if c.package_show_what:
+                <hr class="packages-separator"/>
+                <div class="package-widget-show-what">
+                    <% what = c.package_show_what['what'] %>
+                    % if what == "changelog":
+                        <%include file="/package_show_changelog.html"/>
+                    % elif what == "dependencies":
+                        <%include file="/package_show_deps.html"/>
+                    % elif what == "reverse_dependencies":
+                        <%include file="/package_show_revdeps.html"/>
+                    % elif what == "security":
+                        <%include file="/package_show_security.html"/>
+                    % elif what == "mime":
+                        <%include file="/package_show_mime.html"/>
+                    % elif what == "provided_libs":
+                        <%include file="/package_show_provided_libs.html"/>
+                    % elif what == "content":
+                        <%include file="/package_show_content.html"/>
+                    % elif what == "download":
+                        <%include file="/package_show_download.html"/>
+                    % elif what == "sources":
+                        <%include file="/package_show_sources.html"/>
                     % endif
                 </div>
             % endif
         </div>
-
     </div>
 </div>

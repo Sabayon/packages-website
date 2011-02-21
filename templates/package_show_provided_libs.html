@@ -1,0 +1,18 @@
+% if c.package_show_what.get('data', {}).get('provided_libs'):
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Provided libraries")}
+            </div>
+            % for lib in c.package_show_what['data']['provided_libs']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${c.search_prefixes['library'] | u}${lib | u}&a=${c.package_show_what['data']['arch'] | u}&b=${c.package_show_what['data']['branch'] | u}" rel="nofollow">${lib | h,trim}</a></div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No libraries provided by package")}
+            </div>
+        </div>
+% endif

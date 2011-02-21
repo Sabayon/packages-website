@@ -1,0 +1,23 @@
+% if c.package_show_what['data']:
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Security advisories")}
+            </div>
+            % for obj in c.package_show_what['data']:
+                <div class="package-widget-show-deps-item">
+                    <a href="${obj['link'] | u}" rel="nofollow">${obj['title'] | h,trim}</a>
+                    <div class="package-widget-show-security-summary">
+                        ${obj['summary'] | h,trim}
+                    </div>
+                </div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No security advisories available")}
+            </div>
+        </div>
+% endif

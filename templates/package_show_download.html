@@ -1,0 +1,31 @@
+% if c.package_show_what['data']:
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Download mirrors")}
+            </div>
+            <%
+                mirrors = reversed(c.package_show_what['data']['packages'])
+                from entropy.tools import spliturl
+            %>
+            % for mirror in mirrors:
+                <%
+                    urlobj = spliturl(mirror)
+                    mirror_name = urlobj.netloc
+                    if mirror_name in c.package_show_what['excluded']:
+                        continue
+                    mirror_prot = urlobj.scheme
+                %>
+                <div class="package-widget-show-deps-item">
+                    <a href="${mirror}/${c.pkg_data['download']}" rel="nofollow">${mirror_prot | h}://${mirror_name | h}</a>
+                </div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No download mirrors available")}
+            </div>
+        </div>
+% endif

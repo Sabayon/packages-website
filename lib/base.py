@@ -50,6 +50,26 @@ class BaseController(WSGIController):
         except LanguageError:
             pass
 
+        self.PREFIXES = {
+            'mime': "m:",
+            'category': "c:",
+            'license': "l:",
+            'useflag': "u:",
+            'library': "so:",
+        }
+
+    def _generate_html_metadata(self):
+        c.generic_icon_url_64 = "/images/packages/generic-64x64.png"
+        c.generic_icon_url_48 = "/images/packages/generic-48x48.png"
+        c.generic_icon_url_22 = "/images/packages/generic-22x22.png"
+        c.group_icon_url_64 = "/images/packages/groups/64x64"
+        c.group_icon_url_48 = "/images/packages/groups/48x48"
+        c.meta_list_url = "/images/packages/metalist"
+        c.base_package_show_url = model.config.PACKAGE_SHOW_URL
+        c.base_search_url = model.config.PACKAGE_SEARCH_URL
+        c.search_prefixes = self.PREFIXES
+        model.config.setup_internal(model, c, session, request)
+
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
         # WSGIController.__call__ dispatches to the Controller method

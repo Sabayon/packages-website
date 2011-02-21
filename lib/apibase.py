@@ -3,6 +3,7 @@ import base64
 import urllib
 import hashlib
 import os
+import re
 
 from pylons import tmpl_context as c
 from pylons import app_globals as g
@@ -25,6 +26,7 @@ except ImportError:
 
 from entropy.const import const_convert_to_unicode
 import entropy.tools as entropy_tools
+from entropy.cache import EntropyCacher
 
 GROUP_ICONS_MAP = {
     'accessibility': "preferences-desktop-accessibility.png",
@@ -47,10 +49,19 @@ GROUP_ICONS_MAP = {
 class ApibaseController:
 
     def __init__(self):
+        """
+        This class will do little to none input validation, make sure
+        that your data is properly input validated (using self._*_re
+        objects) before calling these methods.
+        """
         import www.model.Entropy
         import www.model.UGC
         self._ugc = www.model.UGC.UGC
         self._entropy = www.model.Entropy.Entropy
+        self._cacher = EntropyCacher()
+        # same as hostname regexp
+        # repository_id validation rule
+        self._repo_re = re.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", re.IGNORECASE)
 
     def _get_available_branches(self, entropy, repoid, product):
         arches = self._get_available_arches(entropy, repoid, product)
@@ -180,7 +191,7 @@ class ApibaseController:
         @param p: product string
         @type p: string
         """
-        id_str = "+".join((name, str(package_id), repository_id, a, b, p))
+        id_str = ",".join((name, str(package_id), repository_id, a, b, p))
         return id_str
 
     def _api_human_decode_package(self, encoded_id_str):
@@ -194,7 +205,7 @@ class ApibaseController:
         @rtype: tuple
         """
         try:
-            name, package_id, repository_id, a, b, p = encoded_id_str.split("+")
+            name, package_id, repository_id, a, b, p = encoded_id_str.split(",")
             package_id = int(package_id)
         except ValueError:
             return None
@@ -471,6 +482,87 @@ class ApibaseController:
                     repo.close()
         return data
 
+    def _api_search_category(self, entropy, q):
+        """
+        Search packages in repositories using given query string
+        (category strategy).
+
+        @param q: query string
+        @type q: string
+        @return: list of package tuples (pkg_id, repo, arch, branch, product)
+        @rtype: list
+        """
+        data = []
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    # pay attention, if you switch to like = True, you have
+                    # to fixup the category link in the package details page!
+                    pkg_dts = repo.searchCategory(q)
+                    data.extend((pkg_id, repository_id, arch, branch, product) \
+                        for atom, pkg_id in pkg_dts)
+            finally:
+                if repo is not None:
+                    repo.close()
+        return data
+
+    def _api_search_license(self, entropy, q):
+        """
+        Search packages in repositories using given query string
+        (license strategy).
+
+        @param q: query string
+        @type q: string
+        @return: list of package tuples (pkg_id, repo, arch, branch, product)
+        @rtype: list
+        """
+        data = []
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    # pay attention, if you switch to like = True, you have
+                    # to fixup the category link in the package details page!
+                    pkg_dts = repo.searchLicense(q, just_id = True)
+                    data.extend((pkg_id, repository_id, arch, branch, product) \
+                        for pkg_id in pkg_dts)
+            finally:
+                if repo is not None:
+                    repo.close()
+        return data
+
+    def _api_search_useflag(self, entropy, q):
+        """
+        Search packages in repositories using given query string
+        (useflag strategy).
+
+        @param q: query string
+        @type q: string
+        @return: list of package tuples (pkg_id, repo, arch, branch, product)
+        @rtype: list
+        """
+        data = []
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    # pay attention, if you switch to like = True, you have
+                    # to fixup the category link in the package details page!
+                    pkg_dts = repo.searchUseflag(q, just_id = True)
+                    data.extend((pkg_id, repository_id, arch, branch, product) \
+                        for pkg_id in pkg_dts)
+            finally:
+                if repo is not None:
+                    repo.close()
+        return data
+
     def _api_search_match(self, entropy, q):
         """
         Search packages in repositories using given query string (match strategy).
@@ -559,7 +651,7 @@ class ApibaseController:
         for cache validation for those repositories-wide functions.
         """
         valid_repos = self._api_get_valid_repositories(entropy)
-        sha = hashlib.sha1()
+        sha = hashlib.sha256()
         sha.update("0.0")
         for avail_repo, arch, branch, product in valid_repos:
             path = entropy._guess_repo_db_path(avail_repo, arch, product,
@@ -646,6 +738,17 @@ class ApibaseController:
                 hash_id, target)
 
         data = []
+
+        obj = {
+            'id': "details",
+            'name': _("Details"),
+            'icon': "icon_image.png",
+            'url': _generate_action_url(""),
+            'alt': _("Show package details"),
+            'extra_url_meta': "rel=\"nofollow\"",
+        }
+        data.append(obj)
+
         # homepage
         homepage = entropy_repository.retrieveHomepage(package_id)
         if homepage:
@@ -671,15 +774,16 @@ class ApibaseController:
         data.append(obj)
 
         # reverse dependencies
-        obj = {
-            'id': "reverse_dependencies",
-            'name': _("Reverse Dependencies"),
-            'icon': "icon_folder.png",
-            'url': _generate_action_url("reverse_dependencies"),
-            'alt': _("Show which package requires this application"),
-            'extra_url_meta': "rel=\"nofollow\"",
-        }
-        data.append(obj)
+        if not short_list:
+            obj = {
+                'id': "reverse_dependencies",
+                'name': _("Reverse Dependencies"),
+                'icon': "icon_folder.png",
+                'url': _generate_action_url("reverse_dependencies"),
+                'alt': _("Show which package requires this application"),
+                'extra_url_meta': "rel=\"nofollow\"",
+            }
+            data.append(obj)
 
         # similar packages
         provided_mime = entropy_repository.retrieveProvidedMime(package_id)
@@ -697,7 +801,7 @@ class ApibaseController:
         # ugc
         obj = {
             'id': "ugc",
-            'name': _("Comments, Images, Videos"),
+            'name': _("Comments and Documents"),
             'icon': "icon_images.png",
             'url': _generate_action_url("ugc"),
             'alt': _("Show user-generated content"),
@@ -723,7 +827,7 @@ class ApibaseController:
                     quoted_key,)
                 obj = {
                     'id': "bugs",
-                    'name': _("Bugs"),
+                    'name': _("Sabayon Bugs"),
                     'icon': "icon_bugs.png",
                     'url': bug_url,
                     'alt': _("Sabayon bugs related to package"),
@@ -746,7 +850,7 @@ class ApibaseController:
             # security
             obj = {
                 'id': "security",
-                'name': _("Security"),
+                'name': _("Security advisories"),
                 'icon': "icon_tag_purple.png",
                 'url': _generate_action_url("security"),
                 'alt': _("Show security advisories for package"),
@@ -754,27 +858,50 @@ class ApibaseController:
             }
             data.append(obj)
 
-            # mime types
-            obj = {
-                'id': "mime",
-                'name': _("Mime types"),
-                'icon': "icon_image.png",
-                'url': _generate_action_url("mime"),
-                'alt': _("Show mime types handled by package"),
-                'extra_url_meta': "rel=\"nofollow\"",
-            }
-            data.append(obj)
+            if provided_mime:
+                # mime types
+                obj = {
+                    'id': "mime",
+                    'name': _("Mime types"),
+                    'icon': "icon_image.png",
+                    'url': _generate_action_url("mime"),
+                    'alt': _("Show mime types handled by package"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
 
-            # provided libraries
-            obj = {
-                'id': "provided_libs",
-                'name': _("Provided libraries"),
-                'icon': "icon_bricks.png",
-                'url': _generate_action_url("provided_libs"),
-                'alt': _("Show libraries provided by package"),
-                'extra_url_meta': "rel=\"nofollow\"",
-            }
-            data.append(obj)
+            if not is_source_repo:
+                # provided libraries
+                obj = {
+                    'id': "provided_libs",
+                    'name': _("Provided libraries"),
+                    'icon': "icon_bricks.png",
+                    'url': _generate_action_url("provided_libs"),
+                    'alt': _("Show libraries provided by package"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
+
+                # content
+                obj = {
+                    'id': "content",
+                    'name': _("Content"),
+                    'icon': "icon_package.png",
+                    'url': _generate_action_url("content"),
+                    'alt': _("Show files belonging to package"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
+                # download
+                obj = {
+                    'id': "download",
+                    'name': _("Download"),
+                    'icon': "icon_disk.png",
+                    'url': _generate_action_url("download"),
+                    'alt': _("Show package file download mirrors"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
 
             # sources
             obj = {
@@ -789,11 +916,38 @@ class ApibaseController:
 
         return data
 
-    def _get_package_base_metadata(self, entropy, ugc, repository_id,
-        package_id, product, entropy_repository, extended_meta_items = False):
+    def _get_package_base_metadata(self, entropy, repository_id,
+        package_id, arch, product, branch, entropy_repository,
+        extended_meta_items = False):
         """
         Internal method used to build up basic metadata for package.
         """
+        is_source_repo = self._is_source_repository(repository_id)
+        meta_items_hash = 1
+
+        # caching
+        sha = hashlib.sha256()
+        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|%s" % (
+            repository_id,
+            package_id,
+            arch,
+            product,
+            branch,
+            extended_meta_items,
+            self._get_valid_repositories_mtime_hash(entropy),
+            is_source_repo,
+            meta_items_hash,
+        )
+        sha.update(repr(hash_str))
+        cache_key = "_get_package_base_metadata_" + sha.hexdigest()
+
+        data = None
+        if model.config.WEBSITE_CACHING:
+            data = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+        if data is not None:
+            return data
+
         key_slot = entropy_repository.retrieveKeySlot(package_id)
         if key_slot is not None:
             key, slot = key_slot
@@ -801,10 +955,15 @@ class ApibaseController:
             key, slot = "n/a", "0"
         category, name = key.split("/", 1)
         try:
-            arch = entropy_repository.getSetting("arch")
+            r_arch = entropy_repository.getSetting("arch")
         except KeyError:
-            arch = None
-        branch = entropy_repository.retrieveBranch(package_id)
+            r_arch = None
+        """
+        # doesn't work for source-based repos
+        if r_arch != arch:
+            return None # invalid !
+        """
+
         mtime = float(entropy_repository.retrieveCreationDate(package_id))
         date = entropy_tools.convert_unix_time_to_human_time(mtime)
         atom = entropy_repository.retrieveAtom(package_id)
@@ -812,7 +971,11 @@ class ApibaseController:
             package_id, repository_id, arch, branch, product)
         hash_id_api = self._api_encode_package(package_id, repository_id, arch,
             branch, product)
-        is_source_repo = self._is_source_repository(repository_id)
+
+        meta_items = self._setup_metadata_items(entropy,
+            package_id, repository_id, hash_id, is_source_repo,
+            key, entropy_repository, short_list = not extended_meta_items)
+
         data = {
             'atom': atom,
             'name': name,
@@ -835,46 +998,164 @@ class ApibaseController:
             'mtime': mtime,
             'change': self._api_extract_latest_change(
                 atom, entropy_repository.retrieveChangelog(package_id)),
-            'meta_items': self._setup_metadata_items(entropy,
-                package_id, repository_id, hash_id, is_source_repo,
-                key, entropy_repository, short_list = not extended_meta_items),
+            'meta_items': meta_items,
         }
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(cache_key, data,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         return data
 
-    def _get_package_extended_metadata(self, entropy, ugc, repository_id,
-        package_id, product, entropy_repository):
+    def _get_package_extended_metadata(self, entropy, repository_id,
+        package_id, arch, product, branch, entropy_repository):
         """
         Internal method used to build up extended metadata for package.
         """
-        base_data = self._get_package_base_metadata(entropy, ugc, repository_id,
-            package_id, product, entropy_repository, extended_meta_items = True)
+        # caching
+        brief_list_hash = 2
+        sha = hashlib.sha256()
+        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s" % (
+            repository_id,
+            package_id,
+            arch,
+            product,
+            branch,
+            self._get_valid_repositories_mtime_hash(entropy),
+            self._is_source_repository(repository_id),
+            brief_list_hash,
+        )
+        sha.update(repr(hash_str))
+        cache_key = "_get_package_extended_metadata_" + sha.hexdigest()
+
+        data = None
+        if model.config.WEBSITE_CACHING:
+            data = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+        if data is not None:
+            return data
+
+        base_data = self._get_package_base_metadata(entropy, repository_id,
+            package_id, arch, product, branch, entropy_repository,
+            extended_meta_items = True)
+        if base_data is None:
+            return None
 
         size = "0b"
         p_size = entropy_repository.retrieveSize(package_id)
         if p_size is not None:
             size = entropy_tools.bytes_into_human(p_size)
+
+        ondisksize = "0b"
+        o_size = entropy_repository.retrieveOnDiskSize(package_id)
+        if o_size is not None:
+            ondisksize = entropy_tools.bytes_into_human(o_size)
+
+        flags = entropy_repository.retrieveCompileFlags(package_id)
+        if flags is None:
+            chost, cflags, cxxflags = None, None, None
+        else:
+            chost, cflags, cxxflags = flags
         data = {
             'size': size,
             'slot': entropy_repository.retrieveSlot(package_id),
             'license': entropy_repository.retrieveLicense(package_id),
             'flags': entropy_repository.retrieveCompileFlags(package_id),
+            'chost': chost,
+            'cflags': cflags,
+            'cxxflags': cxxflags,
             'tag': entropy_repository.retrieveTag(package_id),
             'digest': entropy_repository.retrieveDigest(package_id),
-            'ondisksize': entropy_repository.retrieveOnDiskSize(package_id),
+            'ondisksize': ondisksize,
             'useflags': entropy_repository.retrieveUseflags(package_id),
             'brief_list': [
                 {
                     'key': "category",
                     'name': _("Category"),
-                    'url': None,
+                    'url': model.config.PACKAGE_SHOW_CATEGORY_URL + "/" + \
+                        base_data['category'],
                     'extra_url_meta': "rel=\"nofollow\"",
+                    'split': False,
+                    'icon': "icon_folder.png",
                 },
                 {
                     'key': "slot",
                     'name': _("Slot"),
                     'url': None,
+                    'split': False,
+                    'icon': "icon_bricks.png",
+                },
+                {
+                    'key': "tag",
+                    'name': _("Tag"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_tag_purple.png",
+                },
+                {
+                    'key': "chost",
+                    'name': "CHOST",
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_database_table.png",
+                },
+                {
+                    'key': "cflags",
+                    'name': "CFLAGS",
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_database_table.png",
+                },
+                {
+                    'key': "cxxflags",
+                    'name': "CXXFLAGS",
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_database_table.png",
+                },
+                {
+                    'key': "ondisksize",
+                    'name': _("Required space"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_disk.png",
+                },
+                {
+                    'key': "digest",
+                    'name': _("Checksum"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_timeline_marker.png",
+                },
+                {
+                    'key': "sha256",
+                    'name': _("SHA 256"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_timeline_marker.png",
+                },
+                {
+                    'key': "download",
+                    'name': _("Package file"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_package.png",
+                },
+                {
+                    'key': "useflags",
+                    'name': _("USE flags"),
+                    'url': model.config.PACKAGE_SHOW_USEFLAG_URL + "/--item--",
                     'extra_url_meta': "rel=\"nofollow\"",
+                    'split': True,
+                    'icon': "icon_flag_purple.png",
+                },
+                {
+                    'key': "license",
+                    'name': _("License"),
+                    'url': model.config.PACKAGE_SHOW_LICENSE_URL + "/--item--",
+                    'extra_url_meta': "rel=\"nofollow\"",
+                    'split': True,
+                    'icon': "icon_changelog.png",
                 },
             ],
         }
@@ -882,6 +1163,11 @@ class ApibaseController:
             entropy_repository.retrieveSignatures(package_id)
 
         data.update(base_data)
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(cache_key, data,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
         return data
 
     def _get_packages_internal_metadata(self, entropy, ugc, package_tuples,
@@ -907,11 +1193,14 @@ class ApibaseController:
                     if repo is None:
                         continue
                     if extended:
-                        meta_map[pkg_obj] = self._get_package_extended_metadata(
-                            entropy, ugc, r, p_id, p, repo)
+                        pkg_data = self._get_package_extended_metadata(
+                            entropy, r, p_id, a, p, b, repo)
                     else:
-                        meta_map[pkg_obj] = self._get_package_base_metadata(
-                            entropy, ugc, r, p_id, p, repo)
+                        pkg_data = self._get_package_base_metadata(
+                            entropy, r, p_id, a, p, b, repo)
+                    if pkg_data is None:
+                        continue
+                    meta_map[pkg_obj] = pkg_data
 
                     key = meta_map[pkg_obj]['key']
                     if key not in ugc_cache:

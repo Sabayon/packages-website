@@ -1,9 +1,0 @@
-%if c.idpackages:
-    <br/>
-    <div style="position: relative; top: -1em;">
-        % for idpackage in c.idpackages:
-            <a href="/repository/match/${c.miscinfo['repo']}/${c.miscinfo['product']}/${c.miscinfo['arch']}/${c.miscinfo['branch']}/${c.idpackages[idpackage]}" target="_blank">${c.idpackages[idpackage]}</a>
-            <br/>
-        % endfor
-    </div>
-%endif

@@ -1,0 +1,25 @@
+% if c.package_show_what['data']:
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Sources")}
+            </div>
+            % for key in sorted(c.package_show_what['data']):
+                <div class="package-widget-show-deps-item">
+                    ${key | h}
+                    % for source in c.package_show_what['data'][key]:
+                        <div class="package-widget-show-source-url-mirror">
+                            <a href="${source}" rel="nofollow">${source | h,trim}</a>
+                        </div>
+                    % endfor
+                </div>
+            % endfor
+        </div>
+    </div>
+% else:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No sources belonging to package")}
+            </div>
+        </div>
+% endif

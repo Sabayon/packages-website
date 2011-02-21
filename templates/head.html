@@ -2,13 +2,18 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     %if c.html_title:
-        <title>${c.html_title}</title>
+        <title>${c.html_title | h}</title>
     %else:
         <title>${_("Sabayon Linux Packages")}</title>
     %endif
 
     <meta name="keywords" content="sabayon, linux, operating systems, operating system, usb, liveusb, linux web, kernel, linux live, sabayon packages"/>
-    <meta name="description" content="Sabayon Linux Packages"/>
+    %if c.html_description:
+        <meta name="description" content="${c.html_description | h}"/>
+    %else:
+        <meta name="description" content="Sabayon Linux Packages"/>
+    %endif
+
     <link rel="stylesheet" href="http://static.sabayon.org/site/css/reset-min.css" type="text/css" />
     <link rel="stylesheet" href="http://static.sabayon.org/site/css/global.css" type="text/css" />
     <link rel="stylesheet" href="http://static.sabayon.org/site/css/global_menu.css" type="text/css" />

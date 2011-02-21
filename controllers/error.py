@@ -23,11 +23,7 @@ class ErrorController(BaseController):
 
     def document(self):
         """Render the error document"""
-        model.config.setup_internal(model, c, session, request)
-	resp = request.environ.get('pylons.original_response')
-        if resp is not None:
-            c.code = cgi.escape(request.GET.get('code', str(resp.status_int)))
-            c.message = literal(resp.body) or cgi.escape(request.GET.get('message', ''))
+        self._generate_html_metadata()
         return render_mako('/page_error.html')
 
     def img(self, id):

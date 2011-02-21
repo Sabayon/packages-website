@@ -1,0 +1,54 @@
+<div class="package-widget-show-deps">
+    <% shown_deps = False %>
+    % if c.package_show_what['data']['run_deps']:
+        <% shown_deps = True %>
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-title">
+                ${_("Runtime dependencies")}
+            </div>
+            % for dep in c.package_show_what['data']['run_deps']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${dep | u}" rel="nofollow">${dep | h,trim}</a></div>
+            % endfor
+        </div>
+    % endif
+    % if c.package_show_what['data']['build_deps']:
+        <% shown_deps = True %>
+        <div class="package-widget-show-deps-generic package-widget-show-deps-build">
+            <div class="package-widget-show-deps-title">
+                ${_("Build dependencies")}
+            </div>
+            % for dep in c.package_show_what['data']['build_deps']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${dep | u}" rel="nofollow">${dep | h,trim}</a></div>
+            % endfor
+        </div>
+    % endif
+    % if c.package_show_what['data']['post_deps']:
+        <% shown_deps = True %>
+        <div class="package-widget-show-deps-generic package-widget-show-deps-post">
+            <div class="package-widget-show-deps-title">
+                ${_("Post dependencies")}
+            </div>
+            % for dep in c.package_show_what['data']['post_deps']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${dep | u}" rel="nofollow">${dep | h,trim}</a></div>
+            % endfor
+        </div>
+    % endif
+    % if c.package_show_what['data']['manual_deps']:
+        <% shown_deps = True %>
+        <div class="package-widget-show-deps-generic package-widget-show-deps-manual">
+            <div class="package-widget-show-deps-title">
+                ${_("Manual dependencies")}
+            </div>
+            % for dep in c.package_show_what['data']['manual_deps']:
+                <div class="package-widget-show-deps-item"><a href="${c.base_search_url}?q=${dep | u}" rel="nofollow">${dep | h,trim}</a></div>
+            % endfor
+        </div>
+    % endif
+    % if not shown_deps:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No dependencies")}
+            </div>
+        </div>
+    % endif
+</div>

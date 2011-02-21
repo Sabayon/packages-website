@@ -19,6 +19,7 @@ import entropy.exceptions as etp_exceptions
 from htmlentitydefs import name2codepoint
 from entropy.const import *
 etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
+etpConst['repositoriesconf'] = model.config.REPOSITORIES_CONF_PATH
 from entropy.exceptions import SystemDatabaseError
 try:
     from entropy.db.exceptions import ProgrammingError, OperationalError, \

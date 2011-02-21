@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import hashlib
+import os
 import datetime, random, os, urllib
 from pylons.i18n import _, N_
 from www.private import *
@@ -26,19 +27,19 @@ ETP_PATH = '/home/sabayonlinux/public_html/packages2.sabayon.org/www/entropy/lib
 WEBSITE_TMP_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/temp'
 WEBSITE_CACHE_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/cache'
 COMMUNITY_REPOS_DIR = "/home/sabayonlinux/public_html/community.sabayon.org/repos/"
+REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
+# new method also!
+os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH
+EXCLUDED_MIRROR_NAMES = ["pkg.sabayon.org"]
 PHPBB_DBNAME = "phpbb3"
 PORTAL_DBNAME = "portal"
 UGC_MAX_UPLOAD_FILE_SIZE = 20 * 1024000 # 20 mb
 LOGIN_URI = '/login'
 ETP_REPOSITORY = "sabayonlinux.org"
-ETP_REPOSITORY_DOWNLOAD_MIRRORS = [
-    "ftp://ftp.nluug.nl/pub/os/Linux/distr/sabayonlinux/entropy/",
-    "ftp://ftp.cc.uoc.gr/mirrors/linux/SabayonLinux/entropy/",
-    "ftp://ftp.fsn.hu/pub/linux/distributions/sabayon/entropy/",
-    "ftp://mirror.internode.on.net/pub/sabayonlinux/entropy/"
-]
 MY_ETP_DBDIR = "database"
 MY_ETP_PKGDIR = "packages"
+
+WEBSITE_CACHING = False
 
 # packages.* options
 # XXX hacky thing to support old URLs
@@ -69,6 +70,10 @@ ugc_store_url = "http://community.sabayon.org/ugc"
 ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
 
 PACKAGE_SHOW_URL = "/show"
+PACKAGE_SHOW_LICENSE_URL = "/license"
+PACKAGE_SHOW_CATEGORY_URL = "/category"
+PACKAGE_SHOW_USEFLAG_URL = "/useflag"
+PACKAGE_SEARCH_URL = "/quicksearch"
 
 def is_https(request):
     return "HTTPS" in request.headers

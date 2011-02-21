@@ -10,16 +10,25 @@
             <b>${_("Special searches")}</b>
         </div>
         <div>
+            ${_("Category")}: <b>${c.search_prefixes['category']} app-foo foo-bar</b>
+        </div>
+        <div>
+            ${_("License")}: <b>${c.search_prefixes['license']} GPL-2 as-is</b>
+        </div>
+        <div>
+            ${_("Useflag")}: <b>${c.search_prefixes['useflag']} mp3</b>
+        </div>
+        <div>
             ${_("Package Sets")}: <b>@setname</b>
         </div>
         <div>
             ${_("Files")}: <b>/path/to/something</b>
         </div>
         <div>
-            ${_("Libraries")}: <b>*.so*</b>
+            ${_("Libraries")}: <b>${c.search_prefixes['library']} libdl.so.2</b>
         </div>
         <div>
-            ${_("Mime")}: <b>application/*</b>, <b>mime:text/plain</b>
+            ${_("Mime")}: <b>${c.search_prefixes['mime']} text/plain text/plain2</b>
         </div>
     </div>
 </div>

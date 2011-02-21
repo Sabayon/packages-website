@@ -1,0 +1,9 @@
+% if c.package_show_what['data']:
+    <pre>${c.package_show_what['data'] | h,trim}</pre>
+% else:
+    <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+        <div class="package-widget-show-deps-title">
+            ${_("No ChangeLog")}
+        </div>
+    </div>
+% endif

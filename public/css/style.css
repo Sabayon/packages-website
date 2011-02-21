@@ -242,7 +242,7 @@ input {
 }
 
 .package-widget-meta-list-row {
-    
+    padding-bottom: 4px;
 }
 
 .package-widget-meta-list-item {
@@ -313,6 +313,75 @@ input {
     font-size: 2em;
 }
 
+.packages-search-nothing-found {
+    font-size: 1.3em;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    text-align: center;
+}
+
 .packages-results-info {
     text-align: right;
+}
+
+.package-widget-meta-list-left-item-binary {
+    border-color: teal;
+}
+
+.package-widget-meta-list-left-item-source {
+    border-color: purple;
+}
+
+.package-widget-meta-list-left-item {
+    border-bottom: 1px dotted teal;
+    margin-bottom: 5px;
+}
+
+.package-widget-meta-list-left-item dt {
+    width: 12em;
+    display: block;
+    float: left;
+    margin-right: 15px;
+    text-align: left;
+    color: #2454AE;
+}
+
+.package-widget-meta-list-left-item dd {
+    color: #4B4848;
+}
+
+.package-widget-show-what {
+    
+}
+
+.package-widget-show-what pre {
+    font-size: 1.3em;
+}
+
+.package-widget-show-what a, .package-widget-show-what a:active, .package-widget-show-what a:link, .package-widget-show-what a:visited {
+    color: teal;
+}
+
+.package-widget-show-deps-generic {
+    padding-bottom: 10px;
+}
+
+.package-widget-show-deps-title {
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.package-widget-show-deps-item {
+    padding-bottom: 3px;
+    padding-left: 30px;
+    padding-top: 3px;
+}
+
+.package-widget-meta-list-left {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.package-widget-show-source-url-mirror {
+    padding-left: 15px;
 }

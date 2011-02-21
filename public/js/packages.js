@@ -1,96 +1,3 @@
-
-function package_search(form_name,search_input,dest_div) {
-    if (document.getElementById(search_input).value.length > 1) {
-        completeAHAH.likeSubmit('/packages/htsearch', 'POST', form_name, dest_div, packages_loading_html);
-    }
-}
-
-function load_depends(idpackage,arch,product,repo,branch,dest_div) {
-    completeAHAH.ahah('/packages/depends?idpackage='+idpackage+'&arch='+arch+'&product='+product+'&branch='+branch+'&repo='+repo, dest_div, null, 'get', null);
-}
-
-function load_content(idpackage,arch,product,repo,branch,dest_div) {
-        completeAHAH.ahah('/packages/content?idpackage=' + idpackage + '&arch=' + arch + '&product=' + product + '&branch=' + branch + '&repo=' + repo, dest_div, null, 'get', null);
-}
-
-function get_package_data(formname, where, image, idpackage, branch, repoid, ugc_count_class) {
-
-    short_el = document.getElementById('shortinfo_'+idpackage+'_'+branch+'_'+repoid);
-    extra_el = document.getElementById('extrainfo_'+idpackage+'_'+branch+'_'+repoid);
-    imgFile = document[image];
-    imgElem = document.getElementById(image);
-    if ((imgElem.value == "0") || (imgElem.value != "1") ) {
-        imgFile.src = "/images/packages/list-remove.png";
-        // save old content into garbage_idpackage
-        if (short_el) {
-            short_el.value = document.getElementById(where).innerHTML;
-        }
-        if ((extra_el.value == "") || (!short_el)) {
-            completeAHAH.likeSubmit('/packages/extrainfo', 'POST', formname, where, packages_loading_html);
-        } else {
-            document.getElementById(where).innerHTML = extra_el.value;
-        }
-        //spin = true;
-        imgElem.value = "1";
-    } else {
-        imgFile.src = "/images/packages/list-add.png";
-        extra_el.value = document.getElementById(where).innerHTML;
-
-        // update documents count when showing shortinfo back
-        docs_count_elems = document.getElementsByClass(ugc_count_class);
-        docs_cur_val = 0;
-        for (idx = 0; idx < 1; idx++) {
-            cur_val = docs_count_elems[idx].innerHTML;
-            docs_cur_val = parseInt(cur_val);
-        }
-        document.getElementById(where).innerHTML = short_el.value;
-
-        docs_count_elems = document.getElementsByClass(ugc_count_class);
-        for (idx = 0; idx < docs_count_elems.length; idx++) {
-            docs_count_elems[idx].innerHTML = docs_cur_val;
-        }
-
-        imgElem.value = "0";
-    }
-
-}
-
-function load_release(branch,product,repo,arch,dest_div) {
-        completeAHAH.ahah('/packages/release?branch=' + branch + '&arch=' + arch + '&product=' + product + '&repo=' + repo, dest_div, null, 'get', null, packages_loading_html);
-}
-
-function show_release(form_name,dest_div) {
-    completeAHAH.likeSubmit('/packages/show_release', 'POST', form_name, dest_div, packages_loading_html);
-}
-
-function show_categories(form_name,dest_div) {
-    completeAHAH.likeSubmit('/packages/show_categories', 'POST', form_name, dest_div, packages_loading_html);
-}
-
-function load_category(cat, product, repo, arch) {
-    listElem = document.getElementById('li_'+cat);
-    if (listElem.value == "0") {
-        listElem.style.listStyleImage = "url('/images/packages/list-remove-small.png')";
-        if (document.getElementById('subtree_'+cat).value == "") {
-            spin = false;
-            completeAHAH.ahah('/packages/category?cat='+cat+'&product='+product+'&arch='+arch+'&repo='+repo, 'info_'+cat, null, 'get', null);
-            spin = true;
-        } else {
-            document.getElementById('info_'+cat).innerHTML = document.getElementById('subtree_'+cat).value;
-        }
-        listElem.value = "1";
-    } else {
-        listElem.style.listStyleImage = "url('/images/packages/list-add-small.png')";
-        document.getElementById('subtree_'+cat).value = document.getElementById('info_'+cat).innerHTML;
-        document.getElementById('info_'+cat).innerHTML = '';
-        listElem.value = "0";
-    }
-}
-
-function load_advisory(atom,repo,dest_div) {
-    completeAHAH.ahah('/packages/getadvisory?atom='+atom+'&repo='+repo, dest_div, null, 'get', null);
-}
-
 function set_stars_rating(item,elem_prefix,vote) {
     item.style.cursor = "pointer";
     var myvote = parseInt(vote);
@@ -131,14 +38,6 @@ function submit_ugc_vote(pkgkey,user_id,vote,login_url,dest_div) {
         return;
     }
     completeAHAH.ahah('/packages/vote?vote=' + vote + '&pkgkey=' + pkgkey, dest_div, null, 'get', null);
-}
-
-function ugc_select_doctype(select_elem,pkgkey,atom,mytitle,keywords,desc,repoid,product,arch,dest_div) {
-    ugc_doctype = select_elem.value;
-    title_cont = document.getElementById(mytitle).value;
-    keywords_cont = document.getElementById(keywords).value;
-    desc_cont = document.getElementById(desc).value;
-    completeAHAH.ahah('/packages/show_ugc_add?ugc_doctype=' + ugc_doctype + '&pkgkey=' + pkgkey + '&atom=' + atom + '&repoid=' + repoid + '&product=' + product + '&arch=' + arch + '&title=' + title_cont + '&keywords=' + keywords_cont + '&description=' + desc_cont, dest_div, null, 'get', null, packages_loading_html);
 }
 
 var ugc_new_doc_counter = 0;
@@ -196,8 +95,6 @@ function ugc_send_document(form_name,dest_div,div_error,title_id,ugc_count_class
 
 }
 
-
-
 function delete_ugc_doc(iddoc,err_div,dest_div) {
     err_obj = document.getElementById(err_div);
     dest_obj = document.getElementById(dest_div);
@@ -219,34 +116,5 @@ function delete_ugc_doc(iddoc,err_div,dest_div) {
 
     show_confirm('${_("Are you sure?")}','${_("You want to <b>remove</b> this document, are you super sure?")}',do_et)
 
-}
-
-/*
-
-    UGC
-
-*/
-
-function ugc_search(form_name,search_input,dest_div,offset,do_spin,spin_target,spin_type) {
-
-    if ( spin_type == "1" ) {
-        loading_html = packages_loading_html;
-    } else {
-        loading_html = undefined;
-    }
-
-    dest_obj = document.getElementById(dest_div);
-    error_obj = document.getElementById(spin_target);
-
-    function do_et_complete(valid, resp_txt, resp_code) {
-        if ((valid) && (!string_startswith(resp_txt.toLowerCase(),'${_("Error").lower()}'))) {
-                error_obj.innerHTML = '';
-                dest_obj.innerHTML = resp_txt;
-            } else {
-                error_obj.innerHTML = "<span style='color: red; font-weight: bold'>"+resp_txt+"</span>";
-            }
-        }
-
-    completeAHAH.likeSubmit('/packages/ugc_search?offset='+offset, 'POST', form_name, spin_target, loading_html, do_et_complete, do_spin, spin_target);
 }
 

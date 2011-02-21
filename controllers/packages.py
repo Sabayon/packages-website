@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import json
+from datetime import datetime
 from cStringIO import StringIO
-log = logging.getLogger(__name__)
 
 from www.lib.base import *
 from www.lib.website import *
@@ -20,10 +20,10 @@ except ImportError:
 import entropy.tools as entropy_tools
 import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
-from entropy.cache import EntropyCacher
 
 import shutil, os, time
 import hashlib
+
 
 class PackagesController(BaseController, WebsiteController, ApibaseController):
 
@@ -92,6 +92,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if arch not in model.config.available_arches:
             return
 
+        # validate repository_id
+        if not self._repo_re.match(repository_id):
+            return
+
         return decoded_data
 
     def show(self, hash_id):
@@ -116,7 +120,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if branch not in avail_branches:
             return redirect(url("/"))
 
-        self._generate_metadata()
+        self._generate_html_metadata()
         results = [(package_id, repository_id, arch, branch, product)]
         c.search_pkgs = results
 
@@ -128,10 +132,18 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             ugc.disconnect()
             del ugc
         c.packages_data = data_map
+        try:
+            data_obj = data_map[results[0]]
+            c.html_title = data_obj['atom'] + " on " + data_obj['product'] + \
+                ", " + data_obj['repository_id'] + ", " + data_obj['arch'] + \
+                ", " + data_obj['branch']
+            c.html_description = data_obj['description']
+        except (IndexError, KeyError):
+            pass
 
         c.show_detailed_view = True
 
-        return self._render('/packages/index.html')
+        return self._render('/index.html', renderer = "html")
 
     def _show_similar(self, hash_id):
         decoded_data = self._parse_hash_id(hash_id)
@@ -152,21 +164,365 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if provided_mime is None:
             return self.show(hash_id)
 
-        query = "mime:" + " ".join(provided_mime)
+        query = self.PREFIXES['mime'] + " ".join(provided_mime)
         return self.quicksearch(q = query)
+
+    def _show_changelog(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "changelog",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        changelog = None
+        try:
+            if repo is not None:
+                changelog = repo.retrieveChangelog(package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if (changelog is not None) and (changelog != "None"):
+            # fixup bug (!= "None")
+            show_what_data['data'] = changelog
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_dependencies(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "dependencies",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        dependencies = None
+        try:
+            if repo is not None:
+                dependencies = repo.retrieveDependencies(package_id,
+                    extended = True)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if dependencies is not None:
+            data = {}
+            data['build_deps'] = [x for x, y in dependencies \
+                if y == etpConst['dependency_type_ids']['bdepend_id']]
+            data['run_deps'] = [x for x, y in dependencies if \
+                y == etpConst['dependency_type_ids']['rdepend_id']]
+            data['post_deps'] = [x for x, y in dependencies if \
+                y == etpConst['dependency_type_ids']['pdepend_id']]
+            data['manual_deps'] = [x for x, y in dependencies if \
+                y == etpConst['dependency_type_ids']['mdepend_id']]
+            key_sorter = lambda x: entropy_tools.dep_getkey(x)
+            for k, v in data.items():
+                v.sort(key = key_sorter)
+            show_what_data['data'] = data
+
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_reverse_dependencies(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "reverse_dependencies",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+
+        # caching
+        sha = hashlib.sha256()
+        hash_str = "%s|%s|%s|%s|%s" % (
+            repository_id, arch, branch, product,
+            self._get_valid_repositories_mtime_hash(entropy))
+        sha.update(hash_str)
+        cache_key = "_show_reverse_dependencies_" + sha.hexdigest()
+        revdep_cache = None
+
+        if model.config.WEBSITE_CACHING:
+            # whacky thing !!
+            revdep_cache = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        revdep_meta = []
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
+            product)
+        try:
+            if repo is not None:
+                if revdep_cache is not None:
+                    repo._setLiveCache("reverseDependenciesMetadata",
+                        revdep_cache)
+                pkg_ids = repo.retrieveReverseDependencies(package_id)
+                if revdep_cache is None:
+                    revdep_cache = repo._getLiveCache(
+                        "reverseDependenciesMetadata")
+
+                def key_sorter(x):
+                    atom = repo.retrieveAtom(x)
+                    if atom:
+                        return entropy_tools.dep_getkey(atom)
+                    else:
+                        return "0"
+
+                for pkg_id in sorted(pkg_ids, key = key_sorter):
+                    pkg_hash_id = self._api_human_encode_package(
+                        repo.retrieveName(pkg_id), pkg_id, repository_id, arch,
+                        branch, product)
+
+                    revdep_meta.append({
+                        'hash_id': pkg_hash_id,
+                        'atom': repo.retrieveAtom(pkg_id),
+                    })
+
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if model.config.WEBSITE_CACHING:
+            if revdep_cache is not None:
+                self._cacher.save(cache_key,
+                    revdep_cache, cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if revdep_meta:
+            show_what_data['data'] = revdep_meta
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_security(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "security",
+            'data': None,
+        }
+        try:
+            import feedparser
+        except ImportError:
+            feedparser = None
+
+        if feedparser is not None:
+
+            feed = None
+            now = datetime.now()
+            cache_key = "_show_security_" + str(now.year) + \
+                str(now.month) + str(now.day)
+
+            if model.config.WEBSITE_CACHING:
+                feed = self._cacher.pop(cache_key,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+            if feed is None:
+                feed = feedparser.parse(model.config.GLSA_URI)
+                if model.config.WEBSITE_CACHING:
+                    if isinstance(feed, dict):
+                        self._cacher.save(cache_key,
+                            feed, cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+            results = []
+            for item in feed['entries']:
+                if item.get("title", "").find(name) != -1:
+                    results.append(item)
+            results.sort(key = lambda x: x['title'])
+            results.reverse()
+            show_what_data['data'] = results
+
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_mime(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "mime",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        provided_mime = None
+        try:
+            if repo is not None:
+                provided_mime = repo.retrieveProvidedMime(package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = provided_mime
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_provided_libs(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "provided_libs",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        provided_libs = None
+        try:
+            if repo is not None:
+                provided_libs = repo.retrieveNeeded(package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = {
+            'provided_libs': provided_libs,
+            'arch': arch,
+            'branch': branch,
+            'product': product,
+        }
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_content(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "content",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        content = None
+        try:
+            if repo is not None:
+                content = repo.retrieveContent(package_id,
+                    order_by = "file")
+        finally:
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = content
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_download(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        entropy = self._entropy()
+        settings = entropy.Settings()
+        show_what_data = {
+            'what': "download",
+            'data': settings['repositories'].get('available', {}).get(repository_id),
+            'excluded': model.config.EXCLUDED_MIRROR_NAMES,
+        }
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_sources(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "sources",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        sources = None
+        try:
+            if repo is not None:
+                sources = repo.retrieveSources(package_id,
+                    extended = True)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = sources
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
 
     def show_what(self, hash_id, what):
         """
         Show package details, and given metadatum (what).
         """
-
+        # FIXME: add caching 
         what_map = {
             "similar": self._show_similar,
             "__fallback__": self.show,
+            "changelog": self._show_changelog,
+            "dependencies": self._show_dependencies,
+            "reverse_dependencies": self._show_reverse_dependencies,
+            "security": self._show_security,
+            "mime": self._show_mime,
+            "provided_libs": self._show_provided_libs,
+            "content": self._show_content,
+            "download": self._show_download,
+            "sources": self._show_sources,
         }
 
         func = what_map.get(what, what_map.get("__fallback__"))
         return func(hash_id)
+
+    def category(self, category):
+        """
+        Show packages in category, using quicksearch
+        """
+        query = self.PREFIXES['category'] + category
+        return self.quicksearch(q = query)
+
+    def license(self, license):
+        """
+        Show packages providing license, using quicksearch
+        """
+        query = self.PREFIXES['license'] + license
+        return self.quicksearch(q = query)
+
+    def useflag(self, useflag):
+        """
+        Show packages providing useflag, using quicksearch
+        """
+        query = self.PREFIXES['useflag'] + useflag
+        return self.quicksearch(q = query)
 
     def quicksearch(self, q = None):
         """
@@ -175,12 +531,19 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if q is None:
             q = request.params.get('q')
-        if not q:
+        if not q.strip():
             return redirect(url("/"))
         if len(q) > 64:
             return redirect(url("/"))
         elif len(q) < 2:
             return redirect(url("/"))
+
+        # no need to validate them, already validated below
+        # use r, a, b, p as filter
+        r = request.params.get('r')
+        a = request.params.get('a')
+        b = request.params.get('b')
+        p = request.params.get('p')
 
         from_pkg = request.params.get('from') or 0
         if from_pkg:
@@ -190,21 +553,26 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 from_pkg = 0
 
         # max results in a page !
-        max_results = 20
+        max_results = 10
         c.max_results = max_results
         c.quick_search_string = q
-        self._generate_metadata()
+        self._generate_html_metadata()
         entropy = self._entropy()
 
         # caching
-        sha = hashlib.sha1()
+        sha = hashlib.sha256()
         sha.update(const_convert_to_rawstring(q))
+        sha.update(repr(r))
+        sha.update(repr(a))
+        sha.update(repr(b))
+        sha.update(repr(p))
         mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
         sha.update(mtime_hash)
         cache_key = "quicksearch_" + sha.hexdigest()
-        cacher = EntropyCacher()
-        results = cacher.pop(cache_key,
-            cache_dir = model.config.WEBSITE_CACHE_DIR)
+        results = None
+        if model.config.WEBSITE_CACHING:
+            results = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         if results is None:
             search_map = {
@@ -215,6 +583,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 'match': self._api_search_match,
                 'sets': self._api_search_sets,
                 'mime': self._api_search_mime,
+                'category': self._api_search_category,
+                'license': self._api_search_license,
+                'useflag': self._api_search_useflag,
             }
             default_searches = ["match", "default", "description"]
             searching_default = True
@@ -223,19 +594,47 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if q.startswith("/"):
                 default_searches = ["path"]
                 searching_default = False
-            elif q.find(".so") != -1:
-                default_searches = ["library"]
-                searching_default = False
             elif q.startswith("@"):
                 default_searches = ["sets"]
                 searching_default = False
             elif q.startswith("application/"):
                 default_searches = ["mime"]
                 searching_default = False
-            elif q.startswith("mime:") and len(q) > 8:
+            elif q.startswith(self.PREFIXES['mime']) and \
+                len(q) > (5+len(self.PREFIXES['mime'])):
                 default_searches = ["mime"]
                 searching_default = False
-                q = q[5:]
+                q = q[len(self.PREFIXES['mime']):]
+                if not q.strip():
+                    return redirect(url("/"))
+            elif q.startswith(self.PREFIXES['category']) and \
+                len(q) > (5+len(self.PREFIXES['mime'])):
+                default_searches = ["category"]
+                searching_default = False
+                q = q[len(self.PREFIXES['category']):]
+                if not q.strip():
+                    return redirect(url("/"))
+            elif q.startswith(self.PREFIXES['license']) and \
+                len(q) > (2+len(self.PREFIXES['license'])):
+                default_searches = ["license"]
+                searching_default = False
+                q = q[len(self.PREFIXES['license']):]
+                if not q.strip():
+                    return redirect(url("/"))
+            elif q.startswith(self.PREFIXES['useflag']) and \
+                len(q) > (1+len(self.PREFIXES['useflag'])):
+                default_searches = ["useflag"]
+                searching_default = False
+                q = q[len(self.PREFIXES['useflag']):]
+                if not q.strip():
+                    return redirect(url("/"))
+            elif q.startswith(self.PREFIXES['library']) and \
+                len(q) > (4+len(self.PREFIXES['library'])):
+                default_searches = ["library"]
+                searching_default = False
+                q = q[len(self.PREFIXES['library']):]
+                if not q.strip():
+                    return redirect(url("/"))
 
             results = []
             for search in default_searches:
@@ -243,10 +642,24 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                     results.extend([x for x in search_map.get(search)(entropy,
                         q_split) if x not in results])
 
+            if r is not None:
+                results = [x for x in results if x[1] == r]
+                searching_default = False
+            if a is not None:
+                results = [x for x in results if x[2] == a]
+                searching_default = False
+            if b is not None:
+                results = [x for x in results if x[3] == b]
+                searching_default = False
+            if p is not None:
+                results = [x for x in results if x[4] == p]
+                searching_default = False
+
             # caching
             # NOTE: EntropyCacher is not started, so cannot use push()
-            cacher.save(cache_key,
-                results, cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key,
+                    results, cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         results_len = len(results)
         if from_pkg > results_len:
@@ -296,10 +709,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if request.params.get('more'):
             return self._render('/search_results_area.html')
-        return self._render('/packages/index.html')
+        return self._render('/index.html')
 
     def index(self):
-        self._generate_metadata()
+        self._generate_html_metadata()
         entropy = self._entropy()
 
         search_pkgs = []
@@ -316,7 +729,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             del ugc
         c.packages_data = data_map
 
-        return self._render('/packages/index.html')
+        return self._render('/index.html', renderer = "html")
 
     def _get_ugc_info(self, repoid, pkgkey, ugc = None):
 
@@ -398,17 +811,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         ugc.disconnect()
         del ugc
         return results, found_rows
-
-    def _generate_metadata(self):
-        c.generic_icon_url_64 = "/images/packages/generic-64x64.png"
-        c.generic_icon_url_48 = "/images/packages/generic-48x48.png"
-        c.generic_icon_url_22 = "/images/packages/generic-22x22.png"
-        c.group_icon_url_64 = "/images/packages/groups/64x64"
-        c.group_icon_url_48 = "/images/packages/groups/48x48"
-        c.meta_list_url = "/images/packages/metalist"
-        c.base_package_show_url = model.config.PACKAGE_SHOW_URL
-        c.base_search_url = "/quicksearch"
-        model.config.setup_internal(model, c, session, request)
 
     def _get_post_get_idpackage_product_arch_branch(self, entropy):
 
@@ -492,7 +894,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.atom = atom
         c.pkgkey = pkgkey
 
-        return self._render('/packages/do_document_page.html')
+        return self._render('/packages/do_document_page.html', renderer = "html")
 
     def ugc_delete(self):
         model.config.setup_internal(model, c, session, request)
@@ -640,7 +1042,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         self._expand_ugc_doc_info(ugc, c.ugc_doc)
         ugc.disconnect()
         del ugc
-        return self._render('/packages/ugc_show_doc.html')
+        return self._render('/packages/ugc_show_doc.html', renderer = "html")
 
     def vote(self):
 
@@ -682,94 +1084,4 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         c.error = error
         c.err_msg = err_msg
-        return self._render('/packages/voted.html')
-
-    def depends(self):
-
-        entropy = self._entropy()
-        not_found, idpackage, product, repo, arch, branch = \
-            self._get_post_get_idpackage_product_arch_branch(entropy)
-        c.repoid = repo
-
-        c.miscinfo = {}
-        c.miscinfo['arch'] = arch
-        c.miscinfo['product'] = product
-        c.miscinfo['repo'] = repo
-        c.miscinfo['branch'] = branch
-        c.idpackages = {}
-
-        if not not_found:
-
-            dbconn = self._api_get_repo(entropy, repo, arch, branch, product)
-            if dbconn is not None:
-                if hasattr(dbconn, 'retrieveDepends'):
-                    # backward compatibility
-                    mydepends = dbconn.retrieveDepends(idpackage)
-                else:
-                    mydepends = dbconn.retrieveReverseDependencies(idpackage)
-                for mydepend in mydepends:
-                    c.idpackages[mydepend] = dbconn.retrieveAtom(mydepend)
-                dbconn.close()
-
-        return self._render('/packages/depends.html')
-
-    def content(self):
-
-        entropy = self._entropy()
-
-        not_found, idpackage, product, repo, arch, branch = \
-            self._get_post_get_idpackage_product_arch_branch(entropy)
-        c.repoid = repo
-
-        c.miscinfo = {}
-        c.miscinfo['arch'] = arch
-        c.miscinfo['product'] = product
-        c.miscinfo['repo'] = repo
-        c.miscinfo['branch'] = branch
-        c.idpackages = {}
-        c.files = []
-        c.idpackage = idpackage
-        c.branch = branch
-
-        if not not_found:
-
-            dbconn = self._api_get_repo(entropy, repo, arch, branch, product)
-            if dbconn is not None:
-                c.files = dbconn.retrieveContent(idpackage, order_by = 'file')
-                dbconn.close()
-
-        return self._render('/packages/content.html')
-
-    def getadvisory(self):
-
-        entropy = self._entropy()
-
-        atom = request.params.get('atom')
-        if not atom:
-            return ''
-
-        repo = request.params.get('atom')
-        if not repo:
-            return ''
-        c.repoid = repo
-
-        key = entropy_dep.dep_getkey(atom)
-        if not key: return ''
-
-        name = key.split("/")[1]
-        import feedparser
-        feed = feedparser.parse(model.config.GLSA_URI)
-        entries = 2000 # infinite
-        strip = None
-        # now filter good ones
-        myfeed = {}
-        myfeed['entries'] = []
-        for item in feed['entries']:
-            if item['title'].find(name) != -1:
-                myfeed['entries'].append(item.copy())
-
-        c.strip = strip
-        c.entries = entries
-        c.feed = myfeed
-        return self._render('/packages/feed.html')
-
+        return self._render('/packages/voted.html', renderer = "html")

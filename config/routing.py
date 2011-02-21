@@ -24,6 +24,9 @@ def make_map(config):
     map.connect('/', controller='packages', action='index')
     map.connect('/search', controller='packages', action='quicksearch')
     map.connect('/quicksearch', controller='packages', action='quicksearch')
+    map.connect('/category/{category}', controller='packages', action='category')
+    map.connect('/license/{license}', controller='packages', action='license')
+    map.connect('/useflag/{useflag}', controller='packages', action='useflag')
     map.connect('/show/{hash_id}', controller='packages', action='show')
     map.connect('/show/{hash_id}/{what}', controller='packages',
         action='show_what')

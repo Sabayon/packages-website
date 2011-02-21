@@ -18,6 +18,12 @@ class Entropy(Client):
 
     def _guess_repo_db_path(self, repoid, arch, product, branch = None):
 
+        product = os.path.basename(product)
+        repoid = os.path.basename(repoid)
+        arch = os.path.basename(arch)
+        if branch is not None:
+            branch = os.path.basename(branch)
+
         repo_dir = os.path.join(config.MY_ETP_DIR, product, repoid)
         if not os.path.isdir(repo_dir):
             repo_dir = os.path.join(config.COMMUNITY_REPOS_DIR, repoid, product,
@@ -32,24 +38,13 @@ class Entropy(Client):
 
         return mypath
 
-    def _guess_repo_packages_path(self, repoid, arch, product, branch = None):
-        repo_dir = os.path.join(config.MY_ETP_DIR, product, repoid)
-        if not os.path.isdir(repo_dir):
-            repo_dir = os.path.join(config.COMMUNITY_REPOS_DIR, repoid,
-                product, repoid)
-
-        mypath = os.path.join(repo_dir, config.MY_ETP_PKGDIR, arch)
-        if branch:
-            mypath = os.path.join(mypath, branch)
-        return mypath
-
-    def _compile_mirror_download_paths(self, repoid, product, mirrors):
-        new_mirrors = []
-        for mirror in mirrors:
-            new_mirrors.append(os.path.join(mirror,product,repoid))
-        return new_mirrors
-
     def _get_branches(self, repoid, arch, product):
+
+        # validate
+        product = os.path.basename(product)
+        repoid = os.path.basename(repoid)
+        arch = os.path.basename(arch)
+
         branches = []
         dir_path = self._guess_repo_db_path(repoid, arch, product)
         if dir_path is None:
@@ -62,6 +57,10 @@ class Entropy(Client):
         return branches
 
     def _get_arches(self, repoid, product):
+
+        # validate
+        product = os.path.basename(product)
+        repoid = os.path.basename(repoid)
 
         supported_arches = config.available_arches.copy()
         arches = []
@@ -81,6 +80,10 @@ class Entropy(Client):
 
     def _get_repositories(self, product, arch = None):
         repositories = []
+        # validate
+        product = os.path.basename(product)
+        if arch is not None:
+            arch = os.path.basename(arch)
 
         supported_repo_dir = os.path.join(config.MY_ETP_DIR, product)
         if os.path.isdir(supported_repo_dir):
@@ -110,6 +113,12 @@ class Entropy(Client):
             in config.disabled_repositories]) # remove dupies
 
     def _open_db(self, repoid, arch, product, branch):
+
+        product = os.path.basename(product)
+        repoid = os.path.basename(repoid)
+        arch = os.path.basename(arch)
+        branch = os.path.basename(branch)
+
         dir_path = self._guess_repo_db_path(repoid, arch, product, branch)
         db_path = os.path.join(dir_path, etpConst['etpdatabasefile'])
         db_path_lock = os.path.join(dir_path, etpConst['etpdatabasedownloadlockfile'])
