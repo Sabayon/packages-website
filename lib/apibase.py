@@ -985,6 +985,7 @@ class ApibaseController:
             'branch': branch,
             'description': entropy_repository.retrieveDescription(package_id),
             'download': entropy_repository.retrieveDownloadURL(package_id),
+            'homepage': entropy_repository.retrieveHomepage(package_id),
             'revision': entropy_repository.retrieveRevision(package_id),
             'package_id': package_id,
             'arch': arch,
@@ -1000,6 +1001,13 @@ class ApibaseController:
                 atom, entropy_repository.retrieveChangelog(package_id)),
             'meta_items': meta_items,
         }
+        if request.params.get("api") == "0":
+            data['digest'] = entropy_repository.retrieveDigest(package_id)
+            size = "0b"
+            p_size = entropy_repository.retrieveSize(package_id)
+            if p_size is not None:
+                size = entropy_tools.bytes_into_human(p_size)
+            data['size'] = size
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
@@ -1070,6 +1078,35 @@ class ApibaseController:
             'useflags': entropy_repository.retrieveUseflags(package_id),
             'brief_list': [
                 {
+                    'key': "repository_id",
+                    'name': _("Repository"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_database_table.png",
+                },
+                {
+                    'key': "spm_repo",
+                    'name': _("Sub-repository"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_drive_network.png",
+                },
+                {
+                    'key': "license",
+                    'name': _("License"),
+                    'url': model.config.PACKAGE_SHOW_LICENSE_URL + "/--item--",
+                    'extra_url_meta': "rel=\"nofollow\"",
+                    'split': True,
+                    'icon': "icon_changelog.png",
+                },
+                {
+                    'key': "ondisksize",
+                    'name': _("Required space"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_disk.png",
+                },
+                {
                     'key': "category",
                     'name': _("Category"),
                     'url': model.config.PACKAGE_SHOW_CATEGORY_URL + "/" + \
@@ -1114,13 +1151,6 @@ class ApibaseController:
                     'icon': "icon_database_table.png",
                 },
                 {
-                    'key': "ondisksize",
-                    'name': _("Required space"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_disk.png",
-                },
-                {
                     'key': "digest",
                     'name': _("Checksum"),
                     'url': None,
@@ -1142,20 +1172,19 @@ class ApibaseController:
                     'icon': "icon_package.png",
                 },
                 {
+                    'key': "size",
+                    'name': _("Package size"),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_attach.png",
+                },
+                {
                     'key': "useflags",
                     'name': _("USE flags"),
                     'url': model.config.PACKAGE_SHOW_USEFLAG_URL + "/--item--",
                     'extra_url_meta': "rel=\"nofollow\"",
                     'split': True,
                     'icon': "icon_flag_purple.png",
-                },
-                {
-                    'key': "license",
-                    'name': _("License"),
-                    'url': model.config.PACKAGE_SHOW_LICENSE_URL + "/--item--",
-                    'extra_url_meta': "rel=\"nofollow\"",
-                    'split': True,
-                    'icon': "icon_changelog.png",
                 },
             ],
         }

@@ -51,12 +51,85 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         return render_mako(page)
 
     def _get_renderer_public_data_map(self):
-        json_public_map = []
-        if c.search_pkgs:
-            for pkg_tuple in c.search_pkgs:
-                pkg_data = c.packages_data.get(pkg_tuple)
-                if pkg_data is not None:
-                    json_public_map.append(pkg_data)
+
+        if request.params.get("api") == "0":
+            entropy = self._entropy()
+
+            idproduct = request.params.get("p") or model.config.default_product
+            if idproduct not in model.config.available_products:
+                idproduct = model.config.default_product
+            product = model.config.available_products.get(idproduct)
+            arch = request.params.get("a") or model.config.default_arch
+            if arch not in model.config.available_arches:
+                arch = model.config.default_arch
+            releases = set()
+            old_data_format = {}
+            ugc = self._ugc()
+            ugc_cache = {}
+            try:
+                for pkg_tuple in c.search_pkgs:
+                    p_id, r, a, b, p = pkg_tuple
+                    pkg_data = c.packages_data.get(pkg_tuple)
+                    if pkg_data:
+                        releases.add(b)
+                        obj = old_data_format.setdefault(b, [])
+                        key = pkg_data['key']
+                        if key not in ugc_cache:
+                            ugc_data = self._get_ugc_base_metadata(entropy,
+                                ugc, r, key)
+                            ugc_cache[key] = ugc_data
+
+                        item = {
+                            "category": pkg_data['category'],
+                            "description": pkg_data['description'],
+                            'spm_repo': pkg_data['spm_repo'],
+                            'name': pkg_data['name'],
+                            'branch': b,
+                            'atom': pkg_data['atom'],
+                            'idpackage': pkg_data['package_id'],
+                            'homepage': pkg_data['homepage'],
+                            'revision': pkg_data['revision'],
+                            'download': pkg_data['download'],
+                            'digest': pkg_data.get("digest", ""),
+                            'size': pkg_data.get("size", ""),
+                            'ugc': ugc_cache[key],
+                        }
+                        obj.append(item)
+            finally:
+                ugc.disconnect()
+                del ugc
+                ugc_cache.clear()
+                del ugc_cache
+
+            if c.search_there_is_more:
+                is_more = True
+            else:
+                is_more = False
+            if c.search_there_is_more_total:
+                total = c.search_there_is_more_total
+            else:
+                total = len(c.search_pkgs)
+            from_pkg = c.from_pkg or 0
+            misc_data = {
+                "product": product,
+                "arch": arch,
+                "idproduct": idproduct,
+                "releases": sorted(releases, reverse = True),
+                'more': is_more,
+                'total': total,
+                'from': from_pkg,
+            }
+            json_public_map = {
+                "__misc__": misc_data,
+            }
+            json_public_map.update(old_data_format)
+        else:
+            json_public_map = []
+            if c.search_pkgs:
+                for pkg_tuple in c.search_pkgs:
+                    pkg_data = c.packages_data.get(pkg_tuple)
+                    if pkg_data is not None:
+                        json_public_map.append(pkg_data)
         return json_public_map
 
     def _render_json(self, page):
@@ -485,7 +558,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         """
         Show package details, and given metadatum (what).
         """
-        # FIXME: add caching 
         what_map = {
             "similar": self._show_similar,
             "__fallback__": self.show,
@@ -527,6 +599,14 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
     def quicksearch(self, q = None):
         """
         Search packages in repositories.
+        Public API for searching, answering to: http://host/search
+        GET parameters:
+        q=<query>: search keyword [mandatory]
+        a=<arch>: architecture [default: amd64]
+        t=<type>: search type (pkg, match, desc, file. lib) [default: pkg]
+        r=<repo>: repository id [default: sabayonlinux.org]
+        b=<branch>: repository branch [default: 5]
+        p=<product>: product [default: standard]
         """
 
         if q is None:
@@ -544,6 +624,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         a = request.params.get('a')
         b = request.params.get('b')
         p = request.params.get('p')
+        t = request.params.get('t')
 
         from_pkg = request.params.get('from') or 0
         if from_pkg:
@@ -553,7 +634,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 from_pkg = 0
 
         # max results in a page !
-        max_results = 10
+        if request.params.get("api") == "0":
+            max_results = 50
+        else:
+            max_results = 10
         c.max_results = max_results
         c.quick_search_string = q
         self._generate_html_metadata()
@@ -587,54 +671,71 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 'license': self._api_search_license,
                 'useflag': self._api_search_useflag,
             }
-            default_searches = ["match", "default", "description"]
+            default_searches = ["match", "default"] #, "description"]
             searching_default = True
-
-            # try to understand string
-            if q.startswith("/"):
+            # &t support
+            if t == "pkg":
+                default_searches = ["default"]
+                searching_default = False
+            elif t == "match":
+                default_searches = ["match"]
+                searching_default = False
+            elif t == "desc":
+                default_searches = ["description"]
+                searching_default = False
+            elif t == "file":
                 default_searches = ["path"]
                 searching_default = False
-            elif q.startswith("@"):
-                default_searches = ["sets"]
-                searching_default = False
-            elif q.startswith("application/"):
-                default_searches = ["mime"]
-                searching_default = False
-            elif q.startswith(self.PREFIXES['mime']) and \
-                len(q) > (5+len(self.PREFIXES['mime'])):
-                default_searches = ["mime"]
-                searching_default = False
-                q = q[len(self.PREFIXES['mime']):]
-                if not q.strip():
-                    return redirect(url("/"))
-            elif q.startswith(self.PREFIXES['category']) and \
-                len(q) > (5+len(self.PREFIXES['mime'])):
-                default_searches = ["category"]
-                searching_default = False
-                q = q[len(self.PREFIXES['category']):]
-                if not q.strip():
-                    return redirect(url("/"))
-            elif q.startswith(self.PREFIXES['license']) and \
-                len(q) > (2+len(self.PREFIXES['license'])):
-                default_searches = ["license"]
-                searching_default = False
-                q = q[len(self.PREFIXES['license']):]
-                if not q.strip():
-                    return redirect(url("/"))
-            elif q.startswith(self.PREFIXES['useflag']) and \
-                len(q) > (1+len(self.PREFIXES['useflag'])):
-                default_searches = ["useflag"]
-                searching_default = False
-                q = q[len(self.PREFIXES['useflag']):]
-                if not q.strip():
-                    return redirect(url("/"))
-            elif q.startswith(self.PREFIXES['library']) and \
-                len(q) > (4+len(self.PREFIXES['library'])):
+            elif t == "lib":
                 default_searches = ["library"]
                 searching_default = False
-                q = q[len(self.PREFIXES['library']):]
-                if not q.strip():
-                    return redirect(url("/"))
+
+            elif not t:
+                # try to understand string
+                if q.startswith("/"):
+                    default_searches = ["path"]
+                    searching_default = False
+                elif q.startswith("@"):
+                    default_searches = ["sets"]
+                    searching_default = False
+                elif q.startswith("application/"):
+                    default_searches = ["mime"]
+                    searching_default = False
+                elif q.startswith(self.PREFIXES['mime']) and \
+                    len(q) > (5+len(self.PREFIXES['mime'])):
+                    default_searches = ["mime"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['mime']):]
+                    if not q.strip():
+                        return redirect(url("/"))
+                elif q.startswith(self.PREFIXES['category']) and \
+                    len(q) > (5+len(self.PREFIXES['mime'])):
+                    default_searches = ["category"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['category']):]
+                    if not q.strip():
+                        return redirect(url("/"))
+                elif q.startswith(self.PREFIXES['license']) and \
+                    len(q) > (2+len(self.PREFIXES['license'])):
+                    default_searches = ["license"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['license']):]
+                    if not q.strip():
+                        return redirect(url("/"))
+                elif q.startswith(self.PREFIXES['useflag']) and \
+                    len(q) > (1+len(self.PREFIXES['useflag'])):
+                    default_searches = ["useflag"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['useflag']):]
+                    if not q.strip():
+                        return redirect(url("/"))
+                elif q.startswith(self.PREFIXES['library']) and \
+                    len(q) > (4+len(self.PREFIXES['library'])):
+                    default_searches = ["library"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['library']):]
+                    if not q.strip():
+                        return redirect(url("/"))
 
             results = []
             for search in default_searches:
