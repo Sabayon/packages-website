@@ -1,34 +1,86 @@
 <div id="searchbox" class="widget">
     <form id="search-form" action="/quicksearch" method="GET">
         <fieldset id="search-fields">
-            <input id="search-term" type="text" maxlength="30" name="q" value="${c.quick_search_string | h,trim}"/>
+            <input id="search-term" type="text" maxlength="${c.search_form_max_length}" name="q" value="${c.quick_search_string | h,trim}"/>
             <input id="search-img" type="image" alt="S" value="S" src="/images/search-icon.png">
         </fieldset>
     </form>
+
     <div class="search-tips konafilter">
         <div class="widget-title navigation-title">
             <b>${_("Special searches")}</b>
         </div>
-        <div>
-            ${_("Category")}: <b>${c.search_prefixes['category']} app-foo foo-bar</b>
-        </div>
-        <div>
-            ${_("License")}: <b>${c.search_prefixes['license']} GPL-2 as-is</b>
-        </div>
-        <div>
-            ${_("Useflag")}: <b>${c.search_prefixes['useflag']} mp3</b>
-        </div>
-        <div>
-            ${_("Package Sets")}: <b>@setname</b>
-        </div>
-        <div>
-            ${_("Files")}: <b>/path/to/something</b>
-        </div>
-        <div>
-            ${_("Libraries")}: <b>${c.search_prefixes['library']} libdl.so.2</b>
-        </div>
-        <div>
-            ${_("Mime")}: <b>${c.search_prefixes['mime']} text/plain text/plain2</b>
-        </div>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Group")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['group']} games</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Category")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['category']} app-foo foo-bar</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("License")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['license']} GPL-2 as-is</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Useflag")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['useflag']} mp3</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Package Sets")}
+            </dt>
+            <dd>
+                <b>@setname</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Files")}
+            </dt>
+            <dd>
+                <b>/path</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Libraries")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['library']} libdl.so.2</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Provided libraries")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['provided_library']} libdl.so.2</b>
+            </dd>
+        </dl>
+        <dl class="search-widget-special-search-item">
+            <dt>
+                ${_("Mime")}
+            </dt>
+            <dd>
+                <b>${c.search_prefixes['mime']} text/plain</b>
+            </dd>
+        </dl>
     </div>
 </div>

@@ -13,9 +13,6 @@
 
     %if can_change_doc:
             | <a href="javascript:delete_ugc_doc('${c.iddoc}','${c.error_div}','${c.destroy_div}')">${_("Delete")}</a>
-            %if is_doc_admin:
-                <!-- | <a href="javascript:show_edit_ugc_doc('${c.iddoc}','${c.edit_div}')">${_("Edit")}</a> -->
-            %endif
     %endif
 %endif
 <span id="${c.error_div}"></span>

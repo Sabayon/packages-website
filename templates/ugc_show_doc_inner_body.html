@@ -1,11 +1,11 @@
-<div id="package-ugc-doc-body-${c.ugc_doc['iddoc']}">
+<div id="package-ugc-doc-body-${c.ugc_doc['iddoc']}" class="package-ugc-doc-body">
     % if c.ugc_doc['iddoctype'] == c.ugc_doctypes['comments']:
-        <%include file="/packages/ugc_comment.html"/>
+        <%include file="/ugc_comment.html"/>
     % elif c.ugc_doc['iddoctype'] == c.ugc_doctypes['image']:
-        <%include file="/packages/ugc_image.html"/>
+        <%include file="/ugc_image.html"/>
     % elif c.ugc_doc['iddoctype'] == c.ugc_doctypes['generic_file']:
-        <%include file="/packages/ugc_generic_file.html"/>
+        <%include file="/ugc_generic_file.html"/>
     % elif c.ugc_doc['iddoctype'] == c.ugc_doctypes['youtube_video']:
-        <%include file="/packages/ugc_youtube_video.html"/>
+        <%include file="/ugc_youtube_video.html"/>
     % endif
 </div>

@@ -1,7 +1,22 @@
 % if c.search_pkgs:
     % if c.total_search_results:
         <div class="packages-results-info">
-            ${_("Results found")}: ${c.total_search_results} (zarro ${_("seconds")})
+            <% 
+                zecondz = "zarro"
+                if c.packages_search_time:
+                    zecondz = c.packages_search_time
+            %>
+            ${_("Results found")}: ${c.total_search_results} (${zecondz} ${_("seconds")})
+        </div>
+    % elif c.show_detailed_view:
+        <%include file="/search_time_widget.html"/>
+        <div class="packages-results-info packages-results-latest-info">
+            ${_("package")}
+        </div>
+    % elif c.search_showing_latest:
+        <%include file="/search_time_widget.html"/>
+        <div class="packages-results-info packages-results-latest-info">
+            ${_("latest")}
         </div>
     % endif
     % if c.did_you_mean:
@@ -19,13 +34,18 @@
             started_from = c.from_pkg
             chunks = total / shown
             max_results = c.max_results
+            filter_opts = ""
+            if c.search_filter_str:
+                filter_opts += "&filter=" + c.search_filter_str
+            if c.search_filter_data:
+                filter_opts += "&filter_data=" + c.search_filter_data
         %>
         <div id="packages-results-more-hot">
             <div id="packages-results-more-from-counter" style="display: none">${started_from}</div>
             <div id="packages-results-more-from-counter-step" style="display: none">${max_results}</div>
             <div id="packages-results-more-inside"></div>
             <div id="packages-result-more-link">
-                <input type="button" id="packages-result-more-link-button" onclick="this.blur();packages_search_more('${c.total_search_results}', '${c.base_search_url}?q=${c.quick_search_string | h,trim}&more=1', 'packages-results-more-inside', 'packages-results-more-from-counter', 'packages-results-more-from-counter-step', 'packages-result-more-link')" value="${_("more results")}"/>
+                <input type="button" id="packages-result-more-link-button" onclick="this.blur();packages_search_more('${c.total_search_results}', '${c.base_search_url}?q=${c.quick_search_string | h,trim}&more=1${filter_opts}', 'packages-results-more-inside', 'packages-results-more-from-counter', 'packages-results-more-from-counter-step', 'packages-result-more-link')" value="${_("more results")}"/>
             </div>
         </div>
     % endif

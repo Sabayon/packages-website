@@ -1,17 +1,14 @@
-% if c.package_show_what.get('data', {}).get('provided_libs'):
+% if c.package_show_what.get('data', {}).get('needed_libs'):
     <div class="package-widget-show-revdeps">
         <div class="package-widget-show-deps-generic">
             <div class="package-widget-show-deps-title">
-                ${_("Provided libraries")}
+                ${_("Needed libraries")}
             </div>
-            % for soname, path, elfclass in c.package_show_what['data']['provided_libs']:
+            % for soname in c.package_show_what['data']['needed_libs']:
                 <div class="package-widget-show-deps-item">
                     <a href="${c.base_search_url}?q=${c.search_prefixes['library'] | u}${soname | u}&a=${c.package_show_what['data']['arch'] | u}&b=${c.package_show_what['data']['branch'] | u}" rel="nofollow">
                         ${soname | h,trim}
                     </a>
-                    <div class="package-widget-show-provided-description">
-                         ${path | h,trim}, elfclass: ${elfclass | h,trim} 
-                    </div>
                 </div>
             % endfor
         </div>
@@ -19,7 +16,7 @@
 % else:
         <div class="package-widget-show-deps-generic package-widget-show-deps-no">
             <div class="package-widget-show-deps-title">
-                ${_("No libraries provided by package")}
+                ${_("No libraries needed by package")}
             </div>
         </div>
 % endif

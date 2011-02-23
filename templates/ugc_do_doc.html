@@ -1,0 +1,14 @@
+<div id="ugc-do-doc-new"></div>
+<hr class="packages-separator ugc-do-doc-separator"/>
+<div class="ugc-do-doc" id="ugc-do-doc">
+    <%
+        c.ugc_doctype = c.ugc_doctypes['comments']
+        c.pkgkey = c.pkg_data['category']+'/'+c.pkg_data['name']
+        c.atom = c.pkg_data['atom']
+        c.repoid = c.pkg_data['repository_id']
+        c.product = c.pkg_data['product']
+        c.arch = c.pkg_data['arch']
+    %>
+    <%include file="/do_ugc_document.html"/>
+    <hr/>
+</div>

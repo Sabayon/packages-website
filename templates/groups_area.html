@@ -1,0 +1,85 @@
+% if c.groups_data:
+    <%include file="/search_time_widget.html"/>
+    <div class="packages-results-info packages-results-latest-info">
+        ${_("groups")}
+    </div>
+    <div>
+        <%
+            max_cols = 2
+            count = 0
+            do_close = False
+        %>
+        <table class="group-widget-view">
+        % for gid in sorted(c.groups_data.keys()): 
+            % if count == 0:
+                <tr>
+                <% do_close = True %>
+            % endif
+            <td class="group-widget-view-col">
+                <div class="package-widget group-widget">
+                    <% item = c.groups_data[gid] %>
+                    <div class="package-widget-top">
+                        <%
+                            icon_url = c.group_icon_url_64 + "/" + item['icon']
+                        %>
+                        <div class="package-widget-title-area group-widget-title-area">
+                            <div class="package-widget-first-area group-widget-first-area">
+                                <div class="package-widget-icon-area">
+                                    <img class="package-widget-icon" src="${icon_url}" alt="package icon"/>
+                                </div>
+                                <div class="package-widget-text-area">
+                                    <div class="package-widget-stats-area">
+                                        
+                                    </div>
+                                    <div class="package-widget-meta-atom group-widget-meta-atom">
+                                        <a href="${c.base_group_url}/${gid}">${item['name'] | h,trim}</a>
+                                    </div>
+                                    <div class="package-widget-meta-description group-widget-meta-description">
+                                        ${item['description'] | h,trim}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-widget-base-meta-area">
+
+                            </div>
+                        </div>
+                        <div class="package-widget-meta-info">
+                            <div class="package-widget-meta-recent-change">
+                                <span class="package-widget-meta-recent-change-title">
+                                    ${_("Categories")}:
+                                </span>
+                                <span class="package-widget-meta-recent-change-data">
+                                <%
+                                    cat_str = ""
+                                    for cat in sorted(item['categories']):
+                                        cat_str += ", " + "<a href=\"" + c.base_search_url + "?q=" + cat + "&filter=category_startswith&filter_data=" + cat + "\">" + cat + "</a>"
+                                    if cat_str:
+                                        cat_str = cat_str[2:]
+                                %>
+                                ${cat_str}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <% count += 1 %>
+            % if count == max_cols:
+                <% count = 0 %>
+                % if do_close:
+                    </tr>
+                    <% do_close = False %>
+                % endif
+            % endif
+        % endfor
+        % if do_close:
+            </tr>
+            <% do_close = False %>
+        % endif
+        </table>
+    </div>
+% else:
+    <div class="nothing-to-show">
+        Sorry, aliens kidnapped the President.
+    </div>
+% endif

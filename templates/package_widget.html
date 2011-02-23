@@ -78,7 +78,7 @@
                                 %>
                                 <dl class="package-widget-meta-list-left-item package-widget-meta-list-left-item-${dd_css_class} package-widget-meta-list-left-${key}">
                                     <dt>
-                                        ${obj['name']}
+                                        <!-- <img src="${c.meta_list_url}/${obj['icon'] | h}" alt="${obj['name'] | h}"/> --> ${obj['name'] | h}
                                     </dt>
                                     <dd>
                                         % if obj['split']:
@@ -110,38 +110,40 @@
             % endif
             <%
                 max_cols = 5
+                if c.show_detailed_view:
+                    max_cols = 4
                 count = 0
             %>
-            <div class="package-widget-meta-list">
-                <% do_close = False %>
-                % for item in c.pkg_data['meta_items']:
-                    % if c.show_detailed_view and item['id'] in ("details",):
-                        <% continue %>
-                    % endif
-                    % if count == 0:
-                        <div class="package-widget-meta-list-row">
-                        <% do_close = True %>
-                    % endif
-                    <span class="package-widget-meta-list-item">
-                        % if item['icon']:
-                            <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
-                        % endif
-                        <a href="${item['url']}" title="${item['alt']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
-                    </span>
-                    <% count += 1 %>
-                    % if count == max_cols:
-                        <% count = 0 %>
-                        % if do_close:
-                            </div>
-                            <% do_close = False %>
-                        % endif
-                    % endif
-                % endfor
-                % if do_close:
-                    </div>
-                    <% do_close = False %>
+            <% do_close = False %>
+            <table class="package-widget-meta-list package-widget-meta-list-options">
+            % for item in c.pkg_data['meta_items']:
+                % if c.show_detailed_view and item['id'] in ("details",):
+                    <% continue %>
                 % endif
-            </div>
+                % if count == 0:
+                    <tr class="package-widget-meta-list-row">
+                    <% do_close = True %>
+                % endif
+                <td class="package-widget-meta-list-item">
+                    % if item['icon']:
+                        <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
+                    % endif
+                    <a href="${item['url']}" title="${item['alt']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
+                </td>
+                <% count += 1 %>
+                % if count == max_cols:
+                    <% count = 0 %>
+                    % if do_close:
+                        </tr>
+                        <% do_close = False %>
+                    % endif
+                % endif
+            % endfor
+            % if do_close:
+                </tr>
+                <% do_close = False %>
+            % endif
+            </table>
             % if c.package_show_what:
                 <hr class="packages-separator"/>
                 <div class="package-widget-show-what">
@@ -158,12 +160,16 @@
                         <%include file="/package_show_mime.html"/>
                     % elif what == "provided_libs":
                         <%include file="/package_show_provided_libs.html"/>
+                    % elif what == "needed_libs":
+                        <%include file="/package_show_needed_libs.html"/>
                     % elif what == "content":
                         <%include file="/package_show_content.html"/>
                     % elif what == "download":
                         <%include file="/package_show_download.html"/>
                     % elif what == "sources":
                         <%include file="/package_show_sources.html"/>
+                    % elif what == "ugc":
+                        <%include file="/package_show_ugc.html"/>
                     % endif
                 </div>
             % endif

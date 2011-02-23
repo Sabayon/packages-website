@@ -10,8 +10,8 @@ from entropy.const import etpConst
 from entropy.exceptions import SystemDatabaseError
 from entropy.db.exceptions import ProgrammingError, OperationalError, \
     DatabaseError
-import entropy.dep
-import entropy.tools
+import entropy.dep as entropy_dep
+import entropy.tools as entropy_tools
 
 class ApiController(BaseController, WebsiteController, ApibaseController):
 
@@ -74,7 +74,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             ugc = self._ugc()
             try:
                 key_sorter = lambda x: ugc.get_ugc_vote(
-                    entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
+                    entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter)
             finally:
                 ugc.disconnect()
@@ -83,7 +83,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             ugc = self._ugc()
             try:
                 key_sorter = lambda x: ugc.get_ugc_downloads(
-                    entropy.dep.dep_getkey(x[5].retrieveAtom(x[0])))
+                    entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
             finally:
                 ugc.disconnect()
@@ -170,16 +170,18 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
+        entropy = self._entropy()
         dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
             if dbconn is None:
                 return self._api_error(renderer, 503, "repository not available")
-            pkg_ids = dbconn.searchPackages(search_term)
+            pkg_ids = dbconn.searchPackages(search_term, just_id = True)
             pkgs_data = [
                 (pkg_id, repository_id, arch, branch, product, dbconn) for \
                     pkg_id in pkg_ids]
+
             ordered_pkgs = self._api_order_by(pkgs_data, order_by)
             # drop dbconn
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
@@ -369,7 +371,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         atom, name, version, tag, desc, cat, chost, cflags, cxxflags, \
             homepage, license, branch, download, digest, slot, api, \
             date, size, rev = base_data
-        pkg_key = entropy.dep.dep_getkey(atom)
+        pkg_key = entropy_dep.dep_getkey(atom)
 
         docs_number = len(ugc.get_ugc_metadata_doctypes(pkg_key,
             [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]))
@@ -408,9 +410,9 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         if size is None:
             size = "0b"
         else:
-            size = entropy.tools.bytes_into_human(size)
+            size = entropy_tools.bytes_into_human(size)
         on_disk_size = entropy_repository.retrieveOnDiskSize(package_id)
-        pkg_key = entropy.dep.dep_getkey(atom)
+        pkg_key = entropy_dep.dep_getkey(atom)
         t_time = float(date)
 
         pkg_data = {
@@ -427,9 +429,9 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             'cxxflags': cxxflags,
             'license': license.split(),
             'tag': tag,
-            'ondisksize': entropy.tools.bytes_into_human(on_disk_size),
+            'ondisksize': entropy_tools.bytes_into_human(on_disk_size),
             'use': sorted(entropy_repository.retrieveUseflags(package_id)),
-            'date': entropy.tools.convert_unix_time_to_human_time(t_time),
+            'date': entropy_tools.convert_unix_time_to_human_time(t_time),
             'time': t_time,
             'repository_id': repository_id,
             'arch': arch,
@@ -439,7 +441,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
         }
         for mydoc in pkg_data['docs']:
-            self._expand_ugc_doc_info(ugc, mydoc)
+            self._expand_ugc_doc_metadata(ugc, mydoc)
 
         dependencies = entropy_repository.retrieveDependencies(package_id,
             extended = True)

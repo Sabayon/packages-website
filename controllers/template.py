@@ -28,6 +28,5 @@ class TemplateController(BaseController):
         By default this controller aborts the request with a 404 (Not
         Found)
         """
-        #model.config.setup_all(model, c, session, request)
         #return render_mako('/home.html')
         abort(404)

@@ -7,535 +7,120 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entropy web site translation version 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-13 23:57+0100\n"
+"POT-Creation-Date: 2011-02-21 23:57+0100\n"
 "PO-Revision-Date: 2009-09-15 21:21-0500\n"
 "Last-Translator: Benjamin\n"
 "Language-Team: Benjamin Guay\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: CANADA\n"
 
-#: ../controllers/community.py:12
-msgid "ICQ UIN"
-msgstr ""
-
-#: ../controllers/community.py:13
-msgid "Very much '96..."
-msgstr ""
-
-#: ../controllers/community.py:19
-msgid "Yahoo IM"
-msgstr ""
-
-#: ../controllers/community.py:20
-msgid "Yaho0o0o0o0 !"
-msgstr ""
-
-#: ../controllers/community.py:26
-#, fuzzy
-msgid "MSN Messenger"
-msgstr "Message"
-
-#: ../controllers/community.py:27
-msgid "Microsoft see, we're friend"
-msgstr ""
-
-#: ../controllers/community.py:33
-msgid "Jabber ID"
-msgstr ""
-
-#: ../controllers/community.py:34
-msgid "The Jabber.org Open Source Protocol"
-msgstr ""
-
-#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:215
-#: ../templates/community/users/public_profile.html:156
-msgid "Website"
-msgstr "Site web"
-
-#: ../controllers/community.py:41
-msgid "Do you have a website?"
-msgstr ""
-
-#: ../controllers/community.py:47
-#: ../templates/community/users/public_profile.html:82
-msgid "Location"
-msgstr "Emplacement"
-
-#: ../controllers/community.py:48
-msgid "Where do you live?"
-msgstr ""
-
-#: ../controllers/community.py:54
-#: ../templates/community/users/public_profile.html:115
-msgid "Interests"
-msgstr "Intérêts"
-
-#: ../controllers/community.py:55
-msgid "What do you like most?"
-msgstr ""
-
-#: ../controllers/community.py:61
-#: ../templates/community/users/public_profile.html:104
-msgid "Occupation"
-msgstr "Occupation"
-
-#: ../controllers/community.py:62
-msgid "What's your job?"
-msgstr ""
-
-#: ../controllers/community.py:68
-msgid "Signature"
-msgstr ""
-
-#: ../controllers/community.py:69
-#, fuzzy
-msgid "Your Community signature"
-msgstr "Note de l'utilisateur de la communauté"
-
-#: ../controllers/community.py:75
-msgid "E-mail"
-msgstr "Courriel"
-
-#: ../controllers/community.py:76
-#, fuzzy
-msgid "Your current e-mail"
-msgstr "Votre courriel"
-
-#: ../controllers/community.py:82
-msgid "Birthday"
-msgstr ""
-
-#: ../controllers/community.py:83
-msgid "When is your birthday? Hey, wanna get tha present?! DD-MM-YYYY"
-msgstr ""
-
-#: ../controllers/community.py:89
-msgid "Master User Group"
-msgstr ""
-
-#: ../controllers/community.py:90
-msgid "Your default User Group"
-msgstr ""
-
-#: ../controllers/community.py:97
-#, fuzzy
-msgid "User Groups"
-msgstr "Groupes"
-
-#: ../controllers/community.py:98
-msgid "You are also in these User Groups"
-msgstr ""
-
-#: ../controllers/community.py:130
-#, fuzzy
-msgid "Sabayon Linux Community Area"
-msgstr "Forum Sabayon Linux"
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "the fabulous"
-msgstr ""
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "Maximus V"
-msgstr ""
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "King Sun XIV"
-msgstr ""
-
-#: ../controllers/community.py:164 ../controllers/community.py:332
-msgid "the one"
-msgstr ""
-
-#: ../controllers/community.py:164 ../controllers/community.py:332
-#, fuzzy
-msgid "you name it"
-msgstr "Allez le chercher"
-
-#: ../controllers/community.py:198 ../templates/loginbox_inner.html:52
-msgid "My User Generated Content"
-msgstr "Mon contenu généré par l'utilisateur"
-
-#: ../controllers/community.py:225 ../templates/loginbox_inner.html:55
-msgid "My Statistics"
-msgstr "Mes statistiques"
-
-#: ../controllers/community.py:259
-#, fuzzy
-msgid "My Sabayon Dashboard"
-msgstr "Mon tableau de bord"
-
-#: ../controllers/community.py:275 ../controllers/community.py:281
-#: ../controllers/community.py:292 ../controllers/community.py:295
-#: ../controllers/community.py:303 ../controllers/community.py:309
-#: ../controllers/community.py:317 ../controllers/login.py:207
-#: ../controllers/login.py:210 ../controllers/login.py:215
-#: ../controllers/login.py:219 ../controllers/login.py:224
-#: ../controllers/login.py:227 ../controllers/login.py:229
-#: ../controllers/login.py:231 ../controllers/login.py:235
-#: ../controllers/login.py:238 ../controllers/login.py:283
-#: ../controllers/login.py:287 ../controllers/login.py:289
-#: ../controllers/login.py:294 ../controllers/login.py:299
-#: ../controllers/login.py:301 ../controllers/login.py:303
-#: ../controllers/login.py:305 ../controllers/login.py:308
-#: ../controllers/login.py:310 ../controllers/login.py:318
-#: ../controllers/login.py:324 ../controllers/packages.py:730
-#: ../controllers/packages.py:737 ../controllers/packages.py:743
-#: ../controllers/packages.py:749 ../controllers/packages.py:866
-#: ../controllers/packages.py:871 ../controllers/packages.py:878
-#: ../controllers/packages.py:882 ../controllers/packages.py:891
-#: ../controllers/packages.py:897 ../controllers/packages.py:899
-#: ../controllers/packages.py:911 ../controllers/packages.py:914
-#: ../controllers/packages.py:919 ../controllers/packages.py:926
-#: ../controllers/packages.py:931 ../controllers/packages.py:933
-#: ../controllers/packages.py:938 ../controllers/packages.py:943
-#: ../controllers/packages.py:953 ../controllers/packages.py:964
-#: ../controllers/packages.py:971 ../controllers/packages.py:984
-#: ../controllers/packages.py:994 ../controllers/packages.py:999
+#: ../controllers/packages.py:921 ../controllers/packages.py:926
+#: ../controllers/packages.py:933 ../controllers/packages.py:937
+#: ../controllers/packages.py:946 ../controllers/packages.py:952
+#: ../controllers/packages.py:954 ../controllers/packages.py:965
+#: ../controllers/packages.py:968 ../controllers/packages.py:973
+#: ../controllers/packages.py:980 ../controllers/packages.py:985
+#: ../controllers/packages.py:987 ../controllers/packages.py:992
+#: ../controllers/packages.py:997 ../controllers/packages.py:1007
+#: ../controllers/packages.py:1018 ../controllers/packages.py:1025
+#: ../controllers/packages.py:1038 ../controllers/packages.py:1048
+#: ../controllers/packages.py:1053
 msgid "Error"
 msgstr "Erreur"
 
-#: ../controllers/community.py:275
-msgid "invalid pages_id"
-msgstr "pages_id invalide"
-
-#: ../controllers/community.py:281
-msgid "permission denied"
-msgstr "accès refusé"
-
-#: ../controllers/community.py:292 ../controllers/community.py:309
-#: ../controllers/login.py:207 ../controllers/login.py:283
-msgid "invalid HTTP method"
-msgstr "méthode HTTP invalide"
-
-#: ../controllers/community.py:295 ../controllers/login.py:210
-#: ../controllers/login.py:287 ../controllers/packages.py:866
+#: ../controllers/packages.py:921
 msgid "not logged in"
 msgstr "pas connecté"
 
-#: ../controllers/community.py:304 ../controllers/login.py:255
-#: ../controllers/login.py:341
-msgid "Success"
-msgstr "Succès"
-
-#: ../controllers/community.py:304
-msgid "profile updated successfully !"
-msgstr "profil mis à jour avec succès !"
-
-#: ../controllers/community.py:317
-msgid "wrong search request"
-msgstr "mauvaise requête de recherche"
-
-#: ../controllers/login.py:26
-msgid "Hello mate, what about logging in? Have a look below"
-msgstr ""
-
-#: ../controllers/login.py:50
-#, fuzzy
-msgid "Sabayon Linux Community activation"
-msgstr "Chat de support Sabayon Linux"
-
-#: ../controllers/login.py:68
-#, fuzzy
-msgid "Sabayon Linux Community registration"
-msgstr "Wolfden, officier en chef de la communauté Sabayon Linux"
-
-#: ../controllers/login.py:97
-msgid "Invalid Username"
-msgstr "Nom d'utilisateur invalide"
-
-#: ../controllers/login.py:102
-msgid "Invalid Email, empty fields or mismatch"
-msgstr "Courriel invalide, champs vides ou différents"
-
-#: ../controllers/login.py:107
-msgid "Invalid Password, empty fields or mismatch or wrong length"
-msgstr "Mot de passe invalide, champs vide, différents ou de mauvaise longueur"
-
-#: ../controllers/login.py:114
-msgid "Invalid Captcha Answer"
-msgstr "Réponse invalide au captcha"
-
-#: ../controllers/login.py:123
-msgid "Invalid"
-msgstr "Invalide"
-
-#: ../controllers/login.py:215
-msgid "wrong POST"
-msgstr "mauvais POST"
-
-#: ../controllers/login.py:219
-msgid "invalid old e-mail"
-msgstr "ancien courriel invalide"
-
-#: ../controllers/login.py:224
-msgid "you changed nothing"
-msgstr "vous n'avez rien changé"
-
-#: ../controllers/login.py:227
-msgid "empty fields"
-msgstr "champs vides"
-
-#: ../controllers/login.py:229
-msgid "e-mails do not match"
-msgstr "les courriels ne correspondent pas"
-
-#: ../controllers/login.py:231
-msgid "invalid parameters"
-msgstr "paramètres invalides"
-
-#: ../controllers/login.py:235
-msgid "invalid e-mail (1)"
-msgstr "courriel invalide (1)"
-
-#: ../controllers/login.py:238
-msgid "invalid e-mail (2)"
-msgstr "courriel invalide (2)"
-
-#: ../controllers/login.py:255 ../controllers/login.py:341
-msgid "you must activate your change. You have mail"
-msgstr "vous devez activer votre changement. Vous avez du courrier"
-
-#: ../controllers/login.py:277
-msgid "Sabayon Linux Community E-mail Update Activation"
-msgstr ""
-
-#: ../controllers/login.py:289
-msgid "not logged in (username)"
-msgstr "pas connecté (nom d'utilisateur)"
-
-#: ../controllers/login.py:294
-msgid "where is the current password?"
-msgstr "où est le mot de passe courant ?"
-
-#: ../controllers/login.py:299
-msgid "missing fields"
-msgstr "champs manquants"
-
-#: ../controllers/login.py:301
-msgid "new password fields do not match"
-msgstr "la longueur du nouveau mot de passe ne correspond pas"
-
-#: ../controllers/login.py:303
-msgid "wtf are you trying to do?"
-msgstr "qu'essayez-vous de faire ?"
-
-#: ../controllers/login.py:305
-msgid "old and new password match"
-msgstr "l'ancien et le nouveau mot de passe concordent"
-
-#: ../controllers/login.py:308
-msgid "password too short"
-msgstr "mot de passe trop court"
-
-#: ../controllers/login.py:310
-msgid "password too long"
-msgstr "mot de passe trop long"
-
-#: ../controllers/login.py:318
-msgid "invalid current password"
-msgstr "mot de passe courant invalide"
-
-#: ../controllers/login.py:324
-msgid "you do not have a valid e-mail"
-msgstr "vous n'avez pas de courriel valide"
-
-#: ../controllers/login.py:363
-msgid "Sabayon Linux Community Password Update Activation"
-msgstr ""
-
-#: ../controllers/packages.py:38
-msgid "Packages"
-msgstr "Paquets"
-
-#: ../controllers/packages.py:39
-msgid "Packages match"
-msgstr "Les paquets concordent"
-
-#: ../controllers/packages.py:40
-msgid "Package descriptions"
-msgstr "Descriptions des paquets"
-
-#: ../controllers/packages.py:41 ../templates/community/my/stats.html:102
-#: ../templates/community/users/public_profile.html:236
-msgid "Files"
-msgstr "Fichiers"
-
-#: ../controllers/packages.py:42
-msgid "Libraries"
-msgstr "Librairies"
-
-#: ../controllers/packages.py:45 ../controllers/packages.py:513
-msgid "Alphabet"
-msgstr "Alphabet"
-
-#: ../controllers/packages.py:46 ../controllers/packages.py:515
-msgid "Vote"
-msgstr "Vote"
-
-#: ../controllers/packages.py:47 ../templates/loginbox_inner.html:29
-#: ../templates/loginbox_inner.html:83
-#: ../templates/packages/ugc_shortinfo.html:11
-msgid "Downloads"
-msgstr "Téléchargements"
-
-#: ../controllers/packages.py:313 ../controllers/packages.py:521
-msgid "vote"
-msgstr "voter"
-
-#: ../controllers/packages.py:314 ../controllers/packages.py:522
-msgid "downloads"
-msgstr "téléchargements"
-
-#: ../controllers/packages.py:502
-msgid "Package name"
-msgstr "Nom du paquet"
-
-#: ../controllers/packages.py:503
-msgid "Content (text)"
-msgstr "Contenu (texte)"
-
-#: ../controllers/packages.py:504
-msgid "Keyword (tag)"
-msgstr "Mot-clé (étiquette)"
-
-#: ../controllers/packages.py:505 ../controllers/packages.py:514
-#: ../templates/registration_form.html:7
-#: ../templates/community/my/stats.html:22
-#: ../templates/community/users/public_profile.html:36
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
-#: ../controllers/packages.py:506
-msgid "Document id."
-msgstr "Identifiant du document"
-
-#: ../controllers/packages.py:509
-msgid "No restrictions"
-msgstr "Pas de restrictions"
-
-#: ../controllers/packages.py:516
-msgid "Number of downloads"
-msgstr "Nombre de téléchargements"
-
-#: ../controllers/packages.py:519
-msgid "key"
-msgstr "clé"
-
-#: ../controllers/packages.py:520
-msgid "username"
-msgstr "nom d'utilisateur"
-
-#: ../controllers/packages.py:615 ../controllers/packages.py:719
-#, fuzzy
-msgid "Sabayon Linux Packages Repository"
-msgstr "Forum Sabayon Linux"
-
-#: ../controllers/packages.py:730
-msgid "invalid search string"
-msgstr "chaîne de recherche invalide"
-
-#: ../controllers/packages.py:737
-msgid "invalid search type"
-msgstr "type de recherche invalide"
-
-#: ../controllers/packages.py:743
-msgid "invalid search restriction type"
-msgstr "type de restriction de recherche invalide"
-
-#: ../controllers/packages.py:749
-msgid "invalid 'order by'"
-msgstr "'order by' invalide"
-
-#: ../controllers/packages.py:871
+#: ../controllers/packages.py:926
 msgid "invalid document"
 msgstr "document invalide"
 
-#: ../controllers/packages.py:878
+#: ../controllers/packages.py:933
 msgid "invalid document specified"
 msgstr "document spécifié invalide"
 
-#: ../controllers/packages.py:882
+#: ../controllers/packages.py:937
 msgid "permission denied, you suck!"
 msgstr "accès refusé, désolé !"
 
-#: ../controllers/packages.py:891
+#: ../controllers/packages.py:946
 msgid "WTF? invalid document type!"
 msgstr "Quoi ? Type de document invalide !"
 
-#: ../controllers/packages.py:897
+#: ../controllers/packages.py:952
 msgid "you know what? I cannot handle this document"
 msgstr "Vous savez quoi ? Je ne peux pas prendre en charge ce document"
 
-#: ../controllers/packages.py:901
+#: ../controllers/packages.py:956
 msgid "Document removed successfully, sigh :'-("
 msgstr "Document supprimé avec succès ouf :'-("
 
-#: ../controllers/packages.py:911 ../controllers/packages.py:914
+#: ../controllers/packages.py:965 ../controllers/packages.py:968
 msgid "wrong username"
 msgstr "mauvais nom d'utilisateur"
 
-#: ../controllers/packages.py:919
+#: ../controllers/packages.py:973
 msgid "no document specified"
 msgstr "pas de document spécifié"
 
-#: ../controllers/packages.py:926
+#: ../controllers/packages.py:980
 msgid "invalid document type"
 msgstr "type de document invalide"
 
-#: ../controllers/packages.py:931
+#: ../controllers/packages.py:985
 msgid "invalid package key"
 msgstr "Clé de paquet invalide"
 
-#: ../controllers/packages.py:933
+#: ../controllers/packages.py:987
 msgid "invalid package string"
 msgstr "chaîne de paquet invalide"
 
-#: ../controllers/packages.py:938
+#: ../controllers/packages.py:992
 msgid "title too short"
 msgstr "titre trop court"
 
-#: ../controllers/packages.py:943
+#: ../controllers/packages.py:997
 msgid "description too short"
 msgstr "description trop courte"
 
-#: ../controllers/packages.py:953
+#: ../controllers/packages.py:1007
 msgid "comment text too short"
 msgstr "texte du commentaire trop court"
 
-#: ../controllers/packages.py:964
+#: ../controllers/packages.py:1018
 msgid "no file? no party!"
 msgstr "pas de fichier ! pas de party !"
 
-#: ../controllers/packages.py:984
+#: ../controllers/packages.py:1038
 msgid "file too big"
 msgstr "fichier trop volumineux"
 
-#: ../controllers/packages.py:999
+#: ../controllers/packages.py:1053
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr "document ajouté mais n'a pu déterminer 'iddoc' correctement"
 
-#: ../controllers/packages.py:1131
+#: ../controllers/packages.py:1073
 msgid "user not authenticated"
 msgstr "utilisateur non authentifié"
 
-#: ../controllers/packages.py:1139
+#: ../controllers/packages.py:1081
 msgid "invalid vote"
 msgstr "vote invalide"
 
-#: ../controllers/packages.py:1142
+#: ../controllers/packages.py:1084
 msgid "invalid package"
 msgstr "paquet invalide"
 
-#: ../controllers/packages.py:1148
+#: ../controllers/packages.py:1090
 msgid "vote not in range"
 msgstr "vote hors de l'intervalle"
 
-#: ../controllers/packages.py:1153
+#: ../controllers/packages.py:1095
 msgid "you already voted this"
 msgstr "vous avez déjà voté ça"
 
@@ -548,1059 +133,1163 @@ msgstr "N/A"
 msgid "Public Profile"
 msgstr "Profil"
 
-#: ../templates/activation_successful.html:17
-#: ../templates/email_activation_successful.html:17
-#: ../templates/password_activation_successful.html:17
-msgid "Activation successful"
-msgstr "Activation réussie"
-
-#: ../templates/activation_successful.html:17
-msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
-msgstr ""
-"Wow, merci beaucoup ! Maintenant vous pouvez réellement commencer à vous "
-"amuser dans notre communauté"
-
-#: ../templates/activation_successful.html:19
-#: ../templates/email_activation_successful.html:19
-#: ../templates/password_activation_successful.html:19
-msgid "Sorry"
-msgstr "Désolé"
-
-#: ../templates/activation_successful.html:19
-#: ../templates/email_activation_successful.html:19
-#: ../templates/password_activation_successful.html:19
-msgid "There is no activation information available"
-msgstr "Il n'y a pas d'informations d'activation disponible"
-
-#: ../templates/body_right.html:8
-msgid "Sponsors"
-msgstr "Commanditaires"
-
-#: ../templates/body_right.html:11
-#, fuzzy
-msgid ""
-"Officially Sponsored by the <b>NLnet Foundation</b>, that financially "
-"supported the Entropy Project"
-msgstr ""
-"Officiellement commandité par la <b>fondation NLNet</b>, supportant "
-"financièrement notre projet Entropy"
-
-#: ../templates/body_right.html:11
-msgid "See NLnet development plan status"
-msgstr "Voir l'état du plan de développement de NLnet"
-
-#: ../templates/body_right.html:15 ../templates/body_right.html:19
-#: ../templates/body_right.html:23
-msgid "Officially Sponsored by"
-msgstr "Officiellement commandité par"
-
-#: ../templates/body_right.html:15
-msgid "University of Brescia"
-msgstr "Université de Brescia"
-
-#: ../templates/body_right.html:15
-msgid ""
-"Housing our Entropy build server inside the Faculty Network Center at the "
-"Department of Electronics"
-msgstr ""
-"Hébergement de notre serveur de compilation d'Entropy dans la Centre de "
-"Faculté Réseau au département d'électronique"
-
-#: ../templates/body_right.html:19
-#, fuzzy
-msgid "University of Milano-Bicocca"
-msgstr "Université de Brescia"
-
-#: ../templates/body_right.html:19
-msgid "Housing our Entropy build servers and WWW inside DISCo"
-msgstr ""
-
-#: ../templates/body_right.html:23
-msgid "Proving the software technology we daily need"
-msgstr ""
-"Prouvant la technologie logiciel dont nous avons besoin à tous les jours"
-
-#: ../templates/body_right.html:28
-msgid "Survey"
-msgstr "Sondage"
-
-#: ../templates/body_right.html:40
-msgid "Cross Linux From Scratch"
-msgstr "Croisement de Linux From Scratch"
-
-#: ../templates/body_right.html:41
-msgid "Ibiblio.org Hosting"
-msgstr "Hébergement Ibiblio.org"
-
-#: ../templates/email_activation_successful.html:17
-msgid "Your E-mail is now active"
-msgstr "Votre courriel est maintenant activé"
-
-#: ../templates/footer.html:7
-msgid "Trademarks are property of their respective owners."
-msgstr "Les marques déposées sont la propriété de leurs auteurs respectifs."
-
-#: ../templates/head.html:7
-#, fuzzy
-msgid "Sabayon Linux Five Oh!"
-msgstr "Sabayon Linux Quatre Zéro !"
-
-#: ../templates/loginbox_inner.html:4
-msgid "Entropy Web Dashboard Login"
-msgstr "Connexion au tableau de bord Web Entropy"
-
-#: ../templates/loginbox_inner.html:11 ../templates/login.html:17
-msgid "New user?"
-msgstr "Nouvel utilisateur ?"
-
-#: ../templates/loginbox_inner.html:11
-msgid "What is all this ?"
-msgstr "Qu'est-ce que c'est que tout ça ?"
-
-#: ../templates/loginbox_inner.html:24 ../templates/login.html:22
-msgid "Login error"
-msgstr "Erreur de connexion"
-
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
-#: ../templates/community/my/stats.html:82
-#: ../templates/community/users/public_profile.html:216
-msgid "Comments"
-msgstr "Commentaires"
-
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
-msgid "Docs"
-msgstr "Documents"
-
-#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:83
-#: ../templates/community/my/stats.html:52
-#: ../templates/community/users/public_profile.html:188
-msgid "Votes"
-msgstr "Votes"
-
-#: ../templates/loginbox_inner.html:43
-#, c-format
-msgid "Hello <b>%s</b>, %s"
-msgstr ""
-
-#: ../templates/loginbox_inner.html:43
-msgid "Logout ?"
-msgstr ""
-
-#: ../templates/loginbox_inner.html:49
-msgid "My Entropy"
-msgstr "Mon Entropy"
-
-#: ../templates/loginbox_inner.html:58
-#, fuzzy
-msgid "Community Menu"
-msgstr "Accueil de la communauté"
-
-#: ../templates/loginbox_inner.html:71
-#: ../templates/community/my/stats.html:137
-#: ../templates/community/users/public_profile.html:271
-msgid "points"
-msgstr "points"
-
-#: ../templates/loginbox_inner.html:75
-msgid "My Comments"
-msgstr "Mes commentaires"
-
-#: ../templates/loginbox_inner.html:75
-msgid "My Docs"
-msgstr "Mes documents"
-
-#: ../templates/loginbox_inner.html:76
-msgid "My Votes"
-msgstr "Mes votes"
-
-#: ../templates/loginbox_inner.html:76
-msgid "My Avg"
-msgstr "Ma moyenne"
-
-#: ../templates/page_error.html:28
-msgid "Houston, we've got a problem!"
-msgstr "Houston, nous avons un problème !"
-
-#: ../templates/page_error.html:31
-#, fuzzy, c-format
-msgid ""
-"Probably the page you are looking for <b>does not exist</b> anymore. You can "
-"blame <u>aliens</u>. Well, we are really sorry. Why don't you get to our <a "
-"href=\"%s\">home page</a>?"
-msgstr ""
-"Il est probable que la page que vous recherchez <b>n'existe plus</b>. Vous "
-"pouvez blâmer les extra-terrestres. Bien, nous sommes vraiment désolés."
-
-#: ../templates/page_template.html:17
-msgid "text goes here"
-msgstr "le texte va ici"
-
-#: ../templates/password_activation_successful.html:17
-msgid "Your Password is now updated"
-msgstr "Votre mot de passe est maintenant à jour"
-
-#: ../templates/password_activation_successful.html:21
-msgid "confirmation code"
-msgstr "code de confirmation"
-
-#: ../templates/password_activation_successful.html:22
-msgid "validation id"
-msgstr "identifiant de validation"
-
-#: ../templates/password_activation_successful.html:23
-msgid "user id"
-msgstr "identifiant de l'utilisateur"
-
-#: ../templates/register.html:21
-msgid "(Sabayon leader)"
-msgstr "(Chef de Sabayon)"
-
-#: ../templates/register.html:26
-msgid ""
-"<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your own "
-"<b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and file "
-"upload service called <b>\"Pixdiff\"</b>, a <b>warm Community</b> that will "
-"always help you out, the ability to <b>vote</b> and <b>interact</b> with "
-"what we offer and with other people inside this space. We are just used to "
-"call all this with one name: <b>Sabayon</b>, <i>the \"2.0\" (two-point-oh) "
-"distribution</i>"
-msgstr ""
-"<b>Vous pourriez demander</b>. Qu'offrez-vous en retour ? <b>Nous répondons</"
-"b>, votre propre <b>blogue</b> sur ce portail, votre <b>\"pastebin\"</b> "
-"personnel et votre service d'envoi de fichier appelé <b>\"Pixdiff\"</b>, une "
-"communauté chaude qui vous aidera toujours, la possibilité de <b>voter</b> "
-"et d'<b>interagir</b> avec ce que nous offrons et avec les autres personnes "
-"à l'intérieur de cet espace : <b>Sabayon</b>, <i>la distribution "
-"\"2.0\" (deux-point-zéro)</i>"
-
-#: ../templates/register.html:29
-msgid ""
-"Please note that you will need to enter a valid e-mail address before your "
-"account is activated. You will receive an e-mail at the address you provide "
-"that contains an account activation link"
-msgstr ""
-"Veuillez prendre note que vous aurez besoin de saisir un courriel valide "
-"avant que votre compte soit activé. Vous recevrez un courriel à l'adresse "
-"spécifiée qui contient un hyperlien d'activation du compte"
-
-#: ../templates/registration_form.html:9
-msgid "Length must be between 3 and 20 characters"
-msgstr "La longueur doit se situer entre 3 et 20 caractères"
-
-#: ../templates/registration_form.html:17
-msgid "E-mail address"
-msgstr "Courriel"
-
-#: ../templates/registration_form.html:25
-msgid "Confirm e-mail address"
-msgstr "Confirmer votre courriel"
-
-#: ../templates/registration_form.html:33
-msgid "Password"
-msgstr "Mot de passe"
-
-#: ../templates/registration_form.html:34
-msgid "Must be between 6 and 30 characters"
-msgstr "Doit se situer entre 6 et 30 caractères"
-
-#: ../templates/registration_form.html:42
-msgid "Confirm password"
-msgstr "Confirmer le mot de passe"
-
-#: ../templates/registration_form.html:68
-msgid "Registration Agreement"
-msgstr "Accord d'enregistrement"
-
-#: ../templates/registration_form.html:73
-msgid "I agree with the terms above"
-msgstr "J'accepte les termes mentionnés ci-haut"
-
-#: ../templates/registration_successful.html:2
-msgid "Registration successful"
-msgstr "Enregistrement complété avec succès"
-
-#: ../templates/registration_successful.html:2
-msgid "Wow, thanks a lot!"
-msgstr "Wow, merci beaucoup !"
-
-#: ../templates/registration_successful.html:4
-msgid ""
-"You should have waited the activation e-mail but the one you provided has "
-"not been accepted for delivery"
-msgstr ""
-"Vous auriez dû attendre le courriel d'activation mais celui que vous avez "
-"fourni n'a pas été accepté pour la livraison"
-
-#: ../templates/registration_successful.html:5
-#, fuzzy
-msgid ""
-"Please contact <a href=\"mailto:mail.issues@sabayon.org\">our service</a> "
-"and ask for help"
-msgstr ""
-"Veuillez contacter <a href=\"mailto:mail.issues@sabayonlinux.org\">notre "
-"service</a> et demandez de l'aide"
-
-#: ../templates/registration_successful.html:7
-msgid ""
-"Now you need to wait and read the activation e-mail before being able to "
-"login"
-msgstr ""
-"Vous devez maintenant attendre et lire le courriel d'activation avant de "
-"pouvoir vous connecter"
-
-#: ../templates/registration_successful.html:10
-#, fuzzy, c-format
-msgid "<a href='%s'>Click here</a> to come back to the source page"
-msgstr ""
-"<a href=\"${c.login_redirect}\">Cliquer ici</a> pour retourne à la page "
-"source"
-
-#: ../templates/packages/advisories_desc.html:1
-msgid ""
-"Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
-"\">Gentoo Linux</a> based distribution which relies its packages versioning "
-"and patches from the Gentoo Portage tree and our add-on repository called "
-"\"overlay\". Thus, Gentoo Linux Security Advisories (GLSA) can be applied to "
-"the packages listed in our tree. Here below, you can see a list of the "
-"latest GLSAs published by the Gentoo Project"
-msgstr ""
-"Sabayon Linux est un distribution basée sur <a href=\"http://www.gentoo.org"
-"\" target=\"_blank\">Gentoo Linux</a> qui repose sur le versioning de "
-"paquets et les rustines de l'arbre Portage Gentoo et notre dépôt additionnel "
-"appelé \"overlay\". Donc, les avis de sécurité Gentoo Linux (GLSA) peuvent "
-"être appliqués aux paquets listés dans notre arbre. Vous trouverez ci-bas "
-"une liste des derniers avis de sécurité publiés par le projet Gentoo"
-
-#: ../templates/packages/advisories_desc.html:1
-msgid "full feed here"
-msgstr "flux complet ici"
-
-#: ../templates/packages/advisories_inner.html:3
-#: ../templates/packages/menu.html:2
-msgid "Security Advisories"
-msgstr "Avis de sécurité"
-
-#: ../templates/packages/advisories_inner.html:10
-msgid "You can get the complete list on the"
-msgstr "Vous pouvez obtenir la liste complète sur le"
-
-#: ../templates/packages/advisories_inner.html:10
-msgid "Gentoo Linux Security Advisories feed"
-msgstr "flux des avis de sécurité Gentoo Linux"
-
-#: ../templates/packages/categories_inner.html:3
-#: ../templates/packages/menu.html:2
-msgid "Categories"
-msgstr "Catégories"
-
-#: ../templates/packages/category.html:5
-#: ../templates/packages/extrainfo.html:81
-#: ../templates/packages/shortinfo.html:3
-msgid "Release"
-msgstr "Version"
-
-#: ../templates/packages/category.html:19
-msgid "No packages in this category"
-msgstr "Pas de paquet dans cette catégorie"
-
-#: ../templates/packages/content.html:7
-msgid "Destroy"
-msgstr "Détruire"
-
-#: ../templates/packages/do_document_page.html:7
+#: ../templates/do_ugc_document.html:7
 msgid "Add documents <b>gain scores</b> !"
 msgstr "Ajouter des documents <b>augmente le score</b> !"
 
-#: ../templates/packages/do_document_page.html:19
+#: ../templates/do_ugc_document.html:19
 msgid "Title"
 msgstr "Titre"
 
-#: ../templates/packages/do_document_page.html:21
+#: ../templates/do_ugc_document.html:21
 msgid "Length must be between 10 and 160"
 msgstr "La longueur doit se situer entre 10 et 160"
 
-#: ../templates/packages/do_document_page.html:35
+#: ../templates/do_ugc_document.html:35
 msgid "Description"
 msgstr "Description"
 
-#: ../templates/packages/do_document_page.html:37
+#: ../templates/do_ugc_document.html:37
 msgid "Being descriptive, what a pain in the *ss"
 msgstr "Être descriptif, que c'est pénible"
 
-#: ../templates/packages/do_document_page.html:47
-#: ../templates/packages/ugc_comment.html:6
-#: ../templates/packages/ugc_doc_desc_keywords.html:4
+#: ../templates/do_ugc_document.html:47 ../templates/ugc_comment.html:6
+#: ../templates/ugc_doc_desc_keywords.html:4
 msgid "Keywords"
 msgstr "Mots-clé"
 
-#: ../templates/packages/do_document_page.html:49
+#: ../templates/do_ugc_document.html:49
 msgid "Space separated, minimum length: 4 chars each"
 msgstr "Séparé par un espace, longueur minimale : 4 caractères chacun"
 
-#: ../templates/packages/do_document_page.html:58
+#: ../templates/do_ugc_document.html:58
 msgid "Document type"
 msgstr "Type de document"
 
-#: ../templates/packages/do_document_page.html:60
+#: ../templates/do_ugc_document.html:60
 msgid "Choose what kind of document you want to add"
 msgstr "Choisir quel sorte de document vous voulez ajouter"
 
-#: ../templates/packages/do_document_page.html:82
+#: ../templates/do_ugc_document.html:82
 msgid "Comment text"
 msgstr "Texte du commentaire"
 
-#: ../templates/packages/do_document_page.html:84
+#: ../templates/do_ugc_document.html:84
 msgid "Insert your comment on this field"
 msgstr "Insérer votre commentaire dans ce champ"
 
-#: ../templates/packages/do_document_page.html:99
+#: ../templates/do_ugc_document.html:99
 msgid "File chooser"
 msgstr "Sélectionneur de fichier"
 
-#: ../templates/packages/do_document_page.html:101
+#: ../templates/do_ugc_document.html:101
 msgid "Select the file you want to upload"
 msgstr "Sélectionner le fichier que vous voulez envoyer"
 
-#: ../templates/packages/do_document_page.html:120
+#: ../templates/do_ugc_document.html:120
 msgid "You need to be logged in to add documents"
 msgstr "Vous devez être connecté pour ajouter des documents"
 
-#: ../templates/packages/do_document_page.html:121
+#: ../templates/do_ugc_document.html:121
 msgid "Login?"
 msgstr "Vous connecter ?"
 
-#: ../templates/packages/do_document_page.html:121
+#: ../templates/do_ugc_document.html:121
 msgid "Register?"
 msgstr "Vous enregistrer ?"
 
-#: ../templates/packages/extrainfo.html:19
-#: ../templates/packages/searchparams_args.html:19
-#: ../templates/packages/shortinfo.html:3
+#: ../templates/head.html:7
 #, fuzzy
-msgid "Repository"
-msgstr "Dépôt Entropy"
+msgid "Sabayon Linux Packages"
+msgstr "Page de Metalinker Sabayon Linux"
 
-#: ../templates/packages/extrainfo.html:29
-msgid "Category"
-msgstr "Catégorie"
+#: ../templates/package_show_changelog.html:6
+msgid "No ChangeLog"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:39
-msgid "Name"
-msgstr "Nom"
+#: ../templates/package_show_content.html:5
+msgid "Files belonging to package"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:49
-msgid "Version"
-msgstr "Version"
+#: ../templates/package_show_content.html:15
+msgid "No files belonging to package"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:59
-msgid "Entropy revision"
-msgstr "Révision d'Entropy"
-
-#: ../templates/packages/extrainfo.html:70
-msgid "Package tag"
-msgstr "Étiquette du paquet"
-
-#: ../templates/packages/extrainfo.html:91
-msgid "Slot"
-msgstr "Fente"
-
-#: ../templates/packages/extrainfo.html:103
+#: ../templates/package_show_deps.html:7
 #, fuzzy
 msgid "Runtime dependencies"
 msgstr "Dépendances"
 
-#: ../templates/packages/extrainfo.html:123
+#: ../templates/package_show_deps.html:18
 #, fuzzy
 msgid "Build dependencies"
 msgstr "Dépendances"
 
-#: ../templates/packages/extrainfo.html:143
+#: ../templates/package_show_deps.html:29
 #, fuzzy
 msgid "Post dependencies"
 msgstr "Dépendances"
 
-#: ../templates/packages/extrainfo.html:163
+#: ../templates/package_show_deps.html:40
 #, fuzzy
 msgid "Manual dependencies"
 msgstr "Dépendances"
 
-#: ../templates/packages/extrainfo.html:183
-msgid "Conflicts"
-msgstr "Conflits"
+#: ../templates/package_show_deps.html:50
+#, fuzzy
+msgid "No dependencies"
+msgstr "Dépendances"
 
-#: ../templates/packages/extrainfo.html:200
-msgid "Required by"
-msgstr "Requis par"
+#: ../templates/package_show_download.html:5
+#, fuzzy
+msgid "Download mirrors"
+msgstr "Téléchargements"
 
-#: ../templates/packages/extrainfo.html:205
-msgid "view packages list"
-msgstr "voir la liste des paquets"
+#: ../templates/package_show_download.html:28
+msgid "No download mirrors available"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:218
-msgid "homepage"
-msgstr "page d'accueil"
+#: ../templates/package_show_mime.html:5
+#, fuzzy
+msgid "Mime types"
+msgstr "Type de document"
 
-#: ../templates/packages/extrainfo.html:227
+#: ../templates/package_show_mime.html:15
+msgid "No mime types handled by package"
+msgstr ""
+
+#: ../templates/package_show_provided_libs.html:5
+msgid "Provided libraries"
+msgstr ""
+
+#: ../templates/package_show_provided_libs.html:15
+msgid "No libraries provided by package"
+msgstr ""
+
+#: ../templates/package_show_revdeps.html:5
+#, fuzzy
+msgid "Reverse dependencies"
+msgstr "Dépendances"
+
+#: ../templates/package_show_revdeps.html:15
+#, fuzzy
+msgid "No reverse dependencies"
+msgstr "Dépendances"
+
+#: ../templates/package_show_security.html:5
+#, fuzzy
+msgid "Security advisories"
+msgstr "Avis de sécurité"
+
+#: ../templates/package_show_security.html:20
+#, fuzzy
+msgid "No security advisories available"
+msgstr "afficher les avis de sécurité"
+
+#: ../templates/package_show_sources.html:5
+#, fuzzy
+msgid "Sources"
+msgstr "source"
+
+#: ../templates/package_show_sources.html:22
+msgid "No sources belonging to package"
+msgstr ""
+
+#: ../templates/package_widget.html:24
+msgid "downloads"
+msgstr "téléchargements"
+
+#: ../templates/package_widget.html:37
+msgid "source"
+msgstr "source"
+
+#: ../templates/package_widget.html:39
+msgid "binary"
+msgstr ""
+
+#: ../templates/package_widget.html:46
+#, fuzzy
+msgid "revision"
+msgstr "Révision"
+
+#: ../templates/package_widget.html:53
+#, fuzzy
+msgid "date"
+msgstr "page mise à jour"
+
+#: ../templates/package_widget.html:61
+msgid "Recent Changes"
+msgstr ""
+
+#: ../templates/packages_area.html:4
+#, fuzzy
+msgid "Results found"
+msgstr "Introuvable"
+
+#: ../templates/packages_area.html:4
+msgid "seconds"
+msgstr ""
+
+#: ../templates/packages_area.html:9
+msgid "Found <b>nothing</b> while searching for"
+msgstr ""
+
+#: ../templates/packages_area.html:9
+msgid "you probably mispelled it"
+msgstr ""
+
+#: ../templates/packages_area.html:34
+msgid ""
+"Sorry, <b>I wasn't able to find anything relevant</b>... So long, so long, "
+"and thanks for all the fish!"
+msgstr ""
+
+#: ../templates/page_error.html:13
+msgid "Call the cops! <b>This page has been stolen!</b>"
+msgstr ""
+
+#: ../templates/search_widget.html:10
+#, fuzzy
+msgid "Special searches"
+msgstr "type de recherche invalide"
+
+#: ../templates/search_widget.html:13
+msgid "Category"
+msgstr "Catégorie"
+
+#: ../templates/search_widget.html:16
 msgid "License"
 msgstr "License"
 
-#: ../templates/packages/extrainfo.html:240
-msgid "CHOST"
-msgstr "CHOST"
-
-#: ../templates/packages/extrainfo.html:250
-msgid "CFLAGS"
-msgstr "CFLAGS"
-
-#: ../templates/packages/extrainfo.html:261
-msgid "USE flags"
+#: ../templates/search_widget.html:19
+#, fuzzy
+msgid "Useflag"
 msgstr "commutateurs USE"
 
-#: ../templates/packages/extrainfo.html:275
-msgid "Content"
-msgstr "Contenu"
+#: ../templates/search_widget.html:22
+#, fuzzy
+msgid "Package Sets"
+msgstr "Paquets"
 
-#: ../templates/packages/extrainfo.html:280
-msgid "View content"
-msgstr "Voir le contenu"
+#: ../templates/search_widget.html:25
+msgid "Files"
+msgstr "Fichiers"
 
-#: ../templates/packages/extrainfo.html:289
-msgid "Space required"
-msgstr "Espace requis"
+#: ../templates/search_widget.html:28
+msgid "Libraries"
+msgstr "Librairies"
 
-#: ../templates/packages/extrainfo.html:299
-#: ../templates/packages/shortinfo.html:3
-msgid "Checksum"
-msgstr "Contrôle de somme"
-
-#: ../templates/packages/extrainfo.html:309
-msgid "Creation date"
-msgstr "Date de création"
-
-#: ../templates/packages/extrainfo.html:319
-msgid "Security"
-msgstr "Sécurité"
-
-#: ../templates/packages/extrainfo.html:324
-msgid "show security advisories"
-msgstr "afficher les avis de sécurité"
-
-#: ../templates/packages/feed.html:16
-msgid "No entries exist"
-msgstr "Aucune entrée existante"
-
-#: ../templates/packages/menu.html:2
-msgid "Packages Search"
-msgstr "Recherche de paquets"
-
-#: ../templates/packages/menu.html:2
-msgid "User Generated Content Search"
-msgstr "Recherche de contenu généré par l'utilisateur"
-
-#: ../templates/packages/menu.html:2
-msgid "Statistics"
-msgstr "Statistiques"
-
-#: ../templates/packages/menu.html:2
-#: ../templates/packages/releases_inner.html:3
-msgid "Releases"
-msgstr "Versions"
-
-#: ../templates/packages/release.html:4
-#: ../templates/packages/show_release.html:5
-msgid "Quick navigation"
-msgstr "Navigation rapide"
-
-#: ../templates/packages/searchbox.html:6
-msgid "Entropy Repository"
-msgstr "Dépôt Entropy"
-
-#: ../templates/packages/searchparams_args.html:3
-msgid "Product"
-msgstr "Produit"
-
-#: ../templates/packages/searchparams_args.html:35
-msgid "Branch"
-msgstr "Branche"
-
-#: ../templates/packages/searchparams_args.html:43
-#: ../templates/packages/stats_inner.html:14
-msgid "Architecture"
-msgstr "Architecture"
-
-#: ../templates/packages/searchparams.html:10
-#: ../templates/packages/ugc_searchparams.html:3
-msgid "Search type"
-msgstr "Type de recherche"
-
-#: ../templates/packages/searchparams.html:28
-#: ../templates/packages/ugc_searchparams.html:35
-msgid "Order by"
-msgstr "Trier par"
-
-#: ../templates/packages/searchresults.html:7
-#, c-format
-msgid "Elements found: %s"
+#: ../templates/search_widget.html:31
+msgid "Mime"
 msgstr ""
 
-#: ../templates/packages/searchresults.html:30
-#: ../templates/packages/ugc_searchresults.html:25
-msgid "Nothing found"
-msgstr "Rien trouvé"
-
-#: ../templates/packages/searchresults.html:33
-msgid "Perhaps, you meant?"
-msgstr "Peut-être, vous vouliez dire ?"
-
-#: ../templates/packages/searchresults.html:42
-msgid "Cannot find the software you are looking for?"
-msgstr "Impossible de trouver le logiciel que vous cherchez ?"
-
-#: ../templates/packages/searchresults.html:43
-msgid "Submit a package request"
-msgstr "Soumettre une demande de paquet"
-
-#: ../templates/packages/searchresults.html:45
-#: ../templates/packages/ugc_searchresults.html:27
-msgid "Back to Search"
-msgstr "Retour à la recherche"
-
-#: ../templates/packages/shortinfo.html:3
-msgid "Revision"
-msgstr "Révision"
-
-#: ../templates/packages/show_categories.html:5
-msgid "Package Categories Navigation"
-msgstr "Navigation dans les catégories des paquets"
-
-#: ../templates/packages/show_release.html:4
-msgid "You are watching"
-msgstr "Vous regardez"
-
-#: ../templates/packages/show_ugc.html:2
-#: ../templates/packages/ugc_searchbox.html:6
-msgid "User Generated Content"
-msgstr "Contenu généré par l'utilisateur"
-
-#: ../templates/packages/stats_inner.html:3
-msgid "Current status"
-msgstr "État courant"
-
-#: ../templates/packages/stats_inner.html:22
-msgid "Branches"
-msgstr "Branches"
-
-#: ../templates/packages/stats_inner.html:30
-msgid "Number of packages"
-msgstr "Nombre de paquets"
-
-#: ../templates/packages/stats_inner.html:38
-msgid "Number of categories"
-msgstr "Nombre de catégories"
-
-#: ../templates/packages/stats_inner.html:46
-#: ../templates/community/users/public_profile.html:238
-msgid "Number of files"
-msgstr "Nombre de fichiers"
-
-#: ../templates/packages/stats_inner.html:54
-msgid "Overall size"
-msgstr "Taille globale"
-
-#: ../templates/packages/ugc_comment.html:8
-#: ../templates/packages/ugc_doc_desc_keywords.html:6
+#: ../templates/ugc_comment.html:8 ../templates/ugc_doc_desc_keywords.html:6
 msgid "no keywords"
 msgstr "pas de mots-clé"
 
-#: ../templates/packages/ugc_doc_handling_links.html:15
+#: ../templates/ugc_doc_handling_links.html:15
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../templates/packages/ugc_doc_handling_links.html:17
-msgid "Edit"
-msgstr "Éditer"
-
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 #, fuzzy, c-format
 msgid "written by %s, around %s"
 msgstr "écrit par %(user)s, autour du %(date)s"
 
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 msgid "User score"
 msgstr "Note de l'utilisateur"
 
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 msgid "Size"
 msgstr "Taille"
 
-#: ../templates/packages/ugc_generic_file.html:4
+#: ../templates/ugc_generic_file.html:4
 msgid "Download"
 msgstr "Télécharger"
 
-#: ../templates/packages/ugc_search_item.html:21
-msgid "by"
-msgstr "par"
-
-#: ../templates/packages/ugc_search_item.html:21
-msgid "on"
-msgstr "sur"
-
-#: ../templates/packages/ugc_search_item.html:21
-msgid "score"
-msgstr "note"
-
-#: ../templates/packages/ugc_searchparams.html:19
-msgid "Restrict on"
-msgstr "Restriction sur"
-
-#: ../templates/packages/ugc_searchresults.html:8
-#, c-format
-msgid "Seeking %s of %s"
-msgstr ""
-
-#: ../templates/packages/ugc_shortinfo.html:11
-#: ../templates/community/my/stats.html:72
-#: ../templates/community/users/public_profile.html:206
-msgid "Documents"
-msgstr "Documents"
-
-#: ../templates/packages/voted.html:12
+#: ../templates/ugc_voted.html:12
 msgid "Vote error"
 msgstr "Erreur de vote"
 
-#: ../templates/community/home.html:7
-msgid "Being part of <b>our Community</b> is what make us proud of ourselves"
-msgstr "Faire partie de <b>notre communauté</b> est ce qui nous rend fiers"
+#: ../templates/user_widget.html:19
+msgid "Login error"
+msgstr "Erreur de connexion"
 
-#: ../templates/community/home.html:8
-msgid ""
-"This is the place where you can get in touch with people in our Community, "
-"see how good they are and get helped"
-msgstr ""
-"C'est ici que vous pouvez rester en contact avec les gens de notre "
-"communauté, voyez combien ils sont bons en les laissant vous aider"
-
-#: ../templates/community/links.html:3
-msgid ""
-"If you want to join our Community or just need help and make questions, here "
-"are some useful links you might need to look at"
-msgstr ""
-"Si vous voulez rejoindre notre communauté ou que vous avez besoin d'aide et "
-"que vous voulez poser des questions, voici quelques liens utiles que vous "
-"voudrez peut-être regarder"
-
-#: ../templates/community/links.html:8
-msgid "Sabayon Linux Support Chat"
-msgstr "Chat de support Sabayon Linux"
-
-#: ../templates/community/links.html:11
-msgid "Wolfden, Sabayon Linux Chief Community Officer"
-msgstr "Wolfden, officier en chef de la communauté Sabayon Linux"
-
-#: ../templates/community/links.html:14
-msgid "Lxnay, Sabayon Linux Chief Architect"
-msgstr "Lxnay, architecte en chef Sabayon Linux"
-
-#: ../templates/community/links.html:17
-msgid "Sabayon Linux Forum"
-msgstr "Forum Sabayon Linux"
-
-#: ../templates/community/menu.html:17
-msgid "Community Home"
-msgstr "Accueil de la communauté"
-
-#: ../templates/community/menu.html:17
-msgid "Users"
-msgstr "Utilisateurs"
-
-#: ../templates/community/menu.html:17
-msgid "Hall of fame"
-msgstr "Temple de la renommée"
-
-#: ../templates/community/menu.html:17
-msgid "Blogs"
-msgstr "Blogues"
-
-#: ../templates/community/menu.html:17
-msgid "Useful links"
-msgstr "Liens utiles"
-
-#: ../templates/community/ranking.html:32
-#: ../templates/community/users/search_results.html:13
-msgid "also known as"
-msgstr "aussi connu sous le nom"
-
-#: ../templates/community/ranking.html:35
-msgid "Points"
-msgstr "Points"
-
-#: ../templates/community/users.html:3
-msgid "Currently counting"
-msgstr "En train de compter"
-
-#: ../templates/community/users.html:3
-msgid "users... and <b>growing</b>"
-msgstr "utilisateurs... et <b>en hausse</b>"
-
-#: ../templates/community/my/stats.html:15
-msgid ""
-"In this page you will find all your statistics regarding your Entropy/Web "
-"account"
-msgstr ""
-"Dans cette page, vous trouverez toutes les statistiques concernant votre "
-"compte Entropy/Web"
-
-#: ../templates/community/my/stats.html:24
-msgid "this is the name other people will reference you"
-msgstr "ceci est le nom par lequel vous serez référencé"
-
-#: ../templates/community/my/stats.html:32
-msgid "User id"
-msgstr "Identifiant de l'utilisateur"
-
-#: ../templates/community/my/stats.html:34
-msgid "this is your user account number"
-msgstr "ceci est votre numéro de compte"
-
-#: ../templates/community/my/stats.html:42
-#: ../templates/community/users/public_profile.html:178
-msgid "Entropy role"
-msgstr "Rôle d'Entropy"
-
-#: ../templates/community/my/stats.html:44
-msgid "your role inside the Community"
-msgstr "votre rôle dans la communauté"
-
-#: ../templates/community/my/stats.html:54
-msgid "number of times you voted"
-msgstr "nombre de fois que vous avez voté"
-
-#: ../templates/community/my/stats.html:57
-#: ../templates/community/my/stats.html:87
-#: ../templates/community/my/stats.html:97
-#: ../templates/community/my/stats.html:107
-#: ../templates/community/my/stats.html:117
+#: ../templates/user_widget.html:33
 #, c-format
-msgid "weight: %s points each"
-msgstr "taille : %s points chaque"
+msgid "Welcome <b>%s</b>"
+msgstr ""
 
-#: ../templates/community/my/stats.html:62
-#: ../templates/community/users/public_profile.html:198
-msgid "Vote average"
-msgstr "Moyenne de vote"
+#: ../templates/user_widget.html:33
+msgid "Disconnect"
+msgstr ""
 
-#: ../templates/community/my/stats.html:64
-msgid "this is kinda self explanatory"
-msgstr "ceci est plutôt auto-explicatif"
+#: ../templates/user_widget.html:37
+msgid "My Comments"
+msgstr "Mes commentaires"
 
-#: ../templates/community/my/stats.html:74
-msgid "how many documents you uploaded (comments,images,etc)"
-msgstr "combien de documents vous avez"
+#: ../templates/user_widget.html:38
+msgid "My Docs"
+msgstr "Mes documents"
 
-#: ../templates/community/my/stats.html:84
-msgid "how many comments you wrote"
-msgstr "Combien de commentaires vous avez écrit"
+#: ../templates/user_widget.html:39
+msgid "My Votes"
+msgstr "Mes votes"
 
-#: ../templates/community/my/stats.html:92
-#: ../templates/community/users/public_profile.html:226
-msgid "Images"
-msgstr "Images"
+#: ../templates/user_widget.html:40
+msgid "My Avg"
+msgstr "Ma moyenne"
 
-#: ../templates/community/my/stats.html:94
-msgid "how many images you uploaded"
-msgstr "combien d'images vous avez envoyé"
-
-#: ../templates/community/my/stats.html:104
-msgid "how many files you uploaded"
-msgstr "Combien de fichiers avez-vous envoyé"
-
-#: ../templates/community/my/stats.html:112
-#: ../templates/community/users/public_profile.html:246
-msgid "YouTube(tm) Videos"
-msgstr "Vidéos YouTube™"
-
-#: ../templates/community/my/stats.html:114
-msgid "how many videos you uploaded"
-msgstr "combien de vidéos vous avez envoyé"
-
-#: ../templates/community/my/stats.html:122
-#: ../templates/community/users/public_profile.html:256
-msgid "Ranking"
-msgstr "Classement"
-
-#: ../templates/community/my/stats.html:124
-msgid "how good you are in our Community"
-msgstr "À quel point vous êtes bon dans la communauté"
-
-#: ../templates/community/my/stats.html:127
-#: ../templates/community/users/public_profile.html:261
-msgid "position"
-msgstr "position"
-
-#: ../templates/community/my/stats.html:132
-#: ../templates/community/users/public_profile.html:266
+#: ../templates/user_widget.html:42
 msgid "Score"
 msgstr "Score"
 
-#: ../templates/community/my/stats.html:134
-msgid "your resulting Entropy score"
-msgstr "votre score Entropy"
+#, fuzzy
+#~ msgid "MSN Messenger"
+#~ msgstr "Message"
 
-#: ../templates/community/my/stats.html:143
-msgid "Not logged in"
-msgstr "Pas connecté"
+#~ msgid "Website"
+#~ msgstr "Site web"
 
-#: ../templates/community/my/ugc.html:18
-msgid ""
-"In this page you will be able to browse through your submitted documents on "
-"all the repositories we host"
-msgstr ""
-"Dans cette page vous pourrez naviguer dans les documents soumis dans tous "
-"les dépôts que nous hébergons"
+#~ msgid "Location"
+#~ msgstr "Emplacement"
 
-#: ../templates/community/my/ugc.html:58
-msgid "View"
-msgstr "Visualiser"
+#~ msgid "Interests"
+#~ msgstr "Intérêts"
 
-#: ../templates/community/users/public_profile.html:25
-msgid "This is just"
-msgstr "C'est juste"
+#~ msgid "Occupation"
+#~ msgstr "Occupation"
 
-#: ../templates/community/users/public_profile.html:25
-msgid "hello !"
-msgstr "salut !"
+#, fuzzy
+#~ msgid "Your Community signature"
+#~ msgstr "Note de l'utilisateur de la communauté"
 
-#: ../templates/community/users/public_profile.html:38
-msgid "Just a nickname, what did you expect?"
-msgstr "Juste un surnom, qu'espériez-vous ?"
+#~ msgid "E-mail"
+#~ msgstr "Courriel"
 
-#: ../templates/community/users/public_profile.html:47
-msgid "User identifier"
-msgstr "Identifiant de l'utilisateur"
+#, fuzzy
+#~ msgid "Your current e-mail"
+#~ msgstr "Votre courriel"
 
-#: ../templates/community/users/public_profile.html:49
-msgid "This is the account number"
-msgstr "Voici le numéro de compte"
+#, fuzzy
+#~ msgid "User Groups"
+#~ msgstr "Groupes"
 
-#: ../templates/community/users/public_profile.html:58
-msgid "Website role"
-msgstr "Rôle de l'utilisateur"
+#, fuzzy
+#~ msgid "Sabayon Linux Community Area"
+#~ msgstr "Forum Sabayon Linux"
 
-#: ../templates/community/users/public_profile.html:60
-msgid "User's role inside our Website"
-msgstr "Rôle de l'utilisateur dans le site Web"
+#, fuzzy
+#~ msgid "you name it"
+#~ msgstr "Allez le chercher"
 
-#: ../templates/community/users/public_profile.html:70
-msgid "Avatar"
-msgstr "Avatar"
+#~ msgid "My User Generated Content"
+#~ msgstr "Mon contenu généré par l'utilisateur"
 
-#: ../templates/community/users/public_profile.html:72
-msgid "User's virtual Alter-Ego"
-msgstr "Alter ego virtuel de l'utilisateur"
+#~ msgid "My Statistics"
+#~ msgstr "Mes statistiques"
 
-#: ../templates/community/users/public_profile.html:84
-msgid "User comes from..."
-msgstr "L'utilisateur vient de..."
+#, fuzzy
+#~ msgid "My Sabayon Dashboard"
+#~ msgstr "Mon tableau de bord"
 
-#: ../templates/community/users/public_profile.html:93
-msgid "Age"
-msgstr "Âge"
+#~ msgid "invalid pages_id"
+#~ msgstr "pages_id invalide"
 
-#: ../templates/community/users/public_profile.html:95
-msgid "How many years are past, huh!"
-msgstr "Combien d'années ont passé, hein !"
+#~ msgid "permission denied"
+#~ msgstr "accès refusé"
 
-#: ../templates/community/users/public_profile.html:106
-msgid "User's current job"
-msgstr "Emploi courant de l'utilisateur"
+#~ msgid "invalid HTTP method"
+#~ msgstr "méthode HTTP invalide"
 
-#: ../templates/community/users/public_profile.html:117
-msgid "User's interests, kinda self explanatory"
-msgstr "Intérêts de l'utilisateur, pas besoin d'explications"
+#~ msgid "Success"
+#~ msgstr "Succès"
 
-#: ../templates/community/users/public_profile.html:126
-msgid "Contacts"
-msgstr "Contacts"
+#~ msgid "profile updated successfully !"
+#~ msgstr "profil mis à jour avec succès !"
 
-#: ../templates/community/users/public_profile.html:128
-msgid "User's E-mail and IM"
-msgstr "Courriel et MI de l'utilisateur"
+#~ msgid "wrong search request"
+#~ msgstr "mauvaise requête de recherche"
 
-#: ../templates/community/users/public_profile.html:158
-msgid "User's Website"
-msgstr "Site web de l'utilisateur"
+#, fuzzy
+#~ msgid "Sabayon Linux Community activation"
+#~ msgstr "Chat de support Sabayon Linux"
 
-#: ../templates/community/users/public_profile.html:161
-msgid "Click here to get there"
-msgstr "Cliquez ici pour aller là"
+#, fuzzy
+#~ msgid "Sabayon Linux Community registration"
+#~ msgstr "Wolfden, officier en chef de la communauté Sabayon Linux"
 
-#: ../templates/community/users/public_profile.html:167
-msgid "Groups"
-msgstr "Groupes"
+#~ msgid "Invalid Username"
+#~ msgstr "Nom d'utilisateur invalide"
 
-#: ../templates/community/users/public_profile.html:169
-msgid "Website groups user is in"
-msgstr "Groupes de site Web dans lequel l'utilisateur se trouve"
+#~ msgid "Invalid Email, empty fields or mismatch"
+#~ msgstr "Courriel invalide, champs vides ou différents"
 
-#: ../templates/community/users/public_profile.html:180
-msgid "User's role inside Entropy"
-msgstr "Rôle de l'utilisateur dans Entropy"
+#~ msgid "Invalid Password, empty fields or mismatch or wrong length"
+#~ msgstr ""
+#~ "Mot de passe invalide, champs vide, différents ou de mauvaise longueur"
 
-#: ../templates/community/users/public_profile.html:190
-msgid "Number of times the User voted"
-msgstr "Nombre de fois que l'utilisateur a voté"
+#~ msgid "Invalid Captcha Answer"
+#~ msgstr "Réponse invalide au captcha"
 
-#: ../templates/community/users/public_profile.html:208
-msgid "Total number of documents"
-msgstr "Nombre total de documents"
+#~ msgid "Invalid"
+#~ msgstr "Invalide"
 
-#: ../templates/community/users/public_profile.html:218
-msgid "Number of comments"
-msgstr "Nombre de commentaires"
+#~ msgid "wrong POST"
+#~ msgstr "mauvais POST"
 
-#: ../templates/community/users/public_profile.html:228
-msgid "Number of images"
-msgstr "Nombre d'images"
+#~ msgid "invalid old e-mail"
+#~ msgstr "ancien courriel invalide"
 
-#: ../templates/community/users/public_profile.html:248
-msgid "Number of videos belonging"
-msgstr "Nombre de vidéos appartenant"
+#~ msgid "you changed nothing"
+#~ msgstr "vous n'avez rien changé"
 
-#: ../templates/community/users/public_profile.html:258
-msgid "User rank inside our Community"
-msgstr "Rang de l'utilisateur dans la communauté"
+#~ msgid "empty fields"
+#~ msgstr "champs vides"
 
-#: ../templates/community/users/public_profile.html:268
-msgid "User's Community Score"
-msgstr "Note de l'utilisateur de la communauté"
+#~ msgid "e-mails do not match"
+#~ msgstr "les courriels ne correspondent pas"
 
-#: ../templates/community/users/search.html:4
-msgid "User search"
-msgstr "Recherche utilisateur"
+#~ msgid "invalid parameters"
+#~ msgstr "paramètres invalides"
 
-#: ../templates/community/users/search.html:6
-msgid ""
-"Write a search term on the right. E-mail, username, name, surname, you name "
-"it"
-msgstr ""
-"Écrirez un terme de recherche à votre droite. Courriel, nom d'utilisateur, "
-"nom, surnom, etc.."
+#~ msgid "invalid e-mail (1)"
+#~ msgstr "courriel invalide (1)"
 
-#: ../templates/community/users/search_results.html:5
-msgid "Search results"
-msgstr "Résultats de recherche"
+#~ msgid "invalid e-mail (2)"
+#~ msgstr "courriel invalide (2)"
 
-#: ../templates/community/users/search_results.html:13
-msgid "featuring"
-msgstr "mettant en vedette"
+#~ msgid "you must activate your change. You have mail"
+#~ msgstr "vous devez activer votre changement. Vous avez du courrier"
 
-#: ../templates/community/users/search_results.html:13
-msgid "Points and Ranking"
-msgstr "Points et classement"
+#~ msgid "not logged in (username)"
+#~ msgstr "pas connecté (nom d'utilisateur)"
 
-#: ../templates/community/users/search_results.html:30
-msgid "No users found. Go out and blame cows"
-msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
+#~ msgid "where is the current password?"
+#~ msgstr "où est le mot de passe courant ?"
+
+#~ msgid "missing fields"
+#~ msgstr "champs manquants"
+
+#~ msgid "new password fields do not match"
+#~ msgstr "la longueur du nouveau mot de passe ne correspond pas"
+
+#~ msgid "wtf are you trying to do?"
+#~ msgstr "qu'essayez-vous de faire ?"
+
+#~ msgid "old and new password match"
+#~ msgstr "l'ancien et le nouveau mot de passe concordent"
+
+#~ msgid "password too short"
+#~ msgstr "mot de passe trop court"
+
+#~ msgid "password too long"
+#~ msgstr "mot de passe trop long"
+
+#~ msgid "invalid current password"
+#~ msgstr "mot de passe courant invalide"
+
+#~ msgid "you do not have a valid e-mail"
+#~ msgstr "vous n'avez pas de courriel valide"
+
+#~ msgid "Packages match"
+#~ msgstr "Les paquets concordent"
+
+#~ msgid "Package descriptions"
+#~ msgstr "Descriptions des paquets"
+
+#~ msgid "Alphabet"
+#~ msgstr "Alphabet"
+
+#~ msgid "Vote"
+#~ msgstr "Vote"
+
+#~ msgid "vote"
+#~ msgstr "voter"
+
+#~ msgid "Package name"
+#~ msgstr "Nom du paquet"
+
+#~ msgid "Content (text)"
+#~ msgstr "Contenu (texte)"
+
+#~ msgid "Keyword (tag)"
+#~ msgstr "Mot-clé (étiquette)"
+
+#~ msgid "Username"
+#~ msgstr "Nom d'utilisateur"
+
+#~ msgid "Document id."
+#~ msgstr "Identifiant du document"
+
+#~ msgid "No restrictions"
+#~ msgstr "Pas de restrictions"
+
+#~ msgid "Number of downloads"
+#~ msgstr "Nombre de téléchargements"
+
+#~ msgid "key"
+#~ msgstr "clé"
+
+#~ msgid "username"
+#~ msgstr "nom d'utilisateur"
+
+#, fuzzy
+#~ msgid "Sabayon Linux Packages Repository"
+#~ msgstr "Forum Sabayon Linux"
+
+#~ msgid "invalid search string"
+#~ msgstr "chaîne de recherche invalide"
+
+#~ msgid "invalid search restriction type"
+#~ msgstr "type de restriction de recherche invalide"
+
+#~ msgid "invalid 'order by'"
+#~ msgstr "'order by' invalide"
+
+#~ msgid "Activation successful"
+#~ msgstr "Activation réussie"
+
+#~ msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
+#~ msgstr ""
+#~ "Wow, merci beaucoup ! Maintenant vous pouvez réellement commencer à vous "
+#~ "amuser dans notre communauté"
+
+#~ msgid "Sorry"
+#~ msgstr "Désolé"
+
+#~ msgid "There is no activation information available"
+#~ msgstr "Il n'y a pas d'informations d'activation disponible"
+
+#~ msgid "Sponsors"
+#~ msgstr "Commanditaires"
+
+#, fuzzy
+#~ msgid ""
+#~ "Officially Sponsored by the <b>NLnet Foundation</b>, that financially "
+#~ "supported the Entropy Project"
+#~ msgstr ""
+#~ "Officiellement commandité par la <b>fondation NLNet</b>, supportant "
+#~ "financièrement notre projet Entropy"
+
+#~ msgid "See NLnet development plan status"
+#~ msgstr "Voir l'état du plan de développement de NLnet"
+
+#~ msgid "Officially Sponsored by"
+#~ msgstr "Officiellement commandité par"
+
+#~ msgid "University of Brescia"
+#~ msgstr "Université de Brescia"
+
+#~ msgid ""
+#~ "Housing our Entropy build server inside the Faculty Network Center at the "
+#~ "Department of Electronics"
+#~ msgstr ""
+#~ "Hébergement de notre serveur de compilation d'Entropy dans la Centre de "
+#~ "Faculté Réseau au département d'électronique"
+
+#, fuzzy
+#~ msgid "University of Milano-Bicocca"
+#~ msgstr "Université de Brescia"
+
+#~ msgid "Proving the software technology we daily need"
+#~ msgstr ""
+#~ "Prouvant la technologie logiciel dont nous avons besoin à tous les jours"
+
+#~ msgid "Survey"
+#~ msgstr "Sondage"
+
+#~ msgid "Cross Linux From Scratch"
+#~ msgstr "Croisement de Linux From Scratch"
+
+#~ msgid "Ibiblio.org Hosting"
+#~ msgstr "Hébergement Ibiblio.org"
+
+#~ msgid "Your E-mail is now active"
+#~ msgstr "Votre courriel est maintenant activé"
+
+#~ msgid "Trademarks are property of their respective owners."
+#~ msgstr "Les marques déposées sont la propriété de leurs auteurs respectifs."
+
+#, fuzzy
+#~ msgid "Sabayon Linux Five Oh!"
+#~ msgstr "Sabayon Linux Quatre Zéro !"
+
+#~ msgid "Entropy Web Dashboard Login"
+#~ msgstr "Connexion au tableau de bord Web Entropy"
+
+#~ msgid "New user?"
+#~ msgstr "Nouvel utilisateur ?"
+
+#~ msgid "What is all this ?"
+#~ msgstr "Qu'est-ce que c'est que tout ça ?"
+
+#~ msgid "Comments"
+#~ msgstr "Commentaires"
+
+#~ msgid "Docs"
+#~ msgstr "Documents"
+
+#~ msgid "Votes"
+#~ msgstr "Votes"
+
+#~ msgid "My Entropy"
+#~ msgstr "Mon Entropy"
+
+#, fuzzy
+#~ msgid "Community Menu"
+#~ msgstr "Accueil de la communauté"
+
+#~ msgid "points"
+#~ msgstr "points"
+
+#~ msgid "Houston, we've got a problem!"
+#~ msgstr "Houston, nous avons un problème !"
+
+#, fuzzy
+#~ msgid ""
+#~ "Probably the page you are looking for <b>does not exist</b> anymore. You "
+#~ "can blame <u>aliens</u>. Well, we are really sorry. Why don't you get to "
+#~ "our <a href=\"%s\">home page</a>?"
+#~ msgstr ""
+#~ "Il est probable que la page que vous recherchez <b>n'existe plus</b>. "
+#~ "Vous pouvez blâmer les extra-terrestres. Bien, nous sommes vraiment "
+#~ "désolés."
+
+#~ msgid "text goes here"
+#~ msgstr "le texte va ici"
+
+#~ msgid "Your Password is now updated"
+#~ msgstr "Votre mot de passe est maintenant à jour"
+
+#~ msgid "confirmation code"
+#~ msgstr "code de confirmation"
+
+#~ msgid "validation id"
+#~ msgstr "identifiant de validation"
+
+#~ msgid "user id"
+#~ msgstr "identifiant de l'utilisateur"
+
+#~ msgid "(Sabayon leader)"
+#~ msgstr "(Chef de Sabayon)"
+
+#~ msgid ""
+#~ "<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your "
+#~ "own <b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and "
+#~ "file upload service called <b>\"Pixdiff\"</b>, a <b>warm Community</b> "
+#~ "that will always help you out, the ability to <b>vote</b> and "
+#~ "<b>interact</b> with what we offer and with other people inside this "
+#~ "space. We are just used to call all this with one name: <b>Sabayon</b>, "
+#~ "<i>the \"2.0\" (two-point-oh) distribution</i>"
+#~ msgstr ""
+#~ "<b>Vous pourriez demander</b>. Qu'offrez-vous en retour ? <b>Nous "
+#~ "répondons</b>, votre propre <b>blogue</b> sur ce portail, votre <b>"
+#~ "\"pastebin\"</b> personnel et votre service d'envoi de fichier appelé <b>"
+#~ "\"Pixdiff\"</b>, une communauté chaude qui vous aidera toujours, la "
+#~ "possibilité de <b>voter</b> et d'<b>interagir</b> avec ce que nous "
+#~ "offrons et avec les autres personnes à l'intérieur de cet espace : "
+#~ "<b>Sabayon</b>, <i>la distribution \"2.0\" (deux-point-zéro)</i>"
+
+#~ msgid ""
+#~ "Please note that you will need to enter a valid e-mail address before "
+#~ "your account is activated. You will receive an e-mail at the address you "
+#~ "provide that contains an account activation link"
+#~ msgstr ""
+#~ "Veuillez prendre note que vous aurez besoin de saisir un courriel valide "
+#~ "avant que votre compte soit activé. Vous recevrez un courriel à l'adresse "
+#~ "spécifiée qui contient un hyperlien d'activation du compte"
+
+#~ msgid "Length must be between 3 and 20 characters"
+#~ msgstr "La longueur doit se situer entre 3 et 20 caractères"
+
+#~ msgid "E-mail address"
+#~ msgstr "Courriel"
+
+#~ msgid "Confirm e-mail address"
+#~ msgstr "Confirmer votre courriel"
+
+#~ msgid "Password"
+#~ msgstr "Mot de passe"
+
+#~ msgid "Must be between 6 and 30 characters"
+#~ msgstr "Doit se situer entre 6 et 30 caractères"
+
+#~ msgid "Confirm password"
+#~ msgstr "Confirmer le mot de passe"
+
+#~ msgid "Registration Agreement"
+#~ msgstr "Accord d'enregistrement"
+
+#~ msgid "I agree with the terms above"
+#~ msgstr "J'accepte les termes mentionnés ci-haut"
+
+#~ msgid "Registration successful"
+#~ msgstr "Enregistrement complété avec succès"
+
+#~ msgid "Wow, thanks a lot!"
+#~ msgstr "Wow, merci beaucoup !"
+
+#~ msgid ""
+#~ "You should have waited the activation e-mail but the one you provided has "
+#~ "not been accepted for delivery"
+#~ msgstr ""
+#~ "Vous auriez dû attendre le courriel d'activation mais celui que vous avez "
+#~ "fourni n'a pas été accepté pour la livraison"
+
+#, fuzzy
+#~ msgid ""
+#~ "Please contact <a href=\"mailto:mail.issues@sabayon.org\">our service</a> "
+#~ "and ask for help"
+#~ msgstr ""
+#~ "Veuillez contacter <a href=\"mailto:mail.issues@sabayonlinux.org\">notre "
+#~ "service</a> et demandez de l'aide"
+
+#~ msgid ""
+#~ "Now you need to wait and read the activation e-mail before being able to "
+#~ "login"
+#~ msgstr ""
+#~ "Vous devez maintenant attendre et lire le courriel d'activation avant de "
+#~ "pouvoir vous connecter"
+
+#, fuzzy
+#~ msgid "<a href='%s'>Click here</a> to come back to the source page"
+#~ msgstr ""
+#~ "<a href=\"${c.login_redirect}\">Cliquer ici</a> pour retourne à la page "
+#~ "source"
+
+#~ msgid ""
+#~ "Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
+#~ "\">Gentoo Linux</a> based distribution which relies its packages "
+#~ "versioning and patches from the Gentoo Portage tree and our add-on "
+#~ "repository called \"overlay\". Thus, Gentoo Linux Security Advisories "
+#~ "(GLSA) can be applied to the packages listed in our tree. Here below, you "
+#~ "can see a list of the latest GLSAs published by the Gentoo Project"
+#~ msgstr ""
+#~ "Sabayon Linux est un distribution basée sur <a href=\"http://www.gentoo."
+#~ "org\" target=\"_blank\">Gentoo Linux</a> qui repose sur le versioning de "
+#~ "paquets et les rustines de l'arbre Portage Gentoo et notre dépôt "
+#~ "additionnel appelé \"overlay\". Donc, les avis de sécurité Gentoo Linux "
+#~ "(GLSA) peuvent être appliqués aux paquets listés dans notre arbre. Vous "
+#~ "trouverez ci-bas une liste des derniers avis de sécurité publiés par le "
+#~ "projet Gentoo"
+
+#~ msgid "full feed here"
+#~ msgstr "flux complet ici"
+
+#~ msgid "You can get the complete list on the"
+#~ msgstr "Vous pouvez obtenir la liste complète sur le"
+
+#~ msgid "Gentoo Linux Security Advisories feed"
+#~ msgstr "flux des avis de sécurité Gentoo Linux"
+
+#~ msgid "Categories"
+#~ msgstr "Catégories"
+
+#~ msgid "Release"
+#~ msgstr "Version"
+
+#~ msgid "No packages in this category"
+#~ msgstr "Pas de paquet dans cette catégorie"
+
+#~ msgid "Destroy"
+#~ msgstr "Détruire"
+
+#, fuzzy
+#~ msgid "Repository"
+#~ msgstr "Dépôt Entropy"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "Version"
+#~ msgstr "Version"
+
+#~ msgid "Entropy revision"
+#~ msgstr "Révision d'Entropy"
+
+#~ msgid "Package tag"
+#~ msgstr "Étiquette du paquet"
+
+#~ msgid "Slot"
+#~ msgstr "Fente"
+
+#~ msgid "Conflicts"
+#~ msgstr "Conflits"
+
+#~ msgid "Required by"
+#~ msgstr "Requis par"
+
+#~ msgid "view packages list"
+#~ msgstr "voir la liste des paquets"
+
+#~ msgid "homepage"
+#~ msgstr "page d'accueil"
+
+#~ msgid "CHOST"
+#~ msgstr "CHOST"
+
+#~ msgid "CFLAGS"
+#~ msgstr "CFLAGS"
+
+#~ msgid "Content"
+#~ msgstr "Contenu"
+
+#~ msgid "View content"
+#~ msgstr "Voir le contenu"
+
+#~ msgid "Space required"
+#~ msgstr "Espace requis"
+
+#~ msgid "Checksum"
+#~ msgstr "Contrôle de somme"
+
+#~ msgid "Creation date"
+#~ msgstr "Date de création"
+
+#~ msgid "Security"
+#~ msgstr "Sécurité"
+
+#~ msgid "No entries exist"
+#~ msgstr "Aucune entrée existante"
+
+#~ msgid "Packages Search"
+#~ msgstr "Recherche de paquets"
+
+#~ msgid "User Generated Content Search"
+#~ msgstr "Recherche de contenu généré par l'utilisateur"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistiques"
+
+#~ msgid "Releases"
+#~ msgstr "Versions"
+
+#~ msgid "Quick navigation"
+#~ msgstr "Navigation rapide"
+
+#~ msgid "Entropy Repository"
+#~ msgstr "Dépôt Entropy"
+
+#~ msgid "Product"
+#~ msgstr "Produit"
+
+#~ msgid "Branch"
+#~ msgstr "Branche"
+
+#~ msgid "Architecture"
+#~ msgstr "Architecture"
+
+#~ msgid "Search type"
+#~ msgstr "Type de recherche"
+
+#~ msgid "Order by"
+#~ msgstr "Trier par"
+
+#~ msgid "Nothing found"
+#~ msgstr "Rien trouvé"
+
+#~ msgid "Perhaps, you meant?"
+#~ msgstr "Peut-être, vous vouliez dire ?"
+
+#~ msgid "Cannot find the software you are looking for?"
+#~ msgstr "Impossible de trouver le logiciel que vous cherchez ?"
+
+#~ msgid "Submit a package request"
+#~ msgstr "Soumettre une demande de paquet"
+
+#~ msgid "Back to Search"
+#~ msgstr "Retour à la recherche"
+
+#~ msgid "Package Categories Navigation"
+#~ msgstr "Navigation dans les catégories des paquets"
+
+#~ msgid "You are watching"
+#~ msgstr "Vous regardez"
+
+#~ msgid "User Generated Content"
+#~ msgstr "Contenu généré par l'utilisateur"
+
+#~ msgid "Current status"
+#~ msgstr "État courant"
+
+#~ msgid "Branches"
+#~ msgstr "Branches"
+
+#~ msgid "Number of packages"
+#~ msgstr "Nombre de paquets"
+
+#~ msgid "Number of categories"
+#~ msgstr "Nombre de catégories"
+
+#~ msgid "Number of files"
+#~ msgstr "Nombre de fichiers"
+
+#~ msgid "Overall size"
+#~ msgstr "Taille globale"
+
+#~ msgid "Edit"
+#~ msgstr "Éditer"
+
+#~ msgid "by"
+#~ msgstr "par"
+
+#~ msgid "on"
+#~ msgstr "sur"
+
+#~ msgid "score"
+#~ msgstr "note"
+
+#~ msgid "Restrict on"
+#~ msgstr "Restriction sur"
+
+#~ msgid "Documents"
+#~ msgstr "Documents"
+
+#~ msgid ""
+#~ "Being part of <b>our Community</b> is what make us proud of ourselves"
+#~ msgstr "Faire partie de <b>notre communauté</b> est ce qui nous rend fiers"
+
+#~ msgid ""
+#~ "This is the place where you can get in touch with people in our "
+#~ "Community, see how good they are and get helped"
+#~ msgstr ""
+#~ "C'est ici que vous pouvez rester en contact avec les gens de notre "
+#~ "communauté, voyez combien ils sont bons en les laissant vous aider"
+
+#~ msgid ""
+#~ "If you want to join our Community or just need help and make questions, "
+#~ "here are some useful links you might need to look at"
+#~ msgstr ""
+#~ "Si vous voulez rejoindre notre communauté ou que vous avez besoin d'aide "
+#~ "et que vous voulez poser des questions, voici quelques liens utiles que "
+#~ "vous voudrez peut-être regarder"
+
+#~ msgid "Sabayon Linux Support Chat"
+#~ msgstr "Chat de support Sabayon Linux"
+
+#~ msgid "Wolfden, Sabayon Linux Chief Community Officer"
+#~ msgstr "Wolfden, officier en chef de la communauté Sabayon Linux"
+
+#~ msgid "Lxnay, Sabayon Linux Chief Architect"
+#~ msgstr "Lxnay, architecte en chef Sabayon Linux"
+
+#~ msgid "Sabayon Linux Forum"
+#~ msgstr "Forum Sabayon Linux"
+
+#~ msgid "Community Home"
+#~ msgstr "Accueil de la communauté"
+
+#~ msgid "Users"
+#~ msgstr "Utilisateurs"
+
+#~ msgid "Hall of fame"
+#~ msgstr "Temple de la renommée"
+
+#~ msgid "Blogs"
+#~ msgstr "Blogues"
+
+#~ msgid "Useful links"
+#~ msgstr "Liens utiles"
+
+#~ msgid "also known as"
+#~ msgstr "aussi connu sous le nom"
+
+#~ msgid "Points"
+#~ msgstr "Points"
+
+#~ msgid "Currently counting"
+#~ msgstr "En train de compter"
+
+#~ msgid "users... and <b>growing</b>"
+#~ msgstr "utilisateurs... et <b>en hausse</b>"
+
+#~ msgid ""
+#~ "In this page you will find all your statistics regarding your Entropy/Web "
+#~ "account"
+#~ msgstr ""
+#~ "Dans cette page, vous trouverez toutes les statistiques concernant votre "
+#~ "compte Entropy/Web"
+
+#~ msgid "this is the name other people will reference you"
+#~ msgstr "ceci est le nom par lequel vous serez référencé"
+
+#~ msgid "User id"
+#~ msgstr "Identifiant de l'utilisateur"
+
+#~ msgid "this is your user account number"
+#~ msgstr "ceci est votre numéro de compte"
+
+#~ msgid "Entropy role"
+#~ msgstr "Rôle d'Entropy"
+
+#~ msgid "your role inside the Community"
+#~ msgstr "votre rôle dans la communauté"
+
+#~ msgid "number of times you voted"
+#~ msgstr "nombre de fois que vous avez voté"
+
+#~ msgid "weight: %s points each"
+#~ msgstr "taille : %s points chaque"
+
+#~ msgid "Vote average"
+#~ msgstr "Moyenne de vote"
+
+#~ msgid "this is kinda self explanatory"
+#~ msgstr "ceci est plutôt auto-explicatif"
+
+#~ msgid "how many documents you uploaded (comments,images,etc)"
+#~ msgstr "combien de documents vous avez"
+
+#~ msgid "how many comments you wrote"
+#~ msgstr "Combien de commentaires vous avez écrit"
+
+#~ msgid "Images"
+#~ msgstr "Images"
+
+#~ msgid "how many images you uploaded"
+#~ msgstr "combien d'images vous avez envoyé"
+
+#~ msgid "how many files you uploaded"
+#~ msgstr "Combien de fichiers avez-vous envoyé"
+
+#~ msgid "YouTube(tm) Videos"
+#~ msgstr "Vidéos YouTube™"
+
+#~ msgid "how many videos you uploaded"
+#~ msgstr "combien de vidéos vous avez envoyé"
+
+#~ msgid "Ranking"
+#~ msgstr "Classement"
+
+#~ msgid "how good you are in our Community"
+#~ msgstr "À quel point vous êtes bon dans la communauté"
+
+#~ msgid "position"
+#~ msgstr "position"
+
+#~ msgid "your resulting Entropy score"
+#~ msgstr "votre score Entropy"
+
+#~ msgid "Not logged in"
+#~ msgstr "Pas connecté"
+
+#~ msgid ""
+#~ "In this page you will be able to browse through your submitted documents "
+#~ "on all the repositories we host"
+#~ msgstr ""
+#~ "Dans cette page vous pourrez naviguer dans les documents soumis dans tous "
+#~ "les dépôts que nous hébergons"
+
+#~ msgid "View"
+#~ msgstr "Visualiser"
+
+#~ msgid "This is just"
+#~ msgstr "C'est juste"
+
+#~ msgid "hello !"
+#~ msgstr "salut !"
+
+#~ msgid "Just a nickname, what did you expect?"
+#~ msgstr "Juste un surnom, qu'espériez-vous ?"
+
+#~ msgid "User identifier"
+#~ msgstr "Identifiant de l'utilisateur"
+
+#~ msgid "This is the account number"
+#~ msgstr "Voici le numéro de compte"
+
+#~ msgid "Website role"
+#~ msgstr "Rôle de l'utilisateur"
+
+#~ msgid "User's role inside our Website"
+#~ msgstr "Rôle de l'utilisateur dans le site Web"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid "User's virtual Alter-Ego"
+#~ msgstr "Alter ego virtuel de l'utilisateur"
+
+#~ msgid "User comes from..."
+#~ msgstr "L'utilisateur vient de..."
+
+#~ msgid "Age"
+#~ msgstr "Âge"
+
+#~ msgid "How many years are past, huh!"
+#~ msgstr "Combien d'années ont passé, hein !"
+
+#~ msgid "User's current job"
+#~ msgstr "Emploi courant de l'utilisateur"
+
+#~ msgid "User's interests, kinda self explanatory"
+#~ msgstr "Intérêts de l'utilisateur, pas besoin d'explications"
+
+#~ msgid "Contacts"
+#~ msgstr "Contacts"
+
+#~ msgid "User's E-mail and IM"
+#~ msgstr "Courriel et MI de l'utilisateur"
+
+#~ msgid "User's Website"
+#~ msgstr "Site web de l'utilisateur"
+
+#~ msgid "Click here to get there"
+#~ msgstr "Cliquez ici pour aller là"
+
+#~ msgid "Groups"
+#~ msgstr "Groupes"
+
+#~ msgid "Website groups user is in"
+#~ msgstr "Groupes de site Web dans lequel l'utilisateur se trouve"
+
+#~ msgid "User's role inside Entropy"
+#~ msgstr "Rôle de l'utilisateur dans Entropy"
+
+#~ msgid "Number of times the User voted"
+#~ msgstr "Nombre de fois que l'utilisateur a voté"
+
+#~ msgid "Total number of documents"
+#~ msgstr "Nombre total de documents"
+
+#~ msgid "Number of comments"
+#~ msgstr "Nombre de commentaires"
+
+#~ msgid "Number of images"
+#~ msgstr "Nombre d'images"
+
+#~ msgid "Number of videos belonging"
+#~ msgstr "Nombre de vidéos appartenant"
+
+#~ msgid "User rank inside our Community"
+#~ msgstr "Rang de l'utilisateur dans la communauté"
+
+#~ msgid "User's Community Score"
+#~ msgstr "Note de l'utilisateur de la communauté"
+
+#~ msgid "User search"
+#~ msgstr "Recherche utilisateur"
+
+#~ msgid ""
+#~ "Write a search term on the right. E-mail, username, name, surname, you "
+#~ "name it"
+#~ msgstr ""
+#~ "Écrirez un terme de recherche à votre droite. Courriel, nom "
+#~ "d'utilisateur, nom, surnom, etc.."
+
+#~ msgid "Search results"
+#~ msgstr "Résultats de recherche"
+
+#~ msgid "featuring"
+#~ msgstr "mettant en vedette"
+
+#~ msgid "Points and Ranking"
+#~ msgstr "Points et classement"
+
+#~ msgid "No users found. Go out and blame cows"
+#~ msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
 
 #~ msgid "the cutest, free Operating System"
 #~ msgstr "Le plus beau système d'exploitation gratuit"
@@ -2123,9 +1812,6 @@ msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
 #~ "de transfert. La plupart des téléchargements ne doivent probablement pas "
 #~ "monopoliser votre bande passante. Metalink va vous aider"
 
-#~ msgid "source"
-#~ msgstr "source"
-
 #~ msgid "Visit the official"
 #~ msgstr "Visitez l'officiel"
 
@@ -2145,10 +1831,6 @@ msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
 
 #~ msgid "Visit the"
 #~ msgstr "Visitez le"
-
-#, fuzzy
-#~ msgid "Sabayon Linux Tracker Page"
-#~ msgstr "Page de Metalinker Sabayon Linux"
 
 #~ msgid "HTTP, FTP, RSYNC mirrors"
 #~ msgstr "Miroirs HTTP, FTP et RSYNC"
@@ -2250,9 +1932,6 @@ msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
 #~ msgid "An image should pop up above this text"
 #~ msgstr "Une image devrait apparaître au-dessus de ce texte"
 
-#~ msgid "Not found"
-#~ msgstr "Introuvable"
-
 #~ msgid "The pastie you are looking for is not available"
 #~ msgstr "Le pastie que vous recherchez n'est pas disponible"
 
@@ -2329,10 +2008,6 @@ msgstr "Pas d'utilisateur trouvé. Sortez et blâmez les vaches"
 
 #~ msgid "invalid mirror country"
 #~ msgstr "pays du miroir invalide"
-
-#, fuzzy
-#~ msgid "updated"
-#~ msgstr "page mise à jour"
 
 #~ msgid "insert at least one link"
 #~ msgstr "insérer au moins un lien"

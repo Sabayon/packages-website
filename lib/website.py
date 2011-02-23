@@ -20,6 +20,7 @@ from htmlentitydefs import name2codepoint
 from entropy.const import *
 etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 etpConst['repositoriesconf'] = model.config.REPOSITORIES_CONF_PATH
+etpConst['dumpstoragedir'] = model.config.WEBSITE_REPO_CACHE_DIR
 from entropy.exceptions import SystemDatabaseError
 try:
     from entropy.db.exceptions import ProgrammingError, OperationalError, \
@@ -115,12 +116,6 @@ class WebsiteController:
             redirect_url = redirect_url.encode('utf-8')
             redirect_url = self._validate_redirect(redirect_url)
         return redirect_url
-
-    def _expand_ugc_doc_info(self, ugc, mydoc):
-        if mydoc.get('userid'):
-            mydoc['score'] = ugc.get_user_score(mydoc['userid'])
-        if mydoc.get('size'):
-            mydoc['size'] = entropy_tools.bytes_into_human(mydoc.get('size'))
 
     def _set_user_perms(self, user_id, portal):
         c.my_role = _("User")

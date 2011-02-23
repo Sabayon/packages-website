@@ -1,0 +1,8 @@
+<div class="package-ugc-data">
+    <%include file="/ugc_doc_desc_keywords.html"/>
+    <div class="package-ugc-data-inside package-ugc-data-image-inside">
+        <a href="${c.ugc_doc['store_url']}" rel="lytebox" onfocus="initLytebox();">
+            <img src="${c.ugc_doc['store_url']}" id="package-ugc-image-${c.ugc_doc['iddoc']}" alt="${c.ugc_doc['description']}" max-width="160" onload="image_resize('package-ugc-image-${c.ugc_doc['iddoc']}',160);">
+        </a>
+    </div>
+</div>

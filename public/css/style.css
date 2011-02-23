@@ -67,6 +67,19 @@ input {
 
 }
 
+.form-left {
+    display: block;
+    float: left;
+    margin-right: 15px;
+    text-align: left;
+    width: 26em;
+}
+
+.form-line {
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
 .search-tips {
     padding-top: 10px;
 }
@@ -174,6 +187,12 @@ input {
     background-image: url("/images/pkgband-source.png");
 }
 
+.group-widget-title-area {
+    background-image: none;
+    min-height: 48px;
+    color: #333333;
+}
+
 .package-widget-meta-atom {
     font-weight: bold;
     font-size: 1.3em;
@@ -181,9 +200,18 @@ input {
     max-width: 550px;
 }
 
+.group-widget-meta-atom {
+    color: #333333;
+}
+
 .package-widget-meta-description {
     max-width: 550px;
     color: #DDDDDD;
+}
+
+.group-widget-meta-description {
+    max-width: 550px;
+    color: #333333;
 }
 
 .package-widget-icon {
@@ -199,6 +227,14 @@ input {
     color: #EEEEEE;
 }
 
+.group-widget {
+    padding: 1em;
+}
+
+.group-widget a, .group-widget a:active, .group-widget a:link, .group-widget a:visited {
+    color: #222222;
+}
+
 .package-widget-base-meta-area {
     padding-top: 5px;
     padding-left: 8px;
@@ -206,6 +242,11 @@ input {
 
 .package-widget-first-area {
     min-height: 72px;
+}
+
+.group-widget-first-area {
+    min-height: 68px;
+    color: #333333;
 }
 
 .package-widget-stats-area {
@@ -234,19 +275,28 @@ input {
 }
 
 .package-widget-meta-list {
-    padding-top: 15px;
+    padding-top: 10px;
+}
+
+.package-widget-meta-list-options {
+    margin-top: 15px;
 }
 
 .package-widget-meta-list a, .package-widget-meta-list a:active, .package-widget-meta-list a:link, .package-widget-meta-list a:visited {
     color: teal;
 }
 
+.package-widget-meta-info a, .package-widget-meta-info a:active, .package-widget-meta-info a:link, .package-widget-meta-info a:visited {
+    color: teal;
+}
+
+
 .package-widget-meta-list-row {
     padding-bottom: 4px;
 }
 
 .package-widget-meta-list-item {
-    padding-left: 15px;
+    padding-left: 25px;
 }
 
 .package-widget-meta-list-url {
@@ -261,6 +311,12 @@ input {
 
 .nothing-to-show {
     
+}
+
+.navigation-list-item {
+    border-bottom: 1px dotted teal;
+    font-size: 1.1em;
+    font-variant: small-caps;
 }
 
 .packages-more-navbar {
@@ -322,7 +378,17 @@ input {
 
 .packages-results-info {
     text-align: right;
+    padding-bottom: 0.2em;
 }
+
+.packages-results-latest-info {
+    color: #888888;
+    font-size: 1.7em;
+    font-variant: small-caps;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    padding-bottom: 10px;
+}  
 
 .package-widget-meta-list-left-item-binary {
     border-color: teal;
@@ -348,6 +414,7 @@ input {
 
 .package-widget-meta-list-left-item dd {
     color: #4B4848;
+    padding-left: 14em;
 }
 
 .package-widget-show-what {
@@ -384,4 +451,111 @@ input {
 
 .package-widget-show-source-url-mirror {
     padding-left: 15px;
+}
+
+.package-ugc-doc-error {
+    text-align: center;
+    color: #FF0000;
+}
+
+.package-ugc-doc-header {
+    text-align: right;
+}
+
+.package-ugc-doc-title {
+    font-weight: bold;
+    color: purple;
+}
+
+.package-ugc-doc {
+    margin-bottom: 25px;
+    border: 1px dotted brown;
+    padding: 8px;
+}
+
+.package-ugc-doc-body {
+    
+}
+
+.package-ugc-data {
+    color: #5C5F5D;
+}
+
+.package-ugc-data-inside {
+    
+}
+
+.package-ugc-data-image-inside {
+    
+}
+
+.ugc-doc-desc-keywords {
+    
+}
+
+.package-ugc-keywords {
+    padding-bottom: 10px;
+    text-align: right;
+}
+
+.ugc-do-doc {
+    margin: 20px auto;
+    width: 99%;
+}
+
+.ugc-do-doc-separator {
+    
+}
+
+
+.ugc-yt-video-code {
+    text-align: right;
+}
+
+.ugc-document-motivation {
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: right;
+    font-style: italic;
+}
+
+.ugc-form-title {
+    width: 26em;
+}
+
+.ugc-do-doc-textarea {
+    width: 350px;
+    height: 70px;
+}
+
+.ugc-do-doc-errors {
+    text-align: right;
+    margin-left: 10px;
+    color: #FF0000;
+}
+
+.search-widget-special-search-item {
+    border-bottom: 1px dotted teal;
+    /* margin-bottom: 5px; */
+}
+
+.search-widget-special-search-item dt {
+    width: 11em;
+    display: block;
+    float: left;
+    margin-right: 15px;
+    text-align: left;
+}
+
+.search-widget-special-search-item dd {
+    padding-left: 5em;
+}
+
+.group-widget-view {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.group-widget-view-col {
+    
 }

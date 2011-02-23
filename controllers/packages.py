@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import logging
+import os
 import json
+import time
 from datetime import datetime
 from cStringIO import StringIO
+import shutil, os, time
+import hashlib
+import tempfile
 
 from www.lib.base import *
 from www.lib.website import *
@@ -17,13 +21,8 @@ try:
 except ImportError:
     from sqlite3.dbapi2 import ProgrammingError, OperationalError, \
         DatabaseError
-import entropy.tools as entropy_tools
 import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
-
-import shutil, os, time
-import hashlib
-
 
 class PackagesController(BaseController, WebsiteController, ApibaseController):
 
@@ -50,9 +49,14 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
     def _render_mako(self, page):
         return render_mako(page)
 
+    def _set_search_time(self, end_t, start_t):
+        c.packages_search_time = round(abs(end_t - start_t), 4)
+
     def _get_renderer_public_data_map(self):
 
         if request.params.get("api") == "0":
+            # THIS IS THE OLD PUBLIC API !!
+            # support Ian stuff (the irc bot was using the old API)
             entropy = self._entropy()
 
             idproduct = request.params.get("p") or model.config.default_product
@@ -64,8 +68,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 arch = model.config.default_arch
             releases = set()
             old_data_format = {}
-            ugc = self._ugc()
             ugc_cache = {}
+            ugc = self._ugc()
             try:
                 for pkg_tuple in c.search_pkgs:
                     p_id, r, a, b, p = pkg_tuple
@@ -175,6 +179,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         """
         Show package details.
         """
+        start_t = time.clock()
+
         decoded_data = self._parse_hash_id(hash_id)
         if decoded_data is None:
             return redirect(url("/"))
@@ -215,6 +221,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             pass
 
         c.show_detailed_view = True
+        self._set_search_time(time.clock(), start_t)
 
         return self._render('/index.html', renderer = "html")
 
@@ -227,9 +234,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
         repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         provided_mime = None
+        category = None
         try:
             if repo is not None:
-                provided_mime = sorted(repo.retrieveProvidedMime(package_id))
+                provided_mime = repo.retrieveProvidedMime(package_id)
+                category = repo.retrieveCategory(package_id)
         finally:
             if repo is not None:
                 repo.close()
@@ -237,8 +246,16 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if provided_mime is None:
             return self.show(hash_id)
 
-        query = self.PREFIXES['mime'] + " ".join(provided_mime)
-        return self.quicksearch(q = query)
+        mime_str = ""
+        max_len = model.config.SEARCH_FORM_MAX_LENGTH
+        for mime in sorted(provided_mime):
+            if (len(mime_str) + 1 + len(mime)) > max_len:
+                # reached the end
+                break
+            mime_str += " " + mime
+        query = self.PREFIXES['mime'] + mime_str
+        return self.quicksearch(q = query, filter_str = "category",
+            filter_data = category, override_query_length_checks = True)
 
     def _show_changelog(self, hash_id):
         decoded_data = self._parse_hash_id(hash_id)
@@ -300,7 +317,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 y == etpConst['dependency_type_ids']['pdepend_id']]
             data['manual_deps'] = [x for x, y in dependencies if \
                 y == etpConst['dependency_type_ids']['mdepend_id']]
-            key_sorter = lambda x: entropy_tools.dep_getkey(x)
+            key_sorter = lambda x: entropy_dep.dep_getkey(x)
             for k, v in data.items():
                 v.sort(key = key_sorter)
             show_what_data['data'] = data
@@ -323,15 +340,15 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
 
         # caching
-        sha = hashlib.sha256()
-        hash_str = "%s|%s|%s|%s|%s" % (
-            repository_id, arch, branch, product,
-            self._get_valid_repositories_mtime_hash(entropy))
-        sha.update(hash_str)
-        cache_key = "_show_reverse_dependencies_" + sha.hexdigest()
         revdep_cache = None
 
         if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            hash_str = "%s|%s|%s|%s|%s" % (
+                repository_id, arch, branch, product,
+                self._get_valid_repositories_mtime_hash(entropy))
+            sha.update(hash_str)
+            cache_key = "_show_reverse_dependencies_" + sha.hexdigest()
             # whacky thing !!
             revdep_cache = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
@@ -352,7 +369,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 def key_sorter(x):
                     atom = repo.retrieveAtom(x)
                     if atom:
-                        return entropy_tools.dep_getkey(atom)
+                        return entropy_dep.dep_getkey(atom)
                     else:
                         return "0"
 
@@ -468,13 +485,44 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         provided_libs = None
         try:
             if repo is not None:
-                provided_libs = repo.retrieveNeeded(package_id)
+                provided_libs = repo.retrieveProvidedLibraries(package_id)
         finally:
             if repo is not None:
                 repo.close()
 
         show_what_data['data'] = {
             'provided_libs': provided_libs,
+            'arch': arch,
+            'branch': branch,
+            'product': product,
+        }
+        c.package_show_what = show_what_data
+
+        return self.show(hash_id)
+
+    def _show_needed_libs(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "needed_libs",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        needed_libs = None
+        try:
+            if repo is not None:
+                needed_libs = repo.retrieveNeeded(package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = {
+            'needed_libs': needed_libs,
             'arch': arch,
             'branch': branch,
             'product': product,
@@ -554,6 +602,39 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         return self.show(hash_id)
 
+    def _show_ugc(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        show_what_data = {
+            'what': "ugc",
+            'data': None,
+        }
+
+        entropy = self._entropy()
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        ugc = self._ugc()
+        metadata = None
+        try:
+            if repo is not None:
+                atom = repo.retrieveAtom(package_id)
+                if atom is not None:
+                    key = entropy_dep.dep_getkey(atom)
+                    metadata = self._get_ugc_extended_metadata(ugc, key)
+        finally:
+            ugc.disconnect()
+            del ugc
+            if repo is not None:
+                repo.close()
+
+        show_what_data['data'] = metadata
+        c.package_show_what = show_what_data
+
+        self._generate_login_metadata()
+        return self.show(hash_id)
+
     def show_what(self, hash_id, what):
         """
         Show package details, and given metadatum (what).
@@ -567,13 +648,22 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             "security": self._show_security,
             "mime": self._show_mime,
             "provided_libs": self._show_provided_libs,
+            "needed_libs": self._show_needed_libs,
             "content": self._show_content,
             "download": self._show_download,
             "sources": self._show_sources,
+            "ugc": self._show_ugc,
         }
 
         func = what_map.get(what, what_map.get("__fallback__"))
         return func(hash_id)
+
+    def group(self, group):
+        """
+        Show packages in group, using quicksearch
+        """
+        query = self.PREFIXES['group'] + group
+        return self.quicksearch(q = query)
 
     def category(self, category):
         """
@@ -596,7 +686,51 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         query = self.PREFIXES['useflag'] + useflag
         return self.quicksearch(q = query)
 
-    def quicksearch(self, q = None):
+    def _get_request_search_filter_params(self, filter_str = None,
+        filter_data = None):
+        """
+        Given the current request.params object in context, return the
+        associated _api_search_* filter function if found and valid, otherwise
+        return None. The signature of the filtering function is declared inside
+        apibase module, under any _api_search_* method. It's:
+            bool filter_cb(entropy_repository, package_id)
+        """
+        if filter_str is None:
+            filter_str = request.params.get("filter")
+        if not filter_str:
+            return None
+        if not filter_str.strip():
+            return None
+        if filter_data is None:
+            filter_data = request.params.get("filter_data")
+        if not filter_data:
+            return None
+        if not filter_data.strip():
+            return None
+
+        filter_data_list = filter_data.split()
+        c.search_filter_str = filter_str
+        c.search_filter_data = filter_data
+
+        def _filter_category(repo, pkg_id):
+            cat = repo.retrieveCategory(pkg_id)
+            return cat in filter_data_list
+
+        def _filter_category_startswith(repo, pkg_id):
+            cat = repo.retrieveCategory(pkg_id)
+            for filter_cat in filter_data_list:
+                if cat.startswith(filter_cat):
+                    return True
+            return False
+
+        supported_filters = {
+            "category": _filter_category,
+            "category_startswith": _filter_category_startswith,
+        }
+        return supported_filters.get(filter_str, None)
+
+    def quicksearch(self, q = None, filter_str = None, filter_data = None,
+        override_query_length_checks = False):
         """
         Search packages in repositories.
         Public API for searching, answering to: http://host/search
@@ -607,16 +741,28 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         r=<repo>: repository id [default: sabayonlinux.org]
         b=<branch>: repository branch [default: 5]
         p=<product>: product [default: standard]
+        filter=<filter type>: filter package results using given filter type
+            currently supported filters:
+                "category"
+        filter_data=<filter data>: if a filter is selected, the data that
+            should be used for filtering (pattern matching) must be passed
+            on the filter_data parameter
         """
+        start_t = time.clock()
+        def _redirect_to_home():
+            if request.params.get('more'):
+                return ""
+            return redirect(url("/"))
 
         if q is None:
             q = request.params.get('q')
         if not q.strip():
-            return redirect(url("/"))
-        if len(q) > 64:
-            return redirect(url("/"))
-        elif len(q) < 2:
-            return redirect(url("/"))
+            return _redirect_to_home()
+        if not override_query_length_checks:
+            if len(q) > model.config.SEARCH_FORM_MAX_LENGTH:
+                return _redirect_to_home()
+            elif len(q) < 2:
+                return _redirect_to_home()
 
         # no need to validate them, already validated below
         # use r, a, b, p as filter
@@ -625,6 +771,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         b = request.params.get('b')
         p = request.params.get('p')
         t = request.params.get('t')
+        filter_cb = self._get_request_search_filter_params(
+            filter_str = filter_str, filter_data = filter_data)
 
         from_pkg = request.params.get('from') or 0
         if from_pkg:
@@ -644,17 +792,17 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
 
         # caching
-        sha = hashlib.sha256()
-        sha.update(const_convert_to_rawstring(q))
-        sha.update(repr(r))
-        sha.update(repr(a))
-        sha.update(repr(b))
-        sha.update(repr(p))
-        mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
-        sha.update(mtime_hash)
-        cache_key = "quicksearch_" + sha.hexdigest()
         results = None
         if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            sha.update(const_convert_to_rawstring(q))
+            sha.update(repr(r))
+            sha.update(repr(a))
+            sha.update(repr(b))
+            sha.update(repr(p))
+            mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
+            sha.update(mtime_hash)
+            cache_key = "quicksearch_" + sha.hexdigest()
             results = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
@@ -663,10 +811,12 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 'default': self._api_search_pkg,
                 'description': self._api_search_desc,
                 'library': self._api_search_lib,
+                'provided_library': self._api_search_provided_lib,
                 'path': self._api_search_path,
                 'match': self._api_search_match,
                 'sets': self._api_search_sets,
                 'mime': self._api_search_mime,
+                'group': self._api_search_group,
                 'category': self._api_search_category,
                 'license': self._api_search_license,
                 'useflag': self._api_search_useflag,
@@ -689,6 +839,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             elif t == "lib":
                 default_searches = ["library"]
                 searching_default = False
+            elif t == "prov_lib":
+                default_searches = ["provided_library"]
+                searching_default = False
 
             elif not t:
                 # try to understand string
@@ -707,41 +860,55 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                     searching_default = False
                     q = q[len(self.PREFIXES['mime']):]
                     if not q.strip():
-                        return redirect(url("/"))
+                        return _redirect_to_home()
+                elif q.startswith(self.PREFIXES['group']) and \
+                    len(q) > (2+len(self.PREFIXES['group'])):
+                    default_searches = ["group"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['group']):]
+                    if not q.strip():
+                        return _redirect_to_home()
                 elif q.startswith(self.PREFIXES['category']) and \
-                    len(q) > (5+len(self.PREFIXES['mime'])):
+                    len(q) > (5+len(self.PREFIXES['category'])):
                     default_searches = ["category"]
                     searching_default = False
                     q = q[len(self.PREFIXES['category']):]
                     if not q.strip():
-                        return redirect(url("/"))
+                        return _redirect_to_home()
                 elif q.startswith(self.PREFIXES['license']) and \
                     len(q) > (2+len(self.PREFIXES['license'])):
                     default_searches = ["license"]
                     searching_default = False
                     q = q[len(self.PREFIXES['license']):]
                     if not q.strip():
-                        return redirect(url("/"))
+                        return _redirect_to_home()
                 elif q.startswith(self.PREFIXES['useflag']) and \
                     len(q) > (1+len(self.PREFIXES['useflag'])):
                     default_searches = ["useflag"]
                     searching_default = False
                     q = q[len(self.PREFIXES['useflag']):]
                     if not q.strip():
-                        return redirect(url("/"))
+                        return _redirect_to_home()
                 elif q.startswith(self.PREFIXES['library']) and \
                     len(q) > (4+len(self.PREFIXES['library'])):
                     default_searches = ["library"]
                     searching_default = False
                     q = q[len(self.PREFIXES['library']):]
                     if not q.strip():
-                        return redirect(url("/"))
+                        return _redirect_to_home()
+                elif q.startswith(self.PREFIXES['provided_library']) and \
+                    len(q) > (4+len(self.PREFIXES['provided_library'])):
+                    default_searches = ["provided_library"]
+                    searching_default = False
+                    q = q[len(self.PREFIXES['provided_library']):]
+                    if not q.strip():
+                        return _redirect_to_home()
 
             results = []
             for search in default_searches:
                 for q_split in q.split():
                     results.extend([x for x in search_map.get(search)(entropy,
-                        q_split) if x not in results])
+                        q_split, filter_cb = filter_cb) if x not in results])
 
             if r is not None:
                 results = [x for x in results if x[1] == r]
@@ -765,7 +932,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         results_len = len(results)
         if from_pkg > results_len:
             # invalid !
-            return redirect(url("/"))
+            return _redirect_to_home()
 
         if results_len > max_results:
             results = results[from_pkg:]
@@ -789,7 +956,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 del ugc
             c.packages_data = data_map
         elif searching_default:
-            results = self._api_get_similar_packages(entropy, q)
+            results = self._api_get_similar_packages(entropy, q,
+                filter_cb = filter_cb)
             if results:
                 if results_len > max_results:
                     results = results[:max_results]
@@ -808,11 +976,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         else:
             c.search_nothing_found = True
 
+        self._set_search_time(time.clock(), start_t)
         if request.params.get('more'):
             return self._render('/search_results_area.html')
         return self._render('/index.html')
 
     def index(self):
+        start_t = time.clock()
         self._generate_html_metadata()
         entropy = self._entropy()
 
@@ -820,6 +990,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         search_pkgs += self._get_latest_binary_packages(entropy)
         search_pkgs += self._get_latest_source_packages(entropy)
         c.search_pkgs = search_pkgs
+        c.search_showing_latest = True
 
         ugc = self._ugc()
         try:
@@ -830,130 +1001,32 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             del ugc
         c.packages_data = data_map
 
+        self._set_search_time(time.clock(), start_t)
         return self._render('/index.html', renderer = "html")
 
-    def _get_ugc_info(self, repoid, pkgkey, ugc = None):
+    def groups(self):
+        start_t = time.clock()
+        self._generate_html_metadata()
+        c.show_area = "groups"
 
-        our_repoid = model.config.ETP_REPOSITORY
-        if our_repoid == repoid:
-            c_data = model.config.ugc_connection_data
-        else:
-            c_data = model.config.community_repos_ugc_connection_data.get(repoid)
-        if not c_data:
-            return None
-        close_ugc = False
-        if ugc == None:
-            close_ugc = True
-            ugc = self._ugc()
-        mydata = {
-            'vote': ugc.get_ugc_vote(pkgkey),
-            'downloads': ugc.get_ugc_downloads(pkgkey),
-            'docs': ugc.get_ugc_metadata_doctypes(pkgkey, [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
-        }
-        for mydoc in mydata['docs']:
-            self._expand_ugc_doc_info(ugc, mydoc)
+        entropy = self._entropy()
+        c.groups_data = self._api_get_groups(entropy)
 
-        if close_ugc:
-            ugc.disconnect()
-            del ugc
-        return mydata
+        self._set_search_time(time.clock(), start_t)
+        return self._render("/index.html", renderer = "html")
 
-    def _search_ugc_content(self, searchstring, doctypes, orderby, results_offset, results_limit):
-        ugc = self._ugc()
-        results, found_rows = ugc.search_content_items(searchstring,
-            iddoctypes = doctypes, results_offset = results_offset,
-            results_limit = results_limit, order_by = orderby)
-        for item in results:
-            ugc._get_ugc_extra_metadata(item)
-        ugc.disconnect()
-        del ugc
-        return results, found_rows
+    def categories(self):
+        start_t = time.clock()
+        self._generate_html_metadata()
+        c.show_area = "categories"
 
-    def _search_ugc_keyword(self, searchstring, doctypes, orderby, results_offset, results_limit):
-        ugc = self._ugc()
-        results, found_rows = ugc.search_keyword_items(searchstring,
-            iddoctypes = doctypes, results_offset = results_offset,
-            results_limit = results_limit, order_by = orderby)
-        for item in results:
-            ugc._get_ugc_extra_metadata(item)
-        ugc.disconnect()
-        del ugc
-        return results, found_rows
+        entropy = self._entropy()
+        c.categories_data = self._api_get_categories(entropy)
 
-    def _search_ugc_username(self, searchstring, doctypes, orderby, results_offset, results_limit):
-        ugc = self._ugc()
-        results, found_rows = ugc.search_username_items(searchstring,
-            iddoctypes = doctypes, results_offset = results_offset,
-            results_limit = results_limit, order_by = orderby)
-        for item in results:
-            ugc._get_ugc_extra_metadata(item)
-        ugc.disconnect()
-        del ugc
-        return results, found_rows
-
-    def _search_ugc_pkgname(self, searchstring, doctypes, orderby, results_offset, results_limit):
-        ugc = self._ugc()
-        results, found_rows = ugc.search_pkgkey_items(searchstring,
-            iddoctypes = doctypes, results_offset = results_offset,
-            results_limit = results_limit, order_by = orderby)
-        for item in results:
-            ugc._get_ugc_extra_metadata(item)
-        ugc.disconnect()
-        del ugc
-        return results, found_rows
-
-    def _search_ugc_iddoc(self, searchstring, doctypes, orderby, results_offset, results_limit):
-        ugc = self._ugc()
-        results, found_rows = ugc.search_iddoc_item(searchstring,
-            iddoctypes = doctypes, results_offset = results_offset,
-            results_limit = results_limit, order_by = orderby)
-        for item in results:
-            ugc._get_ugc_extra_metadata(item)
-        ugc.disconnect()
-        del ugc
-        return results, found_rows
-
-    def _get_post_get_idpackage_product_arch_branch(self, entropy):
-
-        not_found = False
-        # idpackage, product, arch, branch
-        try:
-            idpackage = int(request.params.get('idpackage'))
-        except (ValueError,TypeError,):
-            idpackage = 0
-            not_found = True
-
-        repoid = request.params.get('repo')
-        arch = request.params.get('arch')
-        product = request.params.get('product')
-        branch = request.params.get('branch')
-        if not (repoid and product and branch and arch):
-            not_found = True
-
-        if not not_found:
-            if product not in model.config.available_products:
-                not_found = True
-
-        if not not_found:
-            repos = self._get_available_repositories(entropy, product, arch)
-            if repoid not in repos:
-                not_found = True
-
-        if not not_found:
-            arches = self._get_available_arches(entropy, repoid, product)
-            if arch not in arches:
-                not_found = True
-
-        if not not_found:
-            avail_branches = []
-            avail_branches = entropy._get_branches(repoid, arch, product)
-            if branch not in avail_branches:
-                not_found = True
-
-        return not_found, idpackage, product, repoid, arch, branch
+        self._set_search_time(time.clock(), start_t)
+        return self._render("/index.html", renderer = "html")
 
     def show_ugc_add(self):
-        model.config.setup_internal(model, c, session, request)
 
         error = False
         try:
@@ -995,10 +1068,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.atom = atom
         c.pkgkey = pkgkey
 
-        return self._render('/packages/do_document_page.html', renderer = "html")
+        return self._render('/do_ugc_document.html', renderer = "html")
 
     def ugc_delete(self):
-        model.config.setup_internal(model, c, session, request)
+        self._generate_html_metadata()
+        self._generate_login_metadata()
 
         user_id = self._get_logged_user_id()
         if not user_id:
@@ -1010,30 +1084,28 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             return "%s: %s" % (_("Error"), _("invalid document"),)
 
         ugc = self._ugc()
-        iddoc_user_id = ugc.get_iddoc_userid(iddoc)
-        if iddoc_user_id == None:
-            ugc.disconnect()
-            del ugc
-            return "%s: %s" % (_("Error"), _("invalid document specified"),)
-        elif (iddoc_user_id != user_id) and not (c.is_user_administrator or c.is_user_moderator):
-            ugc.disconnect()
-            del ugc
-            return "%s: %s" % (_("Error"), _("permission denied, you suck!"),)
-
         try:
-            doctype = int(ugc.get_iddoctype(iddoc))
-        except (ValueError,TypeError,):
-            doctype = -1
-        if doctype == -1:
+            iddoc_user_id = ugc.get_iddoc_userid(iddoc)
+            if iddoc_user_id is None:
+                return "%s: %s" % (_("Error"), _("invalid document specified"),)
+            elif (iddoc_user_id != user_id) and not \
+                (c.is_user_administrator or c.is_user_moderator):
+                return "%s: %s" % (_("Error"), _("permission denied!"),)
+
+            try:
+                doctype = int(ugc.get_iddoctype(iddoc))
+            except (ValueError,TypeError,):
+                doctype = -1
+            if doctype == -1:
+                return "%s: %s" % (_("Error"), _("WTF? invalid document type!"),)
+
+            status, err_msg = ugc.remove_document_autosense(iddoc, doctype)
+        finally:
             ugc.disconnect()
             del ugc
-            return "%s: %s" % (_("Error"), _("WTF? invalid document type!"),)
-
-        status, err_msg = ugc.remove_document_autosense(iddoc, doctype)
-        ugc.disconnect()
-        del ugc
-        if status == None:
-            return "%s: %s" % (_("Error"), _("you know what? I cannot handle this document"),)
+        if status is None:
+            return "%s: %s" % (_("Error"),
+                _("you know what? I cannot handle this document"),)
         if not status: return '%s: %s' % (
             _("Error"), err_msg,)
 
@@ -1041,8 +1113,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
 
     def ugc_add(self):
-
-        model.config.setup_internal(model, c, session, request)
+        self._generate_html_metadata()
+        self._generate_login_metadata()
 
         try:
             user_id = int(request.params.get('user_id'))
@@ -1104,46 +1176,46 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         elif docfile_avail and (doctype != c.ugc_doctypes['comments']):
             # fetch tha file
             try:
-                orig_filename = os.path.basename(docfile.filename.lstrip(os.sep)) # two is better than lstrip :P
+                # two is better than lstrip :P
+                orig_filename = os.path.basename(docfile.filename.lstrip(os.sep))
             except AttributeError:
                 return '%s: %s' % (
                     _("Error"), request.POST,)
-            myrand = "_%s_" % (self._get_random(),)
-            tmp_file = os.path.join(model.config.WEBSITE_TMP_DIR,str(user_id)+myrand+orig_filename)
-            while os.path.lexists(tmp_file):
-                tmp_file = os.path.join(model.config.WEBSITE_TMP_DIR,str(user_id)+myrand+orig_filename)
-            tmp_f = open(tmp_file,"wb")
-            shutil.copyfileobj(docfile.file, tmp_f)
-            docfile.file.close()
-            tmp_f.flush()
-            tmp_f.close()
-            fsize = self._get_file_size(tmp_file)
-            if fsize > model.config.UGC_MAX_UPLOAD_FILE_SIZE: # we already check this server side, in middleware.py, two is better than none
+            tmp_fd, tmp_file = tempfile.mkstemp(dir = model.config.WEBSITE_TMP_DIR)
+            with os.fdopen(tmp_fd, "wb") as tmp_f:
+                shutil.copyfileobj(docfile.file, tmp_f)
+                docfile.file.close()
+                tmp_f.flush()
+                fsize = tmp_f.tell()
+            # we already check this server side, in
+            # middleware.py, two is better than none
+            if fsize > model.config.UGC_MAX_UPLOAD_FILE_SIZE:
                 os.remove(tmp_file)
                 return "%s: %s" % (_("Error"), _("file too big"),)
             file_name = os.path.join(pkgkey,orig_filename)
 
         # now handle the UGC add
         ugc = self._ugc()
-        status, iddoc = ugc.insert_document_autosense(pkgkey, doctype, user_id, username, comment_text, tmp_file, file_name, orig_filename, title, description, keywords)
-        if not status:
-            ugc.disconnect()
-            del ugc
-            return '%s: %s' % (
-                _("Error"), iddoc,)
-        if not isinstance(iddoc, int):
-            ugc.disconnect()
-            del ugc
-            return '%s %s' % (
-                "%s: %s" % (_("Error"), _("document added but couldn't determine 'iddoc' correctly"),), iddoc,)
+        try:
+            status, iddoc = ugc.insert_document_autosense(pkgkey, doctype, user_id,
+                username, comment_text, tmp_file, file_name, orig_filename, title,
+                description, keywords)
+            if not status:
+                return '%s: %s' % (_("Error"), iddoc,)
+            if not isinstance(iddoc, int):
+                return '%s %s' % (
+                    "%s: %s" % (_("Error"),
+                    _("document added but couldn't determine 'iddoc' correctly"),), iddoc,)
 
-        c.ugc_doc = {}
-        ugc_data = ugc.get_ugc_metadata_by_identifiers([iddoc])
-        if ugc_data: c.ugc_doc = ugc_data[0]
-        self._expand_ugc_doc_info(ugc, c.ugc_doc)
-        ugc.disconnect()
-        del ugc
-        return self._render('/packages/ugc_show_doc.html', renderer = "html")
+            c.ugc_doc = {}
+            ugc_data = ugc.get_ugc_metadata_by_identifiers([iddoc])
+            if ugc_data:
+                c.ugc_doc = ugc_data[0]
+            self._expand_ugc_doc_metadata(ugc, c.ugc_doc)
+        finally:
+            ugc.disconnect()
+            del ugc
+        return self._render('/ugc_show_doc.html', renderer = "html")
 
     def vote(self):
 
@@ -1185,4 +1257,4 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         c.error = error
         c.err_msg = err_msg
-        return self._render('/packages/voted.html', renderer = "html")
+        return self._render('/ugc_voted.html', renderer = "html")

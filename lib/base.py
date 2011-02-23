@@ -52,10 +52,12 @@ class BaseController(WSGIController):
 
         self.PREFIXES = {
             'mime': "m:",
+            'group': "g:",
             'category': "c:",
             'license': "l:",
             'useflag': "u:",
             'library': "so:",
+            'provided_library': "sop:",
         }
 
     def _generate_html_metadata(self):
@@ -67,8 +69,14 @@ class BaseController(WSGIController):
         c.meta_list_url = "/images/packages/metalist"
         c.base_package_show_url = model.config.PACKAGE_SHOW_URL
         c.base_search_url = model.config.PACKAGE_SEARCH_URL
+        c.base_group_url = model.config.GROUP_SHOW_URL
+        c.base_catetory_url = model.config.CATEGORY_SHOW_URL
         c.search_prefixes = self.PREFIXES
+        c.search_form_max_length = model.config.SEARCH_FORM_MAX_LENGTH
         model.config.setup_internal(model, c, session, request)
+
+    def _generate_login_metadata(self):
+        model.config.setup_permission_data(model, c, session)
 
     def __call__(self, environ, start_response):
         """Invoke the Controller"""

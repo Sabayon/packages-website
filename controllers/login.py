@@ -19,7 +19,7 @@ class LoginController(BaseController, WebsiteController):
 
     def submit(self):
 
-        model.config.setup_all(model, c, session, request)
+        model.config.setup_internal(model, c, session, request) 
         login_data = {
             'username': request.params.get('username'),
             'password': request.params.get('password')
@@ -64,6 +64,6 @@ class LoginController(BaseController, WebsiteController):
             del session['logged_in']
         session.save()
 
-        model.config.setup_all(model, c, session, request)
+        model.config.setup_internal(model, c, session, request)
         return redirect(url('/', protocol=model.config.get_http_protocol(request)))
 

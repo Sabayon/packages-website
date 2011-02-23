@@ -88,7 +88,8 @@ class Entropy(Client):
         supported_repo_dir = os.path.join(config.MY_ETP_DIR, product)
         if os.path.isdir(supported_repo_dir):
             for repoid in os.listdir(supported_repo_dir):
-                repoid_dir_path = os.path.join(supported_repo_dir, repoid, config.MY_ETP_DBDIR)
+                repoid_dir_path = os.path.join(supported_repo_dir, repoid,
+                    config.MY_ETP_DBDIR)
                 if not os.path.isdir(repoid_dir_path):
                     continue
                 if arch in os.listdir(repoid_dir_path) or (arch is None):
@@ -112,21 +113,17 @@ class Entropy(Client):
         return sorted([x for x in set(repositories) if x not \
             in config.disabled_repositories]) # remove dupies
 
-    def _open_db(self, repoid, arch, product, branch):
-
-        product = os.path.basename(product)
-        repoid = os.path.basename(repoid)
-        arch = os.path.basename(arch)
-        branch = os.path.basename(branch)
-
+    def _open_db(self, repoid, arch, product, branch, xcache = False):
+        """
+        xcache is False by default, because in most cases (like search functions)
+        the repository is opened once and used once and then, closed.
+        This causes checksum() to be calculated every time atomMatch is called,
+        due to xcache being enabled. So, xcache is disabled by defalt.
+        """
         dir_path = self._guess_repo_db_path(repoid, arch, product, branch)
         db_path = os.path.join(dir_path, etpConst['etpdatabasefile'])
-        db_path_lock = os.path.join(dir_path, etpConst['etpdatabasedownloadlockfile'])
-        if os.path.isfile(db_path_lock):
-            # temporarily not available
-            raise SystemDatabaseError("temporarily not available")
-        return self.open_generic_repository(db_path, xcache = True,
-            read_only = True, indexing_override = False)
+        return self.open_generic_repository(db_path, xcache = xcache,
+            read_only = True, indexing_override = True)
 
     def output(*myargs, **mykwargs):
         pass

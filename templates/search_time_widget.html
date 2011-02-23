@@ -1,0 +1,14 @@
+<div class="packages-results-info">
+    <% 
+        zecondz = "zarro"
+        if c.packages_search_time:
+            zecondz = c.packages_search_time
+        results_len = len(c.groups_data)
+        if results_len == 0:
+            results_len = ""
+    %>
+    % if results_len:
+        ${_("Results found")}: ${results_len}
+    % endif
+     (${zecondz} ${_("seconds")})
+</div>

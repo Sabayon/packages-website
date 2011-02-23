@@ -17,8 +17,8 @@ VIRUS_CHECK_EXEC = '/usr/bin/clamscan'
 VIRUS_CHECK_ARGS = []
 DEFAULT_CHMOD_DIR = 0775
 DEFAULT_CHMOD_FILE = 0664
-DEFAULT_WEB_USER = "fabio"
-DEFAULT_WEB_UID = 1001
+DEFAULT_WEB_USER = "entropy"
+DEFAULT_WEB_UID = 1000
 DEFAULT_WEB_GROUP = "entropy"
 DEFAULT_WEB_GID = 1000
 GLSA_URI = "http://www.gentoo.org/rdf/en/glsa-index.rdf"
@@ -26,6 +26,7 @@ MY_ETP_DIR = "/home/sabayonlinux/entropy/"
 ETP_PATH = '/home/sabayonlinux/public_html/packages2.sabayon.org/www/entropy/libraries'
 WEBSITE_TMP_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/temp'
 WEBSITE_CACHE_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/cache'
+WEBSITE_REPO_CACHE_DIR = WEBSITE_CACHE_DIR + "/_repos"
 COMMUNITY_REPOS_DIR = "/home/sabayonlinux/public_html/community.sabayon.org/repos/"
 REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
 # new method also!
@@ -69,11 +70,14 @@ ugc_store_path = "/home/sabayonlinux/public_html/community.sabayon.org/ugc"
 ugc_store_url = "http://community.sabayon.org/ugc"
 ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
 
+GROUP_SHOW_URL = "/group"
+CATEGORY_SHOW_URL = "/category"
 PACKAGE_SHOW_URL = "/show"
 PACKAGE_SHOW_LICENSE_URL = "/license"
 PACKAGE_SHOW_CATEGORY_URL = "/category"
 PACKAGE_SHOW_USEFLAG_URL = "/useflag"
 PACKAGE_SEARCH_URL = "/quicksearch"
+SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):
     return "HTTPS" in request.headers
@@ -83,18 +87,10 @@ def get_http_protocol(request):
         return "https"
     return "http"
 
-def setup_all(model, c, session, request):
-    setup_session(session)
-    setup_misc_vars(c, request)
-    setup_login_data(model, c, session)
-    setup_permission_data(model, c, session)
-    session.save()
-
 def setup_internal(model, c, session, request):
     setup_session(session)
     setup_misc_vars(c, request)
     setup_login_data(model, c, session)
-    setup_permission_data(model, c, session)
     session.save()
 
 def setup_login_data(model, c, session):

@@ -1,3 +1,7 @@
-<div>
+% if c.show_area == "groups":
+    <%include file="/groups_area.html"/>
+% elif c.show_area == "categories":
+    <%include file="/categories_area.html"/>
+% else:
     <%include file="/packages_area.html"/>
-</div>
+% endif

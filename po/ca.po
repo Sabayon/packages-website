@@ -6,527 +6,121 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-13 23:57+0100\n"
+"POT-Creation-Date: 2011-02-21 23:57+0100\n"
 "PO-Revision-Date: 2009-12-07 09:01+0100\n"
 "Last-Translator: Roger Calvó <rcalvoi@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ca\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../controllers/community.py:12
-msgid "ICQ UIN"
-msgstr "ICQ UIN"
-
-#: ../controllers/community.py:13
-msgid "Very much '96..."
-msgstr "Molt '96..."
-
-#: ../controllers/community.py:19
-msgid "Yahoo IM"
-msgstr "Yahoo IM"
-
-#: ../controllers/community.py:20
-msgid "Yaho0o0o0o0 !"
-msgstr "Yaho0o0o0o0 !"
-
-#: ../controllers/community.py:26
-msgid "MSN Messenger"
-msgstr "MSN Messenger"
-
-#: ../controllers/community.py:27
-msgid "Microsoft see, we're friend"
-msgstr "Mira Microsoft, som amics"
-
-#: ../controllers/community.py:33
-msgid "Jabber ID"
-msgstr "ID de Jabber"
-
-#: ../controllers/community.py:34
-msgid "The Jabber.org Open Source Protocol"
-msgstr "El protocol de codi obert Jabber.org"
-
-#: ../controllers/community.py:40 ../templates/packages/extrainfo.html:215
-#: ../templates/community/users/public_profile.html:156
-msgid "Website"
-msgstr "Pagina web"
-
-#: ../controllers/community.py:41
-msgid "Do you have a website?"
-msgstr "Teniu una pàgina web?"
-
-#: ../controllers/community.py:47
-#: ../templates/community/users/public_profile.html:82
-msgid "Location"
-msgstr "Situació"
-
-#: ../controllers/community.py:48
-msgid "Where do you live?"
-msgstr "On viviu?"
-
-#: ../controllers/community.py:54
-#: ../templates/community/users/public_profile.html:115
-msgid "Interests"
-msgstr "Interessos"
-
-#: ../controllers/community.py:55
-msgid "What do you like most?"
-msgstr "Què us agrada més?"
-
-#: ../controllers/community.py:61
-#: ../templates/community/users/public_profile.html:104
-msgid "Occupation"
-msgstr "Ocupació"
-
-#: ../controllers/community.py:62
-msgid "What's your job?"
-msgstr "De què treballeu?"
-
-#: ../controllers/community.py:68
-msgid "Signature"
-msgstr "Signatura"
-
-#: ../controllers/community.py:69
-msgid "Your Community signature"
-msgstr "La signatura de la comunitat"
-
-#: ../controllers/community.py:75
-msgid "E-mail"
-msgstr "Correu electrònic"
-
-#: ../controllers/community.py:76
-msgid "Your current e-mail"
-msgstr "Adreça de correu electrònic"
-
-#: ../controllers/community.py:82
-msgid "Birthday"
-msgstr "Naixement"
-
-#: ../controllers/community.py:83
-msgid "When is your birthday? Hey, wanna get tha present?! DD-MM-YYYY"
-msgstr "Quan és el vostre aniversari? Ei, voleu un regal?! DD-MM-YYYY"
-
-#: ../controllers/community.py:89
-msgid "Master User Group"
-msgstr "Grup d'usuaris principal"
-
-#: ../controllers/community.py:90
-msgid "Your default User Group"
-msgstr "Grup d'usuaris predefinit"
-
-#: ../controllers/community.py:97
-msgid "User Groups"
-msgstr "Grups d'usuaris"
-
-#: ../controllers/community.py:98
-msgid "You are also in these User Groups"
-msgstr "També esteu en aquests grups d'usuaris"
-
-#: ../controllers/community.py:130
-msgid "Sabayon Linux Community Area"
-msgstr "Àrea de la comunitat de Sabayon Linux"
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "the fabulous"
-msgstr "el fabulós"
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "Maximus V"
-msgstr "Maximus V"
-
-#: ../controllers/community.py:163 ../controllers/community.py:331
-msgid "King Sun XIV"
-msgstr "Rei sol XIV"
-
-#: ../controllers/community.py:164 ../controllers/community.py:332
-msgid "the one"
-msgstr "l'únic"
-
-#: ../controllers/community.py:164 ../controllers/community.py:332
-msgid "you name it"
-msgstr "anomeneu-lo"
-
-#: ../controllers/community.py:198 ../templates/loginbox_inner.html:52
-msgid "My User Generated Content"
-msgstr "El meu Contingut Generat d'Usuari"
-
-#: ../controllers/community.py:225 ../templates/loginbox_inner.html:55
-msgid "My Statistics"
-msgstr "Les meves estadístiques"
-
-#: ../controllers/community.py:259
-msgid "My Sabayon Dashboard"
-msgstr "El tauler"
-
-#: ../controllers/community.py:275 ../controllers/community.py:281
-#: ../controllers/community.py:292 ../controllers/community.py:295
-#: ../controllers/community.py:303 ../controllers/community.py:309
-#: ../controllers/community.py:317 ../controllers/login.py:207
-#: ../controllers/login.py:210 ../controllers/login.py:215
-#: ../controllers/login.py:219 ../controllers/login.py:224
-#: ../controllers/login.py:227 ../controllers/login.py:229
-#: ../controllers/login.py:231 ../controllers/login.py:235
-#: ../controllers/login.py:238 ../controllers/login.py:283
-#: ../controllers/login.py:287 ../controllers/login.py:289
-#: ../controllers/login.py:294 ../controllers/login.py:299
-#: ../controllers/login.py:301 ../controllers/login.py:303
-#: ../controllers/login.py:305 ../controllers/login.py:308
-#: ../controllers/login.py:310 ../controllers/login.py:318
-#: ../controllers/login.py:324 ../controllers/packages.py:730
-#: ../controllers/packages.py:737 ../controllers/packages.py:743
-#: ../controllers/packages.py:749 ../controllers/packages.py:866
-#: ../controllers/packages.py:871 ../controllers/packages.py:878
-#: ../controllers/packages.py:882 ../controllers/packages.py:891
-#: ../controllers/packages.py:897 ../controllers/packages.py:899
-#: ../controllers/packages.py:911 ../controllers/packages.py:914
-#: ../controllers/packages.py:919 ../controllers/packages.py:926
-#: ../controllers/packages.py:931 ../controllers/packages.py:933
-#: ../controllers/packages.py:938 ../controllers/packages.py:943
-#: ../controllers/packages.py:953 ../controllers/packages.py:964
-#: ../controllers/packages.py:971 ../controllers/packages.py:984
-#: ../controllers/packages.py:994 ../controllers/packages.py:999
+#: ../controllers/packages.py:921 ../controllers/packages.py:926
+#: ../controllers/packages.py:933 ../controllers/packages.py:937
+#: ../controllers/packages.py:946 ../controllers/packages.py:952
+#: ../controllers/packages.py:954 ../controllers/packages.py:965
+#: ../controllers/packages.py:968 ../controllers/packages.py:973
+#: ../controllers/packages.py:980 ../controllers/packages.py:985
+#: ../controllers/packages.py:987 ../controllers/packages.py:992
+#: ../controllers/packages.py:997 ../controllers/packages.py:1007
+#: ../controllers/packages.py:1018 ../controllers/packages.py:1025
+#: ../controllers/packages.py:1038 ../controllers/packages.py:1048
+#: ../controllers/packages.py:1053
 msgid "Error"
 msgstr "Error"
 
-#: ../controllers/community.py:275
-msgid "invalid pages_id"
-msgstr "invalid pages_id"
-
-#: ../controllers/community.py:281
-msgid "permission denied"
-msgstr "s'ha denegat el permís"
-
-#: ../controllers/community.py:292 ../controllers/community.py:309
-#: ../controllers/login.py:207 ../controllers/login.py:283
-msgid "invalid HTTP method"
-msgstr "el mètode HTTP no és vàlid"
-
-#: ../controllers/community.py:295 ../controllers/login.py:210
-#: ../controllers/login.py:287 ../controllers/packages.py:866
+#: ../controllers/packages.py:921
 msgid "not logged in"
 msgstr "no heu entrat"
 
-#: ../controllers/community.py:304 ../controllers/login.py:255
-#: ../controllers/login.py:341
-msgid "Success"
-msgstr "Amb èxit"
-
-#: ../controllers/community.py:304
-msgid "profile updated successfully !"
-msgstr "el perfil s'ha desat correctament!"
-
-#: ../controllers/community.py:317
-msgid "wrong search request"
-msgstr "sol·licitud de cerca incorrecta"
-
-#: ../controllers/login.py:26
-msgid "Hello mate, what about logging in? Have a look below"
-msgstr "Ei, què us sembla si us registreu? Feu una ullada a baix"
-
-#: ../controllers/login.py:50
-msgid "Sabayon Linux Community activation"
-msgstr "Activació de la comunitat de Sabayon Linux"
-
-#: ../controllers/login.py:68
-msgid "Sabayon Linux Community registration"
-msgstr "Registre a la Comunitat Sabayon Linux"
-
-#: ../controllers/login.py:97
-msgid "Invalid Username"
-msgstr "Nom d'usuari no valid"
-
-#: ../controllers/login.py:102
-msgid "Invalid Email, empty fields or mismatch"
-msgstr "Correu no vàlid o camp buit"
-
-#: ../controllers/login.py:107
-msgid "Invalid Password, empty fields or mismatch or wrong length"
-msgstr "Contrasenya no vàlida, camp buit o longitud incorrecta"
-
-#: ../controllers/login.py:114
-msgid "Invalid Captcha Answer"
-msgstr "Resposta Captcha incorrecta"
-
-#: ../controllers/login.py:123
-msgid "Invalid"
-msgstr "No vàlid"
-
-#: ../controllers/login.py:215
-msgid "wrong POST"
-msgstr "POST incorrecte"
-
-#: ../controllers/login.py:219
-msgid "invalid old e-mail"
-msgstr "correu antic no vàlid"
-
-#: ../controllers/login.py:224
-msgid "you changed nothing"
-msgstr "no heu canviat res"
-
-#: ../controllers/login.py:227
-msgid "empty fields"
-msgstr "camps buits"
-
-#: ../controllers/login.py:229
-msgid "e-mails do not match"
-msgstr "els correus no coincideixen"
-
-#: ../controllers/login.py:231
-msgid "invalid parameters"
-msgstr "paràmetres no vàlids"
-
-#: ../controllers/login.py:235
-msgid "invalid e-mail (1)"
-msgstr "correu no vàlid (1)"
-
-#: ../controllers/login.py:238
-msgid "invalid e-mail (2)"
-msgstr "correu no vàlid (2)"
-
-#: ../controllers/login.py:255 ../controllers/login.py:341
-msgid "you must activate your change. You have mail"
-msgstr "heu d'activar els canvis. Teniu un correu"
-
-#: ../controllers/login.py:277
-msgid "Sabayon Linux Community E-mail Update Activation"
-msgstr "Activació de l'actualització del correu de la comunitat Sabayon Linux"
-
-#: ../controllers/login.py:289
-msgid "not logged in (username)"
-msgstr "No heu accedit al compte (nom d'usuari)"
-
-#: ../controllers/login.py:294
-msgid "where is the current password?"
-msgstr "on és la contrasenya actual?"
-
-#: ../controllers/login.py:299
-msgid "missing fields"
-msgstr "falten camps"
-
-#: ../controllers/login.py:301
-msgid "new password fields do not match"
-msgstr "les noves contrasenyes no coincideixen"
-
-#: ../controllers/login.py:303
-msgid "wtf are you trying to do?"
-msgstr "què punyetes esteu intentant fer?"
-
-#: ../controllers/login.py:305
-msgid "old and new password match"
-msgstr "les contrasenyes antiga i nova coincideixen"
-
-#: ../controllers/login.py:308
-msgid "password too short"
-msgstr "la contrasenya és massa curta"
-
-#: ../controllers/login.py:310
-msgid "password too long"
-msgstr "la contrasenya és massa llarga"
-
-#: ../controllers/login.py:318
-msgid "invalid current password"
-msgstr "contrasenya actual no vàlida"
-
-#: ../controllers/login.py:324
-msgid "you do not have a valid e-mail"
-msgstr "no teniu un correu vàlid"
-
-#: ../controllers/login.py:363
-msgid "Sabayon Linux Community Password Update Activation"
-msgstr ""
-"Activació de l'actualització de contrasenya de la comunitat Sabayon Linux"
-
-#: ../controllers/packages.py:38
-msgid "Packages"
-msgstr "Paquets"
-
-#: ../controllers/packages.py:39
-msgid "Packages match"
-msgstr "Paquets coincidents"
-
-#: ../controllers/packages.py:40
-msgid "Package descriptions"
-msgstr "Descripció de paquets"
-
-#: ../controllers/packages.py:41 ../templates/community/my/stats.html:102
-#: ../templates/community/users/public_profile.html:236
-msgid "Files"
-msgstr "Fitxers"
-
-#: ../controllers/packages.py:42
-msgid "Libraries"
-msgstr "Llibreries"
-
-#: ../controllers/packages.py:45 ../controllers/packages.py:513
-msgid "Alphabet"
-msgstr "Alfabet"
-
-#: ../controllers/packages.py:46 ../controllers/packages.py:515
-msgid "Vote"
-msgstr "Vot"
-
-#: ../controllers/packages.py:47 ../templates/loginbox_inner.html:29
-#: ../templates/loginbox_inner.html:83
-#: ../templates/packages/ugc_shortinfo.html:11
-msgid "Downloads"
-msgstr "Baixades"
-
-#: ../controllers/packages.py:313 ../controllers/packages.py:521
-msgid "vote"
-msgstr "vot"
-
-#: ../controllers/packages.py:314 ../controllers/packages.py:522
-msgid "downloads"
-msgstr "baixades"
-
-#: ../controllers/packages.py:502
-msgid "Package name"
-msgstr "Nom del paquet"
-
-#: ../controllers/packages.py:503
-msgid "Content (text)"
-msgstr "Contingut (text)"
-
-#: ../controllers/packages.py:504
-msgid "Keyword (tag)"
-msgstr "Paraula clau (etiqueta)"
-
-#: ../controllers/packages.py:505 ../controllers/packages.py:514
-#: ../templates/registration_form.html:7
-#: ../templates/community/my/stats.html:22
-#: ../templates/community/users/public_profile.html:36
-msgid "Username"
-msgstr "Nom d'usuari"
-
-#: ../controllers/packages.py:506
-msgid "Document id."
-msgstr "Id. del document"
-
-#: ../controllers/packages.py:509
-msgid "No restrictions"
-msgstr "Sense restriccions"
-
-#: ../controllers/packages.py:516
-msgid "Number of downloads"
-msgstr "Nombre de baixades"
-
-#: ../controllers/packages.py:519
-msgid "key"
-msgstr "clau"
-
-#: ../controllers/packages.py:520
-msgid "username"
-msgstr "nom d'usuari"
-
-#: ../controllers/packages.py:615 ../controllers/packages.py:719
-msgid "Sabayon Linux Packages Repository"
-msgstr "Repositori de Paquets Sabayon Linux"
-
-#: ../controllers/packages.py:730
-msgid "invalid search string"
-msgstr "cadena de cerca no vàlida"
-
-#: ../controllers/packages.py:737
-msgid "invalid search type"
-msgstr "tipus de cerca no vàlid"
-
-#: ../controllers/packages.py:743
-msgid "invalid search restriction type"
-msgstr "restricció de tipus de cerca no vàlida"
-
-#: ../controllers/packages.py:749
-msgid "invalid 'order by'"
-msgstr "'ordena per' no és vàlid"
-
-#: ../controllers/packages.py:871
+#: ../controllers/packages.py:926
 msgid "invalid document"
 msgstr "document no vàlid"
 
-#: ../controllers/packages.py:878
+#: ../controllers/packages.py:933
 msgid "invalid document specified"
 msgstr "document especificat no vàlid"
 
-#: ../controllers/packages.py:882
+#: ../controllers/packages.py:937
 msgid "permission denied, you suck!"
 msgstr "s'ha denegat el permís, l'heu cagat!"
 
-#: ../controllers/packages.py:891
+#: ../controllers/packages.py:946
 msgid "WTF? invalid document type!"
 msgstr "Què feu? tipus de document no vàlid!"
 
-#: ../controllers/packages.py:897
+#: ../controllers/packages.py:952
 msgid "you know what? I cannot handle this document"
 msgstr "Sabeu què? No puc gestionar aquest document"
 
-#: ../controllers/packages.py:901
+#: ../controllers/packages.py:956
 msgid "Document removed successfully, sigh :'-("
 msgstr "El document s'ha eliminat amb èxit, uf :'-("
 
-#: ../controllers/packages.py:911 ../controllers/packages.py:914
+#: ../controllers/packages.py:965 ../controllers/packages.py:968
 msgid "wrong username"
 msgstr "nom d'usuari incorrecte"
 
-#: ../controllers/packages.py:919
+#: ../controllers/packages.py:973
 msgid "no document specified"
 msgstr "no s'ha especificat el document"
 
-#: ../controllers/packages.py:926
+#: ../controllers/packages.py:980
 msgid "invalid document type"
 msgstr "el tipus de document no és vàlid"
 
-#: ../controllers/packages.py:931
+#: ../controllers/packages.py:985
 msgid "invalid package key"
 msgstr "la clau del paquet no és vàlida"
 
-#: ../controllers/packages.py:933
+#: ../controllers/packages.py:987
 msgid "invalid package string"
 msgstr "la cadena del paquet no és vàlida"
 
-#: ../controllers/packages.py:938
+#: ../controllers/packages.py:992
 msgid "title too short"
 msgstr "el títol és massa curt"
 
-#: ../controllers/packages.py:943
+#: ../controllers/packages.py:997
 msgid "description too short"
 msgstr "la descripció és massa curta"
 
-#: ../controllers/packages.py:953
+#: ../controllers/packages.py:1007
 msgid "comment text too short"
 msgstr "el text de comentari és massa curt"
 
-#: ../controllers/packages.py:964
+#: ../controllers/packages.py:1018
 msgid "no file? no party!"
 msgstr "no hi ha fitxer? cagada!"
 
-#: ../controllers/packages.py:984
+#: ../controllers/packages.py:1038
 msgid "file too big"
 msgstr "el fitxer és massa gran"
 
-#: ../controllers/packages.py:999
+#: ../controllers/packages.py:1053
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr ""
 "el document s'ha afegit, però no s'ha pogut determinar 'iddoc' correctament"
 
-#: ../controllers/packages.py:1131
+#: ../controllers/packages.py:1073
 msgid "user not authenticated"
 msgstr "usuari no autenticat"
 
-#: ../controllers/packages.py:1139
+#: ../controllers/packages.py:1081
 msgid "invalid vote"
 msgstr "vot no vàlid"
 
-#: ../controllers/packages.py:1142
+#: ../controllers/packages.py:1084
 msgid "invalid package"
 msgstr "paquet no vàlid"
 
-#: ../controllers/packages.py:1148
+#: ../controllers/packages.py:1090
 msgid "vote not in range"
 msgstr "vot fora de rang"
 
-#: ../controllers/packages.py:1153
+#: ../controllers/packages.py:1095
 msgid "you already voted this"
 msgstr "ja heu votat això"
 
@@ -538,1051 +132,1228 @@ msgstr "N/D"
 msgid "Public Profile"
 msgstr "Perfil públic"
 
-#: ../templates/activation_successful.html:17
-#: ../templates/email_activation_successful.html:17
-#: ../templates/password_activation_successful.html:17
-msgid "Activation successful"
-msgstr "Activació correcta"
-
-#: ../templates/activation_successful.html:17
-msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
-msgstr "Uau, gràcies! Ara podeu començar a gaudir de la Comunitat"
-
-#: ../templates/activation_successful.html:19
-#: ../templates/email_activation_successful.html:19
-#: ../templates/password_activation_successful.html:19
-msgid "Sorry"
-msgstr "Ho sento"
-
-#: ../templates/activation_successful.html:19
-#: ../templates/email_activation_successful.html:19
-#: ../templates/password_activation_successful.html:19
-msgid "There is no activation information available"
-msgstr "No hi ha informació d'activació disponible"
-
-#: ../templates/body_right.html:8
-msgid "Sponsors"
-msgstr "Patrocinadors"
-
-#: ../templates/body_right.html:11
-msgid ""
-"Officially Sponsored by the <b>NLnet Foundation</b>, that financially "
-"supported the Entropy Project"
-msgstr ""
-"Patrocinat oficialment per la <b>NLnet Foundation</b>, que patrocina "
-"econòmicament el projecte Entropy."
-
-#: ../templates/body_right.html:11
-msgid "See NLnet development plan status"
-msgstr "Veieu els plans de desenvolupament de NLnet"
-
-#: ../templates/body_right.html:15 ../templates/body_right.html:19
-#: ../templates/body_right.html:23
-msgid "Officially Sponsored by"
-msgstr "Patrocinat oficialment per la "
-
-#: ../templates/body_right.html:15
-msgid "University of Brescia"
-msgstr "Universitat de Brescia"
-
-#: ../templates/body_right.html:15
-msgid ""
-"Housing our Entropy build server inside the Faculty Network Center at the "
-"Department of Electronics"
-msgstr ""
-"que hostatja el nostre servidor Entropy al Centre de Xarxes del Departament "
-"d'Electrònica"
-
-#: ../templates/body_right.html:19
-msgid "University of Milano-Bicocca"
-msgstr "Universitat de Milano-Bicocca"
-
-#: ../templates/body_right.html:19
-msgid "Housing our Entropy build servers and WWW inside DISCo"
-msgstr "Hostatjant els servidors Entropy i la web a DISCo"
-
-#: ../templates/body_right.html:23
-msgid "Proving the software technology we daily need"
-msgstr "Proporcionant la tecnologia de programari que necessitem dia a dia"
-
-#: ../templates/body_right.html:28
-msgid "Survey"
-msgstr "Enquesta"
-
-#: ../templates/body_right.html:40
-msgid "Cross Linux From Scratch"
-msgstr "Cross Linux From Scratch"
-
-#: ../templates/body_right.html:41
-msgid "Ibiblio.org Hosting"
-msgstr "Ibiblio.org Hosting"
-
-#: ../templates/email_activation_successful.html:17
-msgid "Your E-mail is now active"
-msgstr "La vostra adreça de correu està activada"
-
-#: ../templates/footer.html:7
-msgid "Trademarks are property of their respective owners."
-msgstr "Les marques comercials són dels seus respectius propietaris."
-
-#: ../templates/head.html:7
-msgid "Sabayon Linux Five Oh!"
-msgstr "Sabayon Linux Five Oh!"
-
-#: ../templates/loginbox_inner.html:4
-msgid "Entropy Web Dashboard Login"
-msgstr "Accés al tauler web d'Entropy"
-
-#: ../templates/loginbox_inner.html:11 ../templates/login.html:17
-msgid "New user?"
-msgstr "Sou nou?"
-
-#: ../templates/loginbox_inner.html:11
-msgid "What is all this ?"
-msgstr "Què és tot això?"
-
-#: ../templates/loginbox_inner.html:24 ../templates/login.html:22
-msgid "Login error"
-msgstr "Error d'accés"
-
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
-#: ../templates/community/my/stats.html:82
-#: ../templates/community/users/public_profile.html:216
-msgid "Comments"
-msgstr "Comentaris"
-
-#: ../templates/loginbox_inner.html:27 ../templates/loginbox_inner.html:81
-msgid "Docs"
-msgstr "Documents"
-
-#: ../templates/loginbox_inner.html:29 ../templates/loginbox_inner.html:83
-#: ../templates/community/my/stats.html:52
-#: ../templates/community/users/public_profile.html:188
-msgid "Votes"
-msgstr "Vots"
-
-#: ../templates/loginbox_inner.html:43
-#, c-format
-msgid "Hello <b>%s</b>, %s"
-msgstr "Hola <b>%s</b>, %s"
-
-#: ../templates/loginbox_inner.html:43
-msgid "Logout ?"
-msgstr "Desconnecta'm"
-
-#: ../templates/loginbox_inner.html:49
-msgid "My Entropy"
-msgstr "El meu Entropy"
-
-#: ../templates/loginbox_inner.html:58
-#, fuzzy
-msgid "Community Menu"
-msgstr "Inici de la comunitat"
-
-#: ../templates/loginbox_inner.html:71
-#: ../templates/community/my/stats.html:137
-#: ../templates/community/users/public_profile.html:271
-msgid "points"
-msgstr "punts"
-
-#: ../templates/loginbox_inner.html:75
-msgid "My Comments"
-msgstr "Els meus comentaris"
-
-#: ../templates/loginbox_inner.html:75
-msgid "My Docs"
-msgstr "Els meus documents"
-
-#: ../templates/loginbox_inner.html:76
-msgid "My Votes"
-msgstr "Els meus vots"
-
-#: ../templates/loginbox_inner.html:76
-msgid "My Avg"
-msgstr "Les meves mitjanes"
-
-#: ../templates/page_error.html:28
-msgid "Houston, we've got a problem!"
-msgstr "Houston, tenim problemes!"
-
-#: ../templates/page_error.html:31
-#, c-format
-msgid ""
-"Probably the page you are looking for <b>does not exist</b> anymore. You can "
-"blame <u>aliens</u>. Well, we are really sorry. Why don't you get to our <a "
-"href=\"%s\">home page</a>?"
-msgstr ""
-"La pàgina que esteu buscant probablement ja <b>no existeix</b>. Podeu culpar "
-"els <u>aliens</u>. Ho sentim. Perquè no torneu a la <a href=\"%s\">pàgina "
-"d'inici</a>?"
-
-#: ../templates/page_template.html:17
-msgid "text goes here"
-msgstr "el text va aquí"
-
-#: ../templates/password_activation_successful.html:17
-msgid "Your Password is now updated"
-msgstr "La vostra contrasenya s'ha actualitzat"
-
-#: ../templates/password_activation_successful.html:21
-msgid "confirmation code"
-msgstr "codi de confirmació"
-
-#: ../templates/password_activation_successful.html:22
-msgid "validation id"
-msgstr "id de validació"
-
-#: ../templates/password_activation_successful.html:23
-msgid "user id"
-msgstr "id d'usuari"
-
-#: ../templates/register.html:21
-msgid "(Sabayon leader)"
-msgstr "(Cap de Sabayon)"
-
-#: ../templates/register.html:26
-msgid ""
-"<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your own "
-"<b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and file "
-"upload service called <b>\"Pixdiff\"</b>, a <b>warm Community</b> that will "
-"always help you out, the ability to <b>vote</b> and <b>interact</b> with "
-"what we offer and with other people inside this space. We are just used to "
-"call all this with one name: <b>Sabayon</b>, <i>the \"2.0\" (two-point-oh) "
-"distribution</i>"
-msgstr ""
-"<b>Potser us pregunteu</b>. Què us oferim a canvi? <b>Us contestem</b>, el "
-"vostre <b>Bloc</b> en aquest portal, el vostre <b>\"Pastebin\"</b> personal "
-"i un servei de pujada de fitxers anomenat <b>\"Pixdiff\"</b>, una "
-"<b>Comunitat amable</b> que sempre us ajudarà, la possibilitat de <b>votar</"
-"b> i < b>interactuar</b> amb el que oferim i amb altres persones en aquest "
-"espai. Anomenem això: <b>Sabayon</b>, <i>la distribució \"2.0\" (dos-punt-oh)"
-"</i>"
-
-#: ../templates/register.html:29
-msgid ""
-"Please note that you will need to enter a valid e-mail address before your "
-"account is activated. You will receive an e-mail at the address you provide "
-"that contains an account activation link"
-msgstr ""
-"Haureu d'escriure una adreça de correu electrònic vàlida abans d'activar el "
-"compte. Rebreu un correu a l'adreça que proporcioneu que conté un enllaç "
-"d'activació."
-
-#: ../templates/registration_form.html:9
-msgid "Length must be between 3 and 20 characters"
-msgstr "La longitud ha de ser entre 3 i 20 caràcters"
-
-#: ../templates/registration_form.html:17
-msgid "E-mail address"
-msgstr "Adreça de correu"
-
-#: ../templates/registration_form.html:25
-msgid "Confirm e-mail address"
-msgstr "Confirmeu l'adreça de correu"
-
-#: ../templates/registration_form.html:33
-msgid "Password"
-msgstr "Contrasenya"
-
-#: ../templates/registration_form.html:34
-msgid "Must be between 6 and 30 characters"
-msgstr "Ha de tenir entre 6 i 30 caràcters"
-
-#: ../templates/registration_form.html:42
-msgid "Confirm password"
-msgstr "Confirmeu la contrasenya"
-
-#: ../templates/registration_form.html:68
-msgid "Registration Agreement"
-msgstr "Acord de registre"
-
-#: ../templates/registration_form.html:73
-msgid "I agree with the terms above"
-msgstr "Estic d'acord amb els termes anteriors"
-
-#: ../templates/registration_successful.html:2
-msgid "Registration successful"
-msgstr "El registre ha tingut èxit"
-
-#: ../templates/registration_successful.html:2
-msgid "Wow, thanks a lot!"
-msgstr "Uau, moltes gràcies!"
-
-#: ../templates/registration_successful.html:4
-msgid ""
-"You should have waited the activation e-mail but the one you provided has "
-"not been accepted for delivery"
-msgstr ""
-"Hauríeu d'esperar el correu d'activació, però l'adreça de correu que heu "
-"proporcionat no s'ha acceptat per la tramesa."
-
-#: ../templates/registration_successful.html:5
-#, fuzzy
-msgid ""
-"Please contact <a href=\"mailto:mail.issues@sabayon.org\">our service</a> "
-"and ask for help"
-msgstr ""
-"Si us plau contacteu amb <a href=\"mailto:mail.issues@sabayonlinux.org\">el "
-"nostre servei</a> i demaneu ajuda"
-
-#: ../templates/registration_successful.html:7
-msgid ""
-"Now you need to wait and read the activation e-mail before being able to "
-"login"
-msgstr ""
-"Ara heu d'esperar i llegir el correu d'activació abans de poder-vos acreditar"
-
-#: ../templates/registration_successful.html:10
-#, c-format
-msgid "<a href='%s'>Click here</a> to come back to the source page"
-msgstr "<a href='%s'>Feu clic aquí</a> per tornar a la pàgina de codi font"
-
-#: ../templates/packages/advisories_desc.html:1
-msgid ""
-"Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
-"\">Gentoo Linux</a> based distribution which relies its packages versioning "
-"and patches from the Gentoo Portage tree and our add-on repository called "
-"\"overlay\". Thus, Gentoo Linux Security Advisories (GLSA) can be applied to "
-"the packages listed in our tree. Here below, you can see a list of the "
-"latest GLSAs published by the Gentoo Project"
-msgstr ""
-"Sabayon Linux és una distribució basada en <a href=\"http://www.gentoo.org\" "
-"target=\"_blank\">Gentoo Linux</a> i les versions i els pedaços dels paquets "
-"depenen de l'arbre de Gentoo Portage i del nostre repositori afegit, "
-"anomenat \"overlay\". Així mateix, els Avisos de Seguretat de Gentoo Linux "
-"(GLSA) es poden aplicar als paquets llistats en el nostre arbre. A baix "
-"veureu una llista dels últims GLSAs publicats pel Projecte Gentoo"
-
-#: ../templates/packages/advisories_desc.html:1
-msgid "full feed here"
-msgstr "Registre complet aquí"
-
-#: ../templates/packages/advisories_inner.html:3
-#: ../templates/packages/menu.html:2
-msgid "Security Advisories"
-msgstr "Avisos de Seguretat"
-
-#: ../templates/packages/advisories_inner.html:10
-msgid "You can get the complete list on the"
-msgstr "Podeu obtenir la llista sencera de"
-
-#: ../templates/packages/advisories_inner.html:10
-msgid "Gentoo Linux Security Advisories feed"
-msgstr "l'alimentador de Avisos de Seguretat de Gentoo Linux"
-
-#: ../templates/packages/categories_inner.html:3
-#: ../templates/packages/menu.html:2
-msgid "Categories"
-msgstr "Categories"
-
-#: ../templates/packages/category.html:5
-#: ../templates/packages/extrainfo.html:81
-#: ../templates/packages/shortinfo.html:3
-msgid "Release"
-msgstr "Revisió"
-
-#: ../templates/packages/category.html:19
-msgid "No packages in this category"
-msgstr "No hi ha paquets en aquesta categoria"
-
-#: ../templates/packages/content.html:7
-msgid "Destroy"
-msgstr "Destrueix"
-
-#: ../templates/packages/do_document_page.html:7
+#: ../templates/do_ugc_document.html:7
 msgid "Add documents <b>gain scores</b> !"
 msgstr "afegiu documents <b>guanyeu punts</b>!"
 
-#: ../templates/packages/do_document_page.html:19
+#: ../templates/do_ugc_document.html:19
 msgid "Title"
 msgstr "Títol"
 
-#: ../templates/packages/do_document_page.html:21
+#: ../templates/do_ugc_document.html:21
 msgid "Length must be between 10 and 160"
 msgstr "La longitud ha de ser entre 10 i 160"
 
-#: ../templates/packages/do_document_page.html:35
+#: ../templates/do_ugc_document.html:35
 msgid "Description"
 msgstr "descripció"
 
-#: ../templates/packages/do_document_page.html:37
+#: ../templates/do_ugc_document.html:37
 msgid "Being descriptive, what a pain in the *ss"
 msgstr "Essent descriptiu, quina tocada de c*llons"
 
-#: ../templates/packages/do_document_page.html:47
-#: ../templates/packages/ugc_comment.html:6
-#: ../templates/packages/ugc_doc_desc_keywords.html:4
+#: ../templates/do_ugc_document.html:47 ../templates/ugc_comment.html:6
+#: ../templates/ugc_doc_desc_keywords.html:4
 msgid "Keywords"
 msgstr "Paraules clau"
 
-#: ../templates/packages/do_document_page.html:49
+#: ../templates/do_ugc_document.html:49
 msgid "Space separated, minimum length: 4 chars each"
 msgstr "Separades per espais, longitud mínima: 4 caracters cadascuna"
 
-#: ../templates/packages/do_document_page.html:58
+#: ../templates/do_ugc_document.html:58
 msgid "Document type"
 msgstr "Tipus de document"
 
-#: ../templates/packages/do_document_page.html:60
+#: ../templates/do_ugc_document.html:60
 msgid "Choose what kind of document you want to add"
 msgstr "Escolliu el tipus de document que voleu afegir"
 
-#: ../templates/packages/do_document_page.html:82
+#: ../templates/do_ugc_document.html:82
 msgid "Comment text"
 msgstr "text de comentari"
 
-#: ../templates/packages/do_document_page.html:84
+#: ../templates/do_ugc_document.html:84
 msgid "Insert your comment on this field"
 msgstr "Inseriu el vostre comentari en aquest camp"
 
-#: ../templates/packages/do_document_page.html:99
+#: ../templates/do_ugc_document.html:99
 msgid "File chooser"
 msgstr "Escolliu un fitxer"
 
-#: ../templates/packages/do_document_page.html:101
+#: ../templates/do_ugc_document.html:101
 msgid "Select the file you want to upload"
 msgstr "Seleccioneu el fitxer que voleu pujar"
 
-#: ../templates/packages/do_document_page.html:120
+#: ../templates/do_ugc_document.html:120
 msgid "You need to be logged in to add documents"
 msgstr "Heu d'estar acreditats per pujar documents"
 
-#: ../templates/packages/do_document_page.html:121
+#: ../templates/do_ugc_document.html:121
 msgid "Login?"
 msgstr "Accés?"
 
-#: ../templates/packages/do_document_page.html:121
+#: ../templates/do_ugc_document.html:121
 msgid "Register?"
 msgstr "Registra?"
 
-#: ../templates/packages/extrainfo.html:19
-#: ../templates/packages/searchparams_args.html:19
-#: ../templates/packages/shortinfo.html:3
+#: ../templates/head.html:7
 #, fuzzy
-msgid "Repository"
-msgstr "Repositori d'Entropy"
+msgid "Sabayon Linux Packages"
+msgstr "Pàgina del seguidor Sabayon Linux"
 
-#: ../templates/packages/extrainfo.html:29
-msgid "Category"
-msgstr "Categoria"
+#: ../templates/package_show_changelog.html:6
+msgid "No ChangeLog"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:39
-msgid "Name"
-msgstr "Nom"
+#: ../templates/package_show_content.html:5
+msgid "Files belonging to package"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:49
-msgid "Version"
-msgstr "Versió"
+#: ../templates/package_show_content.html:15
+msgid "No files belonging to package"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:59
-msgid "Entropy revision"
-msgstr "Revisió d'Entropy"
-
-#: ../templates/packages/extrainfo.html:70
-msgid "Package tag"
-msgstr "Etiqueta del paquet"
-
-#: ../templates/packages/extrainfo.html:91
-msgid "Slot"
-msgstr "Slot"
-
-#: ../templates/packages/extrainfo.html:103
+#: ../templates/package_show_deps.html:7
 #, fuzzy
 msgid "Runtime dependencies"
 msgstr "Dependències"
 
-#: ../templates/packages/extrainfo.html:123
+#: ../templates/package_show_deps.html:18
 #, fuzzy
 msgid "Build dependencies"
 msgstr "Dependències"
 
-#: ../templates/packages/extrainfo.html:143
+#: ../templates/package_show_deps.html:29
 #, fuzzy
 msgid "Post dependencies"
 msgstr "Dependències"
 
-#: ../templates/packages/extrainfo.html:163
+#: ../templates/package_show_deps.html:40
 #, fuzzy
 msgid "Manual dependencies"
 msgstr "Dependències"
 
-#: ../templates/packages/extrainfo.html:183
-msgid "Conflicts"
-msgstr "Conflictes"
+#: ../templates/package_show_deps.html:50
+#, fuzzy
+msgid "No dependencies"
+msgstr "Dependències"
 
-#: ../templates/packages/extrainfo.html:200
-msgid "Required by"
-msgstr "Requerit per"
+#: ../templates/package_show_download.html:5
+#, fuzzy
+msgid "Download mirrors"
+msgstr "Baixades"
 
-#: ../templates/packages/extrainfo.html:205
-msgid "view packages list"
-msgstr "veure la llista de paquets"
+#: ../templates/package_show_download.html:28
+msgid "No download mirrors available"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:218
-msgid "homepage"
-msgstr "pàgina principal"
+#: ../templates/package_show_mime.html:5
+#, fuzzy
+msgid "Mime types"
+msgstr "Tipus de document"
 
-#: ../templates/packages/extrainfo.html:227
+#: ../templates/package_show_mime.html:15
+msgid "No mime types handled by package"
+msgstr ""
+
+#: ../templates/package_show_provided_libs.html:5
+msgid "Provided libraries"
+msgstr ""
+
+#: ../templates/package_show_provided_libs.html:15
+msgid "No libraries provided by package"
+msgstr ""
+
+#: ../templates/package_show_revdeps.html:5
+#, fuzzy
+msgid "Reverse dependencies"
+msgstr "Dependències"
+
+#: ../templates/package_show_revdeps.html:15
+#, fuzzy
+msgid "No reverse dependencies"
+msgstr "Dependències"
+
+#: ../templates/package_show_security.html:5
+#, fuzzy
+msgid "Security advisories"
+msgstr "Avisos de Seguretat"
+
+#: ../templates/package_show_security.html:20
+#, fuzzy
+msgid "No security advisories available"
+msgstr "mostra els avisos de seguretat"
+
+#: ../templates/package_show_sources.html:5
+#, fuzzy
+msgid "Sources"
+msgstr "origen"
+
+#: ../templates/package_show_sources.html:22
+msgid "No sources belonging to package"
+msgstr ""
+
+#: ../templates/package_widget.html:24
+msgid "downloads"
+msgstr "baixades"
+
+#: ../templates/package_widget.html:37
+msgid "source"
+msgstr "origen"
+
+#: ../templates/package_widget.html:39
+msgid "binary"
+msgstr ""
+
+#: ../templates/package_widget.html:46
+#, fuzzy
+msgid "revision"
+msgstr "Revisió"
+
+#: ../templates/package_widget.html:53
+#, fuzzy
+msgid "date"
+msgstr "s'ha actualitzat"
+
+#: ../templates/package_widget.html:61
+msgid "Recent Changes"
+msgstr ""
+
+#: ../templates/packages_area.html:4
+#, fuzzy
+msgid "Results found"
+msgstr "No s'ha trobat"
+
+#: ../templates/packages_area.html:4
+msgid "seconds"
+msgstr ""
+
+#: ../templates/packages_area.html:9
+msgid "Found <b>nothing</b> while searching for"
+msgstr ""
+
+#: ../templates/packages_area.html:9
+msgid "you probably mispelled it"
+msgstr ""
+
+#: ../templates/packages_area.html:34
+msgid ""
+"Sorry, <b>I wasn't able to find anything relevant</b>... So long, so long, "
+"and thanks for all the fish!"
+msgstr ""
+
+#: ../templates/page_error.html:13
+msgid "Call the cops! <b>This page has been stolen!</b>"
+msgstr ""
+
+#: ../templates/search_widget.html:10
+#, fuzzy
+msgid "Special searches"
+msgstr "tipus de cerca no vàlid"
+
+#: ../templates/search_widget.html:13
+msgid "Category"
+msgstr "Categoria"
+
+#: ../templates/search_widget.html:16
 msgid "License"
 msgstr "Llicència"
 
-#: ../templates/packages/extrainfo.html:240
-msgid "CHOST"
-msgstr "CHOST"
-
-#: ../templates/packages/extrainfo.html:250
-msgid "CFLAGS"
-msgstr "CFLAGS"
-
-#: ../templates/packages/extrainfo.html:261
-msgid "USE flags"
+#: ../templates/search_widget.html:19
+#, fuzzy
+msgid "Useflag"
 msgstr "marcadors USE"
 
-#: ../templates/packages/extrainfo.html:275
-msgid "Content"
-msgstr "Contingut"
+#: ../templates/search_widget.html:22
+#, fuzzy
+msgid "Package Sets"
+msgstr "Paquets"
 
-#: ../templates/packages/extrainfo.html:280
-msgid "View content"
-msgstr "Mostra el contingut"
+#: ../templates/search_widget.html:25
+msgid "Files"
+msgstr "Fitxers"
 
-#: ../templates/packages/extrainfo.html:289
-msgid "Space required"
-msgstr "Espai necessari"
+#: ../templates/search_widget.html:28
+msgid "Libraries"
+msgstr "Llibreries"
 
-#: ../templates/packages/extrainfo.html:299
-#: ../templates/packages/shortinfo.html:3
-msgid "Checksum"
-msgstr "Suma de verificació"
+#: ../templates/search_widget.html:31
+msgid "Mime"
+msgstr ""
 
-#: ../templates/packages/extrainfo.html:309
-msgid "Creation date"
-msgstr "Data de creació"
-
-#: ../templates/packages/extrainfo.html:319
-msgid "Security"
-msgstr "Seguretat"
-
-#: ../templates/packages/extrainfo.html:324
-msgid "show security advisories"
-msgstr "mostra els avisos de seguretat"
-
-#: ../templates/packages/feed.html:16
-msgid "No entries exist"
-msgstr "No hi ha entrades"
-
-#: ../templates/packages/menu.html:2
-msgid "Packages Search"
-msgstr "Cerca de paquets"
-
-#: ../templates/packages/menu.html:2
-msgid "User Generated Content Search"
-msgstr "Contingut Generat per l'Usuari"
-
-#: ../templates/packages/menu.html:2
-msgid "Statistics"
-msgstr "Estadístiques"
-
-#: ../templates/packages/menu.html:2
-#: ../templates/packages/releases_inner.html:3
-msgid "Releases"
-msgstr "Revisions"
-
-#: ../templates/packages/release.html:4
-#: ../templates/packages/show_release.html:5
-msgid "Quick navigation"
-msgstr "Navegació ràpida"
-
-#: ../templates/packages/searchbox.html:6
-msgid "Entropy Repository"
-msgstr "Repositori d'Entropy"
-
-#: ../templates/packages/searchparams_args.html:3
-msgid "Product"
-msgstr "Producte"
-
-#: ../templates/packages/searchparams_args.html:35
-msgid "Branch"
-msgstr "Branca"
-
-#: ../templates/packages/searchparams_args.html:43
-#: ../templates/packages/stats_inner.html:14
-msgid "Architecture"
-msgstr "Arquitectura"
-
-#: ../templates/packages/searchparams.html:10
-#: ../templates/packages/ugc_searchparams.html:3
-msgid "Search type"
-msgstr "Tipus de cerca"
-
-#: ../templates/packages/searchparams.html:28
-#: ../templates/packages/ugc_searchparams.html:35
-msgid "Order by"
-msgstr "Ordena per"
-
-#: ../templates/packages/searchresults.html:7
-#, c-format
-msgid "Elements found: %s"
-msgstr "Elements trobats: %s"
-
-#: ../templates/packages/searchresults.html:30
-#: ../templates/packages/ugc_searchresults.html:25
-msgid "Nothing found"
-msgstr "No s'ha trobat res"
-
-#: ../templates/packages/searchresults.html:33
-msgid "Perhaps, you meant?"
-msgstr "Potser voleu dir?"
-
-#: ../templates/packages/searchresults.html:42
-msgid "Cannot find the software you are looking for?"
-msgstr "No heu trobat el programari que buscàveu?"
-
-#: ../templates/packages/searchresults.html:43
-msgid "Submit a package request"
-msgstr "Envieu una sol·licitud de paquet"
-
-#: ../templates/packages/searchresults.html:45
-#: ../templates/packages/ugc_searchresults.html:27
-msgid "Back to Search"
-msgstr "Torna a la cerca"
-
-#: ../templates/packages/shortinfo.html:3
-msgid "Revision"
-msgstr "Revisió"
-
-#: ../templates/packages/show_categories.html:5
-msgid "Package Categories Navigation"
-msgstr "Navegació per categories de paquets"
-
-#: ../templates/packages/show_release.html:4
-msgid "You are watching"
-msgstr "Esteu veient"
-
-#: ../templates/packages/show_ugc.html:2
-#: ../templates/packages/ugc_searchbox.html:6
-msgid "User Generated Content"
-msgstr "Contingut Generat per Usuaris"
-
-#: ../templates/packages/stats_inner.html:3
-msgid "Current status"
-msgstr "Estat actual"
-
-#: ../templates/packages/stats_inner.html:22
-msgid "Branches"
-msgstr "Branques"
-
-#: ../templates/packages/stats_inner.html:30
-msgid "Number of packages"
-msgstr "Nombre de paquets"
-
-#: ../templates/packages/stats_inner.html:38
-msgid "Number of categories"
-msgstr "Nombre de categories"
-
-#: ../templates/packages/stats_inner.html:46
-#: ../templates/community/users/public_profile.html:238
-msgid "Number of files"
-msgstr "Nombre de fitxers"
-
-#: ../templates/packages/stats_inner.html:54
-msgid "Overall size"
-msgstr "Mida total"
-
-#: ../templates/packages/ugc_comment.html:8
-#: ../templates/packages/ugc_doc_desc_keywords.html:6
+#: ../templates/ugc_comment.html:8 ../templates/ugc_doc_desc_keywords.html:6
 msgid "no keywords"
 msgstr "no paraules clau"
 
-#: ../templates/packages/ugc_doc_handling_links.html:15
+#: ../templates/ugc_doc_handling_links.html:15
 msgid "Delete"
 msgstr "Esborra"
 
-#: ../templates/packages/ugc_doc_handling_links.html:17
-msgid "Edit"
-msgstr "Edita"
-
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 #, c-format
 msgid "written by %s, around %s"
 msgstr "escrit per %s, pel vols de %s"
 
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 msgid "User score"
 msgstr "Puntuació de l'usuari"
 
-#: ../templates/packages/ugc_doc_header.html:4
+#: ../templates/ugc_doc_header.html:4
 msgid "Size"
 msgstr "Mida"
 
-#: ../templates/packages/ugc_generic_file.html:4
+#: ../templates/ugc_generic_file.html:4
 msgid "Download"
 msgstr "Baixada"
 
-#: ../templates/packages/ugc_search_item.html:21
-msgid "by"
-msgstr "per"
-
-#: ../templates/packages/ugc_search_item.html:21
-msgid "on"
-msgstr "el"
-
-#: ../templates/packages/ugc_search_item.html:21
-msgid "score"
-msgstr "puntuació"
-
-#: ../templates/packages/ugc_searchparams.html:19
-msgid "Restrict on"
-msgstr "Restringeix a"
-
-#: ../templates/packages/ugc_searchresults.html:8
-#, c-format
-msgid "Seeking %s of %s"
-msgstr "S'estan cercant %s de %s"
-
-#: ../templates/packages/ugc_shortinfo.html:11
-#: ../templates/community/my/stats.html:72
-#: ../templates/community/users/public_profile.html:206
-msgid "Documents"
-msgstr "Documents"
-
-#: ../templates/packages/voted.html:12
+#: ../templates/ugc_voted.html:12
 msgid "Vote error"
 msgstr "Error de vot"
 
-#: ../templates/community/home.html:7
-msgid "Being part of <b>our Community</b> is what make us proud of ourselves"
+#: ../templates/user_widget.html:19
+msgid "Login error"
+msgstr "Error d'accés"
+
+#: ../templates/user_widget.html:33
+#, fuzzy, c-format
+msgid "Welcome <b>%s</b>"
+msgstr "Hola <b>%s</b>, %s"
+
+#: ../templates/user_widget.html:33
+msgid "Disconnect"
 msgstr ""
-"Ser part de la <b>nostra Comunitat</b> és el que ens fa estar orgullosos de "
-"nosaltres mateixos"
 
-#: ../templates/community/home.html:8
-msgid ""
-"This is the place where you can get in touch with people in our Community, "
-"see how good they are and get helped"
-msgstr ""
-"En aquest espai podeu entrar en contacte amb gent de la Comunitat, podreu "
-"rebre ajuda  i veureu que bons que són"
+#: ../templates/user_widget.html:37
+msgid "My Comments"
+msgstr "Els meus comentaris"
 
-#: ../templates/community/links.html:3
-msgid ""
-"If you want to join our Community or just need help and make questions, here "
-"are some useful links you might need to look at"
-msgstr ""
-"Si voleu unir-vos a la Comunitat o simplement necessiteu ajuda i fer "
-"preguntes, aquí hi ha alguns enllaços que us poden ser útils"
+#: ../templates/user_widget.html:38
+msgid "My Docs"
+msgstr "Els meus documents"
 
-#: ../templates/community/links.html:8
-msgid "Sabayon Linux Support Chat"
-msgstr "Xat d'ajuda de sabayon Linux"
+#: ../templates/user_widget.html:39
+msgid "My Votes"
+msgstr "Els meus vots"
 
-#: ../templates/community/links.html:11
-msgid "Wolfden, Sabayon Linux Chief Community Officer"
-msgstr "Wolfden, cap oficial de la comunitat Sabayon Linux"
+#: ../templates/user_widget.html:40
+msgid "My Avg"
+msgstr "Les meves mitjanes"
 
-#: ../templates/community/links.html:14
-msgid "Lxnay, Sabayon Linux Chief Architect"
-msgstr "Lxnay, arquitecte en cap de Sabayon Linux"
-
-#: ../templates/community/links.html:17
-msgid "Sabayon Linux Forum"
-msgstr "Fòrum de Sabayon Linux"
-
-#: ../templates/community/menu.html:17
-msgid "Community Home"
-msgstr "Inici de la comunitat"
-
-#: ../templates/community/menu.html:17
-msgid "Users"
-msgstr "Usuaris"
-
-#: ../templates/community/menu.html:17
-msgid "Hall of fame"
-msgstr "Saló de la fama"
-
-#: ../templates/community/menu.html:17
-msgid "Blogs"
-msgstr "Blocs"
-
-#: ../templates/community/menu.html:17
-msgid "Useful links"
-msgstr "Enllaços útils"
-
-#: ../templates/community/ranking.html:32
-#: ../templates/community/users/search_results.html:13
-msgid "also known as"
-msgstr "també coneguts com a"
-
-#: ../templates/community/ranking.html:35
-msgid "Points"
-msgstr "Punts"
-
-#: ../templates/community/users.html:3
-msgid "Currently counting"
-msgstr "hi ha"
-
-#: ../templates/community/users.html:3
-msgid "users... and <b>growing</b>"
-msgstr "usuaris... i <b>creixent</b>"
-
-#: ../templates/community/my/stats.html:15
-msgid ""
-"In this page you will find all your statistics regarding your Entropy/Web "
-"account"
-msgstr ""
-"Aquí trobareu les vostres estadístiques quant al vostre compte Entropy/Web"
-
-#: ../templates/community/my/stats.html:24
-msgid "this is the name other people will reference you"
-msgstr "aquest és el nom amb el que us coneixerà l'altra gent"
-
-#: ../templates/community/my/stats.html:32
-msgid "User id"
-msgstr "User id"
-
-#: ../templates/community/my/stats.html:34
-msgid "this is your user account number"
-msgstr "aquest és el vostre número de compte"
-
-#: ../templates/community/my/stats.html:42
-#: ../templates/community/users/public_profile.html:178
-msgid "Entropy role"
-msgstr "rol d'Entropy"
-
-#: ../templates/community/my/stats.html:44
-msgid "your role inside the Community"
-msgstr "el vostre rol dins de la Comunitat"
-
-#: ../templates/community/my/stats.html:54
-msgid "number of times you voted"
-msgstr "número de vegades que heu votat"
-
-#: ../templates/community/my/stats.html:57
-#: ../templates/community/my/stats.html:87
-#: ../templates/community/my/stats.html:97
-#: ../templates/community/my/stats.html:107
-#: ../templates/community/my/stats.html:117
-#, c-format
-msgid "weight: %s points each"
-msgstr "pes: %s punts cadascun"
-
-#: ../templates/community/my/stats.html:62
-#: ../templates/community/users/public_profile.html:198
-msgid "Vote average"
-msgstr "Mitjana de vot"
-
-#: ../templates/community/my/stats.html:64
-msgid "this is kinda self explanatory"
-msgstr "això s'explica tot sol"
-
-#: ../templates/community/my/stats.html:74
-msgid "how many documents you uploaded (comments,images,etc)"
-msgstr "quants documents heu pujat (comentaris,imatges,etc.)"
-
-#: ../templates/community/my/stats.html:84
-msgid "how many comments you wrote"
-msgstr "quants comentaris heu escrit"
-
-#: ../templates/community/my/stats.html:92
-#: ../templates/community/users/public_profile.html:226
-msgid "Images"
-msgstr "Imatges"
-
-#: ../templates/community/my/stats.html:94
-msgid "how many images you uploaded"
-msgstr "quantes imatges heu pujat"
-
-#: ../templates/community/my/stats.html:104
-msgid "how many files you uploaded"
-msgstr "quants fitxers heu pujat"
-
-#: ../templates/community/my/stats.html:112
-#: ../templates/community/users/public_profile.html:246
-msgid "YouTube(tm) Videos"
-msgstr "Videos del YouTube(tm)"
-
-#: ../templates/community/my/stats.html:114
-msgid "how many videos you uploaded"
-msgstr "quants videos heu pujat"
-
-#: ../templates/community/my/stats.html:122
-#: ../templates/community/users/public_profile.html:256
-msgid "Ranking"
-msgstr "Rànquing"
-
-#: ../templates/community/my/stats.html:124
-msgid "how good you are in our Community"
-msgstr "Com sou de bons dins la Comunitat"
-
-#: ../templates/community/my/stats.html:127
-#: ../templates/community/users/public_profile.html:261
-msgid "position"
-msgstr "posició"
-
-#: ../templates/community/my/stats.html:132
-#: ../templates/community/users/public_profile.html:266
+#: ../templates/user_widget.html:42
 msgid "Score"
 msgstr "Puntuació"
 
-#: ../templates/community/my/stats.html:134
-msgid "your resulting Entropy score"
-msgstr "la vostra puntuació Entropy"
+#~ msgid "ICQ UIN"
+#~ msgstr "ICQ UIN"
 
-#: ../templates/community/my/stats.html:143
-msgid "Not logged in"
-msgstr "No us heu acreditat"
+#~ msgid "Very much '96..."
+#~ msgstr "Molt '96..."
 
-#: ../templates/community/my/ugc.html:18
-msgid ""
-"In this page you will be able to browse through your submitted documents on "
-"all the repositories we host"
-msgstr ""
-"Aquí podreu navegar per tots els documents enviats als repositoris que "
-"hostatgem"
+#~ msgid "Yahoo IM"
+#~ msgstr "Yahoo IM"
 
-#: ../templates/community/my/ugc.html:58
-msgid "View"
-msgstr "Vista"
+#~ msgid "Yaho0o0o0o0 !"
+#~ msgstr "Yaho0o0o0o0 !"
 
-#: ../templates/community/users/public_profile.html:25
-msgid "This is just"
-msgstr "Aquest és en"
+#~ msgid "MSN Messenger"
+#~ msgstr "MSN Messenger"
 
-#: ../templates/community/users/public_profile.html:25
-msgid "hello !"
-msgstr "hola !"
+#~ msgid "Microsoft see, we're friend"
+#~ msgstr "Mira Microsoft, som amics"
 
-#: ../templates/community/users/public_profile.html:38
-msgid "Just a nickname, what did you expect?"
-msgstr "Només un sobrenom, què esperàveu?"
+#~ msgid "Jabber ID"
+#~ msgstr "ID de Jabber"
 
-#: ../templates/community/users/public_profile.html:47
-msgid "User identifier"
-msgstr "Identificador d'usuari"
+#~ msgid "The Jabber.org Open Source Protocol"
+#~ msgstr "El protocol de codi obert Jabber.org"
 
-#: ../templates/community/users/public_profile.html:49
-msgid "This is the account number"
-msgstr "això és el número de compte"
+#~ msgid "Website"
+#~ msgstr "Pagina web"
 
-#: ../templates/community/users/public_profile.html:58
-msgid "Website role"
-msgstr "Rol a la web"
+#~ msgid "Do you have a website?"
+#~ msgstr "Teniu una pàgina web?"
 
-#: ../templates/community/users/public_profile.html:60
-msgid "User's role inside our Website"
-msgstr "Rol de l'usuari en la vostra web"
+#~ msgid "Location"
+#~ msgstr "Situació"
 
-#: ../templates/community/users/public_profile.html:70
-msgid "Avatar"
-msgstr "Avatar"
+#~ msgid "Where do you live?"
+#~ msgstr "On viviu?"
 
-#: ../templates/community/users/public_profile.html:72
-msgid "User's virtual Alter-Ego"
-msgstr "Alter-Ego virtual de l'usuari"
+#~ msgid "Interests"
+#~ msgstr "Interessos"
 
-#: ../templates/community/users/public_profile.html:84
-msgid "User comes from..."
-msgstr "L'usuari ve de..."
+#~ msgid "What do you like most?"
+#~ msgstr "Què us agrada més?"
 
-#: ../templates/community/users/public_profile.html:93
-msgid "Age"
-msgstr "Edat"
+#~ msgid "Occupation"
+#~ msgstr "Ocupació"
 
-#: ../templates/community/users/public_profile.html:95
-msgid "How many years are past, huh!"
-msgstr "Quants anys han passat, uf!"
+#~ msgid "What's your job?"
+#~ msgstr "De què treballeu?"
 
-#: ../templates/community/users/public_profile.html:106
-msgid "User's current job"
-msgstr "Feina actual de l'usuari"
+#~ msgid "Signature"
+#~ msgstr "Signatura"
 
-#: ../templates/community/users/public_profile.html:117
-msgid "User's interests, kinda self explanatory"
-msgstr "Interessos de l'usuari, és autoexplicatiu"
+#~ msgid "Your Community signature"
+#~ msgstr "La signatura de la comunitat"
 
-#: ../templates/community/users/public_profile.html:126
-msgid "Contacts"
-msgstr "Contactes"
+#~ msgid "E-mail"
+#~ msgstr "Correu electrònic"
 
-#: ../templates/community/users/public_profile.html:128
-msgid "User's E-mail and IM"
-msgstr "Correu electrònic i IM de l'usuari"
+#~ msgid "Your current e-mail"
+#~ msgstr "Adreça de correu electrònic"
 
-#: ../templates/community/users/public_profile.html:158
-msgid "User's Website"
-msgstr "Web de l'usuari"
+#~ msgid "Birthday"
+#~ msgstr "Naixement"
 
-#: ../templates/community/users/public_profile.html:161
-msgid "Click here to get there"
-msgstr "Feu clic aquí per accedir-hi"
+#~ msgid "When is your birthday? Hey, wanna get tha present?! DD-MM-YYYY"
+#~ msgstr "Quan és el vostre aniversari? Ei, voleu un regal?! DD-MM-YYYY"
 
-#: ../templates/community/users/public_profile.html:167
-msgid "Groups"
-msgstr "Grups"
+#~ msgid "Master User Group"
+#~ msgstr "Grup d'usuaris principal"
 
-#: ../templates/community/users/public_profile.html:169
-msgid "Website groups user is in"
-msgstr "Grups en els que es troba l'usuari"
+#~ msgid "Your default User Group"
+#~ msgstr "Grup d'usuaris predefinit"
 
-#: ../templates/community/users/public_profile.html:180
-msgid "User's role inside Entropy"
-msgstr "Rol de l'usuari dins de Entropy"
+#~ msgid "User Groups"
+#~ msgstr "Grups d'usuaris"
 
-#: ../templates/community/users/public_profile.html:190
-msgid "Number of times the User voted"
-msgstr "Número de vegades que l'usuari ha votat"
+#~ msgid "You are also in these User Groups"
+#~ msgstr "També esteu en aquests grups d'usuaris"
 
-#: ../templates/community/users/public_profile.html:208
-msgid "Total number of documents"
-msgstr "Número total de documents"
+#~ msgid "Sabayon Linux Community Area"
+#~ msgstr "Àrea de la comunitat de Sabayon Linux"
 
-#: ../templates/community/users/public_profile.html:218
-msgid "Number of comments"
-msgstr "Número de comentaris"
+#~ msgid "the fabulous"
+#~ msgstr "el fabulós"
 
-#: ../templates/community/users/public_profile.html:228
-msgid "Number of images"
-msgstr "Número d'imatges"
+#~ msgid "Maximus V"
+#~ msgstr "Maximus V"
 
-#: ../templates/community/users/public_profile.html:248
-msgid "Number of videos belonging"
-msgstr "Número de videos"
+#~ msgid "King Sun XIV"
+#~ msgstr "Rei sol XIV"
 
-#: ../templates/community/users/public_profile.html:258
-msgid "User rank inside our Community"
-msgstr "Rànquing d'usuari dins de la Comunitat"
+#~ msgid "the one"
+#~ msgstr "l'únic"
 
-#: ../templates/community/users/public_profile.html:268
-msgid "User's Community Score"
-msgstr "Puntuació d'usuari de la Comunitat"
+#~ msgid "you name it"
+#~ msgstr "anomeneu-lo"
 
-#: ../templates/community/users/search.html:4
-msgid "User search"
-msgstr "Cerca d'usuaris"
+#~ msgid "My User Generated Content"
+#~ msgstr "El meu Contingut Generat d'Usuari"
 
-#: ../templates/community/users/search.html:6
-msgid ""
-"Write a search term on the right. E-mail, username, name, surname, you name "
-"it"
-msgstr ""
-"Escriviu un terme de cerca a la dreta. Adreça de correu, nom d'usuari, nom, "
-"cognom, com l'anomeneu"
+#~ msgid "My Statistics"
+#~ msgstr "Les meves estadístiques"
 
-#: ../templates/community/users/search_results.html:5
-msgid "Search results"
-msgstr "Resultats de cerca"
+#~ msgid "My Sabayon Dashboard"
+#~ msgstr "El tauler"
 
-#: ../templates/community/users/search_results.html:13
-msgid "featuring"
-msgstr "amb"
+#~ msgid "invalid pages_id"
+#~ msgstr "invalid pages_id"
 
-#: ../templates/community/users/search_results.html:13
-msgid "Points and Ranking"
-msgstr "Punts i rànquing"
+#~ msgid "permission denied"
+#~ msgstr "s'ha denegat el permís"
 
-#: ../templates/community/users/search_results.html:30
-msgid "No users found. Go out and blame cows"
-msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
+#~ msgid "invalid HTTP method"
+#~ msgstr "el mètode HTTP no és vàlid"
+
+#~ msgid "Success"
+#~ msgstr "Amb èxit"
+
+#~ msgid "profile updated successfully !"
+#~ msgstr "el perfil s'ha desat correctament!"
+
+#~ msgid "wrong search request"
+#~ msgstr "sol·licitud de cerca incorrecta"
+
+#~ msgid "Hello mate, what about logging in? Have a look below"
+#~ msgstr "Ei, què us sembla si us registreu? Feu una ullada a baix"
+
+#~ msgid "Sabayon Linux Community activation"
+#~ msgstr "Activació de la comunitat de Sabayon Linux"
+
+#~ msgid "Sabayon Linux Community registration"
+#~ msgstr "Registre a la Comunitat Sabayon Linux"
+
+#~ msgid "Invalid Username"
+#~ msgstr "Nom d'usuari no valid"
+
+#~ msgid "Invalid Email, empty fields or mismatch"
+#~ msgstr "Correu no vàlid o camp buit"
+
+#~ msgid "Invalid Password, empty fields or mismatch or wrong length"
+#~ msgstr "Contrasenya no vàlida, camp buit o longitud incorrecta"
+
+#~ msgid "Invalid Captcha Answer"
+#~ msgstr "Resposta Captcha incorrecta"
+
+#~ msgid "Invalid"
+#~ msgstr "No vàlid"
+
+#~ msgid "wrong POST"
+#~ msgstr "POST incorrecte"
+
+#~ msgid "invalid old e-mail"
+#~ msgstr "correu antic no vàlid"
+
+#~ msgid "you changed nothing"
+#~ msgstr "no heu canviat res"
+
+#~ msgid "empty fields"
+#~ msgstr "camps buits"
+
+#~ msgid "e-mails do not match"
+#~ msgstr "els correus no coincideixen"
+
+#~ msgid "invalid parameters"
+#~ msgstr "paràmetres no vàlids"
+
+#~ msgid "invalid e-mail (1)"
+#~ msgstr "correu no vàlid (1)"
+
+#~ msgid "invalid e-mail (2)"
+#~ msgstr "correu no vàlid (2)"
+
+#~ msgid "you must activate your change. You have mail"
+#~ msgstr "heu d'activar els canvis. Teniu un correu"
+
+#~ msgid "Sabayon Linux Community E-mail Update Activation"
+#~ msgstr ""
+#~ "Activació de l'actualització del correu de la comunitat Sabayon Linux"
+
+#~ msgid "not logged in (username)"
+#~ msgstr "No heu accedit al compte (nom d'usuari)"
+
+#~ msgid "where is the current password?"
+#~ msgstr "on és la contrasenya actual?"
+
+#~ msgid "missing fields"
+#~ msgstr "falten camps"
+
+#~ msgid "new password fields do not match"
+#~ msgstr "les noves contrasenyes no coincideixen"
+
+#~ msgid "wtf are you trying to do?"
+#~ msgstr "què punyetes esteu intentant fer?"
+
+#~ msgid "old and new password match"
+#~ msgstr "les contrasenyes antiga i nova coincideixen"
+
+#~ msgid "password too short"
+#~ msgstr "la contrasenya és massa curta"
+
+#~ msgid "password too long"
+#~ msgstr "la contrasenya és massa llarga"
+
+#~ msgid "invalid current password"
+#~ msgstr "contrasenya actual no vàlida"
+
+#~ msgid "you do not have a valid e-mail"
+#~ msgstr "no teniu un correu vàlid"
+
+#~ msgid "Sabayon Linux Community Password Update Activation"
+#~ msgstr ""
+#~ "Activació de l'actualització de contrasenya de la comunitat Sabayon Linux"
+
+#~ msgid "Packages match"
+#~ msgstr "Paquets coincidents"
+
+#~ msgid "Package descriptions"
+#~ msgstr "Descripció de paquets"
+
+#~ msgid "Alphabet"
+#~ msgstr "Alfabet"
+
+#~ msgid "Vote"
+#~ msgstr "Vot"
+
+#~ msgid "vote"
+#~ msgstr "vot"
+
+#~ msgid "Package name"
+#~ msgstr "Nom del paquet"
+
+#~ msgid "Content (text)"
+#~ msgstr "Contingut (text)"
+
+#~ msgid "Keyword (tag)"
+#~ msgstr "Paraula clau (etiqueta)"
+
+#~ msgid "Username"
+#~ msgstr "Nom d'usuari"
+
+#~ msgid "Document id."
+#~ msgstr "Id. del document"
+
+#~ msgid "No restrictions"
+#~ msgstr "Sense restriccions"
+
+#~ msgid "Number of downloads"
+#~ msgstr "Nombre de baixades"
+
+#~ msgid "key"
+#~ msgstr "clau"
+
+#~ msgid "username"
+#~ msgstr "nom d'usuari"
+
+#~ msgid "Sabayon Linux Packages Repository"
+#~ msgstr "Repositori de Paquets Sabayon Linux"
+
+#~ msgid "invalid search string"
+#~ msgstr "cadena de cerca no vàlida"
+
+#~ msgid "invalid search restriction type"
+#~ msgstr "restricció de tipus de cerca no vàlida"
+
+#~ msgid "invalid 'order by'"
+#~ msgstr "'ordena per' no és vàlid"
+
+#~ msgid "Activation successful"
+#~ msgstr "Activació correcta"
+
+#~ msgid "Wow, thanks a lot! Now you can really start enjoying our Community"
+#~ msgstr "Uau, gràcies! Ara podeu començar a gaudir de la Comunitat"
+
+#~ msgid "Sorry"
+#~ msgstr "Ho sento"
+
+#~ msgid "There is no activation information available"
+#~ msgstr "No hi ha informació d'activació disponible"
+
+#~ msgid "Sponsors"
+#~ msgstr "Patrocinadors"
+
+#~ msgid ""
+#~ "Officially Sponsored by the <b>NLnet Foundation</b>, that financially "
+#~ "supported the Entropy Project"
+#~ msgstr ""
+#~ "Patrocinat oficialment per la <b>NLnet Foundation</b>, que patrocina "
+#~ "econòmicament el projecte Entropy."
+
+#~ msgid "See NLnet development plan status"
+#~ msgstr "Veieu els plans de desenvolupament de NLnet"
+
+#~ msgid "Officially Sponsored by"
+#~ msgstr "Patrocinat oficialment per la "
+
+#~ msgid "University of Brescia"
+#~ msgstr "Universitat de Brescia"
+
+#~ msgid ""
+#~ "Housing our Entropy build server inside the Faculty Network Center at the "
+#~ "Department of Electronics"
+#~ msgstr ""
+#~ "que hostatja el nostre servidor Entropy al Centre de Xarxes del "
+#~ "Departament d'Electrònica"
+
+#~ msgid "University of Milano-Bicocca"
+#~ msgstr "Universitat de Milano-Bicocca"
+
+#~ msgid "Housing our Entropy build servers and WWW inside DISCo"
+#~ msgstr "Hostatjant els servidors Entropy i la web a DISCo"
+
+#~ msgid "Proving the software technology we daily need"
+#~ msgstr "Proporcionant la tecnologia de programari que necessitem dia a dia"
+
+#~ msgid "Survey"
+#~ msgstr "Enquesta"
+
+#~ msgid "Cross Linux From Scratch"
+#~ msgstr "Cross Linux From Scratch"
+
+#~ msgid "Ibiblio.org Hosting"
+#~ msgstr "Ibiblio.org Hosting"
+
+#~ msgid "Your E-mail is now active"
+#~ msgstr "La vostra adreça de correu està activada"
+
+#~ msgid "Trademarks are property of their respective owners."
+#~ msgstr "Les marques comercials són dels seus respectius propietaris."
+
+#~ msgid "Sabayon Linux Five Oh!"
+#~ msgstr "Sabayon Linux Five Oh!"
+
+#~ msgid "Entropy Web Dashboard Login"
+#~ msgstr "Accés al tauler web d'Entropy"
+
+#~ msgid "New user?"
+#~ msgstr "Sou nou?"
+
+#~ msgid "What is all this ?"
+#~ msgstr "Què és tot això?"
+
+#~ msgid "Comments"
+#~ msgstr "Comentaris"
+
+#~ msgid "Docs"
+#~ msgstr "Documents"
+
+#~ msgid "Votes"
+#~ msgstr "Vots"
+
+#~ msgid "Logout ?"
+#~ msgstr "Desconnecta'm"
+
+#~ msgid "My Entropy"
+#~ msgstr "El meu Entropy"
+
+#, fuzzy
+#~ msgid "Community Menu"
+#~ msgstr "Inici de la comunitat"
+
+#~ msgid "points"
+#~ msgstr "punts"
+
+#~ msgid "Houston, we've got a problem!"
+#~ msgstr "Houston, tenim problemes!"
+
+#~ msgid ""
+#~ "Probably the page you are looking for <b>does not exist</b> anymore. You "
+#~ "can blame <u>aliens</u>. Well, we are really sorry. Why don't you get to "
+#~ "our <a href=\"%s\">home page</a>?"
+#~ msgstr ""
+#~ "La pàgina que esteu buscant probablement ja <b>no existeix</b>. Podeu "
+#~ "culpar els <u>aliens</u>. Ho sentim. Perquè no torneu a la <a href=\"%s"
+#~ "\">pàgina d'inici</a>?"
+
+#~ msgid "text goes here"
+#~ msgstr "el text va aquí"
+
+#~ msgid "Your Password is now updated"
+#~ msgstr "La vostra contrasenya s'ha actualitzat"
+
+#~ msgid "confirmation code"
+#~ msgstr "codi de confirmació"
+
+#~ msgid "validation id"
+#~ msgstr "id de validació"
+
+#~ msgid "user id"
+#~ msgstr "id d'usuari"
+
+#~ msgid "(Sabayon leader)"
+#~ msgstr "(Cap de Sabayon)"
+
+#~ msgid ""
+#~ "<b>You may ask</b>. What do we offer in change? <b>We answer</b>, your "
+#~ "own <b>Blog</b> on this Portal, your personal <b>\"Pastebin\"</b> and "
+#~ "file upload service called <b>\"Pixdiff\"</b>, a <b>warm Community</b> "
+#~ "that will always help you out, the ability to <b>vote</b> and "
+#~ "<b>interact</b> with what we offer and with other people inside this "
+#~ "space. We are just used to call all this with one name: <b>Sabayon</b>, "
+#~ "<i>the \"2.0\" (two-point-oh) distribution</i>"
+#~ msgstr ""
+#~ "<b>Potser us pregunteu</b>. Què us oferim a canvi? <b>Us contestem</b>, "
+#~ "el vostre <b>Bloc</b> en aquest portal, el vostre <b>\"Pastebin\"</b> "
+#~ "personal i un servei de pujada de fitxers anomenat <b>\"Pixdiff\"</b>, "
+#~ "una <b>Comunitat amable</b> que sempre us ajudarà, la possibilitat de "
+#~ "<b>votar</b> i < b>interactuar</b> amb el que oferim i amb altres "
+#~ "persones en aquest espai. Anomenem això: <b>Sabayon</b>, <i>la "
+#~ "distribució \"2.0\" (dos-punt-oh)</i>"
+
+#~ msgid ""
+#~ "Please note that you will need to enter a valid e-mail address before "
+#~ "your account is activated. You will receive an e-mail at the address you "
+#~ "provide that contains an account activation link"
+#~ msgstr ""
+#~ "Haureu d'escriure una adreça de correu electrònic vàlida abans d'activar "
+#~ "el compte. Rebreu un correu a l'adreça que proporcioneu que conté un "
+#~ "enllaç d'activació."
+
+#~ msgid "Length must be between 3 and 20 characters"
+#~ msgstr "La longitud ha de ser entre 3 i 20 caràcters"
+
+#~ msgid "E-mail address"
+#~ msgstr "Adreça de correu"
+
+#~ msgid "Confirm e-mail address"
+#~ msgstr "Confirmeu l'adreça de correu"
+
+#~ msgid "Password"
+#~ msgstr "Contrasenya"
+
+#~ msgid "Must be between 6 and 30 characters"
+#~ msgstr "Ha de tenir entre 6 i 30 caràcters"
+
+#~ msgid "Confirm password"
+#~ msgstr "Confirmeu la contrasenya"
+
+#~ msgid "Registration Agreement"
+#~ msgstr "Acord de registre"
+
+#~ msgid "I agree with the terms above"
+#~ msgstr "Estic d'acord amb els termes anteriors"
+
+#~ msgid "Registration successful"
+#~ msgstr "El registre ha tingut èxit"
+
+#~ msgid "Wow, thanks a lot!"
+#~ msgstr "Uau, moltes gràcies!"
+
+#~ msgid ""
+#~ "You should have waited the activation e-mail but the one you provided has "
+#~ "not been accepted for delivery"
+#~ msgstr ""
+#~ "Hauríeu d'esperar el correu d'activació, però l'adreça de correu que heu "
+#~ "proporcionat no s'ha acceptat per la tramesa."
+
+#, fuzzy
+#~ msgid ""
+#~ "Please contact <a href=\"mailto:mail.issues@sabayon.org\">our service</a> "
+#~ "and ask for help"
+#~ msgstr ""
+#~ "Si us plau contacteu amb <a href=\"mailto:mail.issues@sabayonlinux.org"
+#~ "\">el nostre servei</a> i demaneu ajuda"
+
+#~ msgid ""
+#~ "Now you need to wait and read the activation e-mail before being able to "
+#~ "login"
+#~ msgstr ""
+#~ "Ara heu d'esperar i llegir el correu d'activació abans de poder-vos "
+#~ "acreditar"
+
+#~ msgid "<a href='%s'>Click here</a> to come back to the source page"
+#~ msgstr "<a href='%s'>Feu clic aquí</a> per tornar a la pàgina de codi font"
+
+#~ msgid ""
+#~ "Sabayon Linux is a <a href=\"http://www.gentoo.org\" target=\"_blank"
+#~ "\">Gentoo Linux</a> based distribution which relies its packages "
+#~ "versioning and patches from the Gentoo Portage tree and our add-on "
+#~ "repository called \"overlay\". Thus, Gentoo Linux Security Advisories "
+#~ "(GLSA) can be applied to the packages listed in our tree. Here below, you "
+#~ "can see a list of the latest GLSAs published by the Gentoo Project"
+#~ msgstr ""
+#~ "Sabayon Linux és una distribució basada en <a href=\"http://www.gentoo.org"
+#~ "\" target=\"_blank\">Gentoo Linux</a> i les versions i els pedaços dels "
+#~ "paquets depenen de l'arbre de Gentoo Portage i del nostre repositori "
+#~ "afegit, anomenat \"overlay\". Així mateix, els Avisos de Seguretat de "
+#~ "Gentoo Linux (GLSA) es poden aplicar als paquets llistats en el nostre "
+#~ "arbre. A baix veureu una llista dels últims GLSAs publicats pel Projecte "
+#~ "Gentoo"
+
+#~ msgid "full feed here"
+#~ msgstr "Registre complet aquí"
+
+#~ msgid "You can get the complete list on the"
+#~ msgstr "Podeu obtenir la llista sencera de"
+
+#~ msgid "Gentoo Linux Security Advisories feed"
+#~ msgstr "l'alimentador de Avisos de Seguretat de Gentoo Linux"
+
+#~ msgid "Categories"
+#~ msgstr "Categories"
+
+#~ msgid "Release"
+#~ msgstr "Revisió"
+
+#~ msgid "No packages in this category"
+#~ msgstr "No hi ha paquets en aquesta categoria"
+
+#~ msgid "Destroy"
+#~ msgstr "Destrueix"
+
+#, fuzzy
+#~ msgid "Repository"
+#~ msgstr "Repositori d'Entropy"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "Version"
+#~ msgstr "Versió"
+
+#~ msgid "Entropy revision"
+#~ msgstr "Revisió d'Entropy"
+
+#~ msgid "Package tag"
+#~ msgstr "Etiqueta del paquet"
+
+#~ msgid "Slot"
+#~ msgstr "Slot"
+
+#~ msgid "Conflicts"
+#~ msgstr "Conflictes"
+
+#~ msgid "Required by"
+#~ msgstr "Requerit per"
+
+#~ msgid "view packages list"
+#~ msgstr "veure la llista de paquets"
+
+#~ msgid "homepage"
+#~ msgstr "pàgina principal"
+
+#~ msgid "CHOST"
+#~ msgstr "CHOST"
+
+#~ msgid "CFLAGS"
+#~ msgstr "CFLAGS"
+
+#~ msgid "Content"
+#~ msgstr "Contingut"
+
+#~ msgid "View content"
+#~ msgstr "Mostra el contingut"
+
+#~ msgid "Space required"
+#~ msgstr "Espai necessari"
+
+#~ msgid "Checksum"
+#~ msgstr "Suma de verificació"
+
+#~ msgid "Creation date"
+#~ msgstr "Data de creació"
+
+#~ msgid "Security"
+#~ msgstr "Seguretat"
+
+#~ msgid "No entries exist"
+#~ msgstr "No hi ha entrades"
+
+#~ msgid "Packages Search"
+#~ msgstr "Cerca de paquets"
+
+#~ msgid "User Generated Content Search"
+#~ msgstr "Contingut Generat per l'Usuari"
+
+#~ msgid "Statistics"
+#~ msgstr "Estadístiques"
+
+#~ msgid "Releases"
+#~ msgstr "Revisions"
+
+#~ msgid "Quick navigation"
+#~ msgstr "Navegació ràpida"
+
+#~ msgid "Entropy Repository"
+#~ msgstr "Repositori d'Entropy"
+
+#~ msgid "Product"
+#~ msgstr "Producte"
+
+#~ msgid "Branch"
+#~ msgstr "Branca"
+
+#~ msgid "Architecture"
+#~ msgstr "Arquitectura"
+
+#~ msgid "Search type"
+#~ msgstr "Tipus de cerca"
+
+#~ msgid "Order by"
+#~ msgstr "Ordena per"
+
+#~ msgid "Elements found: %s"
+#~ msgstr "Elements trobats: %s"
+
+#~ msgid "Nothing found"
+#~ msgstr "No s'ha trobat res"
+
+#~ msgid "Perhaps, you meant?"
+#~ msgstr "Potser voleu dir?"
+
+#~ msgid "Cannot find the software you are looking for?"
+#~ msgstr "No heu trobat el programari que buscàveu?"
+
+#~ msgid "Submit a package request"
+#~ msgstr "Envieu una sol·licitud de paquet"
+
+#~ msgid "Back to Search"
+#~ msgstr "Torna a la cerca"
+
+#~ msgid "Package Categories Navigation"
+#~ msgstr "Navegació per categories de paquets"
+
+#~ msgid "You are watching"
+#~ msgstr "Esteu veient"
+
+#~ msgid "User Generated Content"
+#~ msgstr "Contingut Generat per Usuaris"
+
+#~ msgid "Current status"
+#~ msgstr "Estat actual"
+
+#~ msgid "Branches"
+#~ msgstr "Branques"
+
+#~ msgid "Number of packages"
+#~ msgstr "Nombre de paquets"
+
+#~ msgid "Number of categories"
+#~ msgstr "Nombre de categories"
+
+#~ msgid "Number of files"
+#~ msgstr "Nombre de fitxers"
+
+#~ msgid "Overall size"
+#~ msgstr "Mida total"
+
+#~ msgid "Edit"
+#~ msgstr "Edita"
+
+#~ msgid "by"
+#~ msgstr "per"
+
+#~ msgid "on"
+#~ msgstr "el"
+
+#~ msgid "score"
+#~ msgstr "puntuació"
+
+#~ msgid "Restrict on"
+#~ msgstr "Restringeix a"
+
+#~ msgid "Seeking %s of %s"
+#~ msgstr "S'estan cercant %s de %s"
+
+#~ msgid "Documents"
+#~ msgstr "Documents"
+
+#~ msgid ""
+#~ "Being part of <b>our Community</b> is what make us proud of ourselves"
+#~ msgstr ""
+#~ "Ser part de la <b>nostra Comunitat</b> és el que ens fa estar orgullosos "
+#~ "de nosaltres mateixos"
+
+#~ msgid ""
+#~ "This is the place where you can get in touch with people in our "
+#~ "Community, see how good they are and get helped"
+#~ msgstr ""
+#~ "En aquest espai podeu entrar en contacte amb gent de la Comunitat, podreu "
+#~ "rebre ajuda  i veureu que bons que són"
+
+#~ msgid ""
+#~ "If you want to join our Community or just need help and make questions, "
+#~ "here are some useful links you might need to look at"
+#~ msgstr ""
+#~ "Si voleu unir-vos a la Comunitat o simplement necessiteu ajuda i fer "
+#~ "preguntes, aquí hi ha alguns enllaços que us poden ser útils"
+
+#~ msgid "Sabayon Linux Support Chat"
+#~ msgstr "Xat d'ajuda de sabayon Linux"
+
+#~ msgid "Wolfden, Sabayon Linux Chief Community Officer"
+#~ msgstr "Wolfden, cap oficial de la comunitat Sabayon Linux"
+
+#~ msgid "Lxnay, Sabayon Linux Chief Architect"
+#~ msgstr "Lxnay, arquitecte en cap de Sabayon Linux"
+
+#~ msgid "Sabayon Linux Forum"
+#~ msgstr "Fòrum de Sabayon Linux"
+
+#~ msgid "Community Home"
+#~ msgstr "Inici de la comunitat"
+
+#~ msgid "Users"
+#~ msgstr "Usuaris"
+
+#~ msgid "Hall of fame"
+#~ msgstr "Saló de la fama"
+
+#~ msgid "Blogs"
+#~ msgstr "Blocs"
+
+#~ msgid "Useful links"
+#~ msgstr "Enllaços útils"
+
+#~ msgid "also known as"
+#~ msgstr "també coneguts com a"
+
+#~ msgid "Points"
+#~ msgstr "Punts"
+
+#~ msgid "Currently counting"
+#~ msgstr "hi ha"
+
+#~ msgid "users... and <b>growing</b>"
+#~ msgstr "usuaris... i <b>creixent</b>"
+
+#~ msgid ""
+#~ "In this page you will find all your statistics regarding your Entropy/Web "
+#~ "account"
+#~ msgstr ""
+#~ "Aquí trobareu les vostres estadístiques quant al vostre compte Entropy/Web"
+
+#~ msgid "this is the name other people will reference you"
+#~ msgstr "aquest és el nom amb el que us coneixerà l'altra gent"
+
+#~ msgid "User id"
+#~ msgstr "User id"
+
+#~ msgid "this is your user account number"
+#~ msgstr "aquest és el vostre número de compte"
+
+#~ msgid "Entropy role"
+#~ msgstr "rol d'Entropy"
+
+#~ msgid "your role inside the Community"
+#~ msgstr "el vostre rol dins de la Comunitat"
+
+#~ msgid "number of times you voted"
+#~ msgstr "número de vegades que heu votat"
+
+#~ msgid "weight: %s points each"
+#~ msgstr "pes: %s punts cadascun"
+
+#~ msgid "Vote average"
+#~ msgstr "Mitjana de vot"
+
+#~ msgid "this is kinda self explanatory"
+#~ msgstr "això s'explica tot sol"
+
+#~ msgid "how many documents you uploaded (comments,images,etc)"
+#~ msgstr "quants documents heu pujat (comentaris,imatges,etc.)"
+
+#~ msgid "how many comments you wrote"
+#~ msgstr "quants comentaris heu escrit"
+
+#~ msgid "Images"
+#~ msgstr "Imatges"
+
+#~ msgid "how many images you uploaded"
+#~ msgstr "quantes imatges heu pujat"
+
+#~ msgid "how many files you uploaded"
+#~ msgstr "quants fitxers heu pujat"
+
+#~ msgid "YouTube(tm) Videos"
+#~ msgstr "Videos del YouTube(tm)"
+
+#~ msgid "how many videos you uploaded"
+#~ msgstr "quants videos heu pujat"
+
+#~ msgid "Ranking"
+#~ msgstr "Rànquing"
+
+#~ msgid "how good you are in our Community"
+#~ msgstr "Com sou de bons dins la Comunitat"
+
+#~ msgid "position"
+#~ msgstr "posició"
+
+#~ msgid "your resulting Entropy score"
+#~ msgstr "la vostra puntuació Entropy"
+
+#~ msgid "Not logged in"
+#~ msgstr "No us heu acreditat"
+
+#~ msgid ""
+#~ "In this page you will be able to browse through your submitted documents "
+#~ "on all the repositories we host"
+#~ msgstr ""
+#~ "Aquí podreu navegar per tots els documents enviats als repositoris que "
+#~ "hostatgem"
+
+#~ msgid "View"
+#~ msgstr "Vista"
+
+#~ msgid "This is just"
+#~ msgstr "Aquest és en"
+
+#~ msgid "hello !"
+#~ msgstr "hola !"
+
+#~ msgid "Just a nickname, what did you expect?"
+#~ msgstr "Només un sobrenom, què esperàveu?"
+
+#~ msgid "User identifier"
+#~ msgstr "Identificador d'usuari"
+
+#~ msgid "This is the account number"
+#~ msgstr "això és el número de compte"
+
+#~ msgid "Website role"
+#~ msgstr "Rol a la web"
+
+#~ msgid "User's role inside our Website"
+#~ msgstr "Rol de l'usuari en la vostra web"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid "User's virtual Alter-Ego"
+#~ msgstr "Alter-Ego virtual de l'usuari"
+
+#~ msgid "User comes from..."
+#~ msgstr "L'usuari ve de..."
+
+#~ msgid "Age"
+#~ msgstr "Edat"
+
+#~ msgid "How many years are past, huh!"
+#~ msgstr "Quants anys han passat, uf!"
+
+#~ msgid "User's current job"
+#~ msgstr "Feina actual de l'usuari"
+
+#~ msgid "User's interests, kinda self explanatory"
+#~ msgstr "Interessos de l'usuari, és autoexplicatiu"
+
+#~ msgid "Contacts"
+#~ msgstr "Contactes"
+
+#~ msgid "User's E-mail and IM"
+#~ msgstr "Correu electrònic i IM de l'usuari"
+
+#~ msgid "User's Website"
+#~ msgstr "Web de l'usuari"
+
+#~ msgid "Click here to get there"
+#~ msgstr "Feu clic aquí per accedir-hi"
+
+#~ msgid "Groups"
+#~ msgstr "Grups"
+
+#~ msgid "Website groups user is in"
+#~ msgstr "Grups en els que es troba l'usuari"
+
+#~ msgid "User's role inside Entropy"
+#~ msgstr "Rol de l'usuari dins de Entropy"
+
+#~ msgid "Number of times the User voted"
+#~ msgstr "Número de vegades que l'usuari ha votat"
+
+#~ msgid "Total number of documents"
+#~ msgstr "Número total de documents"
+
+#~ msgid "Number of comments"
+#~ msgstr "Número de comentaris"
+
+#~ msgid "Number of images"
+#~ msgstr "Número d'imatges"
+
+#~ msgid "Number of videos belonging"
+#~ msgstr "Número de videos"
+
+#~ msgid "User rank inside our Community"
+#~ msgstr "Rànquing d'usuari dins de la Comunitat"
+
+#~ msgid "User's Community Score"
+#~ msgstr "Puntuació d'usuari de la Comunitat"
+
+#~ msgid "User search"
+#~ msgstr "Cerca d'usuaris"
+
+#~ msgid ""
+#~ "Write a search term on the right. E-mail, username, name, surname, you "
+#~ "name it"
+#~ msgstr ""
+#~ "Escriviu un terme de cerca a la dreta. Adreça de correu, nom d'usuari, "
+#~ "nom, cognom, com l'anomeneu"
+
+#~ msgid "Search results"
+#~ msgstr "Resultats de cerca"
+
+#~ msgid "featuring"
+#~ msgstr "amb"
+
+#~ msgid "Points and Ranking"
+#~ msgstr "Punts i rànquing"
+
+#~ msgid "No users found. Go out and blame cows"
+#~ msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 
 #~ msgid "the cutest, free Operating System"
 #~ msgstr "el millor Sistema Operatiu lliure"
@@ -2094,9 +1865,6 @@ msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 #~ "baixades probablement no ocupen tota la banda d'ampla de baixada. "
 #~ "Metalink us ajudarà"
 
-#~ msgid "source"
-#~ msgstr "origen"
-
 #~ msgid "Visit the official"
 #~ msgstr "Visiteu la oficial"
 
@@ -2115,9 +1883,6 @@ msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 
 #~ msgid "Visit the"
 #~ msgstr "Visiteu la"
-
-#~ msgid "Sabayon Linux Tracker Page"
-#~ msgstr "Pàgina del seguidor Sabayon Linux"
 
 #~ msgid "HTTP, FTP, RSYNC mirrors"
 #~ msgstr "Rèpliques HTTP, FTP, RSYNC"
@@ -2219,9 +1984,6 @@ msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 #~ msgid "An image should pop up above this text"
 #~ msgstr "Una imatge hauria d'aparèixer sobre aquest text"
 
-#~ msgid "Not found"
-#~ msgstr "No s'ha trobat"
-
 #~ msgid "The pastie you are looking for is not available"
 #~ msgstr "El pastie que esteu buscant no està disponible"
 
@@ -2300,9 +2062,6 @@ msgstr "No s'han trobat usuaris. Aneu i culpeu les vaques"
 
 #~ msgid "added"
 #~ msgstr "s'ha afegit"
-
-#~ msgid "updated"
-#~ msgstr "s'ha actualitzat"
 
 #~ msgid "insert at least one link"
 #~ msgstr "Inseriu almenys un enllaç"

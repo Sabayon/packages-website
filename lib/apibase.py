@@ -4,6 +4,7 @@ import urllib
 import hashlib
 import os
 import re
+import time
 
 from pylons import tmpl_context as c
 from pylons import app_globals as g
@@ -24,9 +25,11 @@ except ImportError:
     from sqlite3.dbapi2 import ProgrammingError, OperationalError, \
         DatabaseError
 
-from entropy.const import const_convert_to_unicode
+from entropy.const import const_convert_to_unicode, \
+    const_convert_to_rawstring
 import entropy.tools as entropy_tools
 from entropy.cache import EntropyCacher
+from entropy.i18n import _LOCALE
 
 GROUP_ICONS_MAP = {
     'accessibility': "preferences-desktop-accessibility.png",
@@ -71,7 +74,7 @@ class ApibaseController:
         return sorted(branches, reverse = True)
 
     def _get_available_repositories(self, entropy, product, arch):
-        return sorted(entropy._get_repositories(product, arch))
+        return entropy._get_repositories(product, arch)
 
     def _get_available_arches(self, entropy, repoid, product):
         return entropy._get_arches(repoid, product)
@@ -80,9 +83,22 @@ class ApibaseController:
         """
         Internal method, stay away.
         """
+        mtime = self._get_valid_repository_mtime(entropy, repository_id,
+            arch, branch, product)
+        sha = hashlib.sha1()
+        hash_str = "%s:%s:%s:%s:%s" % (
+            repository_id, arch, branch, product, repr(mtime))
+        sha.update(hash_str)
+        cache_key = "_api_get_repo_" + sha.hexdigest()
+        validated = self._cacher.pop(cache_key,
+            cache_dir = model.config.WEBSITE_CACHE_DIR)
+
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
-            dbconn.validate()
+            if validated is None:
+                dbconn.validate()
+                self._cacher.save(cache_key, True,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
             return dbconn
         except (ProgrammingError, OperationalError, SystemDatabaseError):
             try:
@@ -126,14 +142,11 @@ class ApibaseController:
             if b not in self._get_available_branches(entropy, r, p):
                 b = None
 
-        order_by_types = {
-            'alphabet': "0",
-            'vote': "1",
-            'downloads': "2",
-        }
+        order_by_types = ["alphabet", "vote", "downloads"]
         # order by
         o = request.params.get('o') or "alphabet"
-        o = order_by_types.get(o, order_by_types.get("alphabet"))
+        if o not in order_by_types:
+            o = "alphabet"
 
         return r, a, b, p, o
 
@@ -166,7 +179,8 @@ class ApibaseController:
         @return: tuple composed by (package_id, repository_id, arch, branch, product)
         @rtype: tuple
         """
-        id_str = base64.urlsafe_b64decode(encoded_id_str)
+        id_str = base64.urlsafe_b64decode(
+            const_convert_to_rawstring(encoded_id_str, from_enctype = "utf-8"))
         try:
             package_id, repository_id, a, b, p = id_str.split()
             package_id = int(package_id)
@@ -211,6 +225,17 @@ class ApibaseController:
             return None
         return name, package_id, repository_id, a, b, p
 
+    def _api_get_groups(self, entropy):
+        """
+        Return Package Groups available.
+        """
+        spm_class = entropy.Spm_class()
+        groups = spm_class.get_package_groups().copy()
+        for group_name, group_value in groups.items():
+            group_value['icon'] = GROUP_ICONS_MAP.get(group_name,
+                GROUP_ICONS_MAP['__fallback__'])
+        return groups
+
     def _api_category_to_group(self, entropy, category):
         """
         Given a package category, it returns the package group from where
@@ -225,6 +250,49 @@ class ApibaseController:
                     break
         # if we get here, means there is no group matching
         return None
+
+    def _api_get_categories(self, entropy):
+        """
+        Return Package Categories available.
+        """
+        categories = set()
+        category_descriptions = {}
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    mycats = repo.listAllCategories()
+                    categories.update(mycats)
+                    for mycat in mycats:
+                        if mycat in category_descriptions:
+                            continue
+                        cat_desc = None
+                        desc_map = repo.retrieveCategoryDescription(mycat)
+                        if _LOCALE in desc_map:
+                            cat_desc = desc_map[_LOCALE]
+                        elif 'en' in desc_map:
+                            cat_desc = desc_map['en']
+                        if cat_desc is not None:
+                            category_descriptions[mycat] = cat_desc
+
+            finally:
+                if repo is not None:
+                    repo.close()
+
+        categories = sorted(categories)
+        data = []
+        for category in categories:
+            obj = {
+                'name': category,
+                'icon': self._api_get_category_icon(entropy, category),
+                'description': category_descriptions.get(category,
+                    _("No description")),
+            }
+            data.append(obj)
+
+        return data
 
     def _api_get_category_icon(self, entropy, category):
         """
@@ -316,12 +384,17 @@ class ApibaseController:
 
         return list(filter(_repo_filter, valid_list))
 
-    def _api_search_pkg(self, entropy, q):
+    def _api_search_pkg(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string.
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -334,6 +407,9 @@ class ApibaseController:
                 if repo is not None:
                     pkg_ids = repo.searchPackages(q, order_by = "atom",
                         just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -341,13 +417,18 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_desc(self, entropy, q):
+    def _api_search_desc(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (description strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -359,6 +440,9 @@ class ApibaseController:
             try:
                 if repo is not None:
                     pkg_ids = repo.searchDescription(q, just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -366,13 +450,18 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_lib(self, entropy, q):
+    def _api_search_lib(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (library strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -386,9 +475,10 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    pkg_ids = list(repo.searchNeeded(q))
-                    if len(pkg_ids) > 10:
-                        pkg_ids = pkg_ids[:10]
+                    pkg_ids = repo.searchNeeded(q)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -396,13 +486,54 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_path(self, entropy, q):
+    def _api_search_provided_lib(self, entropy, q, filter_cb = None):
+        """
+        Search packages in repositories using given query string
+        (provided library strategy).
+
+        @param q: query string
+        @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
+        @return: list of package tuples (pkg_id, repo, arch, branch, product)
+        @rtype: list
+        """
+        # NOTE: cut results to first 10 items, since this can lead to DDoS
+        data = []
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            if self._is_source_repository(repository_id):
+                continue
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    pkg_ids = repo.resolveNeeded(q)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
+                    data.extend((pkg_id, repository_id, arch, branch, product) \
+                        for pkg_id in pkg_ids)
+            finally:
+                if repo is not None:
+                    repo.close()
+        return data
+
+    def _api_search_path(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (content strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -416,6 +547,9 @@ class ApibaseController:
             try:
                 if repo is not None:
                     pkg_ids = repo.searchBelongs(q)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -423,13 +557,18 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_sets(self, entropy, q):
+    def _api_search_sets(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (sets strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -448,6 +587,9 @@ class ApibaseController:
                         pkg_id, rc = repo.atomMatch(pkg)
                         if pkg_id != -1:
                             pkg_ids.add(pkg_id)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -455,13 +597,18 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_mime(self, entropy, q):
+    def _api_search_mime(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (mimetype strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -475,6 +622,9 @@ class ApibaseController:
             try:
                 if repo is not None:
                     pkg_ids = repo.searchProvidedMime(q)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -482,13 +632,18 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_search_category(self, entropy, q):
+    def _api_search_category(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (category strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -499,23 +654,77 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    # pay attention, if you switch to like = True, you have
-                    # to fixup the category link in the package details page!
-                    pkg_dts = repo.searchCategory(q)
+                    pkg_ids = repo.searchCategory(q, just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
-                        for atom, pkg_id in pkg_dts)
+                        for pkg_id in pkg_ids)
             finally:
                 if repo is not None:
                     repo.close()
         return data
 
-    def _api_search_license(self, entropy, q):
+    def _api_search_group(self, entropy, q, filter_cb = None):
+        """
+        Search packages in repositories using given query string
+        (group strategy).
+
+        @param q: query string
+        @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
+        @return: list of package tuples (pkg_id, repo, arch, branch, product)
+        @rtype: list
+        """
+        spm_class = entropy.Spm_class()
+        groups = spm_class.get_package_groups()
+        if q not in groups:
+            return []
+
+        group_data = groups[q]
+        categories = group_data['categories']
+
+        data = []
+        valid_repos = self._api_get_valid_repositories(entropy)
+        for repository_id, arch, branch, product in valid_repos:
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    repo_categories = repo.listAllCategories()
+                    expanded_cats = set()
+                    for g_cat in categories:
+                        expanded_cats.update([x for x in repo_categories if \
+                            x.startswith(g_cat)])
+                    pkg_ids = set()
+                    for cat in sorted(expanded_cats):
+                        pkg_ids |= repo.searchCategory(cat, just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
+                    data.extend((pkg_id, repository_id, arch, branch, product) \
+                        for pkg_id in pkg_ids)
+            finally:
+                if repo is not None:
+                    repo.close()
+        return data
+
+    def _api_search_license(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (license strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -526,23 +735,29 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    # pay attention, if you switch to like = True, you have
-                    # to fixup the category link in the package details page!
-                    pkg_dts = repo.searchLicense(q, just_id = True)
+                    pkg_ids = repo.searchLicense(q, just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
-                        for pkg_id in pkg_dts)
+                        for pkg_id in pkg_ids)
             finally:
                 if repo is not None:
                     repo.close()
         return data
 
-    def _api_search_useflag(self, entropy, q):
+    def _api_search_useflag(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string
         (useflag strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -553,22 +768,28 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    # pay attention, if you switch to like = True, you have
-                    # to fixup the category link in the package details page!
-                    pkg_dts = repo.searchUseflag(q, just_id = True)
+                    pkg_ids = repo.searchUseflag(q, just_id = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
-                        for pkg_id in pkg_dts)
+                        for pkg_id in pkg_ids)
             finally:
                 if repo is not None:
                     repo.close()
         return data
 
-    def _api_search_match(self, entropy, q):
+    def _api_search_match(self, entropy, q, filter_cb = None):
         """
         Search packages in repositories using given query string (match strategy).
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -580,6 +801,9 @@ class ApibaseController:
             try:
                 if repo is not None:
                     pkg_ids, rc = repo.atomMatch(q, multiMatch = True)
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
             finally:
@@ -587,12 +811,17 @@ class ApibaseController:
                     repo.close()
         return data
 
-    def _api_get_similar_packages(self, entropy, q):
+    def _api_get_similar_packages(self, entropy, q, filter_cb = None):
         """
         Return a list of similar package tuples given search term "q".
 
         @param q: query string
         @type q: string
+        @keyword filter_cb: callback used to filter results, the function
+            must have this signature:
+                bool filter_cb(entropy_repository, package_id)
+            and return True if package is valid, False otherwise.
+        @type filter_cb: callable
         @return: list of package tuples (pkg_id, repo, arch, branch, product)
         @rtype: list
         """
@@ -603,10 +832,13 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    meant_data = entropy.get_meant_packages(q,
-                            valid_repos = [repo])
+                    pkg_ids = [x[0] for x in entropy.get_meant_packages(q,
+                            valid_repos = [repo])]
+                    if filter_cb is not None:
+                        pkg_ids = [pkg_id for pkg_id in pkg_ids if \
+                            filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
-                        for pkg_id, _repo in meant_data)
+                        for pkg_id in pkg_ids)
             finally:
                 if repo is not None:
                     repo.close()
@@ -627,7 +859,6 @@ class ApibaseController:
         Get basic User Generated Metadata for given package key using given
         UGC interface.
         """
-
         c_data = model.config.community_repos_ugc_connection_data.get(
             repository_id)
         if c_data is None:
@@ -644,6 +875,43 @@ class ApibaseController:
         }
         return data
 
+    def _expand_ugc_doc_metadata(self, ugc, doc):
+        if doc.get('userid'):
+            doc['score'] = ugc.get_user_score(doc['userid'])
+        if doc.get('size'):
+            doc['size'] = entropy_tools.bytes_into_human(doc.get('size'))
+
+    def _get_ugc_extended_metadata(self, ugc, package_key):
+        """
+        Get extended User Generated Metadata for given package key using given
+        UGC interface.
+        """
+        data = {
+            'vote': ugc.get_ugc_vote(package_key),
+            'downloads': ugc.get_ugc_downloads(package_key),
+            'docs': ugc.get_ugc_metadata_doctypes(package_key,
+                [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
+        }
+        for doc in data['docs']:
+            self._expand_ugc_doc_metadata(ugc, doc)
+        return data
+
+    def _get_valid_repository_mtime(self, entropy, repository_id,
+        arch, branch, product):
+        """
+        Return the mtime of a given repository.
+        """
+        path = entropy._guess_repo_db_path(repository_id, arch, product,
+            branch)
+        if path is not None:
+            try:
+                mtime = os.path.getmtime(path)
+            except (OSError, IOError):
+                mtime = 0.0
+        else:
+            mtime = 0.0
+        return mtime
+
     def _get_valid_repositories_mtime_hash(self, entropy):
         """
         Return a hash which is bound to repositories mtime. Whenever a
@@ -651,18 +919,11 @@ class ApibaseController:
         for cache validation for those repositories-wide functions.
         """
         valid_repos = self._api_get_valid_repositories(entropy)
-        sha = hashlib.sha256()
+        sha = hashlib.sha1()
         sha.update("0.0")
         for avail_repo, arch, branch, product in valid_repos:
-            path = entropy._guess_repo_db_path(avail_repo, arch, product,
-                branch)
-            if path is not None:
-                try:
-                    mtime = os.path.getmtime(path)
-                except (OSError, IOError):
-                    mtime = 0.0
-            else:
-                mtime = 0.0
+            mtime = self._get_valid_repository_mtime(entropy, avail_repo,
+                arch, branch, product)
             sha.update(repr(mtime))
         return sha.hexdigest()
 
@@ -785,6 +1046,17 @@ class ApibaseController:
             }
             data.append(obj)
 
+        # ugc
+        obj = {
+            'id': "ugc",
+            'name': _("Comments and Documents"),
+            'icon': "icon_images.png",
+            'url': _generate_action_url("ugc"),
+            'alt': _("Show user-generated content"),
+            'extra_url_meta': "rel=\"nofollow\"",
+        }
+        data.append(obj)
+
         # similar packages
         provided_mime = entropy_repository.retrieveProvidedMime(package_id)
         if provided_mime:
@@ -797,17 +1069,6 @@ class ApibaseController:
                 'extra_url_meta': "rel=\"nofollow\"",
             }
             data.append(obj)
-
-        # ugc
-        obj = {
-            'id': "ugc",
-            'name': _("Comments and Documents"),
-            'icon': "icon_images.png",
-            'url': _generate_action_url("ugc"),
-            'alt': _("Show user-generated content"),
-            'extra_url_meta': "rel=\"nofollow\"",
-        }
-        data.append(obj)
 
         if not short_list:
 
@@ -881,6 +1142,16 @@ class ApibaseController:
                     'extra_url_meta': "rel=\"nofollow\"",
                 }
                 data.append(obj)
+                # needed libraries
+                obj = {
+                    'id': "needed_libs",
+                    'name': _("Needed libraries"),
+                    'icon': "icon_bricks.png",
+                    'url': _generate_action_url("needed_libs"),
+                    'alt': _("Show libraries needed by package"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
 
                 # content
                 obj = {
@@ -926,7 +1197,7 @@ class ApibaseController:
         meta_items_hash = 1
 
         # caching
-        sha = hashlib.sha256()
+        sha = hashlib.sha1()
         hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|%s" % (
             repository_id,
             package_id,
@@ -934,7 +1205,8 @@ class ApibaseController:
             product,
             branch,
             extended_meta_items,
-            self._get_valid_repositories_mtime_hash(entropy),
+            repr(self._get_valid_repository_mtime(entropy, repository_id,
+                arch, branch, product)),
             is_source_repo,
             meta_items_hash,
         )
@@ -948,12 +1220,15 @@ class ApibaseController:
         if data is not None:
             return data
 
-        key_slot = entropy_repository.retrieveKeySlot(package_id)
-        if key_slot is not None:
-            key, slot = key_slot
-        else:
-            key, slot = "n/a", "0"
-        category, name = key.split("/", 1)
+        base_data = entropy_repository.getBaseData(package_id)
+        if base_data is None:
+            return None
+
+        atom, name, version, tag, description, category, chost, cflags, \
+            cxxflags, homepage, license, branch, download, digest, slot, \
+            etpapi, mtime, p_size, revision = base_data
+        key = category + "/" + name
+
         try:
             r_arch = entropy_repository.getSetting("arch")
         except KeyError:
@@ -963,10 +1238,7 @@ class ApibaseController:
         if r_arch != arch:
             return None # invalid !
         """
-
-        mtime = float(entropy_repository.retrieveCreationDate(package_id))
-        date = entropy_tools.convert_unix_time_to_human_time(mtime)
-        atom = entropy_repository.retrieveAtom(package_id)
+        date = entropy_tools.convert_unix_time_to_human_time(float(mtime))
         hash_id = self._api_human_encode_package(name,
             package_id, repository_id, arch, branch, product)
         hash_id_api = self._api_encode_package(package_id, repository_id, arch,
@@ -976,17 +1248,24 @@ class ApibaseController:
             package_id, repository_id, hash_id, is_source_repo,
             key, entropy_repository, short_list = not extended_meta_items)
 
+        size = "0b"
+        if p_size is not None:
+            size = entropy_tools.bytes_into_human(p_size)
+
         data = {
             'atom': atom,
             'name': name,
+            'slot': slot,
+            'tag': tag,
+            'license': license,
             'category': category,
             'key': key,
             'ugc': None,
             'branch': branch,
-            'description': entropy_repository.retrieveDescription(package_id),
-            'download': entropy_repository.retrieveDownloadURL(package_id),
-            'homepage': entropy_repository.retrieveHomepage(package_id),
-            'revision': entropy_repository.retrieveRevision(package_id),
+            'description': description,
+            'download': download,
+            'homepage': homepage,
+            'revision': revision,
             'package_id': package_id,
             'arch': arch,
             'repository_id': repository_id,
@@ -997,17 +1276,15 @@ class ApibaseController:
             'hash_id_api': hash_id_api,
             'date': date,
             'mtime': mtime,
+            'digest': digest,
+            'chost': chost,
+            'cflags': cflags,
+            'cxxflags': cxxflags,
+            'size': size,
             'change': self._api_extract_latest_change(
                 atom, entropy_repository.retrieveChangelog(package_id)),
             'meta_items': meta_items,
         }
-        if request.params.get("api") == "0":
-            data['digest'] = entropy_repository.retrieveDigest(package_id)
-            size = "0b"
-            p_size = entropy_repository.retrieveSize(package_id)
-            if p_size is not None:
-                size = entropy_tools.bytes_into_human(p_size)
-            data['size'] = size
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
@@ -1022,14 +1299,15 @@ class ApibaseController:
         """
         # caching
         brief_list_hash = 2
-        sha = hashlib.sha256()
+        sha = hashlib.sha1()
         hash_str = "%s|%s|%s|%s|%s|%s|%s|%s" % (
             repository_id,
             package_id,
             arch,
             product,
             branch,
-            self._get_valid_repositories_mtime_hash(entropy),
+            repr(self._get_valid_repository_mtime(entropy, repository_id,
+                arch, branch, product)),
             self._is_source_repository(repository_id),
             brief_list_hash,
         )
@@ -1049,31 +1327,12 @@ class ApibaseController:
         if base_data is None:
             return None
 
-        size = "0b"
-        p_size = entropy_repository.retrieveSize(package_id)
-        if p_size is not None:
-            size = entropy_tools.bytes_into_human(p_size)
-
         ondisksize = "0b"
         o_size = entropy_repository.retrieveOnDiskSize(package_id)
         if o_size is not None:
             ondisksize = entropy_tools.bytes_into_human(o_size)
 
-        flags = entropy_repository.retrieveCompileFlags(package_id)
-        if flags is None:
-            chost, cflags, cxxflags = None, None, None
-        else:
-            chost, cflags, cxxflags = flags
         data = {
-            'size': size,
-            'slot': entropy_repository.retrieveSlot(package_id),
-            'license': entropy_repository.retrieveLicense(package_id),
-            'flags': entropy_repository.retrieveCompileFlags(package_id),
-            'chost': chost,
-            'cflags': cflags,
-            'cxxflags': cxxflags,
-            'tag': entropy_repository.retrieveTag(package_id),
-            'digest': entropy_repository.retrieveDigest(package_id),
             'ondisksize': ondisksize,
             'useflags': entropy_repository.retrieveUseflags(package_id),
             'brief_list': [
