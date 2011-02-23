@@ -4,6 +4,11 @@
         <% c.ugc_doc = ugc_doc %>
         <%include file="/ugc_show_doc.html"/>
     % endfor
+    % if not ugc_docs:
+        <div class="packages-ugc-data-nougc">
+            ${_("No Comments or Documents, yet.")}
+        </div>
+    % endif
     <%include file="/ugc_do_doc.html"/>
 </div>
 <hr class="packages-separator"/>

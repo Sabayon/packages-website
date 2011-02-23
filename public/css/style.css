@@ -14,7 +14,7 @@ input {
 }
 
 .inside {
-    width: 99em;
+    width: 100em;
 }
 
 #body {
@@ -384,6 +384,7 @@ input {
 .packages-results-info {
     text-align: right;
     padding-bottom: 0.2em;
+    color: #999999;
 }
 
 .packages-results-latest-info {
@@ -601,5 +602,12 @@ input {
 .packages-view-selector-selected { 
     background-color: #235AB2;
     color: white;
-
 }
+
+.packages-ugc-data-nougc {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
+}
+
