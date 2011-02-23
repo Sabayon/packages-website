@@ -1,0 +1,87 @@
+.package-widgets-area {
+    padding-top: 2.5em;
+}
+
+.package-widget-icon {
+    display: none;
+}
+
+.package-widget-text-area {
+    padding-left: 0em;
+    padding-top: 0em;
+}
+
+.package-widget-first-area {
+    min-height: 0em;
+}
+
+.package-widget-title-area-binary {
+    background-image: none;
+}
+
+.package-widget-title-area-source {
+    background-image: none;
+}
+
+.package-widget-title-area {
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    color: inherit;
+    min-height: 0em;
+}
+
+.package-widget-base-meta-area {
+    padding-left: 0em;
+    padding-top: 0em;
+}
+
+.package-widget a, .package-widget a:active, .package-widget a:link, .package-widget a:visited {
+    color: #333333;
+}
+
+.package-widget-title-area-binary a, .package-widget-title-area-binary a:active, .package-widget-title-area-binary a:link, .package-widget-title-area-binary a:visited {
+    color: #235AB2;
+}
+
+.package-widget-title-area-source a, .package-widget-title-area-source a:active, .package-widget-title-area-source a:link, .package-widget-title-area-source a:visited {
+    color: #B23939;
+}
+
+.package-widget-meta-description {
+    color: teal;
+    /* display: none; */
+}
+
+.package-widget-meta-recent-change {
+    display: none;
+}
+
+.package-widget-meta-info {
+    display: none;
+}
+
+.packages-separator {
+    margin-bottom: 0em;
+    margin-top: 0em;
+}
+
+.package-widget-meta-atom {
+    font-weight: normal;
+}
+
+.package-widget-stats-area {
+    padding-right: 0em;
+}
+
+.package-widget-top {
+
+}
+
+.package-widget {
+    margin-bottom: 1.5em;
+}
+
+.package-widget-base-meta-area {
+    color: #444444;
+}
+

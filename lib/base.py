@@ -71,8 +71,13 @@ class BaseController(WSGIController):
         c.base_search_url = model.config.PACKAGE_SEARCH_URL
         c.base_group_url = model.config.GROUP_SHOW_URL
         c.base_catetory_url = model.config.CATEGORY_SHOW_URL
+        c.base_switch_arch_url = model.config.PACKAGE_SWITCH_ARCH_URL
+        c.base_switch_view_url = model.config.PACKAGE_SWITCH_VIEW_URL
         c.search_prefixes = self.PREFIXES
         c.search_form_max_length = model.config.SEARCH_FORM_MAX_LENGTH
+        c.available_arches_selector = model.config.available_arches.copy()
+        c.available_arches_selector['all'] = _("All")
+
         model.config.setup_internal(model, c, session, request)
 
     def _generate_login_metadata(self):

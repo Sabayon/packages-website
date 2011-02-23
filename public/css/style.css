@@ -6,12 +6,15 @@ body {
     background: url("/images/shadow.png");
     background-repeat: repeat-x;
     background-position: center top;
-
 }
 
 input {
     border: 1px solid;
     font-size: 1em;
+}
+
+.inside {
+    width: 99em;
 }
 
 #body {
@@ -34,7 +37,7 @@ input {
     background-repeat: no-repeat;
     background-position: left top;
     height: 158px;
-    width: 980px;
+    width: 1010px;
 }
 
 #loginbox {
@@ -54,12 +57,12 @@ input {
 
 #left-area {
     float: left;
-    width: 700px;
+    width: 730px;
     min-height: 300px;
 }
 
 #right-area {
-    margin: 0 0 0 710px;
+    margin: 0 0 0 740px;
     min-height: 300px;
 }
 
@@ -155,6 +158,7 @@ input {
     height: 1px;
     margin-bottom: 20px;
     margin-top: 20px;
+    width: 700px;
 }
 
 .packages-title {
@@ -177,6 +181,7 @@ input {
     background-position: left bottom;
     min-height: 105px;
     color: #FFFFFF;
+    width: 700px;
 }
 
 .package-widget-title-area-binary {
@@ -558,4 +563,43 @@ input {
 
 .group-widget-view-col {
     
+}
+
+.packages-selector-area {
+    
+}
+
+.packages-arch-selector {
+    font-variant: small-caps;
+    text-align: right;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    padding-left: 0.2em;
+}
+
+.packages-arch-selector-selected {
+    background-color: #235AB2;
+    color: white;
+
+}
+
+.view-selector-area {
+    
+}
+
+.view-selector {
+    font-variant: small-caps;
+    text-align: right;
+}
+
+.packages-view-selector {
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    padding-left: 0.2em;
+}
+
+.packages-view-selector-selected { 
+    background-color: #235AB2;
+    color: white;
+
 }

@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="http://static.sabayon.org/site/css/style.css" type="text/css"/>
 
     <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css"/>
+    % if session.get('selected_view') == "compact" and (not c.show_detailed_view) and (not c.show_area):
+        <link rel="stylesheet" type="text/css" media="screen" href="/css/style-compact.css"/>
+    % endif
+
 
     <link rel="stylesheet" type="text/css" media="screen" href="/css/lytebox.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="/css/sexyalertbox.css"/>

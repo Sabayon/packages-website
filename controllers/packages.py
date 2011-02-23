@@ -729,6 +729,54 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
         return supported_filters.get(filter_str, None)
 
+    def archswitch(self, arch):
+        """
+        Function that switches the quicksearch default arch.
+        """
+        if arch in model.config.available_arches:
+            session['selected_arch'] = arch
+            session.save()
+        elif arch == "all":
+            if 'selected_arch' in session:
+                del session['selected_arch']
+                session.save()
+
+        q = request.params.get("q")
+        filter_func = request.params.get("filter")
+        filter_data = request.params.get("filter_data")
+
+        q_str = model.config.PACKAGE_SEARCH_URL
+        if q:
+            q_str += "?q=" + q
+        if filter_func:
+            q_str += "&filter=" + filter_func
+        if filter_data:
+            q_str += "&filter_data=" + filter_data
+
+        return redirect(url(const_convert_to_rawstring(q_str)))
+
+    def viewswitch(self, view):
+        """
+        Function that switches the quicksearch default view.
+        """
+        if view in ("default", "compact"):
+            session['selected_view'] = view
+            session.save()
+
+        q = request.params.get("q")
+        filter_func = request.params.get("filter")
+        filter_data = request.params.get("filter_data")
+
+        q_str = model.config.PACKAGE_SEARCH_URL
+        if q:
+            q_str += "?q=" + q
+        if filter_func:
+            q_str += "&filter=" + filter_func
+        if filter_data:
+            q_str += "&filter_data=" + filter_data
+
+        return redirect(url(const_convert_to_rawstring(q_str)))
+
     def quicksearch(self, q = None, filter_str = None, filter_data = None,
         override_query_length_checks = False):
         """
@@ -756,6 +804,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if q is None:
             q = request.params.get('q')
+        if not q:
+            return _redirect_to_home()
         if not q.strip():
             return _redirect_to_home()
         if not override_query_length_checks:
@@ -768,6 +818,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         # use r, a, b, p as filter
         r = request.params.get('r')
         a = request.params.get('a')
+        if not a:
+            a = session.get('selected_arch')
+            if a == "all":
+                a = None
         b = request.params.get('b')
         p = request.params.get('p')
         t = request.params.get('t')
@@ -910,6 +964,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                     results.extend([x for x in search_map.get(search)(entropy,
                         q_split, filter_cb = filter_cb) if x not in results])
 
+            # TODO: this can be done earlier using another kind of filter
+            # and speed up the query, but in general, those params are not
+            # used
             if r is not None:
                 results = [x for x in results if x[1] == r]
                 searching_default = False

@@ -40,7 +40,7 @@ ETP_REPOSITORY = "sabayonlinux.org"
 MY_ETP_DBDIR = "database"
 MY_ETP_PKGDIR = "packages"
 
-WEBSITE_CACHING = False
+WEBSITE_CACHING = True
 
 # packages.* options
 # XXX hacky thing to support old URLs
@@ -53,7 +53,7 @@ available_products = {
 available_arches = {
     "amd64": "amd64",
     "x86": "x86",
-    "arch": "arch",
+    "arch": _("Source"),
 }
 disabled_repositories = [
     "itsme",
@@ -77,6 +77,8 @@ PACKAGE_SHOW_LICENSE_URL = "/license"
 PACKAGE_SHOW_CATEGORY_URL = "/category"
 PACKAGE_SHOW_USEFLAG_URL = "/useflag"
 PACKAGE_SEARCH_URL = "/quicksearch"
+PACKAGE_SWITCH_ARCH_URL = "/archswitch"
+PACKAGE_SWITCH_VIEW_URL = "/viewswitch"
 SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):
