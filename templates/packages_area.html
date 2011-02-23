@@ -49,11 +49,13 @@
             </div>
         </div>
     % endif
-% elif c.search_nothing_found:
+% elif c.search_nothing_found: 
+    <%include file="/packages_area_selectors.html"/>
     <div class="packages-search-nothing-found">
         ${_("Sorry, <b>I wasn't able to find anything relevant</b>... So long, so long, and thanks for all the fish!")}
     </div>
 % else:
+    <%include file="/packages_area_selectors.html"/>
     <div class="nothing-to-show">
         Sorry, aliens kidnapped the President.
     </div>

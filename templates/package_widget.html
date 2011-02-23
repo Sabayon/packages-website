@@ -146,7 +146,7 @@
             </table>
             % if c.package_show_what:
                 <hr class="packages-separator"/>
-                <div class="package-widget-show-what">
+                <div class="package-widget-show-what" id="package-widget-show-what">
                     <% what = c.package_show_what['what'] %>
                     % if what == "changelog":
                         <%include file="/package_show_changelog.html"/>

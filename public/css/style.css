@@ -30,6 +30,7 @@ input {
 #packages-area {
     padding: 10px;
     background-color: #FFFFFF;
+    overflow: hidden;
 }
 
 #packages-area-header {
@@ -215,7 +216,7 @@ input {
 }
 
 .group-widget-meta-description {
-    max-width: 550px;
+    max-width: 225px;
     color: #333333;
 }
 

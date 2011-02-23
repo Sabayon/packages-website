@@ -860,6 +860,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             results = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
+        searching_default = True
+        default_searches = ["match", "default"] #, "description"]
         if results is None:
             search_map = {
                 'default': self._api_search_pkg,
@@ -875,8 +877,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 'license': self._api_search_license,
                 'useflag': self._api_search_useflag,
             }
-            default_searches = ["match", "default"] #, "description"]
-            searching_default = True
             # &t support
             if t == "pkg":
                 default_searches = ["default"]

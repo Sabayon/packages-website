@@ -995,8 +995,8 @@ class ApibaseController:
         @rtype: list
         """
         def _generate_action_url(target):
-            return "%s/%s/%s" % (model.config.PACKAGE_SHOW_URL,
-                hash_id, target)
+            return "%s/%s/%s#package-widget-show-what" % (
+                model.config.PACKAGE_SHOW_URL, hash_id, target)
 
         data = []
 
