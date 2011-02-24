@@ -8,117 +8,118 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-21 23:57+0100\n"
+"POT-Creation-Date: 2011-02-24 01:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../controllers/packages.py:921 ../controllers/packages.py:926
-#: ../controllers/packages.py:933 ../controllers/packages.py:937
-#: ../controllers/packages.py:946 ../controllers/packages.py:952
-#: ../controllers/packages.py:954 ../controllers/packages.py:965
-#: ../controllers/packages.py:968 ../controllers/packages.py:973
-#: ../controllers/packages.py:980 ../controllers/packages.py:985
-#: ../controllers/packages.py:987 ../controllers/packages.py:992
-#: ../controllers/packages.py:997 ../controllers/packages.py:1007
-#: ../controllers/packages.py:1018 ../controllers/packages.py:1025
-#: ../controllers/packages.py:1038 ../controllers/packages.py:1048
-#: ../controllers/packages.py:1053
+#: ../controllers/packages.py:1136 ../controllers/packages.py:1141
+#: ../controllers/packages.py:1147 ../controllers/packages.py:1150
+#: ../controllers/packages.py:1157 ../controllers/packages.py:1164
+#: ../controllers/packages.py:1167 ../controllers/packages.py:1179
+#: ../controllers/packages.py:1182 ../controllers/packages.py:1187
+#: ../controllers/packages.py:1194 ../controllers/packages.py:1199
+#: ../controllers/packages.py:1201 ../controllers/packages.py:1206
+#: ../controllers/packages.py:1211 ../controllers/packages.py:1221
+#: ../controllers/packages.py:1232 ../controllers/packages.py:1240
+#: ../controllers/packages.py:1251 ../controllers/packages.py:1261
+#: ../controllers/packages.py:1264
 msgid "Error"
 msgstr ""
 
-#: ../controllers/packages.py:921
+#: ../controllers/packages.py:1136
 msgid "not logged in"
 msgstr ""
 
-#: ../controllers/packages.py:926
+#: ../controllers/packages.py:1141
 msgid "invalid document"
 msgstr ""
 
-#: ../controllers/packages.py:933
+#: ../controllers/packages.py:1147
 msgid "invalid document specified"
 msgstr ""
 
-#: ../controllers/packages.py:937
-msgid "permission denied, you suck!"
+#: ../controllers/packages.py:1150
+msgid "permission denied!"
 msgstr ""
 
-#: ../controllers/packages.py:946
+#: ../controllers/packages.py:1157
 msgid "WTF? invalid document type!"
 msgstr ""
 
-#: ../controllers/packages.py:952
+#: ../controllers/packages.py:1165
 msgid "you know what? I cannot handle this document"
 msgstr ""
 
-#: ../controllers/packages.py:956
+#: ../controllers/packages.py:1169
 msgid "Document removed successfully, sigh :'-("
 msgstr ""
 
-#: ../controllers/packages.py:965 ../controllers/packages.py:968
+#: ../controllers/packages.py:1179 ../controllers/packages.py:1182
 msgid "wrong username"
 msgstr ""
 
-#: ../controllers/packages.py:973
+#: ../controllers/packages.py:1187
 msgid "no document specified"
 msgstr ""
 
-#: ../controllers/packages.py:980
+#: ../controllers/packages.py:1194
 msgid "invalid document type"
 msgstr ""
 
-#: ../controllers/packages.py:985
+#: ../controllers/packages.py:1199
 msgid "invalid package key"
 msgstr ""
 
-#: ../controllers/packages.py:987
+#: ../controllers/packages.py:1201
 msgid "invalid package string"
 msgstr ""
 
-#: ../controllers/packages.py:992
+#: ../controllers/packages.py:1206
 msgid "title too short"
 msgstr ""
 
-#: ../controllers/packages.py:997
+#: ../controllers/packages.py:1211
 msgid "description too short"
 msgstr ""
 
-#: ../controllers/packages.py:1007
+#: ../controllers/packages.py:1221
 msgid "comment text too short"
 msgstr ""
 
-#: ../controllers/packages.py:1018
+#: ../controllers/packages.py:1232
 msgid "no file? no party!"
 msgstr ""
 
-#: ../controllers/packages.py:1038
+#: ../controllers/packages.py:1251
 msgid "file too big"
 msgstr ""
 
-#: ../controllers/packages.py:1053
+#: ../controllers/packages.py:1265
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr ""
 
-#: ../controllers/packages.py:1073
+#: ../controllers/packages.py:1286
 msgid "user not authenticated"
 msgstr ""
 
-#: ../controllers/packages.py:1081
+#: ../controllers/packages.py:1294
 msgid "invalid vote"
 msgstr ""
 
-#: ../controllers/packages.py:1084
+#: ../controllers/packages.py:1297
 msgid "invalid package"
 msgstr ""
 
-#: ../controllers/packages.py:1090
+#: ../controllers/packages.py:1303
 msgid "vote not in range"
 msgstr ""
 
-#: ../controllers/packages.py:1095
+#: ../controllers/packages.py:1308
 msgid "you already voted this"
 msgstr ""
 
@@ -130,73 +131,107 @@ msgstr ""
 msgid "Public Profile"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:7
-msgid "Add documents <b>gain scores</b> !"
+#: ../templates/categories_area.html:4
+msgid "categories"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:19
+#: ../templates/do_ugc_document.html:16
 msgid "Title"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:21
+#: ../templates/do_ugc_document.html:18
 msgid "Length must be between 10 and 160"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:35
+#: ../templates/do_ugc_document.html:32
 msgid "Description"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:37
+#: ../templates/do_ugc_document.html:34
 msgid "Being descriptive, what a pain in the *ss"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:47 ../templates/ugc_comment.html:6
+#: ../templates/do_ugc_document.html:44 ../templates/ugc_comment.html:6
 #: ../templates/ugc_doc_desc_keywords.html:4
 msgid "Keywords"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:49
+#: ../templates/do_ugc_document.html:46
 msgid "Space separated, minimum length: 4 chars each"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:58
+#: ../templates/do_ugc_document.html:55
 msgid "Document type"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:60
+#: ../templates/do_ugc_document.html:57
 msgid "Choose what kind of document you want to add"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:82
+#: ../templates/do_ugc_document.html:79
 msgid "Comment text"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:84
+#: ../templates/do_ugc_document.html:81
 msgid "Insert your comment on this field"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:99
+#: ../templates/do_ugc_document.html:96
 msgid "File chooser"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:101
+#: ../templates/do_ugc_document.html:98
 msgid "Select the file you want to upload"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:120
+#: ../templates/do_ugc_document.html:117
 msgid "You need to be logged in to add documents"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:121
-msgid "Login?"
+#: ../templates/groups_area.html:4
+msgid "groups"
 msgstr ""
 
-#: ../templates/do_ugc_document.html:121
-msgid "Register?"
+#: ../templates/groups_area.html:49
+msgid "Categories"
 msgstr ""
 
-#: ../templates/head.html:7
-msgid "Sabayon Linux Packages"
+#: ../templates/packages_area.html:9 ../templates/search_time_widget.html:11
+msgid "Results found"
+msgstr ""
+
+#: ../templates/packages_area.html:9 ../templates/search_time_widget.html:13
+msgid "seconds"
+msgstr ""
+
+#: ../templates/packages_area.html:14
+msgid "package"
+msgstr ""
+
+#: ../templates/packages_area.html:19
+msgid "latest"
+msgstr ""
+
+#: ../templates/packages_area.html:24
+msgid "Found <b>nothing</b> while searching for"
+msgstr ""
+
+#: ../templates/packages_area.html:24
+msgid "you probably mispelled it"
+msgstr ""
+
+#: ../templates/packages_area.html:55
+msgid ""
+"Sorry, <b>I wasn't able to find anything relevant</b>... So long, so long, "
+"and thanks for all the fish!"
+msgstr ""
+
+#: ../templates/packages_area_selectors.html:4
+msgid "Architecture"
+msgstr ""
+
+#: ../templates/packages_area_selectors.html:34
+msgid "View"
 msgstr ""
 
 #: ../templates/package_show_changelog.html:6
@@ -231,11 +266,11 @@ msgstr ""
 msgid "No dependencies"
 msgstr ""
 
-#: ../templates/package_show_download.html:5
+#: ../templates/package_show_download.html:6
 msgid "Download mirrors"
 msgstr ""
 
-#: ../templates/package_show_download.html:28
+#: ../templates/package_show_download.html:32
 msgid "No download mirrors available"
 msgstr ""
 
@@ -247,11 +282,20 @@ msgstr ""
 msgid "No mime types handled by package"
 msgstr ""
 
+#: ../templates/package_show_needed_libs.html:5
+msgid "Needed libraries"
+msgstr ""
+
+#: ../templates/package_show_needed_libs.html:19
+msgid "No libraries needed by package"
+msgstr ""
+
 #: ../templates/package_show_provided_libs.html:5
+#: ../templates/search_widget.html:71
 msgid "Provided libraries"
 msgstr ""
 
-#: ../templates/package_show_provided_libs.html:15
+#: ../templates/package_show_provided_libs.html:22
 msgid "No libraries provided by package"
 msgstr ""
 
@@ -303,62 +347,48 @@ msgstr ""
 msgid "Recent Changes"
 msgstr ""
 
-#: ../templates/packages_area.html:4
-msgid "Results found"
-msgstr ""
-
-#: ../templates/packages_area.html:4
-msgid "seconds"
-msgstr ""
-
-#: ../templates/packages_area.html:9
-msgid "Found <b>nothing</b> while searching for"
-msgstr ""
-
-#: ../templates/packages_area.html:9
-msgid "you probably mispelled it"
-msgstr ""
-
-#: ../templates/packages_area.html:34
-msgid ""
-"Sorry, <b>I wasn't able to find anything relevant</b>... So long, so long, "
-"and thanks for all the fish!"
-msgstr ""
-
-#: ../templates/page_error.html:13
+#: ../templates/page_error.html:12
 msgid "Call the cops! <b>This page has been stolen!</b>"
 msgstr ""
 
-#: ../templates/search_widget.html:10
+#: ../templates/search_widget.html:11
 msgid "Special searches"
 msgstr ""
 
-#: ../templates/search_widget.html:13
+#: ../templates/search_widget.html:15
+msgid "Group"
+msgstr ""
+
+#: ../templates/search_widget.html:23
 msgid "Category"
 msgstr ""
 
-#: ../templates/search_widget.html:16
+#: ../templates/search_widget.html:31
 msgid "License"
 msgstr ""
 
-#: ../templates/search_widget.html:19
+#: ../templates/search_widget.html:39
 msgid "Useflag"
 msgstr ""
 
-#: ../templates/search_widget.html:22
+#: ../templates/search_widget.html:47
 msgid "Package Sets"
 msgstr ""
 
-#: ../templates/search_widget.html:25
+#: ../templates/search_widget.html:55
 msgid "Files"
 msgstr ""
 
-#: ../templates/search_widget.html:28
+#: ../templates/search_widget.html:63
 msgid "Libraries"
 msgstr ""
 
-#: ../templates/search_widget.html:31
+#: ../templates/search_widget.html:79
 msgid "Mime"
+msgstr ""
+
+#: ../templates/show_ugc.html:9
+msgid "No Comments or Documents, yet."
 msgstr ""
 
 #: ../templates/ugc_comment.html:8 ../templates/ugc_doc_desc_keywords.html:6
@@ -369,21 +399,21 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ../templates/ugc_doc_header.html:4
+#: ../templates/ugc_generic_file.html:4
+msgid "Download"
+msgstr ""
+
+#: ../templates/ugc_show_doc_inner.html:4
 #, c-format
 msgid "written by %s, around %s"
 msgstr ""
 
-#: ../templates/ugc_doc_header.html:4
+#: ../templates/ugc_show_doc_inner.html:4
 msgid "User score"
 msgstr ""
 
-#: ../templates/ugc_doc_header.html:4
+#: ../templates/ugc_show_doc_inner.html:4
 msgid "Size"
-msgstr ""
-
-#: ../templates/ugc_generic_file.html:4
-msgid "Download"
 msgstr ""
 
 #: ../templates/ugc_voted.html:12
