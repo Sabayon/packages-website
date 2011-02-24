@@ -386,6 +386,7 @@ input {
     text-align: right;
     padding-bottom: 0.2em;
     color: #999999;
+    padding-bottom: 0.4em;
 }
 
 .packages-results-latest-info {
@@ -577,12 +578,13 @@ input {
     margin-left: 0.2em;
     margin-right: 0.2em;
     padding-left: 0.2em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
 }
 
 .packages-arch-selector-selected {
     background-color: #235AB2;
     color: white;
-
 }
 
 .view-selector-area {
@@ -592,6 +594,8 @@ input {
 .view-selector {
     font-variant: small-caps;
     text-align: right;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
 }
 
 .packages-view-selector {
@@ -610,5 +614,26 @@ input {
     margin-right: auto;
     text-align: center;
     width: 100%;
+}
+
+.updates-selector-area {
+    
+}
+
+.updates-view-selector {
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    padding-left: 0.2em;
+}
+
+.updates-view-selector-selected {
+    background-color: #235AB2;
+    color: white;
+}
+
+.updates-selector {
+    font-variant: small-caps;
+    text-align: right;
+    font-size: 1.1em;
 }
 

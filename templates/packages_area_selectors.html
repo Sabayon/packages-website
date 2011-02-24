@@ -1,4 +1,4 @@
-% if not c.show_detailed_view and not c.search_showing_latest:
+% if not c.show_detailed_view and (not c.search_showing_latest) and (not c.search_show_more):
     <div class="packages-selector-area">
         <div class="packages-arch-selector">
             <b>${_("Architecture")}</b>:
@@ -28,7 +28,7 @@
         </div>
     </div>
 % endif
-% if not c.show_detailed_view:
+% if (not c.show_detailed_view) and (not c.search_show_more):
     <div class="view-selector-area">
         <div class="view-selector">
             <b>${_("View")}</b>:
@@ -57,4 +57,34 @@
             % endfor
         </div>
     </div>
+    % if c.search_showing_latest and session.get('logged_in') and session.get('entropy'):
+    <div class="updates-selector-area">
+        <div class="updates-selector">
+            <b>${_("Updates")}</b>:
+            <% selected = session.get('updates_amount', 10) %> 
+            % for updates_count in (10, 50, 100):
+                <%
+                    selector_css_class=""
+                    if updates_count == selected:
+                        selector_css_class="updates-view-selector-selected"
+                    filter_opts = ""
+                    if c.search_filter_str:
+                        filter_opts += "&filter=" + c.search_filter_str
+                    if c.search_filter_data:
+                        filter_opts += "&filter_data=" + c.search_filter_data
+                    q_str = ""
+                    if c.quick_search_string:
+                        q_str = "?q=" + c.quick_search_string
+                %>
+                <span class="updates-view-selector ${selector_css_class}">
+                % if updates_count == selected:
+                    <b>${updates_count}</b>
+                % else:
+                    <a href="${c.base_switch_updates_url}/${updates_count}${q_str}${filter_opts}">${updates_count}</a>
+                % endif
+                </span>
+            % endfor
+        </div>
+    </div>
+    % endif
 % endif

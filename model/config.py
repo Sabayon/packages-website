@@ -79,6 +79,7 @@ PACKAGE_SHOW_USEFLAG_URL = "/useflag"
 PACKAGE_SEARCH_URL = "/quicksearch"
 PACKAGE_SWITCH_ARCH_URL = "/archswitch"
 PACKAGE_SWITCH_VIEW_URL = "/viewswitch"
+PACKAGE_SWITCH_UPDATES_URL = "/updateswitch"
 SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):

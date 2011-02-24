@@ -777,6 +777,33 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         return redirect(url(const_convert_to_rawstring(q_str)))
 
+    def updateswitch(self, amount):
+        """
+        Function that switches the amount of shown latest packages.
+        """
+        try:
+            amount = int(amount)
+        except ValueError:
+            amount = 0
+
+        if amount in (10, 50, 100):
+            session['updates_amount'] = amount
+            session.save()
+
+        q = request.params.get("q")
+        filter_func = request.params.get("filter")
+        filter_data = request.params.get("filter_data")
+
+        q_str = model.config.PACKAGE_SEARCH_URL
+        if q:
+            q_str += "?q=" + q
+        if filter_func:
+            q_str += "&filter=" + filter_func
+        if filter_data:
+            q_str += "&filter_data=" + filter_data
+
+        return redirect(url(const_convert_to_rawstring(q_str)))
+
     def quicksearch(self, q = None, filter_str = None, filter_data = None,
         override_query_length_checks = False):
         """
@@ -1035,6 +1062,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         self._set_search_time(time.clock(), start_t)
         if request.params.get('more'):
+            c.search_show_more = True
             return self._render('/search_results_area.html')
         return self._render('/index.html')
 
@@ -1043,9 +1071,40 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         self._generate_html_metadata()
         entropy = self._entropy()
 
-        search_pkgs = []
-        search_pkgs += self._get_latest_binary_packages(entropy)
-        search_pkgs += self._get_latest_source_packages(entropy)
+        cached_obj = None
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            sha.update(self._get_valid_repositories_mtime_hash(entropy))
+            cache_key = "_index_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if cached_obj is not None:
+                bin_search_pkgs, src_search_pkgs = cached_obj
+
+        if cached_obj is None:
+            bin_search_pkgs = self._get_latest_binary_packages(entropy,
+                max_count = 100)
+            src_search_pkgs = self._get_latest_source_packages(entropy,
+                max_count = 100)
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key,
+                    (bin_search_pkgs, src_search_pkgs),
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        updates_amount = session.get("updates_amount", 10)
+        try:
+            updates_amount = int(updates_amount)
+            if updates_amount < 10:
+                raise ValueError()
+            if updates_amount > 100:
+                raise ValueError()
+        except ValueError:
+            updates_amount = 10
+
+        bin_search_pkgs = bin_search_pkgs[:updates_amount]
+        src_search_pkgs = src_search_pkgs[:updates_amount]
+        search_pkgs = bin_search_pkgs + src_search_pkgs
+
         c.search_pkgs = search_pkgs
         c.search_showing_latest = True
 
