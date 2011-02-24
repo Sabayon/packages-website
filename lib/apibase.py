@@ -1225,7 +1225,7 @@ class ApibaseController:
             return None
 
         atom, name, version, tag, description, category, chost, cflags, \
-            cxxflags, homepage, license, branch, download, digest, slot, \
+            cxxflags, homepage, license, x_branch, download, digest, slot, \
             etpapi, mtime, p_size, revision = base_data
         key = category + "/" + name
 
