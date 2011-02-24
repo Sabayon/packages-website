@@ -29,6 +29,7 @@
     color: inherit;
     min-height: 0em;
     width: 730px;
+    border-bottom: 1px dotted teal;
 }
 
 .package-widget-base-meta-area {
