@@ -1299,6 +1299,7 @@ class ApibaseController:
         """
         # caching
         brief_list_hash = 2
+        is_source_repo = self._is_source_repository(repository_id)
         sha = hashlib.sha1()
         hash_str = "%s|%s|%s|%s|%s|%s|%s|%s" % (
             repository_id,
@@ -1308,7 +1309,7 @@ class ApibaseController:
             branch,
             repr(self._get_valid_repository_mtime(entropy, repository_id,
                 arch, branch, product)),
-            self._is_source_repository(repository_id),
+            is_source_repo,
             brief_list_hash,
         )
         sha.update(repr(hash_str))
@@ -1332,120 +1333,123 @@ class ApibaseController:
         if o_size is not None:
             ondisksize = entropy_tools.bytes_into_human(o_size)
 
+        brief_list = []
+        brief_list.append({
+            'key': "repository_id",
+            'name': _("Repository"),
+            'url': None,
+            'split': False,
+            'icon': "icon_database_table.png",
+        })
+        brief_list.append({
+            'key': "spm_repo",
+            'name': _("Sub-repository"),
+            'url': None,
+            'split': False,
+            'icon': "icon_drive_network.png",
+        })
+        brief_list.append({
+            'key': "license",
+            'name': _("License"),
+            'url': model.config.PACKAGE_SHOW_LICENSE_URL + "/--item--",
+            'extra_url_meta': "rel=\"nofollow\"",
+            'split': True,
+            'icon': "icon_changelog.png",
+        })
+        if not is_source_repo:
+            brief_list.append({
+                'key': "ondisksize",
+                'name': _("Required space"),
+                'url': None,
+                'split': False,
+                'icon': "icon_disk.png",
+            })
+        brief_list.append({
+            'key': "category",
+            'name': _("Category"),
+            'url': model.config.PACKAGE_SHOW_CATEGORY_URL + "/" + \
+                base_data['category'],
+            'extra_url_meta': "rel=\"nofollow\"",
+            'split': False,
+            'icon': "icon_folder.png",
+        })
+        brief_list.append({
+            'key': "slot",
+            'name': _("Slot"),
+            'url': None,
+            'split': False,
+            'icon': "icon_bricks.png",
+        })
+        brief_list.append({
+            'key': "tag",
+            'name': _("Tag"),
+            'url': None,
+            'split': False,
+            'icon': "icon_tag_purple.png",
+        })
+        if not is_source_repo:
+            brief_list.append({
+                'key': "chost",
+                'name': "CHOST",
+                'url': None,
+                'split': False,
+                'icon': "icon_database_table.png",
+            })
+            brief_list.append({
+                'key': "cflags",
+                'name': "CFLAGS",
+                'url': None,
+                'split': False,
+                'icon': "icon_database_table.png",
+            })
+            brief_list.append({
+                'key': "cxxflags",
+                'name': "CXXFLAGS",
+                'url': None,
+                'split': False,
+                'icon': "icon_database_table.png",
+            })
+            brief_list.append({
+                'key': "digest",
+                'name': _("Checksum"),
+                'url': None,
+                'split': False,
+                'icon': "icon_timeline_marker.png",
+            })
+            brief_list.append({
+                'key': "sha256",
+                'name': _("SHA 256"),
+                'url': None,
+                'split': False,
+                'icon': "icon_timeline_marker.png",
+            })
+            brief_list.append({
+                'key': "download",
+                'name': _("Package file"),
+                'url': None,
+                'split': False,
+                'icon': "icon_package.png",
+            })
+            brief_list.append({
+                'key': "size",
+                'name': _("Package size"),
+                'url': None,
+                'split': False,
+                'icon': "icon_attach.png",
+            })
+        brief_list.append({
+            'key': "useflags",
+            'name': _("USE flags"),
+            'url': model.config.PACKAGE_SHOW_USEFLAG_URL + "/--item--",
+            'extra_url_meta': "rel=\"nofollow\"",
+            'split': True,
+            'icon': "icon_flag_purple.png",
+        })
+
         data = {
             'ondisksize': ondisksize,
             'useflags': entropy_repository.retrieveUseflags(package_id),
-            'brief_list': [
-                {
-                    'key': "repository_id",
-                    'name': _("Repository"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_database_table.png",
-                },
-                {
-                    'key': "spm_repo",
-                    'name': _("Sub-repository"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_drive_network.png",
-                },
-                {
-                    'key': "license",
-                    'name': _("License"),
-                    'url': model.config.PACKAGE_SHOW_LICENSE_URL + "/--item--",
-                    'extra_url_meta': "rel=\"nofollow\"",
-                    'split': True,
-                    'icon': "icon_changelog.png",
-                },
-                {
-                    'key': "ondisksize",
-                    'name': _("Required space"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_disk.png",
-                },
-                {
-                    'key': "category",
-                    'name': _("Category"),
-                    'url': model.config.PACKAGE_SHOW_CATEGORY_URL + "/" + \
-                        base_data['category'],
-                    'extra_url_meta': "rel=\"nofollow\"",
-                    'split': False,
-                    'icon': "icon_folder.png",
-                },
-                {
-                    'key': "slot",
-                    'name': _("Slot"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_bricks.png",
-                },
-                {
-                    'key': "tag",
-                    'name': _("Tag"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_tag_purple.png",
-                },
-                {
-                    'key': "chost",
-                    'name': "CHOST",
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_database_table.png",
-                },
-                {
-                    'key': "cflags",
-                    'name': "CFLAGS",
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_database_table.png",
-                },
-                {
-                    'key': "cxxflags",
-                    'name': "CXXFLAGS",
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_database_table.png",
-                },
-                {
-                    'key': "digest",
-                    'name': _("Checksum"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_timeline_marker.png",
-                },
-                {
-                    'key': "sha256",
-                    'name': _("SHA 256"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_timeline_marker.png",
-                },
-                {
-                    'key': "download",
-                    'name': _("Package file"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_package.png",
-                },
-                {
-                    'key': "size",
-                    'name': _("Package size"),
-                    'url': None,
-                    'split': False,
-                    'icon': "icon_attach.png",
-                },
-                {
-                    'key': "useflags",
-                    'name': _("USE flags"),
-                    'url': model.config.PACKAGE_SHOW_USEFLAG_URL + "/--item--",
-                    'extra_url_meta': "rel=\"nofollow\"",
-                    'split': True,
-                    'icon': "icon_flag_purple.png",
-                },
-            ],
+            'brief_list': brief_list,
         }
         data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
             entropy_repository.retrieveSignatures(package_id)
