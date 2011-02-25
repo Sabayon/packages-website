@@ -255,6 +255,15 @@ class ApibaseController:
         """
         Return Package Categories available.
         """
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            sha.update(self._get_valid_repositories_mtime_hash(entropy))
+            cache_key = "_api_get_categories_" + sha.hexdigest()
+            data = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if data is not None:
+                return data
+
         categories = set()
         category_descriptions = {}
         valid_repos = self._api_get_valid_repositories(entropy)
@@ -291,6 +300,10 @@ class ApibaseController:
                     _("No description")),
             }
             data.append(obj)
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(cache_key, data,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         return data
 
