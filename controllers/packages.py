@@ -790,19 +790,18 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             session['updates_amount'] = amount
             session.save()
 
-        q = request.params.get("q")
-        filter_func = request.params.get("filter")
-        filter_data = request.params.get("filter_data")
+        return redirect(url("/"))
 
-        q_str = model.config.PACKAGE_SEARCH_URL
-        if q:
-            q_str += "?q=" + q
-        if filter_func:
-            q_str += "&filter=" + filter_func
-        if filter_data:
-            q_str += "&filter_data=" + filter_data
+    def updatetype(self, update_type):
+        """
+        Function that switches the type of latest updates shown (all, source,
+        binary).
+        """
+        if update_type in ("all", "source", "binary"):
+            session['updates_show_type'] = update_type
+            session.save()
 
-        return redirect(url(const_convert_to_rawstring(q_str)))
+        return redirect(url("/"))
 
     def quicksearch(self, q = None, filter_str = None, filter_data = None,
         override_query_length_checks = False):
@@ -1081,11 +1080,16 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         except ValueError:
             updates_amount = 10
 
+        updates_show_type = session.get('updates_show_type', "all")
+        if updates_show_type not in ("all", "source", "binary"):
+            updates_show_type = "all"
+
         cached_obj = None
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
             sha.update(repr(updates_amount))
+            sha.update(updates_show_type)
             cache_key = "_index2_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
@@ -1097,7 +1101,12 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 max_count = 100)
             bin_search_pkgs = bin_search_pkgs[:updates_amount]
             src_search_pkgs = src_search_pkgs[:updates_amount]
-            search_pkgs = bin_search_pkgs + src_search_pkgs
+            if updates_show_type == "all":
+                search_pkgs = bin_search_pkgs + src_search_pkgs
+            elif updates_show_type == "source":
+                search_pkgs = src_search_pkgs
+            else:
+                search_pkgs = bin_search_pkgs
 
             ugc = self._ugc()
             try:

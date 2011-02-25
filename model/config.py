@@ -80,6 +80,7 @@ PACKAGE_SEARCH_URL = "/quicksearch"
 PACKAGE_SWITCH_ARCH_URL = "/archswitch"
 PACKAGE_SWITCH_VIEW_URL = "/viewswitch"
 PACKAGE_SWITCH_UPDATES_URL = "/updateswitch"
+PACKAGE_SWITCH_UPDATES_TYPE_URL = "/updatetype"
 SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):

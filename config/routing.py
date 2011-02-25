@@ -27,6 +27,7 @@ def make_map(config):
     map.connect('/archswitch/{arch}', controller='packages', action='archswitch')
     map.connect('/viewswitch/{view}', controller='packages', action='viewswitch')
     map.connect('/updateswitch/{amount}', controller='packages', action='updateswitch')
+    map.connect('/updatetype/{update_type}', controller='packages', action='updatetype')
 
     map.connect('/group/{group}', controller='packages', action='group')
     map.connect('/category/{category}', controller='packages', action='category')
