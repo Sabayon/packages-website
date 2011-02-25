@@ -1071,26 +1071,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         self._generate_html_metadata()
         entropy = self._entropy()
 
-        cached_obj = None
-        if model.config.WEBSITE_CACHING:
-            sha = hashlib.sha1()
-            sha.update(self._get_valid_repositories_mtime_hash(entropy))
-            cache_key = "_index_" + sha.hexdigest()
-            cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-            if cached_obj is not None:
-                bin_search_pkgs, src_search_pkgs = cached_obj
-
-        if cached_obj is None:
-            bin_search_pkgs = self._get_latest_binary_packages(entropy,
-                max_count = 100)
-            src_search_pkgs = self._get_latest_source_packages(entropy,
-                max_count = 100)
-            if model.config.WEBSITE_CACHING:
-                self._cacher.save(cache_key,
-                    (bin_search_pkgs, src_search_pkgs),
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
-
         updates_amount = session.get("updates_amount", 10)
         try:
             updates_amount = int(updates_amount)
@@ -1101,21 +1081,40 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         except ValueError:
             updates_amount = 10
 
-        bin_search_pkgs = bin_search_pkgs[:updates_amount]
-        src_search_pkgs = src_search_pkgs[:updates_amount]
-        search_pkgs = bin_search_pkgs + src_search_pkgs
+        cached_obj = None
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            sha.update(self._get_valid_repositories_mtime_hash(entropy))
+            sha.update(repr(updates_amount))
+            cache_key = "_index2_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
 
-        c.search_pkgs = search_pkgs
+        if cached_obj is None:
+            bin_search_pkgs = self._get_latest_binary_packages(entropy,
+                max_count = 100)
+            src_search_pkgs = self._get_latest_source_packages(entropy,
+                max_count = 100)
+            bin_search_pkgs = bin_search_pkgs[:updates_amount]
+            src_search_pkgs = src_search_pkgs[:updates_amount]
+            search_pkgs = bin_search_pkgs + src_search_pkgs
+
+            ugc = self._ugc()
+            try:
+                data_map = self._get_packages_base_metadata(entropy, ugc,
+                    search_pkgs)
+            finally:
+                ugc.disconnect()
+                del ugc
+
+            cached_obj = search_pkgs, data_map
+
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        c.search_pkgs, c.packages_data = cached_obj
         c.search_showing_latest = True
-
-        ugc = self._ugc()
-        try:
-            data_map = self._get_packages_base_metadata(entropy, ugc,
-                search_pkgs)
-        finally:
-            ugc.disconnect()
-            del ugc
-        c.packages_data = data_map
 
         self._set_search_time(time.clock(), start_t)
         return self._render('/index.html', renderer = "html")

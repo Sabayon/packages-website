@@ -948,6 +948,23 @@ class ApibaseController:
         products = sorted(model.config.available_products.keys())
         arches = sorted(model.config.available_arches.keys())
 
+        # caching
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            hash_str = "%s|%s|%s|%s|%s" % (
+                want_source_repo,
+                max_count,
+                products,
+                arches,
+                self._get_valid_repositories_mtime_hash(entropy),
+            )
+            sha.update(repr(hash_str))
+            cache_key = "_get_latest_repo_type_packages_" + sha.hexdigest()
+            data = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if data is not None:
+                return data
+
         raw_latest = []
         valid_repos = self._api_get_valid_repositories(entropy)
         for avail_repo, arch, branch, product in valid_repos:
@@ -963,7 +980,13 @@ class ApibaseController:
         pkgs = sorted(raw_latest, key = lambda x: x[0])
         if len(pkgs) > max_count:
             pkgs = pkgs[:max_count]
-        return [(p_id, r, a, b, p) for cdate, p_id, r, a, b, p in pkgs]
+        data = [(p_id, r, a, b, p) for cdate, p_id, r, a, b, p in pkgs]
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(cache_key, data,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        return data
 
     def _get_latest_repo_packages(self, entropy, repository_id,
         arch, branch, product, count):
