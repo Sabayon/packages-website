@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-24 01:24+0100\n"
+"POT-Creation-Date: 2011-02-27 00:17+0100\n"
 "PO-Revision-Date: 2009-08-05 12:09+0100\n"
 "Last-Translator: Rémy Epke <testflacon@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,15 +122,6 @@ msgstr "Stem buiten bereik"
 #: ../controllers/packages.py:1308
 msgid "you already voted this"
 msgstr "U heeft hier al op gestemd"
-
-#: ../controllers/users.py:36
-msgid "N/A"
-msgstr "N/A"
-
-#: ../controllers/users.py:54
-#, fuzzy
-msgid "Public Profile"
-msgstr "Profiel"
 
 #: ../templates/categories_area.html:4
 #, fuzzy
@@ -483,6 +474,13 @@ msgstr "Mijn Gem."
 #: ../templates/user_widget.html:42
 msgid "Score"
 msgstr "Score"
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#, fuzzy
+#~ msgid "Public Profile"
+#~ msgstr "Profiel"
 
 #~ msgid "permission denied, you suck!"
 #~ msgstr "Toegang geweigerd...kut voor je!"

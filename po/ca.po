@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-24 01:24+0100\n"
+"POT-Creation-Date: 2011-02-27 00:17+0100\n"
 "PO-Revision-Date: 2009-12-07 09:01+0100\n"
 "Last-Translator: Roger Calvó <rcalvoi@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -124,14 +124,6 @@ msgstr "vot fora de rang"
 #: ../controllers/packages.py:1308
 msgid "you already voted this"
 msgstr "ja heu votat això"
-
-#: ../controllers/users.py:36
-msgid "N/A"
-msgstr "N/D"
-
-#: ../controllers/users.py:54
-msgid "Public Profile"
-msgstr "Perfil públic"
 
 #: ../templates/categories_area.html:4
 #, fuzzy
@@ -478,6 +470,12 @@ msgstr "Les meves mitjanes"
 #: ../templates/user_widget.html:42
 msgid "Score"
 msgstr "Puntuació"
+
+#~ msgid "N/A"
+#~ msgstr "N/D"
+
+#~ msgid "Public Profile"
+#~ msgstr "Perfil públic"
 
 #~ msgid "permission denied, you suck!"
 #~ msgstr "s'ha denegat el permís, l'heu cagat!"

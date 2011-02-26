@@ -4,7 +4,6 @@ controllers/__init__.py
 controllers/login.py
 controllers/packages.py
 controllers/template.py
-controllers/users.py
 templates/body_right.html
 templates/categories_area.html
 templates/do_ugc_document.html

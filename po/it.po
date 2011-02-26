@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Spritz 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-24 01:24+0100\n"
+"POT-Creation-Date: 2011-02-27 00:17+0100\n"
 "PO-Revision-Date: 2009-08-04 14:31+0100\n"
 "Last-Translator: Fabio Erculiani <lxnay@sabayonlinux.org>\n"
 "Language-Team: Fabio Erculiani <lxnay@sabayonlinux.org>\n"
@@ -126,15 +126,6 @@ msgstr "voto non in range"
 #: ../controllers/packages.py:1308
 msgid "you already voted this"
 msgstr "hai già votato questo pacchetto"
-
-#: ../controllers/users.py:36
-msgid "N/A"
-msgstr "N/D"
-
-#: ../controllers/users.py:54
-#, fuzzy
-msgid "Public Profile"
-msgstr "Profilo"
 
 #: ../templates/categories_area.html:4
 #, fuzzy
@@ -481,6 +472,13 @@ msgstr "Media"
 #: ../templates/user_widget.html:42
 msgid "Score"
 msgstr "Punteggio"
+
+#~ msgid "N/A"
+#~ msgstr "N/D"
+
+#, fuzzy
+#~ msgid "Public Profile"
+#~ msgstr "Profilo"
 
 #~ msgid "permission denied, you suck!"
 #~ msgstr "permesso negato, sfigato!"
