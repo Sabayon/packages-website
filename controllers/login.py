@@ -48,13 +48,6 @@ class LoginController(BaseController, WebsiteController):
 
         myauth.disconnect()
         del myauth
-
-        login_redirect = self._get_redirect()
-        if logged and login_redirect:
-            if model.config.get_http_protocol(request) == "https":
-                return redirect(url(login_redirect.replace("http://", "https://")))
-            else:
-                return redirect(url(login_redirect))
         return redirect(url("/", protocol=model.config.get_http_protocol(request)))
 
     def logout(self):
