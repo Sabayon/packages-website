@@ -972,7 +972,7 @@ class ApibaseController:
                 self._get_valid_repositories_mtime_hash(entropy),
             )
             sha.update(repr(hash_str))
-            cache_key = "_get_latest_repo_type_packages_" + sha.hexdigest()
+            cache_key = "_get_latest_repo_type_packages3_" + sha.hexdigest()
             data = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
             if data is not None:
@@ -990,7 +990,13 @@ class ApibaseController:
                 entropy, avail_repo, arch, branch,
                 product, max_count))
 
-        pkgs = sorted(raw_latest, key = lambda x: x[0])
+        def key_sorter(x):
+            try:
+                return float(x[0])
+            except (TypeError, ValueError):
+                return 0.0
+
+        pkgs = sorted(raw_latest, key = key_sorter, reverse = True)
         if len(pkgs) > max_count:
             pkgs = pkgs[:max_count]
         data = [(p_id, r, a, b, p) for cdate, p_id, r, a, b, p in pkgs]

@@ -1,19 +1,34 @@
 <%include file="/packages_area_selectors.html"/>
 <div class="package-widgets-area">
-    % for binary in (True, False):
-    <div>
-        % for pkg_tuple in c.search_pkgs:
-            <%
-            c.pkg_data = c.packages_data.get(pkg_tuple)
-            c.pkg_tuple = pkg_tuple
-            %>
-            % if c.pkg_data:
-                % if (binary and not c.pkg_data['is_source_repo']) or (not binary and c.pkg_data['is_source_repo']):
+    % if c.search_showing_latest:
+        % for binary in (True, False):
+        <div>
+            % for pkg_tuple in c.search_pkgs:
+                <%
+                c.pkg_data = c.packages_data.get(pkg_tuple)
+                c.pkg_tuple = pkg_tuple
+                %>
+                % if c.pkg_data:
+                    % if (binary and not c.pkg_data['is_source_repo']) or (not binary and c.pkg_data['is_source_repo']):
+                        <%include file="/package_widget.html"/>
+                        <hr class="packages-separator"/>
+                    % endif
+                % endif
+            % endfor
+        </div>
+        % endfor
+    % else:
+        <div>
+            % for pkg_tuple in c.search_pkgs:
+                <%
+                c.pkg_data = c.packages_data.get(pkg_tuple)
+                c.pkg_tuple = pkg_tuple
+                %>
+                % if c.pkg_data:
                     <%include file="/package_widget.html"/>
                     <hr class="packages-separator"/>
                 % endif
-            % endif
-        % endfor
-    </div>
-    % endfor
+            % endfor
+        </div>
+    % endif
 </div>

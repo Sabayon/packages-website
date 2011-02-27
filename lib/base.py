@@ -75,10 +75,13 @@ class BaseController(WSGIController):
         c.base_switch_view_url = model.config.PACKAGE_SWITCH_VIEW_URL
         c.base_switch_updates_url = model.config.PACKAGE_SWITCH_UPDATES_URL
         c.base_switch_updates_type_url = model.config.PACKAGE_SWITCH_UPDATES_TYPE_URL
+        c.base_switch_sortby_url = model.config.PACKAGE_SWITCH_SORTBY_URL
+        c.default_sorting = model.config.default_sorting
         c.search_prefixes = self.PREFIXES
         c.search_form_max_length = model.config.SEARCH_FORM_MAX_LENGTH
         c.available_arches_selector = model.config.available_arches.copy()
         c.available_arches_selector['all'] = _("All")
+        c.available_sortby_selector = model.config.available_sortings.copy()
 
         model.config.setup_internal(model, c, session, request)
 

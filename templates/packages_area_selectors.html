@@ -27,6 +27,36 @@
             % endfor
         </div>
     </div>
+    % if session.get('logged_in') and session.get('entropy'):
+        <div class="sortby-selector-area">
+            <div class="packages-sortby-selector">
+                <b>${_("Sort by")}</b>:
+                <% selected = session.get('sort_by', c.default_sorting) %>
+                % for sortby in sorted(c.available_sortby_selector):
+                    <%
+                        selector_css_class=""
+                        if sortby == selected:
+                            selector_css_class="packages-sortby-selector-selected"
+                        filter_opts = ""
+                        if c.search_filter_str:
+                            filter_opts += "&filter=" + c.search_filter_str
+                        if c.search_filter_data:
+                            filter_opts += "&filter_data=" + c.search_filter_data
+                        q_str = ""
+                        if c.quick_search_string:
+                            q_str = "?q=" + c.quick_search_string
+                    %>
+                    <span class="packages-sortby-selector ${selector_css_class}">
+                    % if sortby == selected:
+                        <b>${c.available_sortby_selector[sortby]}</b>
+                    % else:
+                        <a href="${c.base_switch_sortby_url}/${sortby}${q_str}${filter_opts}">${c.available_sortby_selector[sortby]}</a>
+                    % endif
+                    </span>
+                % endfor
+            </div>
+        </div>
+    % endif
 % endif
 % if (not c.show_detailed_view) and (not c.search_show_more):
     <div class="view-selector-area">

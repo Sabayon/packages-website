@@ -729,6 +729,25 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
         return supported_filters.get(filter_str, None)
 
+    def _redirect_q(self):
+        """
+        Redirect to search URL using q, filter and filter_data request
+        information.
+        """
+        q = request.params.get("q")
+        filter_func = request.params.get("filter")
+        filter_data = request.params.get("filter_data")
+
+        q_str = model.config.PACKAGE_SEARCH_URL
+        if q:
+            q_str += "?q=" + q
+        if filter_func:
+            q_str += "&filter=" + filter_func
+        if filter_data:
+            q_str += "&filter_data=" + filter_data
+
+        return redirect(url(const_convert_to_rawstring(q_str)))
+
     def archswitch(self, arch):
         """
         Function that switches the quicksearch default arch.
@@ -741,19 +760,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 del session['selected_arch']
                 session.save()
 
-        q = request.params.get("q")
-        filter_func = request.params.get("filter")
-        filter_data = request.params.get("filter_data")
-
-        q_str = model.config.PACKAGE_SEARCH_URL
-        if q:
-            q_str += "?q=" + q
-        if filter_func:
-            q_str += "&filter=" + filter_func
-        if filter_data:
-            q_str += "&filter_data=" + filter_data
-
-        return redirect(url(const_convert_to_rawstring(q_str)))
+        return self._redirect_q()
 
     def viewswitch(self, view):
         """
@@ -763,19 +770,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             session['selected_view'] = view
             session.save()
 
-        q = request.params.get("q")
-        filter_func = request.params.get("filter")
-        filter_data = request.params.get("filter_data")
-
-        q_str = model.config.PACKAGE_SEARCH_URL
-        if q:
-            q_str += "?q=" + q
-        if filter_func:
-            q_str += "&filter=" + filter_func
-        if filter_data:
-            q_str += "&filter_data=" + filter_data
-
-        return redirect(url(const_convert_to_rawstring(q_str)))
+        return self._redirect_q()
 
     def updateswitch(self, amount):
         """
@@ -803,6 +798,95 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         return redirect(url("/"))
 
+    def sortswitch(self, sortby):
+        if sortby in model.config.available_sortings:
+            session['sort_by'] = sortby
+            session.save()
+
+        return self._redirect_q()
+
+    def _sort_by_results(self, entropy, ugc, o, results):
+        """
+        Sort list of package tuples (results) using sort by "o" directive,
+        which is one of model.config.available_sortings.
+        """
+        repo_cache = {}
+
+        def _sort_alphabet(x):
+            (pkg_id, repository_id, arch, branch, product) = x
+            repo_coords = (repository_id, arch, branch, product)
+            repo = repo_cache.get(repo_coords)
+            if repo is None:
+                repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                    product)
+                if repo is None:
+                    return "~"
+                repo_cache[repo_coords] = repo
+            atom = repo.retrieveAtom(pkg_id)
+            if not atom:
+                return "~"
+            return atom
+
+        download_cache = {}
+
+        def _sort_downloads(x):
+            (pkg_id, repository_id, arch, branch, product) = x
+            repo_coords = (repository_id, arch, branch, product)
+            repo = repo_cache.get(repo_coords)
+            if repo is None:
+                repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                    product)
+                if repo is None:
+                    return 0
+                repo_cache[repo_coords] = repo
+            key_slot = repo.retrieveKeySlot(pkg_id)
+            if not key_slot:
+                return 0
+            key, slot = key_slot
+            downloads = download_cache.get(key)
+            if downloads is None:
+                downloads = -int(ugc.get_ugc_downloads(key))
+                download_cache[key] = downloads
+            return downloads
+
+        votes_cache = {}
+
+        def _sort_votes(x):
+            (pkg_id, repository_id, arch, branch, product) = x
+            repo_coords = (repository_id, arch, branch, product)
+            repo = repo_cache.get(repo_coords)
+            if repo is None:
+                repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                    product)
+                if repo is None:
+                    return "~"
+                repo_cache[repo_coords] = repo
+            key_slot = repo.retrieveKeySlot(pkg_id)
+            if not key_slot:
+                return "~"
+            key, slot = key_slot
+            vote = votes_cache.get(key)
+            if vote is None:
+                vote = -ugc.get_ugc_vote(key)
+                votes_cache[key] = vote
+            return vote
+
+        sort_map = {
+            "alphabet": _sort_alphabet,
+            "downloads": _sort_downloads,
+            "votes": _sort_votes,
+        }
+        sorter = sort_map.get(o)
+        if sorter:
+            try:
+                results.sort(key = sorter)
+            finally:
+                for repo in repo_cache.values():
+                    repo.close()
+
+        download_cache.clear()
+        votes_cache.clear()
+
     def quicksearch(self, q = None, filter_str = None, filter_data = None,
         override_query_length_checks = False):
         """
@@ -815,6 +899,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         r=<repo>: repository id [default: sabayonlinux.org]
         b=<branch>: repository branch [default: 5]
         p=<product>: product [default: standard]
+        o=<order-by>: order by (relevance, alphabet, downloads, votes)
+            [default: relevance]
         filter=<filter type>: filter package results using given filter type
             currently supported filters:
                 "category"
@@ -840,7 +926,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             elif len(q) < 2:
                 return _redirect_to_home()
 
-        # no need to validate them, already validated below
+        # most of them are validated below (whitelist)
         # use r, a, b, p as filter
         r = request.params.get('r')
         a = request.params.get('a')
@@ -848,11 +934,34 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             a = session.get('selected_arch')
             if a == "all":
                 a = None
+        else:
+            a_str = "all"
+            if a not in model.config.available_arches:
+                a = None
+            else:
+                a_str = a
+            session['selected_arch'] = a_str
+            session.save()
+
+        # these are validated below
         b = request.params.get('b')
         p = request.params.get('p')
         t = request.params.get('t')
         filter_cb = self._get_request_search_filter_params(
             filter_str = filter_str, filter_data = filter_data)
+
+        o = request.params.get('o')
+        if o is None:
+            session_o = session.get('sort_by')
+            if session_o in model.config.available_sortings:
+                o = session_o
+            else:
+                o = model.config.default_sorting
+        else:
+            if o not in model.config.available_sortings:
+                o = model.config.default_sorting
+            session['sort_by'] = o
+            session.save()
 
         from_pkg = request.params.get('from') or 0
         if from_pkg:
@@ -880,9 +989,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(a))
             sha.update(repr(b))
             sha.update(repr(p))
+            sha.update(repr(o))
             mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
             sha.update(mtime_hash)
-            cache_key = "quicksearch_" + sha.hexdigest()
+            cache_key = "quicksearch3_" + sha.hexdigest()
             results = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
@@ -1006,6 +1116,17 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 results = [x for x in results if x[4] == p]
                 searching_default = False
 
+            # sorting support, performance critical
+            # a rough optimization is to sort results only up to
+            # from_pkg + max_results.
+            if o != model.config.default_sorting:
+                ugc = self._ugc()
+                try:
+                    self._sort_by_results(entropy, ugc, o, results)
+                finally:
+                    ugc.disconnect()
+                    del ugc
+
             # caching
             # NOTE: EntropyCacher is not started, so cannot use push()
             if model.config.WEBSITE_CACHING:
@@ -1090,7 +1211,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
             sha.update(repr(updates_amount))
             sha.update(updates_show_type)
-            cache_key = "_index2_" + sha.hexdigest()
+            cache_key = "_index4_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 

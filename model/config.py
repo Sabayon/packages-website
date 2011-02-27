@@ -55,6 +55,14 @@ available_arches = {
     "x86": "x86",
     "arch": _("Source"),
 }
+available_sortings = {
+    "relevance": _("Relevance"),
+    "alphabet": _("Alphabet"),
+    "downloads": _("Downloads"),
+    "votes": _("Votes"),
+}
+default_sorting = "relevance"
+
 disabled_repositories = [
     "itsme",
     "community0",
@@ -81,6 +89,7 @@ PACKAGE_SWITCH_ARCH_URL = "/archswitch"
 PACKAGE_SWITCH_VIEW_URL = "/viewswitch"
 PACKAGE_SWITCH_UPDATES_URL = "/updateswitch"
 PACKAGE_SWITCH_UPDATES_TYPE_URL = "/updatetype"
+PACKAGE_SWITCH_SORTBY_URL = "/sortswitch"
 SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):

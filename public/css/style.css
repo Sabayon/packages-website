@@ -383,8 +383,7 @@ input {
 }
 
 .packages-results-info {
-    text-align: right;
-    padding-bottom: 0.2em;
+    text-align: left;
     color: #999999;
     padding-bottom: 0.4em;
 }
@@ -395,7 +394,7 @@ input {
     font-variant: small-caps;
     font-weight: bold;
     letter-spacing: 0.3em;
-    padding-bottom: 10px;
+    padding-bottom: 1em;
 }  
 
 .package-widget-meta-list-left-item-binary {
@@ -583,6 +582,21 @@ input {
 }
 
 .packages-arch-selector-selected {
+    background-color: #235AB2;
+    color: white;
+}
+
+.packages-sortby-selector {
+    font-variant: small-caps;
+    text-align: right;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    padding-left: 0.2em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+}
+
+.packages-sortby-selector-selected {
     background-color: #235AB2;
     color: white;
 }
