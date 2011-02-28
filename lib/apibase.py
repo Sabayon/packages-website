@@ -1025,6 +1025,19 @@ class ApibaseController:
             if repo is not None:
                 repo.close()
 
+    def __generate_action_url(self, hash_id, target):
+        return "%s/%s/%s" % (model.config.PACKAGE_SHOW_URL, hash_id, target)
+
+    def __get_metadata_install_app_item(self, hash_id):
+        return {
+            'id': "install",
+            'name': _("Install (beta)"),
+            'icon': "media-optical.png",
+            'url': self.__generate_action_url(hash_id, "install"),
+            'alt': _("Install this application"),
+            'extra_url_meta': "rel=\"nofollow\"",
+        }
+
     def _setup_metadata_items(self, entropy, package_id, repository_id,
         hash_id, is_source_repo, package_key, entropy_repository,
         short_list = True):
@@ -1037,8 +1050,8 @@ class ApibaseController:
         @rtype: list
         """
         def _generate_action_url(target):
-            return "%s/%s/%s#package-widget-show-what" % (
-                model.config.PACKAGE_SHOW_URL, hash_id, target)
+            return self.__generate_action_url(hash_id, target) + \
+                "#package-widget-show-what"
 
         data = []
 
@@ -1215,6 +1228,10 @@ class ApibaseController:
                     'extra_url_meta': "rel=\"nofollow\"",
                 }
                 data.append(obj)
+                if repository_id == model.config.ETP_REPOSITORY:
+                    # install
+                    obj = self.__get_metadata_install_app_item(hash_id)
+                    data.append(obj)
 
             # sources
             obj = {
@@ -1327,6 +1344,8 @@ class ApibaseController:
                 atom, entropy_repository.retrieveChangelog(package_id)),
             'meta_items': meta_items,
         }
+        if repository_id == model.config.ETP_REPOSITORY:
+            data['app_install'] = self.__get_metadata_install_app_item(hash_id)
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,

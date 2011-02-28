@@ -12,6 +12,7 @@
                 css_class = "package-widget-title-area-binary"
                 css_meta_info_class = "package-widget-meta-info-binary"
         %>
+
         <div class="package-widget-title-area ${css_class}">
             <div class="package-widget-first-area">
                 <div class="package-widget-icon-area">
@@ -128,7 +129,13 @@
                     % if item['icon']:
                         <img src="${c.meta_list_url}/${item['icon']}" alt="${item['alt']}"/>
                     % endif
-                    <a href="${item['url']}" title="${item['alt']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>${item['name']}</a>
+                    <a href="${item['url']}" title="${item['alt']}" class="package-widget-meta-list-url" ${item.get('extra_url_meta', "")}>
+                        % if item['id'] == "install":
+                            <b>${item['name']}</b>
+                        % else:
+                            ${item['name']}
+                        % endif
+                    </a>
                 </td>
                 <% count += 1 %>
                 % if count == max_cols:
@@ -170,6 +177,8 @@
                         <%include file="/package_show_sources.html"/>
                     % elif what == "ugc":
                         <%include file="/package_show_ugc.html"/>
+                    % elif what == "install":
+                        <%include file="/package_show_install.html"/>
                     % endif
                 </div>
             % endif

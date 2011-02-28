@@ -7,6 +7,8 @@ from cStringIO import StringIO
 import shutil, os, time
 import hashlib
 import tempfile
+import random
+random.seed()
 
 from www.lib.base import *
 from www.lib.website import *
@@ -23,6 +25,7 @@ except ImportError:
         DatabaseError
 import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
+import entropy.tools as entropy_tools
 
 class PackagesController(BaseController, WebsiteController, ApibaseController):
 
@@ -558,6 +561,74 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         return self.show(hash_id)
 
+    def _show_install(self, hash_id):
+        decoded_data = self._parse_hash_id(hash_id)
+        if decoded_data is None:
+            return redirect(url("/"))
+        name, package_id, repository_id, arch, branch, product = decoded_data
+
+        entropy = self._entropy()
+        settings = entropy.Settings()
+        mirrors = settings['repositories'].get('available', {}).get(
+            repository_id, {}).get('packages', [])
+        excluded = model.config.EXCLUDED_MIRROR_NAMES
+
+        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
+        download = None
+        try:
+            if repo is not None:
+                download = repo.retrieveDownloadURL(package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if download is None:
+            return redirect(url("/"))
+
+        def _filter_mirror(mirror):
+            if not (mirror.startswith("http://") or mirror.startswith("ftp://")):
+                return False
+            mirror_data = entropy_tools.spliturl(mirror)
+            mirror_name = mirror_data.netloc
+            return mirror_name not in excluded
+
+        mirrors = list(filter(_filter_mirror, mirrors))
+        selected_mirror = mirrors[random.randint(0, len(mirrors) - 1)]
+
+        sha = hashlib.sha256()
+        sha.update(repr(random.randint(0, 1024000)))
+        sha.update(selected_mirror)
+        session['pkg_install_key'] = sha.hexdigest()
+        session.save()
+
+        show_what_data = {
+            'what': "install",
+            'data': mirrors,
+            'download_rel': download.replace(etpConst['packagesext'],
+                etpConst['packagesext_webinstall']),
+            'selected_mirror': selected_mirror,
+        }
+        c.package_show_what = show_what_data
+        return self.show(hash_id)
+
+    def getinstall(self):
+        """
+        This method is triggered by the install app button in package details.
+        """
+        # download token
+        k = request.params.get("k")
+        if k != session.get('pkg_install_key'):
+            # invalid !
+            return redirect(url("/"))
+        # redirect url
+        r = request.params.get("r")
+        if r is None:
+            return redirect(url("/"))
+
+        return redirect(url(
+            const_convert_to_rawstring(r, from_enctype="utf-8")))
+
+
     def _show_download(self, hash_id):
         decoded_data = self._parse_hash_id(hash_id)
         if decoded_data is None:
@@ -651,6 +722,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             "needed_libs": self._show_needed_libs,
             "content": self._show_content,
             "download": self._show_download,
+            "install": self._show_install,
             "sources": self._show_sources,
             "ugc": self._show_ugc,
         }

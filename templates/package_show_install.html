@@ -1,0 +1,54 @@
+<% mirrors_shown = False %>
+% if c.package_show_what['data']:
+    <%
+        import os
+        download_name = os.path.basename(c.package_show_what['download_rel'])
+        selected_url = c.package_show_what['selected_mirror'] + "/" + c.package_show_what['download_rel']
+    %>
+    <div class="package-widget-show-revdeps">
+        <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
+            <div class="package-widget-show-deps-subtitle">
+                ${_("<b>Sabayon Linux</b> and Entropy <b>1.0_alpha23</b> or <b>newer</b> required. Download and double click, or execute in terminal:")}
+                <pre class="code">
+
+# sh "${download_name}"
+                </pre>
+            </div>
+            <div class="package-widget-show-deps-subtitle">
+                ${_("A download will start <b>automatically</b> within a few seconds, if not, please <b>right click</b> on one of the links below and select <b>Save as</b>.")}
+            </div>
+            <%
+                mirrors = reversed(c.package_show_what['data'])
+                from entropy.tools import spliturl
+                import os.path
+            %>
+            % for mirror in mirrors:
+                <%
+                    urlobj = spliturl(mirror)
+                    mirror_name = urlobj.netloc
+                    mirror_prot = urlobj.scheme
+                    mirrors_shown = True
+                %>
+                <div class="package-widget-show-deps-item">
+                    <a href="${mirror}/${c.package_show_what['download_rel'].replace("#","%23")}" rel="nofollow">${mirror_prot | h}://${mirror_name | h}</a> -> ${download_name | h}
+                </div>
+            % endfor
+        </div>
+    </div>
+    <iframe id="app-install-frame" name="app-install-frame" class="app-install-frame" width="0" height="0" border="0" onload="">
+        &nbsp;
+    </iframe>
+    <script type="text/javascript">
+        function open_install_url(url) {
+            self.frames['app-install-frame'].location.href = url;
+        }
+        open_install_url('${c.base_install_app_mirror_url}?k=${session.get('pkg_install_key', 'invalid')}&r=${selected_url | h,trim}');
+    </script>
+% endif
+% if not mirrors_shown:
+        <div class="package-widget-show-deps-generic package-widget-show-deps-no">
+            <div class="package-widget-show-deps-title">
+                ${_("No install mirrors available")}
+            </div>
+        </div>
+% endif

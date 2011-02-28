@@ -81,6 +81,7 @@ ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
 GROUP_SHOW_URL = "/group"
 CATEGORY_SHOW_URL = "/category"
 PACKAGE_SHOW_URL = "/show"
+PACKAGE_INSTALL_GET_ETP = "/getinstall"
 PACKAGE_SHOW_LICENSE_URL = "/license"
 PACKAGE_SHOW_CATEGORY_URL = "/category"
 PACKAGE_SHOW_USEFLAG_URL = "/useflag"

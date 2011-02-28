@@ -652,3 +652,37 @@ input {
     margin-bottom: 0.4em;
 }
 
+.code {
+    background-color: #FFFFEF;
+    border: 1px dotted #DDDDAA;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 3px;
+}
+
+.package-widget-show-deps-subtitle {
+    margin-bottom: 1em;
+}
+
+.app-install-frame {
+    border: 0 none;
+    /* height: 10em; */
+    width: 100%;
+}
+
+.package-app-install {
+    float: right;
+    position: relative;
+    text-align: right;
+    top: -5em;
+}
+
+.package-app-install a, .package-app-install a:active, .package-app-install a:link, .package-app-install a:visited {
+    color: teal;
+}
+
+.package-app-install-title {
+    
+}
