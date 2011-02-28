@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entropy web site translation version 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-27 00:17+0100\n"
+"POT-Creation-Date: 2011-02-28 23:22+0100\n"
 "PO-Revision-Date: 2009-09-15 21:21-0500\n"
 "Last-Translator: Benjamin\n"
 "Language-Team: Benjamin Guay\n"
@@ -18,110 +18,110 @@ msgstr ""
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: CANADA\n"
 
-#: ../controllers/packages.py:1136 ../controllers/packages.py:1141
-#: ../controllers/packages.py:1147 ../controllers/packages.py:1150
-#: ../controllers/packages.py:1157 ../controllers/packages.py:1164
-#: ../controllers/packages.py:1167 ../controllers/packages.py:1179
-#: ../controllers/packages.py:1182 ../controllers/packages.py:1187
-#: ../controllers/packages.py:1194 ../controllers/packages.py:1199
-#: ../controllers/packages.py:1201 ../controllers/packages.py:1206
-#: ../controllers/packages.py:1211 ../controllers/packages.py:1221
-#: ../controllers/packages.py:1232 ../controllers/packages.py:1240
-#: ../controllers/packages.py:1251 ../controllers/packages.py:1261
-#: ../controllers/packages.py:1264
+#: ../controllers/packages.py:1396 ../controllers/packages.py:1401
+#: ../controllers/packages.py:1407 ../controllers/packages.py:1410
+#: ../controllers/packages.py:1417 ../controllers/packages.py:1424
+#: ../controllers/packages.py:1427 ../controllers/packages.py:1439
+#: ../controllers/packages.py:1442 ../controllers/packages.py:1447
+#: ../controllers/packages.py:1454 ../controllers/packages.py:1459
+#: ../controllers/packages.py:1461 ../controllers/packages.py:1466
+#: ../controllers/packages.py:1471 ../controllers/packages.py:1481
+#: ../controllers/packages.py:1492 ../controllers/packages.py:1500
+#: ../controllers/packages.py:1511 ../controllers/packages.py:1521
+#: ../controllers/packages.py:1524
 msgid "Error"
 msgstr "Erreur"
 
-#: ../controllers/packages.py:1136
+#: ../controllers/packages.py:1396
 msgid "not logged in"
 msgstr "pas connecté"
 
-#: ../controllers/packages.py:1141
+#: ../controllers/packages.py:1401
 msgid "invalid document"
 msgstr "document invalide"
 
-#: ../controllers/packages.py:1147
+#: ../controllers/packages.py:1407
 msgid "invalid document specified"
 msgstr "document spécifié invalide"
 
-#: ../controllers/packages.py:1150
+#: ../controllers/packages.py:1410
 #, fuzzy
 msgid "permission denied!"
 msgstr "accès refusé"
 
-#: ../controllers/packages.py:1157
+#: ../controllers/packages.py:1417
 msgid "WTF? invalid document type!"
 msgstr "Quoi ? Type de document invalide !"
 
-#: ../controllers/packages.py:1165
+#: ../controllers/packages.py:1425
 msgid "you know what? I cannot handle this document"
 msgstr "Vous savez quoi ? Je ne peux pas prendre en charge ce document"
 
-#: ../controllers/packages.py:1169
+#: ../controllers/packages.py:1429
 msgid "Document removed successfully, sigh :'-("
 msgstr "Document supprimé avec succès ouf :'-("
 
-#: ../controllers/packages.py:1179 ../controllers/packages.py:1182
+#: ../controllers/packages.py:1439 ../controllers/packages.py:1442
 msgid "wrong username"
 msgstr "mauvais nom d'utilisateur"
 
-#: ../controllers/packages.py:1187
+#: ../controllers/packages.py:1447
 msgid "no document specified"
 msgstr "pas de document spécifié"
 
-#: ../controllers/packages.py:1194
+#: ../controllers/packages.py:1454
 msgid "invalid document type"
 msgstr "type de document invalide"
 
-#: ../controllers/packages.py:1199
+#: ../controllers/packages.py:1459
 msgid "invalid package key"
 msgstr "Clé de paquet invalide"
 
-#: ../controllers/packages.py:1201
+#: ../controllers/packages.py:1461
 msgid "invalid package string"
 msgstr "chaîne de paquet invalide"
 
-#: ../controllers/packages.py:1206
+#: ../controllers/packages.py:1466
 msgid "title too short"
 msgstr "titre trop court"
 
-#: ../controllers/packages.py:1211
+#: ../controllers/packages.py:1471
 msgid "description too short"
 msgstr "description trop courte"
 
-#: ../controllers/packages.py:1221
+#: ../controllers/packages.py:1481
 msgid "comment text too short"
 msgstr "texte du commentaire trop court"
 
-#: ../controllers/packages.py:1232
+#: ../controllers/packages.py:1492
 msgid "no file? no party!"
 msgstr "pas de fichier ! pas de party !"
 
-#: ../controllers/packages.py:1251
+#: ../controllers/packages.py:1511
 msgid "file too big"
 msgstr "fichier trop volumineux"
 
-#: ../controllers/packages.py:1265
+#: ../controllers/packages.py:1525
 msgid "document added but couldn't determine 'iddoc' correctly"
 msgstr "document ajouté mais n'a pu déterminer 'iddoc' correctement"
 
-#: ../controllers/packages.py:1286
+#: ../controllers/packages.py:1546
 msgid "user not authenticated"
 msgstr "utilisateur non authentifié"
 
-#: ../controllers/packages.py:1294
+#: ../controllers/packages.py:1554
 msgid "invalid vote"
 msgstr "vote invalide"
 
-#: ../controllers/packages.py:1297
+#: ../controllers/packages.py:1557
 msgid "invalid package"
 msgstr "paquet invalide"
 
-#: ../controllers/packages.py:1303
+#: ../controllers/packages.py:1563
 msgid "vote not in range"
 msgstr "vote hors de l'intervalle"
 
-#: ../controllers/packages.py:1308
+#: ../controllers/packages.py:1568
 msgid "you already voted this"
 msgstr "vous avez déjà voté ça"
 
@@ -229,9 +229,22 @@ msgstr ""
 msgid "Architecture"
 msgstr "Architecture"
 
-#: ../templates/packages_area_selectors.html:34
+#: ../templates/packages_area_selectors.html:33
+msgid "Sort by"
+msgstr ""
+
+#: ../templates/packages_area_selectors.html:64
 msgid "View"
 msgstr "Visualiser"
+
+#: ../templates/packages_area_selectors.html:93
+#, fuzzy
+msgid "Updates"
+msgstr "page mise à jour"
+
+#: ../templates/packages_area_selectors.html:115
+msgid "Updates type"
+msgstr ""
 
 #: ../templates/package_show_changelog.html:6
 msgid "No ChangeLog"
@@ -335,29 +348,29 @@ msgstr "source"
 msgid "No sources belonging to package"
 msgstr ""
 
-#: ../templates/package_widget.html:24
+#: ../templates/package_widget.html:25
 msgid "downloads"
 msgstr "téléchargements"
 
-#: ../templates/package_widget.html:37
+#: ../templates/package_widget.html:38
 msgid "source"
 msgstr "source"
 
-#: ../templates/package_widget.html:39
+#: ../templates/package_widget.html:40
 msgid "binary"
 msgstr ""
 
-#: ../templates/package_widget.html:46
+#: ../templates/package_widget.html:47
 #, fuzzy
 msgid "revision"
 msgstr "Révision"
 
-#: ../templates/package_widget.html:53
+#: ../templates/package_widget.html:54
 #, fuzzy
 msgid "date"
 msgstr "page mise à jour"
 
-#: ../templates/package_widget.html:61
+#: ../templates/package_widget.html:62
 msgid "Recent Changes"
 msgstr ""
 
