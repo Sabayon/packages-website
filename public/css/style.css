@@ -669,6 +669,7 @@ input {
 .app-install-frame {
     border: 0 none;
     /* height: 10em; */
+    height: 50px;
     width: 100%;
 }
 

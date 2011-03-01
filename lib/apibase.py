@@ -1241,23 +1241,13 @@ class ApibaseController:
             data.append(obj)
 
         if not is_source_repo:
-            if repository_id == model.config.ETP_REPOSITORY:
+            if not is_source_repo and \
+                (repository_id == model.config.ETP_REPOSITORY):
 
-                try:
-                    user_agent = request.environ['HTTP_USER_AGENT']
-                except (AttributeError, KeyError):
-                    user_agent = None
-
-                # WARNING: hard coded arches!!
-                found_arch = "x86"
-                if user_agent is not None:
-                    if user_agent.find("x86_64") != -1:
-                        found_arch = "amd64"
-                if found_arch == arch:
-                    # install
-                    obj = self.__get_metadata_install_app_item(hash_id)
-                    obj['url'] += "#package-widget-show-what"
-                    data.append(obj)
+                # install
+                obj = self.__get_metadata_install_app_item(hash_id)
+                obj['url'] += "#package-widget-show-what"
+                data.append(obj)
 
         return data
 

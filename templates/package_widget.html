@@ -118,6 +118,16 @@
             <% do_close = False %>
             <table class="package-widget-meta-list package-widget-meta-list-options">
             % for item in c.pkg_data['meta_items']:
+                <%
+                    if item['id'] == "install":
+                        # WARNING: hard coded arches!!
+                        found_arch = "x86"
+                        if c.user_agent is not None:
+                            if c.user_agent.find("x86_64") != -1:
+                                found_arch = "amd64"
+                        if found_arch != c.pkg_data['arch']:
+                            continue
+                %>
                 % if c.show_detailed_view and item['id'] in ("details",):
                     <% continue %>
                 % endif

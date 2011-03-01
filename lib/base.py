@@ -83,7 +83,11 @@ class BaseController(WSGIController):
         c.available_arches_selector = model.config.available_arches.copy()
         c.available_arches_selector['all'] = _("All")
         c.available_sortby_selector = model.config.available_sortings.copy()
-
+        try:
+            user_agent = request.environ['HTTP_USER_AGENT']
+        except (AttributeError, KeyError):
+            user_agent = None
+        c.user_agent = user_agent
         model.config.setup_internal(model, c, session, request)
 
     def _generate_login_metadata(self):
