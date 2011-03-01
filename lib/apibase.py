@@ -26,7 +26,7 @@ except ImportError:
         DatabaseError
 
 from entropy.const import const_convert_to_unicode, \
-    const_convert_to_rawstring
+    const_convert_to_rawstring, ETP_ARCH_MAP
 import entropy.tools as entropy_tools
 from entropy.cache import EntropyCacher
 from entropy.i18n import _LOCALE
@@ -1039,7 +1039,7 @@ class ApibaseController:
         }
 
     def _setup_metadata_items(self, entropy, package_id, repository_id,
-        hash_id, is_source_repo, package_key, entropy_repository,
+        arch, hash_id, is_source_repo, package_key, entropy_repository,
         short_list = True):
         """
         This cryptic method setups a simple list of links (and their metadata)
@@ -1242,10 +1242,27 @@ class ApibaseController:
 
         if not is_source_repo:
             if repository_id == model.config.ETP_REPOSITORY:
-                # install
-                obj = self.__get_metadata_install_app_item(hash_id)
-                obj['url'] += "#package-widget-show-what"
-                data.append(obj)
+
+                try:
+                    user_agent = request.environ['HTTP_USER_AGENT']
+                except (AttributeError, KeyError):
+                    user_agent = None
+
+                found_arch = None
+                if user_agent is not None:
+                    for arches, etp_arch in ETP_ARCH_MAP.items():
+                        if etp_arch is None:
+                            continue # unsupported
+                        for e_arch in arches:
+                            if user_agent.find(e_arch) != -1:
+                                found_arch = etp_arch
+                        if found_arch:
+                            break
+                if found_arch == arch:
+                    # install
+                    obj = self.__get_metadata_install_app_item(hash_id)
+                    obj['url'] += "#package-widget-show-what"
+                    data.append(obj)
 
         return data
 
@@ -1307,7 +1324,7 @@ class ApibaseController:
             branch, product)
 
         meta_items = self._setup_metadata_items(entropy,
-            package_id, repository_id, hash_id, is_source_repo,
+            package_id, repository_id, arch, hash_id, is_source_repo,
             key, entropy_repository, short_list = not extended_meta_items)
 
         size = "0b"
