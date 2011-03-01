@@ -1244,6 +1244,7 @@ class ApibaseController:
             if repository_id == model.config.ETP_REPOSITORY:
                 # install
                 obj = self.__get_metadata_install_app_item(hash_id)
+                obj['url'] += "#package-widget-show-what"
                 data.append(obj)
 
         return data
