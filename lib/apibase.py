@@ -1248,16 +1248,11 @@ class ApibaseController:
                 except (AttributeError, KeyError):
                     user_agent = None
 
-                found_arch = None
+                # WARNING: hard coded arches!!
+                found_arch = "x86"
                 if user_agent is not None:
-                    for arches, etp_arch in ETP_ARCH_MAP.items():
-                        if etp_arch is None:
-                            continue # unsupported
-                        for e_arch in arches:
-                            if user_agent.find(e_arch) != -1:
-                                found_arch = etp_arch
-                        if found_arch:
-                            break
+                    if user_agent.find("x86_64"):
+                        found_arch = "amd64"
                 if found_arch == arch:
                     # install
                     obj = self.__get_metadata_install_app_item(hash_id)
