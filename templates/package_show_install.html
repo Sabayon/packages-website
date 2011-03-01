@@ -5,6 +5,11 @@
         download_name = os.path.basename(c.package_show_what['download_rel'])
         selected_url = c.package_show_what['selected_mirror'] + "/" + c.package_show_what['download_rel']
     %>
+    <script type="text/javascript">
+        function open_install_url(url) {
+            self.frames['app-install-frame'].location.href = url;
+        }
+    </script>
     <div class="package-widget-show-revdeps">
         <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
             <div class="package-widget-show-deps-subtitle">
@@ -28,9 +33,12 @@
                     mirror_name = urlobj.netloc
                     mirror_prot = urlobj.scheme
                     mirrors_shown = True
+                    this_url = mirror + "/" + c.package_show_what['download_rel']
                 %>
                 <div class="package-widget-show-deps-item">
-                    <a href="${mirror}/${c.package_show_what['download_rel'].replace("#","%23")}" rel="nofollow">${mirror_prot | h}://${mirror_name | h}</a> -> ${download_name | h}
+                    <!-- onclick="open_install_url('${c.base_install_app_mirror_url}?k=${session.get('pkg_install_key', 'invalid')}&r=${this_url | h,trim}'); return false;" -->
+                    <a href="${mirror}/${c.package_show_what['download_rel'].replace("#","%23")}"
+                        rel="nofollow">${mirror_prot | h}://${mirror_name | h}</a> -> ${download_name | h}
                 </div>
             % endfor
         </div>
@@ -39,9 +47,6 @@
         &nbsp;
     </iframe>
     <script type="text/javascript">
-        function open_install_url(url) {
-            self.frames['app-install-frame'].location.href = url;
-        }
         open_install_url('${c.base_install_app_mirror_url}?k=${session.get('pkg_install_key', 'invalid')}&r=${selected_url | h,trim}');
     </script>
 % endif

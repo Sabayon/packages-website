@@ -1112,20 +1112,20 @@ class ApibaseController:
         }
         data.append(obj)
 
-        # similar packages
-        provided_mime = entropy_repository.retrieveProvidedMime(package_id)
-        if provided_mime:
-            obj = {
-                'id': "similar",
-                'name': _("Similar"),
-                'icon': "icon_similar.png",
-                'url': _generate_action_url("similar"),
-                'alt': _("Show similar packages"),
-                'extra_url_meta': "rel=\"nofollow\"",
-            }
-            data.append(obj)
-
         if not short_list:
+
+            # similar packages
+            provided_mime = entropy_repository.retrieveProvidedMime(package_id)
+            if provided_mime:
+                obj = {
+                    'id': "similar",
+                    'name': _("Similar"),
+                    'icon': "icon_similar.png",
+                    'url': _generate_action_url("similar"),
+                    'alt': _("Show similar packages"),
+                    'extra_url_meta': "rel=\"nofollow\"",
+                }
+                data.append(obj)
 
             obj = {
                 'id': "changelog",
@@ -1228,10 +1228,6 @@ class ApibaseController:
                     'extra_url_meta': "rel=\"nofollow\"",
                 }
                 data.append(obj)
-                if repository_id == model.config.ETP_REPOSITORY:
-                    # install
-                    obj = self.__get_metadata_install_app_item(hash_id)
-                    data.append(obj)
 
             # sources
             obj = {
@@ -1243,6 +1239,12 @@ class ApibaseController:
                 'extra_url_meta': "rel=\"nofollow\"",
             }
             data.append(obj)
+
+        if not is_source_repo:
+            if repository_id == model.config.ETP_REPOSITORY:
+                # install
+                obj = self.__get_metadata_install_app_item(hash_id)
+                data.append(obj)
 
         return data
 
