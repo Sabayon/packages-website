@@ -1251,7 +1251,7 @@ class ApibaseController:
                 # WARNING: hard coded arches!!
                 found_arch = "x86"
                 if user_agent is not None:
-                    if user_agent.find("x86_64"):
+                    if user_agent.find("x86_64") != -1:
                         found_arch = "amd64"
                 if found_arch == arch:
                     # install
