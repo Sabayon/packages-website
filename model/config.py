@@ -31,7 +31,9 @@ COMMUNITY_REPOS_DIR = "/home/sabayonlinux/public_html/community.sabayon.org/repo
 REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
 # new method also!
 os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH
-EXCLUDED_MIRROR_NAMES = ["pkg.sabayon.org"]
+EXCLUDED_MIRROR_NAMES = ["pkg.sabayon.org", "ftp.fsn.hu", "ftp.rnl.ist.utl.pt",
+    "mirror.dun.nu", "ftp.cc.uoc.gr", "mirrors.cs.wmich.edu",
+    "riksun.riken.go.jp"]
 PHPBB_DBNAME = "phpbb3"
 PORTAL_DBNAME = "portal"
 UGC_MAX_UPLOAD_FILE_SIZE = 20 * 1024000 # 20 mb
