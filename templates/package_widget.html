@@ -71,11 +71,15 @@
                     <div class="package-widget-meta-list-left konafilter">
                         % for obj in c.pkg_data['brief_list']:
                             <% key = obj['key'] %>
-                            % if c.pkg_data.get(key):
+                            % if key in c.pkg_data:
                                 <%
                                     dd_css_class = "binary"
                                     if c.pkg_data['is_source_repo']:
                                         dd_css_class = "source"
+                                    if c.pkg_data.get(key) is None:
+                                        c.pkg_data[key] = "N/A"
+                                    if c.pkg_data.get(key) == "":
+                                        c.pkg_data[key] = "N/A"
                                 %>
                                 <dl class="package-widget-meta-list-left-item package-widget-meta-list-left-item-${dd_css_class} package-widget-meta-list-left-${key}">
                                     <dt>
