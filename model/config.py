@@ -70,6 +70,7 @@ disabled_repositories = [
     "community0",
     "community1",
     "jenna",
+    "sabayon-weekly",
 ]
 source_repositories = ["portage"]
 
