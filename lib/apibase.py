@@ -1511,6 +1511,13 @@ class ApibaseController:
             'split': True,
             'icon': "icon_flag_purple.png",
         })
+        brief_list.append({
+            'key': "keywords",
+            'name': _("Keywords"),
+            'url': None,
+            'split': False,
+            'icon': "icon_flag_purple.png",
+        })
         if not is_source_repo:
             brief_list.append({
                 'key': "injected",
@@ -1525,6 +1532,7 @@ class ApibaseController:
             'useflags': entropy_repository.retrieveUseflags(package_id),
             'brief_list': brief_list,
             'injected': entropy_repository.isInjected(package_id),
+            'keywords': " ".join(sorted(entropy_repository.retrieveKeywords(package_id))),
         }
         data['sha1'], data['sha256'], data['sha512'], data['gpg'] = \
             entropy_repository.retrieveSignatures(package_id)
