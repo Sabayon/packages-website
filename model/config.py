@@ -3,6 +3,8 @@ import hashlib
 import os
 import datetime, random, os, urllib
 from pylons.i18n import _, N_
+ugc_connection_data = {}
+phpbb_connection_data = {}
 from www.private import *
 from paste.request import construct_url
 
