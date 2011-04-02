@@ -66,6 +66,16 @@ class ApibaseController:
         # repository_id validation rule
         self._repo_re = re.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", re.IGNORECASE)
 
+    def _validate_package_names(self, package_names):
+        """
+        Validate package names string list.
+
+        @raise AttributeError: if invalid
+        """
+        for package_name in package_names:
+            if not entropy_tools.validate_package_name(package_name):
+                raise AttributeError("invalid package name")
+
     def _get_available_branches(self, entropy, repoid, product):
         arches = self._get_available_arches(entropy, repoid, product)
         branches = set()
@@ -78,6 +88,14 @@ class ApibaseController:
 
     def _get_available_arches(self, entropy, repoid, product):
         return entropy._get_arches(repoid, product)
+
+    def _api_base_response(self, code, message = None):
+        response = {
+            'code': code,
+            'api_rev': 1,
+            'message': message or "",
+        }
+        return response
 
     def _api_get_repo(self, entropy, repository_id, arch, branch, product):
         """
