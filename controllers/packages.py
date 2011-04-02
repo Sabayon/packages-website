@@ -27,6 +27,8 @@ import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
 import entropy.tools as entropy_tools
 
+from entropy.client.services.interfaces import ClientWebService
+
 class PackagesController(BaseController, WebsiteController, ApibaseController):
 
     def __init__(self):
@@ -1359,6 +1361,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if c.description == "undefined":
             c.description = ''
         pkgkey = request.params.get('pkgkey')
+        try:
+            self._validate_package_names([pkgkey])
+        except AttributeError:
+            error = True
+
         atom = request.params.get('atom')
         repoid = request.params.get('repoid')
         if not (pkgkey and atom and repoid):
@@ -1454,17 +1461,24 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             return "%s: %s" % (_("Error"), _("invalid document type"),)
 
         pkgkey = request.params.get('pkgkey')
-        if not isinstance(pkgkey,basestring):
+        if not isinstance(pkgkey, basestring):
             return '%s %s' % (
                 "%s: %s" % (_("Error"), _("invalid package key"),), pkgkey,)
         if not pkgkey or (len(pkgkey.split("/")) != 2):
             return "%s: %s" % (_("Error"), _("invalid package string"),)
-        if pkgkey: pkgkey = self._htmlencode(pkgkey)
+
+        # validate pkgkey
+        try:
+            self._validate_package_names([pkgkey])
+            pkgkey = entropy_dep.dep_getkey(pkgkey)
+        except AttributeError:
+            return "%s: %s" % (_("Error"), _("invalid package string"),)
 
         title = request.params.get('title')
         if not title or len(title) < 5:
             return "%s: %s" % (_("Error"), _("title too short"),)
-        if title: title = self._htmlencode(title)
+        if title:
+            title = self._htmlencode(title)
 
         description = request.params.get('description')
         if (not description) and (doctype != c.ugc_doctypes['comments']):
@@ -1479,7 +1493,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             comment_text = ''
         if (len(comment_text) < 5) and (doctype == c.ugc_doctypes['comments']):
             return "%s: %s" % (_("Error"), _("comment text too short"),)
-        if comment_text: comment_text = self._htmlencode(comment_text)
+        if comment_text:
+            comment_text = self._htmlencode(comment_text)
 
         tmp_file = None
         orig_filename = None
@@ -1509,14 +1524,14 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if fsize > model.config.UGC_MAX_UPLOAD_FILE_SIZE:
                 os.remove(tmp_file)
                 return "%s: %s" % (_("Error"), _("file too big"),)
-            file_name = os.path.join(pkgkey,orig_filename)
+            file_name = os.path.join(pkgkey, orig_filename)
 
         # now handle the UGC add
         ugc = self._ugc()
         try:
-            status, iddoc = ugc.insert_document_autosense(pkgkey, doctype, user_id,
-                username, comment_text, tmp_file, file_name, orig_filename, title,
-                description, keywords)
+            status, iddoc = ugc.insert_document_autosense(pkgkey, doctype,
+                user_id, username, comment_text, tmp_file, file_name,
+                orig_filename, title, description, keywords)
             if not status:
                 return '%s: %s' % (_("Error"), iddoc,)
             if not isinstance(iddoc, int):
@@ -1547,30 +1562,44 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if not error:
             vote = request.params.get('vote')
-            pkgkey = request.params.get('pkgkey')
+
+            # validate vote
             try:
                 vote = int(vote)
+                if vote not in ClientWebService.VALID_VOTES:
+                    raise ValueError()
             except (ValueError,TypeError,):
                 err_msg = _('invalid vote')
                 error = True
+
+            pkgkey = request.params.get('pkgkey')
             if not pkgkey:
                 err_msg = _('invalid package')
                 error = True
 
-            if not error:
-                ugc = self._ugc()
-                if vote not in ugc.VOTE_RANGE:
-                    err_msg = _('vote not in range')
+            # validate pkgkey
+            try:
+                self._validate_package_names([pkgkey])
+                pkgkey = entropy_dep.dep_getkey(pkgkey)
+            except AttributeError:
+                err_msg = _('invalid package')
+                error = True
+
+        if not error:
+
+            ugc = self._ugc()
+            if vote not in ugc.VOTE_RANGE:
+                err_msg = _('vote not in range')
+                error = True
+            else:
+                voted = ugc.do_vote(pkgkey, user_id, vote, do_commit = True)
+                if not voted:
+                    err_msg = _('you already voted this')
                     error = True
                 else:
-                    voted = ugc.do_vote(pkgkey, user_id, vote, do_commit = True)
-                    if not voted:
-                        err_msg = _('you already voted this')
-                        error = True
-                    else:
-                        c.new_vote = ugc.get_ugc_vote(pkgkey)
-                ugc.disconnect()
-                del ugc
+                    c.new_vote = ugc.get_ugc_vote(pkgkey)
+            ugc.disconnect()
+            del ugc
 
         c.error = error
         c.err_msg = err_msg
