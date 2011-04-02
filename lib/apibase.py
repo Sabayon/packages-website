@@ -917,13 +917,14 @@ class ApibaseController:
         Get extended User Generated Metadata for given package key using given
         UGC interface.
         """
+        count, docs = ugc.get_ugc_metadata_doctypes(package_key,
+            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES])
         data = {
             'vote': ugc.get_ugc_vote(package_key),
             'downloads': ugc.get_ugc_downloads(package_key),
-            'docs': ugc.get_ugc_metadata_doctypes(package_key,
-                [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
+            'docs': docs,
         }
-        for doc in data['docs']:
+        for doc in docs:
             self._expand_ugc_doc_metadata(ugc, doc)
         return data
 
