@@ -22,14 +22,6 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         WebsiteController.__init__(self)
         ApibaseController.__init__(self)
 
-    def _api_base_response(self, code, message = None):
-        response = {
-            'code': code,
-            'api_rev': 1,
-            'message': message or "",
-        }
-        return response
-
     def _api_render(self, response, renderer):
         if renderer == "json":
             return json.dumps(response)
