@@ -74,7 +74,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         def _vote_order():
             ugc = self._ugc()
             try:
-                key_sorter = lambda x: ugc.get_ugc_downloads(
+                key_sorter = lambda x: ugc.get_ugc_download(
                     entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
             finally:
@@ -381,7 +381,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             'product': product,
             'package_id': package_id,
             'vote': round(ugc.get_ugc_vote(pkg_key), 2),
-            'downloads': int(ugc.get_ugc_downloads(pkg_key)),
+            'downloads': ugc.get_ugc_download(pkg_key),
             'docs_number': docs_number,
         }
         return pkg_data
