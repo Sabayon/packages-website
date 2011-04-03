@@ -3,10 +3,12 @@ import os
 
 from www.model import config
 
-from entropy.const import *
+from entropy.const import const_convert_to_unicode, etpConst
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
 import entropy.dump
 import entropy.tools
+
+from www.lib.exceptions import ServiceConnectionError
 
 class Database:
 

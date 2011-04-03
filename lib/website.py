@@ -16,7 +16,7 @@ import time
 import www.lib.helpers as h
 import www.model as model
 from htmlentitydefs import name2codepoint
-from entropy.const import *
+from entropy.const import etpConst
 etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 etpConst['repositoriesconf'] = model.config.REPOSITORIES_CONF_PATH
 etpConst['dumpstoragedir'] = model.config.WEBSITE_REPO_CACHE_DIR

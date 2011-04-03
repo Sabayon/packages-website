@@ -15,7 +15,8 @@ from www.lib.website import *
 from www.lib.apibase import ApibaseController
 from www.lib.dict2xml import dict_to_xml
 
-from entropy.const import *
+from entropy.const import etpConst, const_convert_to_unicode, \
+    const_convert_to_rawstring
 from entropy.exceptions import SystemDatabaseError
 try:
     from entropy.db.exceptions import ProgrammingError, OperationalError, \
@@ -26,6 +27,7 @@ except ImportError:
 import entropy.dump as entropy_dump
 import entropy.dep as entropy_dep
 import entropy.tools as entropy_tools
+from entropy.i18n import _
 
 from entropy.client.services.interfaces import ClientWebService
 
