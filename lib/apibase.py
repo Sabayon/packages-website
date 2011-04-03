@@ -31,6 +31,8 @@ import entropy.tools as entropy_tools
 from entropy.cache import EntropyCacher
 from entropy.i18n import _LOCALE
 
+from entropy.client.services.interfaces import Document
+
 GROUP_ICONS_MAP = {
     'accessibility': "preferences-desktop-accessibility.png",
     'development': "applications-development.png",
@@ -76,6 +78,21 @@ class ApibaseController:
             if not entropy_tools.validate_package_name(package_name):
                 raise AttributeError("invalid package name")
 
+    def _validate_keywords(self, keywords):
+        """
+        Validate User Generated Content keywords list.
+
+        @raise AttributeError: if keywords list is invalid
+        """
+        key_re = re.compile('[a-zA-Z0-9\-\+]+$')
+        for keyword in keywords:
+            if not key_re.match(keyword):
+                raise AttributeError("invalid keyword detected")
+            if len(keyword) < 2:
+                raise AttributeError("keyword too short")
+            if len(keyword) > 12:
+                raise AttributeError("keyword too long")
+
     def _get_available_branches(self, entropy, repoid, product):
         arches = self._get_available_arches(entropy, repoid, product)
         branches = set()
@@ -96,6 +113,19 @@ class ApibaseController:
             'message': message or "",
         }
         return response
+
+    def _api_get_keywords(self):
+        # validate keywords
+        keywords = (request.params.get(Document.DOCUMENT_KEYWORDS_ID) or \
+            "").strip().split()
+        if not keywords:
+            raise AttributeError("no keywords")
+        # validate each keyword
+        try:
+            self._validate_keywords(keywords)
+        except AttributeError:
+            raise AttributeError("invalid keywords")
+        return keywords
 
     def _api_get_repo(self, entropy, repository_id, arch, branch, product):
         """
@@ -899,7 +929,7 @@ class ApibaseController:
 
         data = {
             'vote': ugc.get_ugc_vote(package_key),
-            'downloads': int(ugc.get_ugc_downloads(package_key)),
+            'downloads': int(ugc.get_ugc_download(package_key)),
             'icon': ugc.get_ugc_icon(package_key),
             'category_icon': self._api_get_category_icon(entropy,
                 package_key.split("/", 1)[0])
@@ -921,7 +951,7 @@ class ApibaseController:
             [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES])
         data = {
             'vote': ugc.get_ugc_vote(package_key),
-            'downloads': ugc.get_ugc_downloads(package_key),
+            'downloads': ugc.get_ugc_download(package_key),
             'docs': docs,
         }
         for doc in docs:
