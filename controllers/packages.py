@@ -919,7 +919,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             key, slot = key_slot
             downloads = download_cache.get(key)
             if downloads is None:
-                downloads = -int(ugc.get_ugc_downloads(key))
+                downloads = -int(ugc.get_ugc_download(key))
                 download_cache[key] = downloads
             return downloads
 
@@ -1356,7 +1356,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             error = True
 
         c.title = request.params.get('title')
-        c.keywords = request.params.get('keywords')
+
+        try:
+            keywords_fmt = self._api_get_keywords()
+            c.keywords = request.params.get('keywords')
+        except AttributeError:
+            error = True
+
         c.description = request.params.get('description')
         if c.description == "undefined":
             c.description = ''
@@ -1424,6 +1430,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 return "%s: %s" % (_("Error"), _("WTF? invalid document type!"),)
 
             status, err_msg = ugc.remove_document_autosense(iddoc, doctype)
+            if status:
+                ugc.commit()
         finally:
             ugc.disconnect()
             del ugc
@@ -1484,12 +1492,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if (not description) and (doctype != c.ugc_doctypes['comments']):
             return "%s: %s" % (_("Error"), _("description too short"),)
 
-        keywords = request.params.get('keywords')
-        if not isinstance(keywords,basestring):
-            keywords = ''
+        try:
+            keywords = self._api_get_keywords()
+        except AttributeError:
+            return "%s: %s" % (_("Error"), _("invalid keywords"),)
 
         comment_text = request.params.get('text')
-        if not isinstance(comment_text,basestring):
+        if not isinstance(comment_text, basestring):
             comment_text = ''
         if (len(comment_text) < 5) and (doctype == c.ugc_doctypes['comments']):
             return "%s: %s" % (_("Error"), _("comment text too short"),)
@@ -1538,6 +1547,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 return '%s %s' % (
                     "%s: %s" % (_("Error"),
                     _("document added but couldn't determine 'iddoc' correctly"),), iddoc,)
+            ugc.commit()
 
             c.ugc_doc = {}
             ugc_data = ugc.get_ugc_metadata_by_identifiers([iddoc])
@@ -1592,11 +1602,12 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 err_msg = _('vote not in range')
                 error = True
             else:
-                voted = ugc.do_vote(pkgkey, user_id, vote, do_commit = True)
+                voted = ugc.do_vote(pkgkey, user_id, vote)
                 if not voted:
                     err_msg = _('you already voted this')
                     error = True
                 else:
+                    ugc.commit()
                     c.new_vote = ugc.get_ugc_vote(pkgkey)
             ugc.disconnect()
             del ugc
