@@ -20,20 +20,23 @@ etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
 etpConst['repositoriesconf'] = model.config.REPOSITORIES_CONF_PATH
 etpConst['dumpstoragedir'] = model.config.WEBSITE_REPO_CACHE_DIR
 
+from entropy.client.services.interfaces import Document
+
 class WebsiteController:
 
     def __init__(self):
 
-        c.ugc_doctypes = etpConst['ugc_doctypes'].copy()
-        # disabled
-        disabled_types = [c.ugc_doctypes.get('bbcode_doc')]
-        del c.ugc_doctypes['bbcode_doc']
-        c.default_ugc_doctype = etpConst['ugc_doctypes'].get('comments')
-        c.ugc_doctypes_desc_singular = etpConst['ugc_doctypes_description_singular'].copy()
-        c.ugc_doctypes_desc_plural = etpConst['ugc_doctypes_description'].copy()
-        for mytype in disabled_types:
-            del c.ugc_doctypes_desc_singular[mytype]
-            del c.ugc_doctypes_desc_plural[mytype]
+        # backward compatibility
+        c.ugc_doctypes = {
+            'comments': Document.COMMENT_TYPE_ID,
+            'image': Document.IMAGE_TYPE_ID,
+            'generic_file': Document.FILE_TYPE_ID,
+            'youtube_video': Document.VIDEO_TYPE_ID,
+            'icon': Document.ICON_TYPE_ID,
+        }
+        c.default_ugc_doctype = Document.COMMENT_TYPE_ID
+        c.ugc_doctypes_desc_singular = Document.DESCRIPTION_SINGULAR.copy()
+        c.ugc_doctypes_desc_plural = Document.DESCRIPTION_PLURAL.copy()
         self.small_img_dirname = 'small'
         self.VIRUS_CHECK_EXEC = model.config.VIRUS_CHECK_EXEC
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
