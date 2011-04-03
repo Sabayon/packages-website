@@ -258,7 +258,6 @@ class DistributionUGCInterface(Database):
         return mydate
 
     def _is_iddoctype_available(self, iddoctype):
-        self.check_connection()
         rows = self.execute_query("""
         SELECT `iddoctype` FROM entropy_doctypes WHERE `iddoctype` = %s
         """, (iddoctype,))
@@ -267,7 +266,6 @@ class DistributionUGCInterface(Database):
         return False
 
     def is_pkgkey_available(self, key):
-        self.check_connection()
         rows = self.execute_query("""
         SELECT `idkey` FROM entropy_base WHERE `key` = %s
         """, (key,))
@@ -276,7 +274,6 @@ class DistributionUGCInterface(Database):
         return False
 
     def is_iddoc_available(self, iddoc):
-        self.check_connection()
         rows = self.execute_query("""
         SELECT `iddoc` FROM entropy_docs WHERE `iddoc` = %s
         """, (iddoc,))
@@ -285,20 +282,17 @@ class DistributionUGCInterface(Database):
         return False
 
     def insert_iddoctype(self, iddoctype, description):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_doctypes VALUES (%s, %s)
         """, (iddoctype, description,))
 
     def insert_pkgkey(self, key):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_base VALUES (%s,%s)
         """, (None, key,))
         return self.lastrowid()
 
     def _insert_download(self, idkey, ddate, count = 0):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_downloads VALUES (%s,%s,%s,%s)
         """, (None, idkey, ddate, count))
@@ -310,21 +304,18 @@ class DistributionUGCInterface(Database):
         return iddownload
 
     def insert_entropy_branch(self, branch):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_branches VALUES (%s,%s)
         """, (None, branch,))
         return self.lastrowid()
 
     def insert_entropy_release_string(self, release_string):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_release_strings VALUES (%s, %s)
         """, (None, release_string,))
         return self.lastrowid()
 
     def insert_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
-        self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_ip_locations VALUES (%s, %s, %s)
         """, (None, ip_latitude, ip_longitude,))
@@ -347,7 +338,6 @@ class DistributionUGCInterface(Database):
         return entropy_ip_locations_id
 
     def _update_download(self, iddownload, idkey):
-        self.check_connection()
         self.execute_query("""
         UPDATE entropy_downloads SET `count` = `count`+1 WHERE `iddownload` = %s
         """, (iddownload,))
@@ -367,7 +357,6 @@ class DistributionUGCInterface(Database):
         """, mydata)
 
     def _get_iddownload(self, idkey, ddate):
-        self.check_connection()
         self.execute_query("""
         SELECT `iddownload` FROM entropy_downloads WHERE `idkey` = %s
         AND `ddate` = %s
@@ -378,7 +367,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_idkey(self, key):
-        self.check_connection()
         self.execute_query("""
         SELECT `idkey` FROM entropy_base WHERE `key` = %s
         """, (key,))
@@ -388,7 +376,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_iddoctype(self, iddoc):
-        self.check_connection()
         self.execute_query("""
         SELECT `iddoctype` FROM entropy_docs WHERE `iddoc` = %s
         """, (iddoc,))
@@ -398,7 +385,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_entropy_branches_id(self, branch):
-        self.check_connection()
         self.execute_query("""
         SELECT `entropy_branches_id` FROM entropy_branches
         WHERE `entropy_branch` = %s
@@ -409,7 +395,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_entropy_release_strings_id(self, release_string):
-        self.check_connection()
         self.execute_query("""
         SELECT `entropy_release_strings_id` FROM entropy_release_strings
         WHERE `release_string` = %s
@@ -420,7 +405,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
-        self.check_connection()
         self.execute_query("""
         SELECT `entropy_ip_locations_id` FROM 
         entropy_ip_locations WHERE
@@ -432,7 +416,6 @@ class DistributionUGCInterface(Database):
         return -1
 
     def get_pkgkey(self, idkey):
-        self.check_connection()
         self.execute_query("""
         SELECT `key` FROM entropy_base WHERE `idkey` = %s
         """, (idkey,))
@@ -441,7 +424,6 @@ class DistributionUGCInterface(Database):
             return data['key']
 
     def get_ugc_metadata(self, pkgkey):
-        self.check_connection()
         metadata = {
             'vote': 0.0,
             'downloads': 0,
@@ -466,7 +448,6 @@ class DistributionUGCInterface(Database):
 
     def get_ugc_metadata_doctypes(self, pkgkey, typeslist, offset = 0,
         length = 100):
-        self.check_connection()
         if len(typeslist) == 1:
             self.execute_query("""
                 SELECT SQL_CACHE SQL_CALC_FOUND_ROWS *
@@ -496,7 +477,6 @@ class DistributionUGCInterface(Database):
         return count, [self._get_ugc_extra_metadata(x) for x in raw_docs]
 
     def get_ugc_metadata_doctypes_by_identifiers(self, identifiers, typeslist):
-        self.check_connection()
         identifiers = list(identifiers)
         if len(identifiers) < 2:
             identifiers += [0]
@@ -509,7 +489,6 @@ class DistributionUGCInterface(Database):
         return [self._get_ugc_extra_metadata(x) for x in self.fetchall()]
 
     def get_ugc_metadata_by_identifiers(self, identifiers):
-        self.check_connection()
         identifiers = list(identifiers)
         if len(identifiers) < 2:
             identifiers += [0]
@@ -556,7 +535,6 @@ class DistributionUGCInterface(Database):
         image document types containing __icon__ as title to icon type
         """
         
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE * FROM entropy_docs, entropy_base
         WHERE entropy_base.`idkey` = entropy_docs.`idkey`
@@ -577,7 +555,6 @@ class DistributionUGCInterface(Database):
         return icon_path
 
     def get_ugc_vote(self, pkgkey):
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE avg(entropy_votes.`vote`) as avg_vote
         FROM entropy_votes,entropy_base WHERE 
@@ -590,7 +567,6 @@ class DistributionUGCInterface(Database):
         return avg_vote
 
     def get_ugc_votes(self, pkgkeys):
-        self.check_connection()
 
         if len(pkgkeys) == 1:
             # then return data without caching, probably user just pushed
@@ -609,7 +585,6 @@ class DistributionUGCInterface(Database):
         return vote_data
 
     def get_ugc_allvotes(self):
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE entropy_base.`key` as `vkey`,
         avg(entropy_votes.vote) as `avg_vote` FROM 
@@ -619,7 +594,6 @@ class DistributionUGCInterface(Database):
         return dict((x['vkey'], x['avg_vote']) for x in self.fetchall())
 
     def get_ugc_download(self, pkgkey):
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE
             entropy_total_downloads.`count` AS tot_downloads
@@ -635,7 +609,6 @@ class DistributionUGCInterface(Database):
         return downloads
 
     def get_ugc_downloads(self, pkgkeys):
-        self.check_connection()
         if len(pkgkeys) == 1:
             pkgkey = pkgkeys[0]
             downloads = self.get_ugc_download(pkgkey)
@@ -653,7 +626,6 @@ class DistributionUGCInterface(Database):
         return dict((x['vkey'], x['tot_downloads']) for x in self.fetchall())
 
     def get_ugc_alldownloads(self):
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE
             entropy_base.`key` as vkey,
@@ -666,7 +638,6 @@ class DistributionUGCInterface(Database):
         return dict((x['vkey'], x['tot_downloads'],) for x in raw_data)
 
     def get_iddoc_userid(self, iddoc):
-        self.check_connection()
         self.execute_query("""
         SELECT `userid` FROM entropy_docs WHERE `iddoc` = %s
         """, (iddoc,))
@@ -674,7 +645,6 @@ class DistributionUGCInterface(Database):
         return data.get('userid', None)
 
     def get_total_comments_count(self):
-        self.check_connection()
         self.execute_query("""
         SELECT count(`iddoc`) as comments FROM entropy_docs
         WHERE `iddoctype` = %s
@@ -686,7 +656,6 @@ class DistributionUGCInterface(Database):
         return comments
 
     def get_total_documents_count(self):
-        self.check_connection()
         self.execute_query("""
         SELECT count(`iddoc`) as comments FROM entropy_docs
         WHERE `iddoctype` != %s""", (self.DOC_TYPES['comments'],))
@@ -697,7 +666,6 @@ class DistributionUGCInterface(Database):
         return comments
 
     def get_total_votes_count(self):
-        self.check_connection()
         self.execute_query("""
         SELECT count(`idvote`) as votes FROM entropy_votes
         """)
@@ -708,7 +676,6 @@ class DistributionUGCInterface(Database):
         return votes
 
     def get_user_score_ranking(self, userid):
-        self.check_connection()
         self.execute_query('SET @row = 0')
         self.execute_query("""
         SELECT Row, col_a FROM (SELECT @row := @row + 1 AS Row, userid AS col_a
@@ -721,7 +688,6 @@ class DistributionUGCInterface(Database):
         return ranking
 
     def get_users_scored_count(self):
-        self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE count(`userid`) as mycount FROM entropy_user_scores
         """)
@@ -732,7 +698,6 @@ class DistributionUGCInterface(Database):
         return count
 
     def is_user_score_available(self, userid):
-        self.check_connection()
         rows = self.execute_query("""
         SELECT `userid` FROM entropy_user_scores WHERE `userid` = %s
         """, (userid,))
@@ -749,7 +714,6 @@ class DistributionUGCInterface(Database):
             (votes*self.VOTES_SCORE_WEIGHT)
 
     def update_user_score(self, userid):
-        self.check_connection()
         avail = self.is_user_score_available(userid)
         myscore = self.calculate_user_score(userid)
         if avail:
@@ -763,7 +727,6 @@ class DistributionUGCInterface(Database):
         return myscore
 
     def get_user_score(self, userid):
-        self.check_connection()
         self.execute_query("""
         SELECT score FROM entropy_user_scores WHERE userid = %s
         """, (userid,))
@@ -774,7 +737,6 @@ class DistributionUGCInterface(Database):
         return myscore
 
     def get_users_score_ranking(self, offset = 0, count = 0):
-        self.check_connection()
         limit_string = ''
         if count:
             limit_string += ' LIMIT %s,%s' % (offset, count,)
@@ -793,7 +755,6 @@ class DistributionUGCInterface(Database):
         return found_rows, data
 
     def get_user_votes_average(self, userid):
-        self.check_connection()
         self.execute_query("""
         SELECT avg(`vote`) as vote_avg FROM entropy_votes WHERE `userid` = %s
         """, (userid,))
@@ -804,7 +765,6 @@ class DistributionUGCInterface(Database):
         return round(float(vote_avg), 2)
 
     def get_user_alldocs(self, userid):
-        self.check_connection()
         self.execute_query("""
         SELECT * FROM entropy_docs,entropy_base WHERE 
         entropy_docs.`userid` = %s AND 
@@ -821,14 +781,12 @@ class DistributionUGCInterface(Database):
             self.DOC_TYPES['comments'], doctype_sql_cmp = "=")
 
     def get_user_votes(self, userid):
-        self.check_connection()
         self.execute_query("""
         SELECT * FROM entropy_votes WHERE `userid` = %s
         """, (userid,))
         return self.fetchall()
 
     def get_user_generic_doctype(self, userid, doctype, doctype_sql_cmp = "="):
-        self.check_connection()
         self.execute_query("""
         SELECT * FROM entropy_docs WHERE `userid` = %s AND `iddoctype` """+ \
             doctype_sql_cmp + """ %s""", (userid, doctype,))
@@ -836,7 +794,6 @@ class DistributionUGCInterface(Database):
 
     def get_user_generic_doctype_count(self, userid, doctype,
         doctype_sql_cmp = "="):
-        self.check_connection()
         self.execute_query("""
         SELECT count(`iddoc`) as docs FROM entropy_docs
         WHERE `userid` = %s AND `iddoctype` """ + \
@@ -868,7 +825,6 @@ class DistributionUGCInterface(Database):
             self.DOC_TYPES['youtube_video'])
 
     def get_user_votes_count(self, userid):
-        self.check_connection()
         self.execute_query("""
         SELECT count(`idvote`) as votes FROM entropy_votes WHERE `userid` = %s
         """, (userid,))
@@ -899,7 +855,6 @@ class DistributionUGCInterface(Database):
         return idkey
 
     def insert_flood_control_check(self, userid):
-        self.check_connection()
         self.execute_query('SELECT max(`ts`) as ts FROM entropy_docs WHERE `userid` = %s', (userid,))
         data = self.fetchone()
         if not data:
@@ -915,7 +870,6 @@ class DistributionUGCInterface(Database):
 
     def insert_generic_doc(self, idkey, userid, username, doc_type, data,
         title, description, keywords):
-        self.check_connection()
 
         title = title[:self.entropy_docs_title_len]
         description = description[:self.entropy_docs_description_len]
@@ -941,7 +895,6 @@ class DistributionUGCInterface(Database):
 
     def insert_comment(self, pkgkey, userid, username, comment, title,
         keywords):
-        self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         iddoc = self.insert_generic_doc(idkey, userid, username,
             self.DOC_TYPES['comments'], comment, title, '', keywords)
@@ -950,7 +903,6 @@ class DistributionUGCInterface(Database):
         return True, iddoc
 
     def remove_comment(self, iddoc):
-        self.check_connection()
         userid = self.get_iddoc_userid(iddoc)
         self.execute_query("""
         DELETE FROM entropy_docs WHERE `iddoc` = %s AND `iddoctype` = %s
@@ -960,7 +912,6 @@ class DistributionUGCInterface(Database):
         return True, iddoc
 
     def do_vote(self, pkgkey, userid, vote):
-        self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         vote = int(vote)
         if vote not in self.VOTE_RANGE: # weird
@@ -975,7 +926,6 @@ class DistributionUGCInterface(Database):
         return True
 
     def _has_user_already_voted(self, pkgkey, userid):
-        self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         self.execute_query("""
         SELECT `idvote` FROM entropy_votes WHERE `idkey` = %s AND `userid` = %s
@@ -986,7 +936,6 @@ class DistributionUGCInterface(Database):
         return False
 
     def _do_downloads(self, pkgkeys, ip_addr = None):
-        self.check_connection()
         mydate = self._get_date()
         iddownloads = set()
         for pkgkey in pkgkeys:
@@ -1006,7 +955,6 @@ class DistributionUGCInterface(Database):
     def do_download_stats(self, branch, release_string, hw_hash, pkgkeys,
         ip_addr):
 
-        self.check_connection()
         branch_id = self.get_entropy_branches_id(branch)
         if branch_id == -1:
             branch_id = self.insert_entropy_branch(branch)
@@ -1064,7 +1012,6 @@ class DistributionUGCInterface(Database):
 
     def is_entropy_hardware_usage_stats_available(self,
         entropy_distribution_usage_id):
-        self.check_connection()
         self.execute_query("""
         SELECT entropy_hardware_usage_id  FROM entropy_hardware_usage
         WHERE `entropy_distribution_usage_id` = %s
@@ -1075,7 +1022,6 @@ class DistributionUGCInterface(Database):
         return False
 
     def is_user_ip_available_in_entropy_distribution_usage(self, ip_address):
-        self.check_connection()
         self.execute_query("""
         SELECT entropy_distribution_usage_id FROM entropy_distribution_usage
         WHERE `ip_address` = %s
@@ -1103,7 +1049,6 @@ class DistributionUGCInterface(Database):
 
     def insert_generic_file(self, pkgkey, userid, username, file_path,
             file_name, doc_type, title, description, keywords):
-        self.check_connection()
         file_path = os.path.realpath(file_path)
 
         # do a virus check?
@@ -1211,8 +1156,6 @@ class DistributionUGCInterface(Database):
         return self.delete_generic_file(iddoc, self.DOC_TYPES['generic_file'])
 
     def delete_generic_file(self, iddoc, doc_type):
-        self.check_connection()
-
         userid = self.get_iddoc_userid(iddoc)
         self.execute_query("""
         SELECT `ddata` FROM entropy_docs WHERE `iddoc` = %s
@@ -1238,7 +1181,6 @@ class DistributionUGCInterface(Database):
     def insert_youtube_video(self, pkgkey, userid, username, video_path,
         file_name, title, description, keywords):
 
-        self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         video_path = os.path.realpath(video_path)
         if not (os.access(video_path, os.R_OK) and os.path.isfile(video_path)):
@@ -1300,7 +1242,6 @@ class DistributionUGCInterface(Database):
         return True, (iddoc, video_id,)
 
     def remove_youtube_video(self, iddoc):
-        self.check_connection()
         if not self.is_iddoc_available(iddoc):
             return False, None
         userid = self.get_iddoc_userid(iddoc)
@@ -1347,7 +1288,6 @@ class DistributionUGCInterface(Database):
         return deleted, (iddoc, video_id,)
 
     def get_youtube_service(self):
-        self.check_connection()
         keywords = ['google_email', 'google_password']
         for keyword in keywords:
             if keyword not in self.connection_data:
