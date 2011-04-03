@@ -29,13 +29,16 @@ from www.lib.exceptions import ServiceConnectionError
 
 class DistributionUGCInterface(Database):
 
+    # ONLY WITH INNODB, ON DELETE CASCADE WORKS !!!
+    # INNODB is much slower for big data (it seems), that's why it's not
+    # used everywhere
     SQL_TABLES = {
         'entropy_base': """
             CREATE TABLE `entropy_base` (
             `idkey` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `key` VARCHAR( 255 )  collate utf8_bin NOT NULL,
             KEY `key` (`key`)
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_votes': """
             CREATE TABLE `entropy_votes` (
@@ -46,13 +49,13 @@ class DistributionUGCInterface(Database):
             `vote` TINYINT NOT NULL,
             `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_user_scores': """
             CREATE TABLE `entropy_user_scores` (
             `userid` INT UNSIGNED NOT NULL PRIMARY KEY,
             `score` INT UNSIGNED NOT NULL DEFAULT 0
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_downloads': """
             CREATE TABLE `entropy_downloads` (
@@ -63,7 +66,16 @@ class DistributionUGCInterface(Database):
             KEY `idkey` (`idkey`,`ddate`),
             KEY `idkey_2` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            );
+            ) ENGINE=MyISAM;
+        """,
+        'entropy_total_downloads': """
+            CREATE TABLE `entropy_total_downloads` (
+            `idtotaldownload` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `idkey` INT UNSIGNED NOT NULL,
+            `count` INT UNSIGNED NULL DEFAULT '0',
+            KEY `idkey` (`idkey`),
+            FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
+            ) ENGINE=MyISAM;
         """,
         'entropy_downloads_data': """
             CREATE TABLE `entropy_downloads_data` (
@@ -71,7 +83,7 @@ class DistributionUGCInterface(Database):
             `ip_address` VARCHAR(40) NULL DEFAULT '',
             `entropy_ip_locations_id` INT UNSIGNED NULL DEFAULT 0,
             FOREIGN KEY  (`iddownload`) REFERENCES `entropy_downloads` (`iddownload`)
-            );
+            ) ENGINE=MyISAM;
         """,
         'entropy_docs': """
             CREATE TABLE `entropy_docs` (
@@ -90,13 +102,13 @@ class DistributionUGCInterface(Database):
             KEY `title` (`title`(333)),
             KEY `description` (`description`(333)),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_doctypes': """
             CREATE TABLE `entropy_doctypes` (
             `iddoctype` TINYINT NOT NULL PRIMARY KEY,
             `description` TEXT NOT NULL
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_docs_keywords': """
             CREATE TABLE `entropy_docs_keywords` (
@@ -104,7 +116,8 @@ class DistributionUGCInterface(Database):
             `keyword` VARCHAR( 100 ),
             KEY `keyword` (`keyword`),
             FOREIGN KEY  (`iddoc`) REFERENCES `entropy_docs` (`iddoc`)
-            );
+                ON DELETE CASCADE
+            ) ENGINE=INNODB;
         """,
         'entropy_distribution_usage': """
             CREATE TABLE `entropy_distribution_usage` (
@@ -117,30 +130,32 @@ class DistributionUGCInterface(Database):
             `creation_date` DATETIME DEFAULT NULL,
             `hits` INT UNSIGNED NULL DEFAULT 0,
             FOREIGN KEY  (`entropy_branches_id`) REFERENCES `entropy_branches` (`entropy_branches_id`),
-            FOREIGN KEY  (`entropy_release_strings_id`) REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
+            FOREIGN KEY  (`entropy_release_strings_id`)
+                REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
             KEY `ip_address` (`ip_address`),
             KEY `entropy_ip_locations_id` (`entropy_ip_locations_id`)
-            );
+            ) ENGINE=MyISAM;
         """,
         'entropy_hardware_usage': """
             CREATE TABLE `entropy_hardware_usage` (
             `entropy_hardware_usage_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `entropy_distribution_usage_id` INT UNSIGNED NOT NULL,
             `entropy_hardware_hash` VARCHAR ( 64 ),
-            FOREIGN KEY  (`entropy_distribution_usage_id`) REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
-            );
+            FOREIGN KEY  (`entropy_distribution_usage_id`)
+                REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
+            ) ENGINE=INNODB;
         """,
         'entropy_branches': """
             CREATE TABLE `entropy_branches` (
             `entropy_branches_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `entropy_branch` VARCHAR( 100 )
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_release_strings': """
             CREATE TABLE `entropy_release_strings` (
             `entropy_release_strings_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `release_string` VARCHAR( 255 )
-            );
+            ) ENGINE=INNODB;
         """,
         'entropy_ip_locations': """
             CREATE TABLE `entropy_ip_locations` (
@@ -148,7 +163,7 @@ class DistributionUGCInterface(Database):
             `ip_latitude` FLOAT( 8,5 ),
             `ip_longitude` FLOAT( 8,5 ),
             KEY `ip_locations_lat_lon` (`ip_latitude`,`ip_longitude`)
-            );
+            ) ENGINE=INNODB;
         """,
     }
     VOTE_RANGE = list(range(1, 6))
@@ -188,7 +203,7 @@ class DistributionUGCInterface(Database):
         self._initialize_doctypes()
         self._setup_store_path(store_path)
         self.__system_settings = SystemSettings()
-        self.system_name = self.__system_settings['system']['name']
+        self._system_name = self.__system_settings['system']['name']
 
     def _get_geoip_data_from_ip_address(self, ip_address):
         geoip_dbpath = self.connection_data.get('geoip_dbpath', '')
@@ -269,65 +284,51 @@ class DistributionUGCInterface(Database):
             return True
         return False
 
-    def insert_iddoctype(self, iddoctype, description, do_commit = False):
+    def insert_iddoctype(self, iddoctype, description):
         self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_doctypes VALUES (%s, %s)
         """, (iddoctype, description,))
-        if do_commit:
-            self.commit()
 
-    def insert_pkgkey(self, key, do_commit = False):
+    def insert_pkgkey(self, key):
         self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_base VALUES (%s,%s)
         """, (None, key,))
-        myid = self.lastrowid()
-        if do_commit:
-            self.commit()
-        return myid
+        return self.lastrowid()
 
-    def insert_download(self, key, ddate, count = 0, do_commit = False):
+    def _insert_download(self, idkey, ddate, count = 0):
         self.check_connection()
-        idkey = self.handle_pkgkey(key)
         self.execute_query("""
         INSERT INTO entropy_downloads VALUES (%s,%s,%s,%s)
         """, (None, idkey, ddate, count))
-        myid = self.lastrowid()
-        if do_commit:
-            self.commit()
-        return myid
+        iddownload = self.lastrowid()
+        self.execute_query("""
+        INSERT INTO entropy_total_downloads VALUES (%s,%s,%s)
+        """, (None, idkey, count))
+        # idtotaldownload = self.lastrowid()
+        return iddownload
 
-    def insert_entropy_branch(self, branch, do_commit = False):
+    def insert_entropy_branch(self, branch):
         self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_branches VALUES (%s,%s)
         """, (None, branch,))
-        myid = self.lastrowid()
-        if do_commit:
-            self.commit()
-        return myid
+        return self.lastrowid()
 
-    def insert_entropy_release_string(self, release_string, do_commit = False):
+    def insert_entropy_release_string(self, release_string):
         self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_release_strings VALUES (%s, %s)
         """, (None, release_string,))
-        myid = self.lastrowid()
-        if do_commit:
-            self.commit()
-        return myid
+        return self.lastrowid()
 
-    def insert_entropy_ip_locations_id(self, ip_latitude, ip_longitude,
-        do_commit = False):
+    def insert_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
         self.check_connection()
         self.execute_query("""
         INSERT INTO entropy_ip_locations VALUES (%s, %s, %s)
         """, (None, ip_latitude, ip_longitude,))
-        myid = self.lastrowid()
-        if do_commit:
-            self.commit()
-        return myid
+        return self.lastrowid()
 
     def handle_entropy_ip_locations_id(self, ip_addr):
         entropy_ip_locations_id = 0
@@ -345,27 +346,28 @@ class DistributionUGCInterface(Database):
                         self.insert_entropy_ip_locations_id(ip_lat, ip_long)
         return entropy_ip_locations_id
 
-    def update_download(self, iddownload, do_commit = False):
+    def _update_download(self, iddownload, idkey):
         self.check_connection()
         self.execute_query("""
         UPDATE entropy_downloads SET `count` = `count`+1 WHERE `iddownload` = %s
         """, (iddownload,))
-        if do_commit:
-            self.commit()
-        return iddownload
+        # this doesn't check if a record is already available, but should be
+        # fine
+        # TODO: when the old public interface (repository service) is dropped
+        # move this to a trigger
+        self.execute_query("""
+        UPDATE entropy_total_downloads SET `count` = `count`+1 WHERE `idkey` = %s
+        """, (idkey,))
 
-    def store_download_data(self, iddownloads, ip_addr, do_commit = False):
+    def store_download_data(self, iddownloads, ip_addr):
         entropy_ip_locations_id = self.handle_entropy_ip_locations_id(ip_addr)
         mydata = [(x, ip_addr, entropy_ip_locations_id,) for x in iddownloads]
         self.execute_many("""
         INSERT INTO entropy_downloads_data VALUES (%s,%s,%s)
         """, mydata)
-        if do_commit:
-            self.commit()
 
-    def get_iddownload(self, key, ddate):
+    def _get_iddownload(self, idkey, ddate):
         self.check_connection()
-        idkey = self.handle_pkgkey(key)
         self.execute_query("""
         SELECT `iddownload` FROM entropy_downloads WHERE `idkey` = %s
         AND `ddate` = %s
@@ -550,17 +552,21 @@ class DistributionUGCInterface(Database):
         """
         Retrieve UGC icon URL for package key. URL if found (using store_url),
         None otherwise.
-        FIXME: make it work with icon document type too.
+        TODO: once the repository-manager crap is gone, rename all the
+        image document types containing __icon__ as title to icon type
         """
+        
         self.check_connection()
         self.execute_query("""
         SELECT SQL_CACHE * FROM entropy_docs, entropy_base
         WHERE entropy_base.`idkey` = entropy_docs.`idkey`
         AND entropy_base.`key` = %s
-        AND entropy_docs.iddoctype = %s
-        AND entropy_docs.title = "__icon__"
+        AND ( 
+        ( entropy_docs.iddoctype = %s AND entropy_docs.title = "__icon__"
+        ) OR ( entropy_docs.iddoctype = %s
+        ))
         ORDER BY entropy_docs.ts DESC
-        LIMIT 1""", (pkgkey, self.DOC_TYPES['image']))
+        LIMIT 1""", (pkgkey, self.DOC_TYPES['image'], self.DOC_TYPES['icon']))
         data = self.fetchone() or {}
         icon_path = data.get('ddata')
         if not isinstance(icon_path, const_get_stringtype()) \
@@ -597,7 +603,7 @@ class DistributionUGCInterface(Database):
             data = self.fetchone() or {}
             return {pkgkeys[0]: data.get('avg_vote', None),}
 
-        # performances are the same...
+        # WARNING: SLOW! OPTIMIZE!
         vote_data = self.get_ugc_allvotes()
         vote_data = dict((x, y) for x, y in vote_data.items() if x in pkgkeys)
         return vote_data
@@ -612,31 +618,49 @@ class DistributionUGCInterface(Database):
         """)
         return dict((x['vkey'], x['avg_vote']) for x in self.fetchall())
 
-    def get_ugc_downloads(self, pkgkey):
+    def get_ugc_download(self, pkgkey):
         self.check_connection()
         self.execute_query("""
-        SELECT SQL_CACHE sum(entropy_downloads.`count`) as `tot_downloads` FROM
-        entropy_downloads,entropy_base WHERE entropy_base.key = %s AND 
-        entropy_base.idkey = entropy_downloads.idkey""", (pkgkey,))
+        SELECT SQL_CACHE
+            entropy_total_downloads.`count` AS tot_downloads
+        FROM entropy_total_downloads, entropy_base
+        WHERE
+            entropy_base.idkey = entropy_total_downloads.idkey AND
+            entropy_base.`key` = %s
+        """, (pkgkey,))
         data = self.fetchone() or {}
         downloads = data.get('tot_downloads')
         if not downloads:
             return 0
         return downloads
 
+    def get_ugc_downloads(self, pkgkeys):
+        self.check_connection()
+        if len(pkgkeys) == 1:
+            pkgkey = pkgkeys[0]
+            downloads = self.get_ugc_download(pkgkey)
+            return {pkgkey: downloads,}
+
+        self.execute_query("""
+        SELECT SQL_CACHE
+            entropy_base.`key` as vkey,
+            entropy_total_downloads.`count` AS tot_downloads
+        FROM entropy_total_downloads, entropy_base
+        WHERE
+            entropy_base.idkey = entropy_total_downloads.idkey AND
+            entropy_base.`key` IN %s
+        """, (pkgkeys,))
+        return dict((x['vkey'], x['tot_downloads']) for x in self.fetchall())
+
     def get_ugc_alldownloads(self):
         self.check_connection()
         self.execute_query("""
-        SELECT SQL_CACHE entropy_base.key as vkey,
-            tot_downloads from entropy_base,
-        (
-            SELECT  idkey as idp1,
-                CAST(sum(entropy_downloads.`count`) AS UNSIGNED INTEGER)
-                    AS `tot_downloads`
-            FROM entropy_downloads
-            GROUP BY entropy_downloads.`idkey`
-        ) AS tmp
-            WHERE idkey = tmp.idp1
+        SELECT SQL_CACHE
+            entropy_base.`key` as vkey,
+            entropy_total_downloads.`count` AS tot_downloads
+        FROM entropy_total_downloads, entropy_base
+        WHERE
+            entropy_base.idkey = entropy_total_downloads.idkey
         """)
         raw_data = self.fetchall()
         return dict((x['vkey'], x['tot_downloads'],) for x in raw_data)
@@ -890,7 +914,7 @@ class DistributionUGCInterface(Database):
         return False
 
     def insert_generic_doc(self, idkey, userid, username, doc_type, data,
-        title, description, keywords, do_commit = False):
+        title, description, keywords):
         self.check_connection()
 
         title = title[:self.entropy_docs_title_len]
@@ -905,78 +929,29 @@ class DistributionUGCInterface(Database):
         INSERT INTO entropy_docs VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (None, idkey, userid, username, doc_type, data, title,
                 description, None,))
-        if do_commit:
-            self.commit()
         iddoc = self.lastrowid()
-        self.insert_keywords(iddoc, keywords)
+        self._insert_keywords(iddoc, keywords)
         self.update_user_score(userid)
         return iddoc
 
-    def insert_keywords(self, iddoc, keywords):
-        keywords = keywords.split(",")
-        clean_keys = []
-        for key in keywords:
-            try:
-                key = key.strip().split()[0]
-            except IndexError:
-                continue
-            if not key:
-                continue
-            if not key.isalnum():
-                continue
-            key = key[:self.entropy_docs_keyword_len]
-            if key in clean_keys:
-                continue
-            clean_keys.append(key)
-
-        if not clean_keys:
-            return
-
-        mydata = []
-        for key in clean_keys:
-            mydata.append((iddoc, key,))
-
+    def _insert_keywords(self, iddoc, keywords):
         self.execute_many("""
         INSERT INTO entropy_docs_keywords VALUES (%s,%s)
-        """, mydata)
-
-    def remove_keywords(self, iddoc):
-        self.execute_query("""
-        DELETE FROM entropy_docs_keywords WHERE `iddoc` = %s
-        """, (iddoc,))
+        """, [(iddoc, x) for x in keywords])
 
     def insert_comment(self, pkgkey, userid, username, comment, title,
-        keywords, do_commit = False):
+        keywords):
         self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         iddoc = self.insert_generic_doc(idkey, userid, username,
             self.DOC_TYPES['comments'], comment, title, '', keywords)
         if isinstance(iddoc, const_get_stringtype()):
             return False, iddoc
-        if do_commit:
-            self.commit()
-        return True, iddoc
-
-    def edit_comment(self, iddoc, new_comment, new_title, new_keywords,
-        do_commit = False):
-        self.check_connection()
-        if not self.is_iddoc_available(iddoc):
-            return False
-        new_title = new_title[:self.entropy_docs_title_len]
-        self.execute_query("""
-        UPDATE entropy_docs SET `ddata` = %s, `title` = %s
-        WHERE `iddoc` = %s AND `iddoctype` = %s
-        """, (new_comment, new_title, iddoc, self.DOC_TYPES['comments'],))
-        self.remove_keywords(iddoc)
-        self.insert_keywords(iddoc, new_keywords)
-        if do_commit:
-            self.commit()
         return True, iddoc
 
     def remove_comment(self, iddoc):
         self.check_connection()
         userid = self.get_iddoc_userid(iddoc)
-        self.remove_keywords(iddoc)
         self.execute_query("""
         DELETE FROM entropy_docs WHERE `iddoc` = %s AND `iddoctype` = %s
         """, (iddoc, self.DOC_TYPES['comments'],))
@@ -984,24 +959,22 @@ class DistributionUGCInterface(Database):
             self.update_user_score(userid)
         return True, iddoc
 
-    def do_vote(self, pkgkey, userid, vote, do_commit = False):
+    def do_vote(self, pkgkey, userid, vote):
         self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         vote = int(vote)
         if vote not in self.VOTE_RANGE: # weird
             vote = 3 # avg?
         mydate = self._get_date()
-        if self.has_user_already_voted(pkgkey, userid):
+        if self._has_user_already_voted(pkgkey, userid):
             return False
         self.execute_query("""
         INSERT INTO entropy_votes VALUES (%s,%s,%s,%s,%s,%s)
         """, (None, idkey, userid, mydate, vote, None,))
-        if do_commit:
-            self.commit()
         self.update_user_score(userid)
         return True
 
-    def has_user_already_voted(self, pkgkey, userid):
+    def _has_user_already_voted(self, pkgkey, userid):
         self.check_connection()
         idkey = self.handle_pkgkey(pkgkey)
         self.execute_query("""
@@ -1012,27 +985,26 @@ class DistributionUGCInterface(Database):
             return True
         return False
 
-    def do_downloads(self, pkgkeys, ip_addr = None, do_commit = False):
+    def _do_downloads(self, pkgkeys, ip_addr = None):
         self.check_connection()
         mydate = self._get_date()
         iddownloads = set()
         for pkgkey in pkgkeys:
-            iddownload = self.get_iddownload(pkgkey, mydate)
+            idkey = self.handle_pkgkey(pkgkey)
+            iddownload = self._get_iddownload(idkey, mydate)
             if iddownload == -1:
-                iddownload = self.insert_download(pkgkey, mydate, count = 1)
+                iddownload = self._insert_download(idkey, mydate, count = 1)
             else:
-                self.update_download(iddownload)
+                self._update_download(iddownload, idkey)
             if (iddownload > 0) and isinstance(ip_addr, const_get_stringtype()):
                 iddownloads.add(iddownload)
 
         if iddownloads:
             self.store_download_data(iddownloads, ip_addr)
-        if do_commit:
-            self.commit()
         return True
 
     def do_download_stats(self, branch, release_string, hw_hash, pkgkeys,
-        ip_addr, do_commit = False):
+        ip_addr):
 
         self.check_connection()
         branch_id = self.get_entropy_branches_id(branch)
@@ -1043,7 +1015,7 @@ class DistributionUGCInterface(Database):
         if rel_strings_id == -1:
             rel_strings_id = self.insert_entropy_release_string(release_string)
 
-        self.do_downloads(pkgkeys, ip_addr = ip_addr)
+        self._do_downloads(pkgkeys, ip_addr = ip_addr)
 
         entropy_distribution_usage_id = \
             self.is_user_ip_available_in_entropy_distribution_usage(ip_addr)
@@ -1052,7 +1024,8 @@ class DistributionUGCInterface(Database):
         if self.STATS_MAP['installer'] in pkgkeys:
             hits = 0
         if entropy_distribution_usage_id == -1:
-            entropy_ip_locations_id = self.handle_entropy_ip_locations_id(ip_addr)
+            entropy_ip_locations_id = self.handle_entropy_ip_locations_id(
+                ip_addr)
             self.execute_query("""
             INSERT INTO entropy_distribution_usage
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
@@ -1081,8 +1054,6 @@ class DistributionUGCInterface(Database):
             self.do_entropy_hardware_usage_stats(entropy_distribution_usage_id,
                 hw_hash)
 
-        if do_commit:
-            self.commit()
         return True
 
     def do_entropy_hardware_usage_stats(self, entropy_distribution_usage_id, hw_hash):
@@ -1203,7 +1174,7 @@ class DistributionUGCInterface(Database):
         """, (None, idkey, userid, username, doc_type, file_name,
                 title, description, None,))
         iddoc = self.lastrowid()
-        self.insert_keywords(iddoc, keywords)
+        self._insert_keywords(iddoc, keywords)
         store_url = os.path.basename(dest_path)
         if self.store_url:
             store_url = os.path.join(self.store_url, store_url)
@@ -1212,11 +1183,15 @@ class DistributionUGCInterface(Database):
 
     def insert_image(self, pkgkey, userid, username, image_path, file_name,
             title, description, keywords):
+        if not entropy.tools.is_supported_image_file(image_path):
+            return False, 'not an image'
         return self.insert_generic_file(pkgkey, userid, username, image_path,
             file_name, self.DOC_TYPES['image'], title, description, keywords)
 
     def insert_icon(self, pkgkey, userid, username, image_path, file_name,
             title, description, keywords):
+        if not entropy.tools.is_supported_image_file(image_path):
+            return False, 'not an image'
         return self.insert_generic_file(pkgkey, userid, username, image_path,
             file_name, self.DOC_TYPES['icon'], title, description, keywords)
 
@@ -1253,7 +1228,6 @@ class DistributionUGCInterface(Database):
             if os.path.isfile(mypath) and os.access(mypath, os.W_OK):
                 os.remove(mypath)
 
-        self.remove_keywords(iddoc)
         self.execute_query("""
         DELETE FROM entropy_docs WHERE `iddoc` = %s AND `iddoctype` = %s
         """, (iddoc, doc_type,))
@@ -1291,12 +1265,12 @@ class DistributionUGCInterface(Database):
             return False, None
 
         mykeywords = ', '.join([x.strip().strip(',') for x in \
-            keywords.split() + ["sabayon"] if (x.strip() and x.strip(",") and \
+            keywords + ["sabayon"] if (x.strip() and x.strip(",") and \
                 (len(x.strip()) > 4))])
         gd_keywords = gdata.media.Keywords(text = mykeywords)
 
         mydescription = "%s: %s" % (pkgkey, description,)
-        mytitle = "%s: %s" % (self.system_name, title,)
+        mytitle = "%s: %s" % (self._system_name, title,)
         my_media_group = gdata.media.Group(
             title = gdata.media.Title(text = mytitle),
             description = gdata.media.Description(
@@ -1336,7 +1310,6 @@ class DistributionUGCInterface(Database):
             return False, None
 
         def do_remove():
-            self.remove_keywords(iddoc)
             self.execute_query("""
             DELETE FROM entropy_docs WHERE `iddoc` = %s
             AND `iddoctype` = %s
@@ -1359,11 +1332,13 @@ class DistributionUGCInterface(Database):
             return False, None
 
         video_id = data.get('ddata')
-        try:
-            video_entry = yt_service.GetYouTubeVideoEntry(video_id = video_id)
-            deleted = yt_service.DeleteVideoEntry(video_entry)
-        except:
-            deleted = True
+        video_entry = yt_service.GetYouTubeVideoEntry(video_id = video_id)
+        # workaround broken API
+        video_entry.link[0].rel = "edit"
+        video_entry.link[0].href = \
+            'http://gdata.youtube.com/feeds/api/users/%s/uploads/%s' % (
+                "SabayonChannel", video_id)
+        deleted = yt_service.DeleteVideoEntry(video_entry)
 
         if deleted:
             do_remove()
@@ -1383,8 +1358,6 @@ class DistributionUGCInterface(Database):
         srv.password = self.connection_data['google_password']
         if 'google_developer_key' in self.connection_data:
             srv.developer_key = self.connection_data['google_developer_key']
-        if 'google_client_id' in self.connection_data:
-            srv.client_id = self.connection_data['google_client_id']
         srv.source = 'Entropy'
         srv.ProgrammaticLogin()
         return srv
@@ -1410,7 +1383,7 @@ class UGC(DistributionUGCInterface):
         keywords):
 
         status = False
-        iddoc = _('invalid doc type')
+        iddoc = 'invalid doc type'
 
         if doc_type == self.DOC_TYPES['comments']:
             status, iddoc = self.insert_comment(pkgkey, userid, username,
@@ -1437,7 +1410,7 @@ class UGC(DistributionUGCInterface):
         elif doc_type == self.DOC_TYPES['youtube_video']:
             status, ddata = self.insert_youtube_video(pkgkey, userid, username,
                 file_path, real_filename, title, description, keywords)
-            if isinstance(ddata,tuple):
+            if isinstance(ddata, tuple):
                 iddoc, doc_path = ddata
 
         if isinstance(iddoc, long):
@@ -1448,7 +1421,7 @@ class UGC(DistributionUGCInterface):
     def remove_document_autosense(self, iddoc, doc_type):
 
         status = False
-        r_iddoc = _('type not supported locally')
+        r_iddoc = 'type not supported locally'
 
         if doc_type == self.DOC_TYPES['generic_file']:
             status, r_iddoc = self.delete_file(iddoc)
