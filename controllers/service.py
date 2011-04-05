@@ -21,6 +21,8 @@ from entropy.misc import EmailSender
 import entropy.tools
 import entropy.dep
 
+from datetime import datetime
+
 class ServiceController(BaseController, WebsiteController, ApibaseController):
 
     def __init__(self):
@@ -362,19 +364,38 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             self._validate_repository_id()
         except AttributeError:
             return self._generic_invalid_request()
+        repository_id = self._get_repository_id()
 
-        ugc = None
-        try:
-            ugc = self._ugc()
-            vote_data = ugc.get_ugc_allvotes()
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
+        cached_obj = None
+        cache_key = None
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            # use today date
+            now = datetime.now()
+            date_str = "%s-%s-%s" % (now.year, now.month, now.day)
+            sha.update(repr(date_str))
+            sha.update(repr(repository_id))
+            cache_key = "_get_available_votes_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if cached_obj is None:
+            ugc = None
+            try:
+                ugc = self._ugc()
+                cached_obj = ugc.get_ugc_allvotes()
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         # ok valid
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = vote_data
+        response['r'] = cached_obj
         return self._service_render(response)
 
     def add_vote(self):
@@ -513,19 +534,38 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             self._validate_repository_id()
         except AttributeError:
             return self._generic_invalid_request()
+        repository_id = self._get_repository_id()
 
-        ugc = None
-        try:
-            ugc = self._ugc()
-            down_data = ugc.get_ugc_alldownloads()
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
+        cached_obj = None
+        cache_key = None
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            # use today date
+            now = datetime.now()
+            date_str = "%s-%s-%s" % (now.year, now.month, now.day)
+            sha.update(repr(date_str))
+            sha.update(repr(repository_id))
+            cache_key = "_get_available_downloads_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if cached_obj is None:
+            ugc = None
+            try:
+                ugc = self._ugc()
+                cached_obj = ugc.get_ugc_alldownloads()
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         # ok valid
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = down_data
+        response['r'] = cached_obj
         return self._service_render(response)
 
     def add_document(self):
@@ -900,7 +940,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 continue
             mail_txt += '%s: %s\n' % (key, request.params.get(key),)
 
-        from datetime import datetime
         date = datetime.fromtimestamp(time.time())
 
         # add ip address
