@@ -101,6 +101,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             raise AttributeError("no package_names")
 
         package_names = package_names.split()
+        if len(package_names) > 200:
+            # WTF !?!?!?!
+            raise AttributeError("wtf too big")
         # validate package_names
         try:
             self._validate_package_names(package_names)
