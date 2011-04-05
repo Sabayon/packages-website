@@ -184,7 +184,7 @@ class DistributionUGCInterface(Database):
 
         if store_url is None:
             store_url = ""
-        self.store_url = store_url
+        self._store_url = store_url
         self.FLOOD_INTERVAL = 30
         self.DOC_TYPES = {
             'comments': Document.COMMENT_TYPE_ID,
@@ -459,7 +459,7 @@ class DistributionUGCInterface(Database):
                 mydict['size'] = entropy.tools.get_file_size(mypath)
             except OSError:
                 pass
-            mydict['store_url'] = os.path.join(self.store_url, myfilename)
+            mydict['store_url'] = os.path.join(self._store_url, myfilename)
         return mydict
 
     def get_ugc_icon(self, pkgkey):
@@ -486,7 +486,7 @@ class DistributionUGCInterface(Database):
             and (icon_path is not None):
             icon_path = icon_path.tostring()
         if icon_path is not None:
-            icon_path = os.path.join(self.store_url, icon_path.lstrip("/"))
+            icon_path = os.path.join(self._store_url, icon_path.lstrip("/"))
         return icon_path
 
     def get_ugc_vote(self, pkgkey):
@@ -508,21 +508,26 @@ class DistributionUGCInterface(Database):
             # a new vote and wants to get back his value
             self.execute_query("""
             SELECT SQL_CACHE avg(entropy_votes.`vote`) as avg_vote
-            FROM entropy_votes,entropy_base WHERE 
-            entropy_base.`key` = %s AND 
-            entropy_base.idkey = entropy_votes.idkey""", (pkgkeys[0],))
+            FROM entropy_votes, entropy_base WHERE 
+            entropy_base.idkey = entropy_votes.idkey
+            AND entropy_base.`key` = %s""", (pkgkeys[0],))
             data = self.fetchone() or {}
             return {pkgkeys[0]: data.get('avg_vote', None),}
 
-        # WARNING: SLOW! OPTIMIZE!
-        vote_data = self.get_ugc_allvotes()
-        vote_data = dict((x, y) for x, y in vote_data.items() if x in pkgkeys)
-        return vote_data
+        self.execute_query("""
+        SELECT SQL_CACHE entropy_base.`key` as `vkey`,
+        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM 
+        entropy_votes,entropy_base WHERE 
+        entropy_votes.`idkey` = entropy_base.`idkey` AND
+        entropy_base.`key` IN %s
+        GROUP BY entropy_base.`key`
+        """, (pkgkeys,))
+        return dict((x['vkey'], x['avg_vote']) for x in self.fetchall())
 
     def get_ugc_allvotes(self):
         self.execute_query("""
         SELECT SQL_CACHE entropy_base.`key` as `vkey`,
-        avg(entropy_votes.vote) as `avg_vote` FROM 
+        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM 
         entropy_votes,entropy_base WHERE 
         entropy_votes.`idkey` = entropy_base.`idkey` GROUP BY entropy_base.`key`
         """)
@@ -600,9 +605,15 @@ class DistributionUGCInterface(Database):
         return False
 
     def _calculate_user_score(self, userid):
-        comments = self._get_user_comments_count(userid)
-        docs = self._get_user_docs_count(userid)
-        votes = self._get_user_votes_count(userid)
+        docs_cnts = self._get_user_doctypes_count(userid)
+        votes, votes_avg = self._get_user_votes_stats(userid)
+        comments = 0
+        docs = 0
+        for key, val in docs_cnts.items():
+            if key == self.DOC_TYPES['comments']:
+                comments += val
+            else:
+                docs += val
         return (comments*self.COMMENTS_SCORE_WEIGHT) + \
             (docs*self.DOCS_SCORE_WEIGHT) + \
             (votes*self.VOTES_SCORE_WEIGHT)
@@ -630,16 +641,6 @@ class DistributionUGCInterface(Database):
             myscore = self._update_user_score(userid)
         return myscore
 
-    def _get_user_votes_average(self, userid):
-        self.execute_query("""
-        SELECT avg(`vote`) as vote_avg FROM entropy_votes WHERE `userid` = %s
-        """, (userid,))
-        data = self.fetchone() or {}
-        vote_avg = data.get('vote_avg', 0.0)
-        if not vote_avg:
-            return 0.0
-        return round(float(vote_avg), 2)
-
     def _get_user_generic_doctype_count(self, userid, doctype,
         doctype_sql_cmp = "="):
         self.execute_query("""
@@ -649,48 +650,34 @@ class DistributionUGCInterface(Database):
         data = self.fetchone() or {}
         return data.get('docs', 0)
 
-    def _get_user_comments_count(self, userid):
-        return self._get_user_generic_doctype_count(userid,
-            self.DOC_TYPES['comments'])
-
-    def _get_user_docs_count(self, userid):
-        return self._get_user_generic_doctype_count(userid,
-            self.DOC_TYPES['comments'], doctype_sql_cmp = "!=")
-
-    def _get_user_images_count(self, userid):
-        return self._get_user_generic_doctype_count(userid,
-            self.DOC_TYPES['image'])
-
-    def _get_user_files_count(self, userid):
-        return self._get_user_generic_doctype_count(userid,
-            self.DOC_TYPES['generic_file'])
-
-    def _get_user_yt_videos_count(self, userid):
-        return self._get_user_generic_doctype_count(userid,
-            self.DOC_TYPES['youtube_video'])
-
-    def _get_user_votes_count(self, userid):
+    def _get_user_doctypes_count(self, userid):
         self.execute_query("""
-        SELECT count(`idvote`) as votes FROM entropy_votes WHERE `userid` = %s
+        SELECT iddoctype, count(`iddoc`) as docs
+        FROM entropy_docs WHERE `userid` = %s GROUP BY iddoctype
         """, (userid,))
+        return dict((x['iddoctype'], x['docs']) for x in self.fetchall())
+
+    def _get_user_votes_stats(self, userid):
+        self.execute_query("""
+        SELECT count(`idvote`) as votes, round(avg(`vote`), 2) as vote_avg
+        FROM entropy_votes WHERE `userid` = %s""", (userid,))
         data = self.fetchone() or {}
-        votes = data.get('votes', 0)
-        if votes is None:
-            votes = 0
-        return votes
+        return data.get('votes', 0), data.get('votes_avg', 0.0)
 
     def get_user_stats(self, userid):
+
         mydict = {}
-        mydict['comments'] = self._get_user_comments_count(userid)
-        mydict['docs'] = self._get_user_docs_count(userid)
-        mydict['images'] = self._get_user_images_count(userid)
-        mydict['files'] = self._get_user_files_count(userid)
-        mydict['yt_videos'] = self._get_user_yt_videos_count(userid)
-        mydict['votes'] = self._get_user_votes_count(userid)
-        mydict['votes_avg'] = self._get_user_votes_average(userid)
+        data = self._get_user_doctypes_count(userid)
+        mydict['comments'] = data.get(self.DOC_TYPES['comments'], 0)
+        mydict['images'] = data.get(self.DOC_TYPES['image'], 0)
+        mydict['files'] = data.get(self.DOC_TYPES['generic_file'], 0)
+        mydict['yt_videos'] = data.get(self.DOC_TYPES['youtube_video'], 0)
+        mydict['docs'] = mydict['images'] + mydict['files'] + \
+            mydict['yt_videos']
+        mydict['votes'], mydict['votes_avg'] = self._get_user_votes_stats(
+            userid)
         mydict['total_docs'] = mydict['comments'] + mydict['docs']
         mydict['score'] = self.get_user_score(userid)
-        mydict['ranking'] = self._get_user_score_ranking(userid)
         return mydict
 
     def _handle_pkgkey(self, key):
@@ -703,7 +690,9 @@ class DistributionUGCInterface(Database):
         return idkey
 
     def insert_flood_control_check(self, userid):
-        self.execute_query('SELECT max(`ts`) as ts FROM entropy_docs WHERE `userid` = %s', (userid,))
+        self.execute_query("""
+        SELECT max(`ts`) as ts FROM entropy_docs WHERE `userid` = %s
+        """, (userid,))
         data = self.fetchone()
         if not data:
             return False
@@ -968,8 +957,8 @@ class DistributionUGCInterface(Database):
         iddoc = self.lastrowid()
         self._insert_keywords(iddoc, keywords)
         store_url = os.path.basename(dest_path)
-        if self.store_url:
-            store_url = os.path.join(self.store_url, store_url)
+        if self._store_url:
+            store_url = os.path.join(self._store_url, store_url)
         self._update_user_score(userid)
         return True, (iddoc, store_url)
 
