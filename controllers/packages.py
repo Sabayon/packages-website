@@ -1353,9 +1353,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         try:
             ugc_doctype = int(request.params.get('ugc_doctype'))
             if ugc_doctype not in c.ugc_doctypes_desc_singular:
-                error = True
+                return ""
         except (ValueError,TypeError,):
-            error = True
+            return ""
 
         c.title = request.params.get('title')
 
@@ -1363,7 +1363,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             keywords_fmt = self._api_get_keywords()
             c.keywords = request.params.get('keywords')
         except AttributeError:
-            error = True
+            return ""
 
         c.description = request.params.get('description')
         if c.description == "undefined":
@@ -1372,26 +1372,24 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         try:
             self._validate_package_names([pkgkey])
         except AttributeError:
-            error = True
+            return ""
 
         atom = request.params.get('atom')
         repoid = request.params.get('repoid')
         if not (pkgkey and atom and repoid):
-            error = True
+            return ""
 
+        
         product = request.params.get('product')
         arch = request.params.get('arch')
         if product not in model.config.available_products:
-            error = True
+            return ""
 
         entropy = self._entropy()
-        if not error:
-            arches = self._get_available_arches(entropy, repoid, product)
-            if arch not in arches:
-                error = True
+        arches = self._get_available_arches(entropy, repoid, product)
+        if arch not in arches:
+            return ""
 
-        if error:
-            return ''
         c.ugc_doctype = ugc_doctype
         c.repoid = repoid
         c.arch = arch
