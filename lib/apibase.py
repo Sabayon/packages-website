@@ -75,6 +75,8 @@ class ApibaseController:
         @raise AttributeError: if invalid
         """
         for package_name in package_names:
+            if not package_name:
+                raise AttributeError("invalid package name")
             if not entropy_tools.validate_package_name(package_name):
                 raise AttributeError("invalid package name")
 
@@ -86,6 +88,8 @@ class ApibaseController:
         """
         key_re = re.compile('[a-zA-Z0-9\-\+]+$')
         for keyword in keywords:
+            if not keyword:
+                raise AttributeError("invalid keyword")
             if not key_re.match(keyword):
                 raise AttributeError("invalid keyword detected")
             if len(keyword) < 2:
