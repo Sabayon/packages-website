@@ -484,7 +484,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
     def add_downloads(self):
         """
-        Add vote for package. This method requires authentication.
+        Add downloads stats for package.
         """
         try:
             self._validate_repository_id()
@@ -517,12 +517,21 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if not entropy.tools.is_valid_string(hw_hash):
             return self._generic_invalid_request()
 
-        # try to match
-        entropy_client = self._entropy()
-        avail = self._api_are_matches_available(entropy_client, package_names)
-        if not avail:
-            return self._generic_invalid_request(
-                message = "invalid packages")
+        are_repos = False
+        if len(package_names) < 10:
+            are_repos = True
+            for package_name in package_names:
+                if package_name not in self._supported_repository_ids:
+                    are_repos = False
+                    break
+
+        if not are_repos:
+            # validate package names
+            entropy_client = self._entropy()
+            avail = self._api_are_matches_available(entropy_client, package_names)
+            if not avail:
+                return self._generic_invalid_request(
+                    message = "invalid packages")
 
         ip_addr = request.environ.get('REMOTE_ADDR')
 
