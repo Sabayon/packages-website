@@ -427,6 +427,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except ValueError:
             return self._generic_invalid_request()
 
+        # try to match
+        entropy_client = self._entropy()
+        matches = self._api_search_match(entropy_client, package_name)
+        if not matches:
+            return self._generic_invalid_request(
+                message = "invalid package")
+
         ugc = None
         try:
             ugc = self._ugc()
