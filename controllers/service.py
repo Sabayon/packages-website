@@ -431,6 +431,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             ugc = self._ugc()
             voted = ugc.do_vote(package_name, user_id, vote)
+            if voted:
+                ugc.commit()
         finally:
             if ugc is not None:
                 ugc.disconnect()
