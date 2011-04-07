@@ -876,6 +876,37 @@ class ApibaseController:
                     repo.close()
         return data
 
+    def _api_are_matches_available(self, entropy, packages):
+        """
+        Match each package against the currently configured repositories,
+        return True if all of them are available somewhere.
+
+        @param packages: list of package strings
+        @type packages: list
+        @return: True, if all the packages are available
+        @rtype: bool
+        """
+        valid_repos = self._api_get_valid_repositories(entropy)
+        current_set = set(packages)
+        for repository_id, arch, branch, product in valid_repos:
+            if not current_set:
+                break
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                product)
+            try:
+                if repo is not None:
+                    matched_set = set()
+                    for package in current_set:
+                        pkg_id, rc = repo.atomMatch(package)
+                        if rc == 0:
+                            matched_set.add(package)
+                    current_set -= matched_set
+            finally:
+                if repo is not None:
+                    repo.close()
+
+        return not current_set
+
     def _api_get_similar_packages(self, entropy, q, filter_cb = None):
         """
         Return a list of similar package tuples given search term "q".

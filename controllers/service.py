@@ -429,8 +429,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         # try to match
         entropy_client = self._entropy()
-        matches = self._api_search_match(entropy_client, package_name)
-        if not matches:
+        avail = self._api_are_matches_available(entropy_client, [package_name])
+        if not avail:
             return self._generic_invalid_request(
                 message = "invalid package")
 
@@ -516,6 +516,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             return self._generic_invalid_request()
         if not entropy.tools.is_valid_string(hw_hash):
             return self._generic_invalid_request()
+
+        # try to match
+        entropy_client = self._entropy()
+        avail = self._api_are_matches_available(entropy_client, package_names)
+        if not avail:
+            return self._generic_invalid_request(
+                message = "invalid packages")
 
         ip_addr = request.environ.get('REMOTE_ADDR')
 
@@ -611,6 +618,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except AttributeError:
             return self._generic_invalid_request(
                 code = WebService.WEB_SERVICE_INVALID_CREDENTIALS_CODE)
+
+        # try to match
+        entropy_client = self._entropy()
+        avail = self._api_are_matches_available(entropy_client, [package_name])
+        if not avail:
+            return self._generic_invalid_request(
+                message = "invalid package")
 
         action_map = {
             Document.COMMENT_TYPE_ID: self._add_comment,
