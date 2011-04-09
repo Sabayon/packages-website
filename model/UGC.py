@@ -394,13 +394,25 @@ class DistributionUGCInterface(Database):
 
     def get_ugc_metadata_doctypes(self, pkgkey, typeslist, offset = 0,
         length = 100):
+
+        # FIXME TODO: remove in future
+        # backward icon type compatibility
+        extra_sql = ""
+        if Document.ICON_TYPE_ID in typeslist:
+            extra_sql = """
+            OR (
+                entropy_docs.`iddoctype` = %s AND
+                entropy_docs.title = "__icon__"
+            )
+            """ % (Document.IMAGE_TYPE_ID,)
+
         if len(typeslist) == 1:
             self.execute_query("""
                 SELECT SQL_CACHE SQL_CALC_FOUND_ROWS *
                 FROM entropy_docs, entropy_base WHERE 
                 entropy_docs.`idkey` = entropy_base.`idkey` AND 
                 entropy_base.`key` = %s AND 
-                entropy_docs.`iddoctype` = %s 
+                ( entropy_docs.`iddoctype` = %s """+extra_sql+"""  )
                 ORDER BY entropy_docs.`ts` ASC
                 LIMIT %s, %s""", (pkgkey, typeslist[0], offset, length,))
         else:
@@ -409,7 +421,7 @@ class DistributionUGCInterface(Database):
                 FROM entropy_docs,entropy_base WHERE 
                 entropy_docs.`idkey` = entropy_base.`idkey` AND 
                 entropy_base.`key` = %s AND 
-                entropy_docs.`iddoctype` IN %s 
+                ( entropy_docs.`iddoctype` IN %s """+extra_sql+""" )
                 ORDER BY entropy_docs.`ts` ASC
                 LIMIT %s, %s""", (pkgkey, typeslist, offset, length,))
 
