@@ -195,6 +195,7 @@ class DistributionUGCInterface(Database):
         }
         self.UPLOADED_DOC_TYPES = [
             self.DOC_TYPES['image'],
+            self.DOC_TYPES['icon'],
             self.DOC_TYPES['generic_file']
         ]
         Database.__init__(self)
