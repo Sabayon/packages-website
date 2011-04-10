@@ -614,14 +614,15 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             self._validate_repository_id(repository_id = repository_id)
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid repository")
 
         # document id is ignored, since this is an "add"
         # get document_type_id
         try:
             document_type_id = self._get_document_type_id()
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(
+                message = "invalid document type")
 
         try:
             username, user_id = self._try_auth_login()
@@ -647,7 +648,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         func = action_map.get(document_type_id)
         if func is None:
             # unsupported !
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(
+                message = "invalid document type request")
         return func(package_name, document_type_id, username, user_id)
 
     def _add_document_get_comment(self, req_field):
@@ -694,18 +696,18 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             comment = self._add_document_get_comment(Document.DOCUMENT_DATA_ID)
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid comment")
 
         try:
             title = self._add_document_get_title(Document.DOCUMENT_TITLE_ID)
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid title")
 
         try:
             keywords = self._api_get_keywords()
         except AttributeError:
             # invalid keywords
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid keywords")
 
         doc = None
         ugc = None
@@ -720,7 +722,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 try:
                     docs = self._ugc_document_data_to_document(raw_docs)
                 except AttributeError:
-                    return self._generic_invalid_request()
+                    return self._generic_invalid_request(
+                        message = "invalid conversion")
                 doc = docs[0]
         finally:
             if ugc is not None:
@@ -777,19 +780,20 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             title = self._add_document_get_title(Document.DOCUMENT_TITLE_ID)
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid title")
 
         try:
             description = self._add_document_get_description(
                 Document.DOCUMENT_DESCRIPTION_ID)
         except AttributeError:
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(
+                message = "invalid description")
 
         try:
             keywords = self._api_get_keywords()
         except AttributeError:
             # invalid keywords
-            return self._generic_invalid_request()
+            return self._generic_invalid_request(message = "invalid keywords")
 
         # get payload data
         try:
@@ -810,14 +814,15 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             if not status:
                 if isinstance(iddoc, const_get_stringtype()):
                     return self._generic_invalid_request(message = iddoc)
-                return self._generic_invalid_request()
+                return self._generic_invalid_request(message = "upload failed")
 
             ugc.commit()
             raw_docs = ugc.get_ugc_metadata_by_identifiers([iddoc])
             try:
                 docs = self._ugc_document_data_to_document(raw_docs)
             except AttributeError:
-                return self._generic_invalid_request()
+                return self._generic_invalid_request(
+                    message = "conversion error")
             doc = docs[0]
         finally:
             # not really atomic actually
