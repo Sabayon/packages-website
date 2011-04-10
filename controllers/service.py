@@ -372,7 +372,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha = hashlib.sha1()
             # use today date
             now = datetime.now()
-            date_str = "%s-%s-%s" % (now.year, now.month, now.day)
+            # update hourly !!
+            date_str = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.hour)
             sha.update(repr(date_str))
             sha.update(repr(repository_id))
             cache_key = "_get_available_votes_" + sha.hexdigest()
