@@ -123,7 +123,7 @@ class ApibaseController:
         keywords = (request.params.get(Document.DOCUMENT_KEYWORDS_ID) or \
             "").strip().split()
         if not keywords:
-            raise AttributeError("no keywords")
+            return []
         # validate each keyword
         try:
             self._validate_keywords(keywords)
