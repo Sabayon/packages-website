@@ -519,12 +519,18 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             return self._generic_invalid_request()
 
         are_repos = False
-        if len(package_names) < 10:
+        if (len(package_names) == 1) and ("installer" in package_names):
+            # Support for our Installer
             are_repos = True
-            for package_name in package_names:
-                if package_name not in self._supported_repository_ids:
-                    are_repos = False
-                    break
+
+        if not are_repos:
+            are_repos = False
+            if len(package_names) < 10:
+                are_repos = True
+                for package_name in package_names:
+                    if package_name not in self._supported_repository_ids:
+                        are_repos = False
+                        break
 
         if not are_repos:
             # validate package names
