@@ -982,7 +982,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         for key in sorted(request.params):
             if key in keys_to_file:
                 continue
-            mail_txt += '%s: %s\n' % (key, request.params.get(key),)
+            req_obj = request.params.get(key)
+            if req_obj is None:
+                continue
+            if isinstance(req_obj, cgi.FieldStorage):
+                mail_txt += '%s: %s\n' % (key, req_obj.file.read(),)
+            else:
+                mail_txt += '%s: %s\n' % (key, request.params.get(key),)
 
         date = datetime.fromtimestamp(time.time())
 
@@ -994,16 +1000,17 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         files = []
         rm_paths = []
         for key in keys_to_file:
-            if key not in request.params:
+            val = request.params.get(key)
+            if val is None:
                 continue
+            if isinstance(val, cgi.FieldStorage):
+                val = val.file.read()
 
             fd, path = tempfile.mkstemp(suffix = "__%s.txt" % (key,))
             try:
                 with os.fdopen(fd, "wb") as f_path:
-                    f_path.write(request.params.get(key, ''))
+                    f_path.write(val)
                     f_path.flush()
-            except IOError:
-                continue
             finally:
                 rm_paths.append(path)
 
