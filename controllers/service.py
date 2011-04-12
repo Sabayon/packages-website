@@ -12,7 +12,8 @@ from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
 
-from entropy.const import const_convert_to_rawstring, const_get_stringtype
+from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
+    etpConst
 from entropy.services.client import WebService
 from entropy.client.services.interfaces import ClientWebService, Document, \
     DocumentFactory
@@ -185,6 +186,26 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             raise AttributeError("document ids are invalid (2)")
 
         return document_ids
+
+    def _get_package_ids(self):
+        """
+        Get Entropy Package ids from HTTP request data.
+        """
+        package_ids = (request.params.get("package_ids") or \
+            "").strip().split()
+        if not package_ids:
+            raise AttributeError("package ids not found")
+        try:
+            package_ids = [int(x) for x in package_ids]
+        except (ValueError, TypeError):
+            raise AttributeError("package ids are invalid")
+
+        # check data
+        invalid_ints = [x for x in package_ids if x < 1]
+        if invalid_ints:
+            raise AttributeError("package ids are invalid (2)")
+
+        return package_ids
 
     def _get_document_id(self):
         """
@@ -1029,3 +1050,206 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
+    def _reposerv_get_params(self, entropy_client):
+        """
+        Read from HTTP Request the following parameters:
+        - arch = architecture
+        - product = product
+        - branch = branch
+        - __repository_id__ = repository
+        """
+        # arch
+        a = request.params.get('arch')
+        if a not in model.config.available_arches:
+            raise AssertionError("invalid architecture")
+
+        # product
+        p = request.params.get('product')
+        if p not in model.config.available_products:
+            raise AssertionError("invalid product")
+
+        avail_repos = self._get_available_repositories(entropy_client, p, a)
+        # repository
+        r = self._get_repository_id()
+        if r not in avail_repos:
+            raise AssertionError("invalid repository identifier")
+
+        # validate arch
+        avail_arches = self._get_available_arches(entropy_client, r, p)
+        if a not in avail_arches:
+            raise AssertionError("invalid architecture (2)")
+
+        # validate branch
+        b = request.params.get('branch')
+        if b not in self._get_available_branches(entropy_client, r, p):
+            raise AssertionError("invalid branches")
+
+        return r, a, b, p
+
+    def repository_service_available(self):
+        """
+        Inform caller that we are up and running, ready to accept repository
+        metadata requests.
+        """
+        try:
+            self._validate_repository_id()
+        except AttributeError:
+            return self._generic_invalid_request()
+
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = True
+        return self._service_render(response)
+
+    def _reposerv_get_revision(self, entropy_client, r, a, b, p):
+        """
+        Get repository revision.
+        """
+        dir_path = entropy_client._guess_repo_db_path(r, a, p, b)
+        if dir_path is None:
+            return "-1"
+        revision_path = os.path.join(dir_path,
+            etpConst['etpdatabaserevisionfile'])
+        try:
+            with open(revision_path, "r") as rev_f:
+                return rev_f.readline().strip()
+        except (IOError, OSError):
+            return "-1"
+
+    def get_repository_metadata(self):
+        """
+        Get Repository Metadata.
+        """
+        entropy_client = self._entropy()
+        try:
+            r, a, b, p = self._reposerv_get_params(entropy_client)
+        except AssertionError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        repo = None
+        try:
+            repo = self._api_get_repo(entropy_client, r, a, b, p)
+            if repo is None:
+                return self._generic_invalid_request(
+                    message = "unavailable repository")
+            meta = {
+                'sets': list(repo.retrievePackageSets()),
+                'treeupdates_actions': repo.listAllTreeUpdatesActions(),
+                'treeupdates_digest': repo.retrieveRepositoryUpdatesDigest(r),
+                'revision': self._reposerv_get_revision(
+                    entropy_client, r, a, b, p),
+                'checksum': repo.checksum(do_order = True,
+                    strict = False, strings = True,
+                    include_signatures = True),
+            }
+            response = self._api_base_response(
+                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+            response['r'] = meta
+            return self._service_render(response)
+        finally:
+            if repo is not None:
+                repo.close()
+
+    def get_package_ids(self):
+        """
+        Get Package Identifiers available inside repository.
+        """
+        entropy_client = self._entropy()
+        try:
+            r, a, b, p = self._reposerv_get_params(entropy_client)
+        except AssertionError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        repo = None
+        try:
+            repo = self._api_get_repo(entropy_client, r, a, b, p)
+            if repo is None:
+                return self._generic_invalid_request(
+                    message = "unavailable repository")
+            package_ids = repo.listAllPackageIds(order_by = "package_id")
+            response = self._api_base_response(
+                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+            response['r'] = package_ids
+            return self._service_render(response)
+        finally:
+            if repo is not None:
+                repo.close()
+
+    def _reposerv_json_pkg_data(self, pkg_data):
+        """
+        Convert Entropy Package Metadata dict to a more json friendly format.
+        """
+        def _do_convert_from_set(obj):
+            new_obj = []
+            for sub in obj:
+                if isinstance(sub, (tuple, list, set, frozenset)):
+                    sub = _do_convert_from_set(sub)
+                elif isinstance(sub, dict):
+                    sub = _do_convert_dict(sub)
+                new_obj.append(sub)
+            return new_obj
+
+        def _do_convert_dict(d):
+            for k, v in list(d.items()):
+                if isinstance(v, (tuple, list, set, frozenset)):
+                    # this changes the data pointed at pkg_data
+                    d[k] = _do_convert_from_set(v)
+                elif isinstance(v, dict):
+                    d[k] = _do_convert_dict(v)
+            return d
+
+        return _do_convert_dict(pkg_data)
+
+    def get_packages_metadata(self):
+        """
+        Get Package Identifiers available inside repository.
+        """
+        entropy_client = self._entropy()
+        try:
+            r, a, b, p = self._reposerv_get_params(entropy_client)
+        except AssertionError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        try:
+            package_ids = self._get_package_ids()
+        except AttributeError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        repo = None
+        try:
+            repo = self._api_get_repo(entropy_client, r, a, b, p)
+            if repo is None:
+                return self._generic_invalid_request(
+                    message = "unavailable repository")
+            package_list = []
+            for package_id in package_ids:
+                pkg_meta = repo.getPackageData(package_id)
+                if pkg_meta is None:
+                    # request is out of sync, we can abort everything
+                    return self._generic_invalid_request(
+                        message = "requesting unavailable packages")
+                self._reposerv_json_pkg_data(pkg_meta)
+                package_list.append(pkg_meta)
+            response = self._api_base_response(
+                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+            response['r'] = package_list
+            return self._service_render(response)
+        finally:
+            if repo is not None:
+                repo.close()
+
+    def repository_revision(self):
+        """
+        Return the current repository revision.
+        """
+        entropy_client = self._entropy()
+        try:
+            r, a, b, p = self._reposerv_get_params(entropy_client)
+        except AssertionError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        revision = self._reposerv_get_revision(entropy_client, r, a, b, p)
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = revision
+        return self._service_render(response)
