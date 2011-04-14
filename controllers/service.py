@@ -1223,7 +1223,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     message = "unavailable repository")
             package_list = []
             for package_id in package_ids:
-                pkg_meta = repo.getPackageData(package_id)
+                pkg_meta = repo.getPackageData(package_id,
+                    content_insert_formatted = True,
+                    get_content = False, get_changelog = False)
                 if pkg_meta is None:
                     # request is out of sync, we can abort everything
                     return self._generic_invalid_request(
