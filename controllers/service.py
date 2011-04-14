@@ -16,7 +16,7 @@ from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
     etpConst
 from entropy.services.client import WebService
 from entropy.client.services.interfaces import ClientWebService, Document, \
-    DocumentFactory
+    DocumentFactory, RepositoryWebService
 from entropy.misc import EmailSender
 
 import entropy.tools
@@ -1216,30 +1216,56 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except AttributeError as err:
             return self._generic_invalid_request(message = str(err))
 
-        repo = None
-        try:
-            repo = self._api_get_repo(entropy_client, r, a, b, p)
-            if repo is None:
-                return self._generic_invalid_request(
-                    message = "unavailable repository")
-            package_meta = {}
-            for package_id in package_ids:
-                pkg_meta = repo.getPackageData(package_id,
-                    content_insert_formatted = True,
-                    get_content = False, get_changelog = False)
-                if pkg_meta is None:
-                    # request is out of sync, we can abort everything
+        if len(package_ids) > RepositoryWebService.MAXIMUM_PACKAGE_REQUEST_SIZE:
+            return self._generic_invalid_request(
+                message = "too many package_ids")
+        package_ids = sorted(package_ids)
+
+        cached_obj = None
+        if model.config.WEBSITE_CACHING:
+            sha = hashlib.sha1()
+            sha.update(repr(self._get_valid_repository_mtime(entropy_client,
+                r, a, b, p)))
+            sha.update(repr(package_ids))
+            sha.update(r)
+            sha.update(a)
+            sha.update(b)
+            sha.update(p)
+            cache_key = "_service_get_packages_metadata_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if cached_obj is None:
+
+            repo = None
+            try:
+                repo = self._api_get_repo(entropy_client, r, a, b, p)
+                if repo is None:
                     return self._generic_invalid_request(
-                        message = "requesting unavailable packages")
-                self._reposerv_json_pkg_data(pkg_meta)
-                package_meta[package_id] = pkg_meta
-            response = self._api_base_response(
-                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-            response['r'] = package_meta
-            return self._service_render(response)
-        finally:
-            if repo is not None:
-                repo.close()
+                        message = "unavailable repository")
+                cached_obj = {}
+                for package_id in package_ids:
+                    pkg_meta = repo.getPackageData(package_id,
+                        content_insert_formatted = True,
+                        get_content = False, get_changelog = False)
+                    if pkg_meta is None:
+                        # request is out of sync, we can abort everything
+                        return self._generic_invalid_request(
+                            message = "requesting unavailable packages")
+                    self._reposerv_json_pkg_data(pkg_meta)
+                    cached_obj[package_id] = pkg_meta
+            finally:
+                if repo is not None:
+                    repo.close()
+
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = cached_obj
+        return self._service_render(response)
 
     def repository_revision(self):
         """
