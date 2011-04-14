@@ -1134,7 +1134,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     message = "unavailable repository")
             meta = {
                 'sets': dict((x, list(y)) for x, y in \
-                    repo.retrievePackageSets()),
+                    repo.retrievePackageSets().items()),
                 'treeupdates_actions': repo.listAllTreeUpdatesActions(),
                 'treeupdates_digest': repo.retrieveRepositoryUpdatesDigest(r),
                 'revision': self._reposerv_get_revision(
