@@ -1221,7 +1221,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             if repo is None:
                 return self._generic_invalid_request(
                     message = "unavailable repository")
-            package_list = []
+            package_meta = {}
             for package_id in package_ids:
                 pkg_meta = repo.getPackageData(package_id,
                     content_insert_formatted = True,
@@ -1231,10 +1231,10 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     return self._generic_invalid_request(
                         message = "requesting unavailable packages")
                 self._reposerv_json_pkg_data(pkg_meta)
-                package_list.append(pkg_meta)
+                package_meta[package_id] = pkg_meta
             response = self._api_base_response(
                 WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-            response['r'] = package_list
+            response['r'] = package_meta
             return self._service_render(response)
         finally:
             if repo is not None:
