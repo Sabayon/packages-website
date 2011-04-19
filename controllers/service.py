@@ -561,7 +561,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 return self._generic_invalid_request(
                     message = "invalid packages")
 
-        ip_addr = request.environ.get('REMOTE_ADDR')
+        ip_addr = self._get_ip_address(request)
 
         ugc = None
         try:
@@ -1014,7 +1014,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         date = datetime.fromtimestamp(time.time())
 
         # add ip address
-        ip_addr = request.environ.get('REMOTE_ADDR')
+        ip_addr = self._get_ip_address(request)
         mail_txt += 'ip_address: %s\n' % (ip_addr,)
         mail_txt += 'date: %s\n' % (date,)
 
