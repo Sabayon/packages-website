@@ -876,6 +876,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             self._validate_repository_id()
         except AttributeError:
             return self._generic_invalid_request()
+        repository_id = self._get_repository_id()
 
         try:
             package_names = self._get_package_names()
@@ -892,42 +893,64 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             # get all the docs, if no filter is set
             document_types.extend(Document.SUPPORTED_TYPES)
 
-        # validate offset, if any
-        offset = request.params.get("offset")
-        if not offset:
-            offset = 0
-        else:
-            try:
-                offset = int(offset)
-            except (TypeError, ValueError):
+        # get cached?
+        cache = request.params.get("cache")
+        if cache:
+            cache = cache and model.config.WEBSITE_CACHING
+
+        cached_obj = None
+        cache_key = None
+        if cache:
+            sha = hashlib.sha1()
+            sha.update(repr(package_names))
+            sha.update(repr(repository_id))
+            sha.update(repr(document_types))
+            cache_key = "_service_get_documents_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        if cached_obj is None:
+            # validate offset, if any
+            offset = request.params.get("offset")
+            if not offset:
                 offset = 0
-
-        chunk_size = 15
-
-        data = {}
-        ugc = None
-        try:
-            ugc = self._ugc()
-            for package_name in package_names:
-                total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
-                    package_name, document_types, offset = offset,
-                    length = chunk_size)
-                total = len(pkg_data_list)
+            else:
                 try:
-                    docs = self._ugc_document_data_to_document(pkg_data_list)
-                except AttributeError:
-                    return self._generic_invalid_request()
-                data[package_name] = {
-                    'total': total,
-                    'docs': docs,
-                }
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
+                    offset = int(offset)
+                except (TypeError, ValueError):
+                    offset = 0
+
+            chunk_size = 15
+
+            data = {}
+            ugc = None
+            try:
+                ugc = self._ugc()
+                for package_name in package_names:
+                    total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
+                        package_name, document_types, offset = offset,
+                        length = chunk_size)
+                    total = len(pkg_data_list)
+                    try:
+                        docs = self._ugc_document_data_to_document(pkg_data_list)
+                    except AttributeError:
+                        return self._generic_invalid_request()
+                    data[package_name] = {
+                        'total': total,
+                        'docs': docs,
+                    }
+                cached_obj = data
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+
+            if cache and (cached_obj is not None):
+                self._cacher.save(cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = data
+        response['r'] = cached_obj
         return self._service_render(response)
 
     def get_documents_by_id(self):
