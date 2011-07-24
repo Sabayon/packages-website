@@ -147,6 +147,8 @@ class ApibaseController:
 
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
+            if dbconn is None:
+                return None
             if validated is None:
                 dbconn.validate()
                 self._cacher.save(cache_key, True,

@@ -121,6 +121,8 @@ class Entropy(Client):
         due to xcache being enabled. So, xcache is disabled by defalt.
         """
         dir_path = self._guess_repo_db_path(repoid, arch, product, branch)
+        if dir_path is None:
+            return None
         db_path = os.path.join(dir_path, etpConst['etpdatabasefile'])
         return self.open_generic_repository(db_path, xcache = xcache,
             read_only = True, indexing_override = True)
