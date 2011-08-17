@@ -1022,7 +1022,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             'lsof', 'repositories.conf', 'client.conf']
 
         # call it over
-        mail_txt = ''
+        mail_txt = unicode("")
         for key in sorted(request.params):
             if key in keys_to_file:
                 continue

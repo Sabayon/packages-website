@@ -1367,7 +1367,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         c.description = request.params.get('description')
         if c.description == "undefined":
-            c.description = ''
+            c.description = unicode("")
         pkgkey = request.params.get('pkgkey')
         try:
             self._validate_package_names([pkgkey])
@@ -1499,7 +1499,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         comment_text = request.params.get('text')
         if not isinstance(comment_text, basestring):
-            comment_text = ''
+            comment_text = unicode("")
         if (len(comment_text) < 5) and (doctype == c.ugc_doctypes['comments']):
             return "%s: %s" % (_("Error"), _("comment text too short"),)
         if comment_text:
