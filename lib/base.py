@@ -12,6 +12,7 @@ from pylons.controllers.util import abort, etag_cache, redirect
 from pylons.decorators import jsonify, validate
 from pylons.i18n import _, ungettext, N_, set_lang, add_fallback
 from pylons.i18n.translation import LanguageError
+from pylons.templating import render_mako
 
 import www.lib.helpers as h
 import www.model as model
