@@ -13,7 +13,6 @@ from pylons.controllers import WSGIController
 from pylons.controllers.util import abort, etag_cache, redirect
 from pylons.decorators import jsonify, validate
 from pylons.i18n import _, ungettext, N_
-from pylons.templating import render
 from paste.request import construct_url
 
 import www.model as model
