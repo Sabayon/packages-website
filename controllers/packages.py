@@ -980,7 +980,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         filter=<filter type>: filter package results using given filter type
             currently supported filters:
                 "category"
-        filter_data=<filter data>: if a filter is selected, the data that
+        filter_data=<filtre data>: if a filter is selected, the data that
             should be used for filtering (pattern matching) must be passed
             on the filter_data parameter
         """
@@ -1066,6 +1066,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(b))
             sha.update(repr(p))
             sha.update(repr(o))
+            sha.update(repr(t))
             mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
             sha.update(mtime_hash)
             cache_key = "quicksearch3_" + sha.hexdigest()
