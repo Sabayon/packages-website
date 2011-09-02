@@ -144,6 +144,7 @@ def setup_session(session):
 
 def setup_misc_vars(c, request):
 
+    c.HTTP_PROTOCOL = get_http_protocol(request)
     if is_https(request):
         c.site_uri = SITE_URI_SSL
         c.forum_uri = FORUM_URI_SSL
