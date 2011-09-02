@@ -14,11 +14,11 @@
         <meta name="description" content="Sabayon Entropy Store"/>
     %endif
 
-    <link rel="stylesheet" href="http://static.sabayon.org/site/css/reset-min.css" type="text/css" />
-    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global.css" type="text/css" />
-    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global_menu.css" type="text/css" />
-    <link rel="stylesheet" href="http://static.sabayon.org/site/css/global_styles.css" type="text/css" />
-    <link rel="stylesheet" href="http://static.sabayon.org/site/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="${c.HTTP_PROTOCOL}://static.sabayon.org/site/css/reset-min.css" type="text/css" />
+    <link rel="stylesheet" href="${c.HTTP_PROTOCOL}://static.sabayon.org/site/css/global.css" type="text/css" />
+    <link rel="stylesheet" href="${c.HTTP_PROTOCOL}://static.sabayon.org/site/css/global_menu.css" type="text/css" />
+    <link rel="stylesheet" href="${c.HTTP_PROTOCOL}://static.sabayon.org/site/css/global_styles.css" type="text/css" />
+    <link rel="stylesheet" href="${c.HTTP_PROTOCOL}://static.sabayon.org/site/css/style.css" type="text/css"/>
 
     <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css"/>
     % if session.get('selected_view') == "compact" and (not c.show_detailed_view) and (not c.show_area):
@@ -40,7 +40,7 @@
     <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
 
 <!-- analytics -->
-<script src="http://www.google-analytics.com/urchin.js" mce_src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+<script src="${c.HTTP_PROTOCOL}://www.google-analytics.com/urchin.js" mce_src="${c.HTTP_PROTOCOL}://www.google-analytics.com/urchin.js" type="text/javascript">
 </script>
 <script type="text/javascript">
 _uacct = "UA-258726-1";
