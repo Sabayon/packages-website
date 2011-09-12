@@ -554,8 +554,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         content = None
         try:
             if repo is not None:
-                content = repo.retrieveContent(package_id,
-                    order_by = "file")
+                # sqlite3 from debian bug, order by is DAMN slow
+                content = list(repo.retrieveContent(package_id))
+                content.sort()
         finally:
             if repo is not None:
                 repo.close()
