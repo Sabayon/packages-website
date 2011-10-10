@@ -8,7 +8,7 @@ etpConst['entropygid'] = config.DEFAULT_WEB_GID
 import entropy.dump
 import entropy.tools
 
-from www.lib.exceptions import ServiceConnectionError
+from www.lib.exceptions import ServiceConnectionError, TransactionError
 
 class Database:
 
@@ -94,19 +94,34 @@ class Database:
         return self.dbconn.commit()
 
     def execute_script(self, myscript):
-        pty = None
-        for line in myscript.split(";"):
-            line = line.strip()
-            if not line:
-                continue
-            pty = self.cursor.execute(line)
-        return pty
+        try:
+            pty = None
+            for line in myscript.split(";"):
+                line = line.strip()
+                if not line:
+                    continue
+                pty = self.cursor.execute(line)
+            return pty
+        except self.mysql_exceptions.OperationalError as err:
+            if err[0] == 1213:
+                raise TransactionError(err[0], err[1])
+            raise
 
     def execute_query(self, *args):
-        return self.cursor.execute(*args)
+        try:
+            return self.cursor.execute(*args)
+        except self.mysql_exceptions.OperationalError as err:
+            if err[0] == 1213:
+                raise TransactionError(err[0], err[1])
+            raise
 
     def execute_many(self, query, myiter):
-        return self.cursor.executemany(query, myiter)
+        try:
+            return self.cursor.executemany(query, myiter)
+        except self.mysql_exceptions.OperationalError as err:
+            if err[0] == 1213:
+                raise TransactionError(err[0], err[1])
+            raise
 
     def fetchone(self):
         return self.cursor.fetchone()

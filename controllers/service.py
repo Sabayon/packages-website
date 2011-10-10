@@ -11,6 +11,7 @@ import time
 from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
+from www.lib.exceptions import TransactionError
 
 from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
     etpConst
@@ -556,23 +557,35 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if not are_repos:
             # validate package names
             entropy_client = self._entropy()
-            avail = self._api_are_matches_available(entropy_client, package_names)
+            avail = self._api_are_matches_available(entropy_client,
+                                                    package_names)
             if not avail:
                 return self._generic_invalid_request(
                     message = "invalid packages")
 
         ip_addr = self._get_ip_address(request)
 
-        ugc = None
-        try:
-            ugc = self._ugc()
-            added = ugc.do_download_stats(branch, release_string, hw_hash,
-                package_names, ip_addr)
-            if added:
-                ugc.commit()
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
+        tries = 5
+        while tries:
+            ugc = None
+            try:
+                ugc = self._ugc()
+                added = ugc.do_download_stats(branch, release_string, hw_hash,
+                                          package_names, ip_addr)
+                if added:
+                    ugc.commit()
+            except TransactionError:
+                # deadlock?
+                if tries == 0:
+                    raise
+                tries -= 1
+                # restart the whole transaction
+                # there is a deadlock somewhere (InnoDB)
+                continue
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+            break
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
