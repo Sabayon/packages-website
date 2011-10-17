@@ -1043,7 +1043,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             if req_obj is None:
                 continue
             if isinstance(req_obj, cgi.FieldStorage):
-                mail_txt += '%s: %s\n' % (key, req_obj.file.read(),)
+                mail_txt += '%s: %s\n' % (key, unicode(req_obj.file.read(), "utf-8", errors="replace"),)
             else:
                 mail_txt += '%s: %s\n' % (key, request.params.get(key),)
 
