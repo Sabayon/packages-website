@@ -28,16 +28,18 @@ class LoginController(BaseController, WebsiteController):
             login_data['password'] = login_data['password'].encode('utf-8')
 
         myauth = self.Authenticator()
-        myauth.set_login_data(login_data)
         error = None
         try:
-            logged = myauth.login()
-        except (self.etp_exceptions.PermissionDenied, UnicodeEncodeError,), e:
-            logged = False
+            user_id = myauth.login(login_data['username'], login_data['password'])
+        except (self.etp_exceptions.PermissionDenied, UnicodeEncodeError,) as e:
+            user_id = None
+            c.login_error = e
+        except AttributeError as e:
+            user_id = None
             c.login_error = e
 
-        if logged:
-            myauth._update_session_table(myauth.login_data['user_id'], request.environ['REMOTE_ADDR'])
+        if user_id is not None:
+            myauth._update_session_table(user_id, request.environ['REMOTE_ADDR'])
             session['entropy'] = {}
             session['entropy']['entropy_user'] = login_data['username']
             session['logged_in'] = True
