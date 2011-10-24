@@ -29,35 +29,23 @@ class Portal(DistributionAuthInterface):
     def check_connection(self):
         pass
 
-    def do_fake_authenticator_login(self, authenticator, user_id):
-        data = {
-            'user_id': user_id,
-            'username': '###fake###',
-            'password': '###fake###'
-        }
-        authenticator.set_login_data(data)
-        authenticator.logged_in = True
-
     def check_admin(self, user_id):
         auth = self.authenticator()
-        self.do_fake_authenticator_login(auth, user_id)
-        valid = auth.is_administrator()
+        valid = auth.is_administrator(user_id)
         auth.disconnect()
         del auth
         return valid
 
     def check_moderator(self, user_id):
         auth = self.authenticator()
-        self.do_fake_authenticator_login(auth, user_id)
-        valid = auth.is_moderator()
+        valid = auth.is_moderator(user_id)
         auth.disconnect()
         del auth
         return valid
 
     def check_user(self, user_id):
         auth = self.authenticator()
-        self.do_fake_authenticator_login(auth, user_id)
-        valid = auth.is_user()
+        valid = auth.is_user(user_id)
         auth.disconnect()
         del auth
         return valid
