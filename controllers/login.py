@@ -44,7 +44,7 @@ class LoginController(BaseController, WebsiteController):
             session['entropy']['entropy_user'] = login_data['username']
             session['logged_in'] = True
             session['entropy']['password_hash'] = model.config.hash_string(login_data['password'])
-            session['entropy']['entropy_user_id'] = myauth.login_data['user_id']
+            session['entropy']['entropy_user_id'] = user_id
             model.config.setup_login_data(model, c, session)
             session.save()
 
