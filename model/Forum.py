@@ -2,7 +2,7 @@ import os
 import config
 from entropy.const import *
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
-from entropy.services.auth_interfaces import phpBB3Auth as phpBB3AuthInterface
+from www.lib.phpbb import Authenticator as phpBB3AuthInterface
 
 class Forum(phpBB3AuthInterface):
 

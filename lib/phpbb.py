@@ -18,7 +18,6 @@ import hashlib
 import re
 import binascii
 
-from entropy.services.skel import RemoteDatabase
 from entropy.const import etpConst, const_isstring, const_convert_to_unicode
 from entropy.i18n import _
 

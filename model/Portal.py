@@ -3,19 +3,17 @@ import os
 import config
 from entropy.const import *
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
-from entropy.services.skel import RemoteDatabase as RemoteDbSkelInterface
-from entropy.services.skel import Authenticator as DistributionAuthInterface
+from www.lib.phpbb import Authenticator as DistributionAuthInterface
 from Authenticator import Authenticator
 try:
     from entropy.services.exceptions import ServiceConnectionError
 except ImportError:
     ServiceConnectionError = Exception
 
-class Portal(DistributionAuthInterface, RemoteDbSkelInterface):
+class Portal(DistributionAuthInterface):
 
     def __init__(self):
         self.authenticator = Authenticator
-	RemoteDbSkelInterface.__init__(self)
         DistributionAuthInterface.__init__(self)
         self.set_connection_data(config.portal_connection_data)
         self.connect()
