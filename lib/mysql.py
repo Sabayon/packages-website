@@ -111,7 +111,7 @@ class Database:
         try:
             return self.cursor.execute(*args)
         except self.mysql_exceptions.OperationalError as err:
-            if err[0] == 1213:
+            if err[0] in (1213, 1205):
                 raise TransactionError(err[0], err[1])
             raise
 
