@@ -103,7 +103,7 @@ class Database:
                 pty = self.cursor.execute(line)
             return pty
         except self.mysql_exceptions.OperationalError as err:
-            if err[0] == 1213:
+            if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
 
@@ -111,7 +111,7 @@ class Database:
         try:
             return self.cursor.execute(*args)
         except self.mysql_exceptions.OperationalError as err:
-            if err[0] in (1213, 1205):
+            if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
 
@@ -119,7 +119,7 @@ class Database:
         try:
             return self.cursor.executemany(query, myiter)
         except self.mysql_exceptions.OperationalError as err:
-            if err[0] == 1213:
+            if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
 
