@@ -565,7 +565,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ip_addr = self._get_ip_address(request)
 
-        tries = 5
+        tries = 50
+        added = None
         while tries:
             ugc = None
             try:
@@ -575,18 +576,24 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 if added:
                     ugc.commit()
             except TransactionError:
+                ugc.disconnect()
+                ugc = None
                 # deadlock?
                 if tries == 0:
                     raise
                 tries -= 1
                 # restart the whole transaction
                 # there is a deadlock somewhere (InnoDB)
+                time.sleep(0.5)
                 continue
             finally:
                 if ugc is not None:
                     ugc.disconnect()
             break
 
+        if added is None:
+            return self._generic_invalid_request(code=500,
+                message="transaction error")
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
         response['r'] = added
