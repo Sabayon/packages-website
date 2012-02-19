@@ -124,6 +124,10 @@ class Entropy(Client):
         if dir_path is None:
             return None
         db_path = os.path.join(dir_path, etpConst['etpdatabasefile'])
+        if not os.path.isfile(db_path):
+            return None
+        if os.path.getsize(db_path) < 10:
+            return None
         return self.open_generic_repository(db_path, xcache = xcache,
             read_only = True, indexing_override = True)
 
