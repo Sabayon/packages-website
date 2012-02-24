@@ -1,2 +1,4 @@
 ## -*- coding: utf-8 -*-
-<div class="package-ugc-doc-title">${c.ugc_doc['title']}</div>
+%if c.ugc_doc['title'].strip():
+    <div class="package-ugc-doc-title">${c.ugc_doc['title']}</div>
+%endif

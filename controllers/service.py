@@ -720,7 +720,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         title = (request.params.get(req_field) or "").strip()
         if not title:
-            raise AttributeError("no title")
+            return ""
         return self._htmlencode(title)
 
     def _add_document_get_description(self, req_field):
