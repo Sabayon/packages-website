@@ -1,5 +1,5 @@
 <div class="ugc-doc-desc-keywords">
-    <div>${c.ugc_doc['description']}</div>
+    <div>${c.ugc_doc['description'].replace("\r\n", "<br/>").replace("\n", "<br/>")}</div>
     <div class="package-ugc-keywords">
         <b>${_("Keywords")}</b>: ${', '.join(c.ugc_doc['keywords'])}
         % if not c.ugc_doc['keywords']:
