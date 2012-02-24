@@ -215,10 +215,6 @@ function ugc_send_document(form_name,dest_div,div_error,title_id,ugc_count_class
     }
 
     function do_et_start() {
-        if (title_cont.length < 5) {
-            show_error('${_("What about the title?")}','${_("Please insert a proper title")}');
-            return false;
-        }
         ugc_new_doc_counter += 1;
         newdiv = document.createElement('div');
         newdiv.setAttribute('id', 'ugc-new-doc-'+ugc_new_doc_counter);
