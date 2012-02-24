@@ -1485,8 +1485,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             return "%s: %s" % (_("Error"), _("invalid package string"),)
 
         title = request.params.get('title')
-        if not title or len(title) < 5:
-            return "%s: %s" % (_("Error"), _("title too short"),)
+        if not title:
+            title = ""
         if title:
             title = self._htmlencode(title)
 
