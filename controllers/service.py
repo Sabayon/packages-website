@@ -950,7 +950,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
                         package_name, document_types, offset = offset,
                         length = chunk_size)
-                    total = len(pkg_data_list)
                     try:
                         docs = self._ugc_document_data_to_document(pkg_data_list)
                     except AttributeError:
