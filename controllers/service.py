@@ -913,6 +913,18 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             # get all the docs, if no filter is set
             document_types.extend(Document.SUPPORTED_TYPES)
 
+        # if latest == "1", return results from
+        # latest to oldest
+        latest_str = request.params.get("latest")
+        if latest_str:
+            if latest_str == "0":
+                latest = False
+            else:
+                latest = True
+        else:
+            latest_str = "0"
+            latest = False
+
         # get cached?
         cache = request.params.get("cache")
         if cache:
@@ -925,6 +937,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(package_names))
             sha.update(repr(repository_id))
             sha.update(repr(document_types))
+            sha.update(latest_str)
             cache_key = "_service_get_documents_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
@@ -949,7 +962,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 for package_name in package_names:
                     total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
                         package_name, document_types, offset = offset,
-                        length = chunk_size)
+                        length = chunk_size, latest = latest)
                     try:
                         docs = self._ugc_document_data_to_document(pkg_data_list)
                     except AttributeError:

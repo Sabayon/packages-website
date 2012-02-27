@@ -394,7 +394,7 @@ class DistributionUGCInterface(Database):
         return [x['keyword'] for x in self.fetchall()]
 
     def get_ugc_metadata_doctypes(self, pkgkey, typeslist, offset = 0,
-        length = 100):
+        length = 100, latest = False):
 
         # FIXME TODO: remove in future
         # backward icon type compatibility
@@ -407,6 +407,11 @@ class DistributionUGCInterface(Database):
             )
             """ % (Document.IMAGE_TYPE_ID,)
 
+        if latest:
+            order_by = "DESC"
+        else:
+            order_by = "ASC"
+
         if len(typeslist) == 1:
             self.execute_query("""
                 SELECT SQL_CACHE SQL_CALC_FOUND_ROWS *
@@ -414,7 +419,7 @@ class DistributionUGCInterface(Database):
                 entropy_docs.`idkey` = entropy_base.`idkey` AND 
                 entropy_base.`key` = %s AND 
                 ( entropy_docs.`iddoctype` = %s """+extra_sql+"""  )
-                ORDER BY entropy_docs.`ts` ASC
+                ORDER BY entropy_docs.`ts` """ + order_by + """
                 LIMIT %s, %s""", (pkgkey, typeslist[0], offset, length,))
         else:
             self.execute_query("""
@@ -423,7 +428,7 @@ class DistributionUGCInterface(Database):
                 entropy_docs.`idkey` = entropy_base.`idkey` AND 
                 entropy_base.`key` = %s AND 
                 ( entropy_docs.`iddoctype` IN %s """+extra_sql+""" )
-                ORDER BY entropy_docs.`ts` ASC
+                ORDER BY entropy_docs.`ts` """ + order_by + """
                 LIMIT %s, %s""", (pkgkey, typeslist, offset, length,))
 
         raw_docs = self.fetchall()
