@@ -141,7 +141,7 @@ class DistributionUGCInterface(Database):
             CREATE TABLE `entropy_hardware_usage` (
             `entropy_hardware_usage_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `entropy_distribution_usage_id` INT UNSIGNED NOT NULL,
-            `entropy_hardware_hash` VARCHAR ( 64 ),
+            `entropy_hardware_hash` VARCHAR ( 80 ),
             FOREIGN KEY  (`entropy_distribution_usage_id`)
                 REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
             ) ENGINE=INNODB;
