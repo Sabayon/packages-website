@@ -74,7 +74,7 @@ class DistributionUGCInterface(Database):
             `idtotaldownload` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `idkey` INT UNSIGNED NOT NULL,
             `count` INT UNSIGNED NULL DEFAULT '0',
-            KEY `idkey` (`idkey`),
+            UNIQUE KEY `idkey` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=MyISAM;
         """,
