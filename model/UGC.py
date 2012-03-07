@@ -269,14 +269,13 @@ class DistributionUGCInterface(Database):
             mydate.minute, mydate.second)
         return mydate
 
-    def _insert_download(self, idkey, ddate, count = 0):
+    def _insert_download(self, idkey, ddate):
         self.execute_query("""
         INSERT INTO entropy_downloads VALUES (%s,%s,%s,%s)
-        """, (None, idkey, ddate, count))
+        """, (None, idkey, ddate, 1))
         iddownload = self.lastrowid()
-        self.execute_query("""
-        INSERT INTO entropy_total_downloads VALUES (%s,%s,%s)
-        """, (None, idkey, count))
+
+        self._update_total_downloads(idkey)
         # idtotaldownload = self.lastrowid()
         return iddownload
 
@@ -314,6 +313,16 @@ class DistributionUGCInterface(Database):
                         self._insert_entropy_ip_locations_id(ip_lat, ip_long)
         return entropy_ip_locations_id
 
+    def _update_total_downloads(self, idkey):
+        rows_affected = self.execute_query("""
+        UPDATE entropy_total_downloads SET `count` = `count`+1
+        WHERE `idkey` = %s
+        """, (idkey,))
+        if not rows_affected:
+            self.execute_query("""
+            INSERT INTO entropy_total_downloads VALUES (%s,%s,%s)
+            """, (None, idkey, 1))
+
     def _update_download(self, iddownload, idkey):
         self.execute_query("""
         UPDATE entropy_downloads SET `count` = `count`+1 WHERE `iddownload` = %s
@@ -325,6 +334,7 @@ class DistributionUGCInterface(Database):
         self.execute_query("""
         UPDATE entropy_total_downloads SET `count` = `count`+1 WHERE `idkey` = %s
         """, (idkey,))
+        self._update_total_downloads(idkey)
 
     def _store_download_data(self, iddownloads, ip_addr):
         entropy_ip_locations_id = self._handle_entropy_ip_locations_id(ip_addr)
@@ -784,7 +794,7 @@ class DistributionUGCInterface(Database):
             idkey = self._handle_pkgkey(pkgkey)
             iddownload = self._get_iddownload(idkey, mydate)
             if iddownload == -1:
-                iddownload = self._insert_download(idkey, mydate, count = 1)
+                iddownload = self._insert_download(idkey, mydate)
             else:
                 self._update_download(iddownload, idkey)
             if (iddownload > 0) and isinstance(ip_addr, const_get_stringtype()):
