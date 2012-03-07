@@ -331,9 +331,6 @@ class DistributionUGCInterface(Database):
         # fine
         # TODO: when the old public interface (repository service) is dropped
         # move this to a trigger
-        self.execute_query("""
-        UPDATE entropy_total_downloads SET `count` = `count`+1 WHERE `idkey` = %s
-        """, (idkey,))
         self._update_total_downloads(idkey)
 
     def _store_download_data(self, iddownloads, ip_addr):
