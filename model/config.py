@@ -99,7 +99,12 @@ PACKAGE_SWITCH_SORTBY_URL = "/sortswitch"
 SEARCH_FORM_MAX_LENGTH = 64
 
 def is_https(request):
-    return "HTTPS" in request.headers
+    if "HTTPS" in request.headers:
+        return True
+    proto = request.headers.get("X-Forwarded-Proto", "http")
+    if proto.lower() == "https":
+        return True
+    return False
 
 def get_http_protocol(request):
     if is_https(request):
