@@ -80,7 +80,7 @@ source_repositories = ["portage"]
 community_repos_ugc_connection_data = {}
 
 ugc_store_path = "/home/sabayonlinux/public_html/community.sabayon.org/ugc"
-ugc_store_url = "http://community.sabayon.org/ugc"
+ugc_store_url = "https://community.sabayon.org/ugc"
 ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
 
 GROUP_SHOW_URL = "/group"
