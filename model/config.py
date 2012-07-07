@@ -27,12 +27,12 @@ DEFAULT_WEB_UID = 1000
 DEFAULT_WEB_GROUP = "entropy"
 DEFAULT_WEB_GID = 1000
 GLSA_URI = "http://www.gentoo.org/rdf/en/glsa-index.rdf"
-MY_ETP_DIR = "/home/sabayonlinux/entropy/"
-ETP_PATH = '/home/sabayonlinux/public_html/packages2.sabayon.org/www/entropy/lib'
-WEBSITE_TMP_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/temp'
-WEBSITE_CACHE_DIR = '/home/sabayonlinux/public_html/packages2.sabayon.org/cache'
+MY_ETP_DIR = "/home/entropy/"
+ETP_PATH = '/sabayon/www/packages.sabayon.org/www/entropy/lib'
+WEBSITE_TMP_DIR = '/sabayon/www/packages.sabayon.org/temp'
+WEBSITE_CACHE_DIR = '/sabayon/www/packages.sabayon.org/cache'
 WEBSITE_REPO_CACHE_DIR = WEBSITE_CACHE_DIR + "/_repos"
-COMMUNITY_REPOS_DIR = "/home/sabayonlinux/public_html/community.sabayon.org/repos/"
+COMMUNITY_REPOS_DIR = "/sabayon/www/community.sabayon.org/repos/"
 REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
 # new method also!
 os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH
@@ -82,7 +82,7 @@ source_repositories = ["portage"]
 # UGC #
 community_repos_ugc_connection_data = {}
 
-ugc_store_path = "/home/sabayonlinux/public_html/community.sabayon.org/ugc"
+ugc_store_path = "/sabayon/www/community.sabayon.org/ugc"
 ugc_store_url = "https://community.sabayon.org/ugc"
 ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
 
