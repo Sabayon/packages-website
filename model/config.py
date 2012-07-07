@@ -5,7 +5,10 @@ import datetime, random, os, urllib
 from pylons.i18n import _, N_
 ugc_connection_data = {}
 phpbb_connection_data = {}
-from www.private import *
+try:
+    from private import *
+except ImportError:
+    from www.private import *
 from paste.request import construct_url
 
 SITE_URI = 'http://www.sabayon.org'
