@@ -5,6 +5,7 @@ from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
 from entropy.client.interfaces import Client
+from entropy.db.exceptions import DatabaseError
 
 class Entropy(Client):
 
@@ -128,8 +129,13 @@ class Entropy(Client):
             return None
         if os.path.getsize(db_path) < 10:
             return None
-        return self.open_generic_repository(db_path, xcache = xcache,
-            read_only = True, indexing_override = True)
+        try:
+            return self.open_generic_repository(db_path, xcache = xcache,
+                read_only = True, indexing_override = True)
+        except DatabaseError as err:
+            sys.stderr.write("Error opening %s: %s\n" % (
+                    db_path, repr(err),))
+            return None
 
     def output(*myargs, **mykwargs):
         pass
