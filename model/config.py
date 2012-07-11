@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import os
+import gc
+import sys
+import signal
 import datetime, random, os, urllib
 from pylons.i18n import _, N_
 ugc_connection_data = {}
@@ -10,6 +13,23 @@ try:
 except ImportError:
     from www.private import *
 from paste.request import construct_url
+
+gc.set_debug(gc.DEBUG_STATS)
+# Run gc.collect() with stats to stderr on SIGUSR2
+def _gc_collect(signum, frame):
+    # shows all the memleak info and stores
+    # uncollectable objects to gc.garbage
+    gc.set_debug(gc.DEBUG_LEAK)
+    gc.collect()
+    sys.stderr.write("Uncollectable objects:\n")
+    sys.stderr.write("%s\n" % (gc.garbage,))
+    sys.stderr.write("\n---\n")
+    gc.set_debug(gc.DEBUG_STATS)
+    # now clear for real
+    del gc.garbage[:]
+    gc.collect()
+
+signal.signal(signal.SIGUSR2, _gc_collect)
 
 SITE_URI = 'http://www.sabayon.org'
 SITE_URI_SSL = 'https://www.sabayon.org'
