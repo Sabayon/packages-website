@@ -9,11 +9,6 @@ def _gc_collect():
     # shows all the memleak info and stores
     # uncollectable objects to gc.garbage
     sys.stderr.write("\n-- DUMP BEGIN --\n")
-    try:
-        from guppy import hpy
-        sys.stderr.write("%s\n\n" % (hpy().heap(),))
-    except ImportError:
-        pass
     gc.set_debug(gc.DEBUG_LEAK)
     gc.collect()
     sys.stderr.write("Uncollectable unreachable objects (sorry):\n")
