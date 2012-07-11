@@ -11,11 +11,16 @@ def _gc_collect():
     gc.set_debug(gc.DEBUG_LEAK)
     gc.collect()
     sys.stderr.write("\n-- DUMP BEGIN --\n")
-    sys.stderr.write("Uncollectable objects:\n")
-    sys.stderr.write("%s\n" % (gc.garbage,))
+    sys.stderr.write("Uncollectable unreachable objects (sorry):\n")
+    for obj in gc.garbage:
+        try:
+            sys.stderr.write("%s\n" % (obj,))
+        except:
+            pass
+    sys.stderr.write("Quantity: %s\n" % (len(gc.garbage),))
     sys.stderr.write("\n-- DUMP END --\n")
     gc.set_debug(False)
-    # now clear for real
+    # now empty the list
     del gc.garbage[:]
     gc.collect()
     _setup_timer()
