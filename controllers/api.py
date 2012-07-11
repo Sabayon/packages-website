@@ -70,6 +70,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 return sorted(pkgs_data, key = key_sorter)
             finally:
                 ugc.disconnect()
+                del ugc
 
         def _vote_order():
             ugc = self._ugc()
@@ -79,6 +80,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
             finally:
                 ugc.disconnect()
+                del ugc
 
         order_map = {
             "alphabet": _alphabet_order,
@@ -526,6 +528,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 response['r'] = pkgs_data
             finally:
                 ugc.disconnect()
+                del ugc
         except Exception as err:
             return self._api_error(renderer, 503, repr(err))
         finally:

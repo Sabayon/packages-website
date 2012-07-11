@@ -366,6 +366,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         # fill unavailable packages with None value
         for package_name in package_names:
@@ -410,6 +411,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             finally:
                 if ugc is not None:
                     ugc.disconnect()
+                    del ugc
 
             if model.config.WEBSITE_CACHING:
                 self._cacher.save(cache_key, cached_obj,
@@ -466,6 +468,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
@@ -493,6 +496,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         # fill unavailable packages with None value
         for package_name in package_names:
@@ -565,35 +569,19 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ip_addr = self._get_ip_address(request)
 
-        tries = 50
-        added = None
-        while tries:
-            ugc = None
-            try:
-                ugc = self._ugc()
-                added = ugc.do_download_stats(branch, release_string, hw_hash,
-                                          package_names, ip_addr)
-                if added:
-                    ugc.commit()
-            except TransactionError:
+        ugc = None
+        try:
+            ugc = self._ugc()
+            added = ugc.do_download_stats(
+                branch, release_string, hw_hash,
+                package_names, ip_addr)
+            if added:
+                ugc.commit()
+        finally:
+            if ugc is not None:
                 ugc.disconnect()
-                ugc = None
-                # deadlock?
-                if tries == 0:
-                    raise
-                tries -= 1
-                # restart the whole transaction
-                # there is a deadlock somewhere (InnoDB)
-                time.sleep(0.5)
-                continue
-            finally:
-                if ugc is not None:
-                    ugc.disconnect()
-            break
+                del ugc
 
-        if added is None:
-            return self._generic_invalid_request(code=500,
-                message="transaction error")
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
         response['r'] = added
@@ -630,6 +618,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             finally:
                 if ugc is not None:
                     ugc.disconnect()
+                    del ugc
 
             if model.config.WEBSITE_CACHING:
                 self._cacher.save(cache_key, cached_obj,
@@ -775,6 +764,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
@@ -872,14 +862,15 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     message = "conversion error")
             doc = docs[0]
         finally:
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
             # not really atomic actually
             try:
                 os.remove(payload_tmp_file)
             except OSError as err:
                 if err.errno != errno.ENOENT:
                     raise
-            if ugc is not None:
-                ugc.disconnect()
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK,
@@ -975,6 +966,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             finally:
                 if ugc is not None:
                     ugc.disconnect()
+                    del ugc
 
             if cache and (cached_obj is not None):
                 self._cacher.save(cache_key, cached_obj,
@@ -1001,6 +993,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         docs = self._ugc_document_data_to_document(raw_docs)
         data = dict((doc.document_id(), doc) for doc in docs)
@@ -1033,6 +1026,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
+                del ugc
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)

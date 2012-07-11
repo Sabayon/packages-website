@@ -122,15 +122,17 @@ def setup_internal(model, c, session, request):
 
 def setup_login_data(model, c, session):
     import www.model.UGC as ugc
-    myugc = ugc.UGC()
+    myugc = None
     try:
+        myugc = ugc.UGC()
         if session.get('logged_in') and session.get('entropy'):
             if session['entropy'].get('entropy_user_id'):
                 c.front_page_user_stats = myugc.get_user_stats(
                     session['entropy']['entropy_user_id'])
     finally:
-        myugc.disconnect()
-        del myugc
+        if myugc is not None:
+            myugc.disconnect()
+            del myugc
 
 def setup_permission_data(model, c, session):
     if session.get('entropy') and session.get('logged_in'):

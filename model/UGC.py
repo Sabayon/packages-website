@@ -1228,14 +1228,3 @@ class UGC(DistributionUGCInterface):
 
         return status, r_iddoc
 
-    def __del__(self):
-        if hasattr(self,'commit'):
-            try:
-                self.commit()
-            except:
-                pass
-        if hasattr(self,'disconnect'):
-            try:
-                self.disconnect()
-            except ServiceConnectionError:
-                pass

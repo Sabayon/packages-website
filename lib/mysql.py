@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 
+import MySQLdb, _mysql_exceptions
+from MySQLdb.constants import FIELD_TYPE
+from MySQLdb.converters import conversions
+
 from www.model import config
 
 from entropy.const import const_convert_to_unicode, etpConst
@@ -16,30 +20,24 @@ class Database:
         return mystr
 
     def __init__(self):
-        import MySQLdb, _mysql_exceptions
-        from MySQLdb.constants import FIELD_TYPE
-        from MySQLdb.converters import conversions
         self.dbconn = None
         self.cursor = None
         self.plain_cursor = None
         self.escape_string = self.escape_fake
         self.connection_data = {}
-        self.mysql = MySQLdb
-        self.mysql_exceptions = _mysql_exceptions
-        self.FIELD_TYPE = FIELD_TYPE
         self.conversion_dict = conversions.copy()
-        self.conversion_dict[self.FIELD_TYPE.DECIMAL] = int
-        self.conversion_dict[self.FIELD_TYPE.LONG] = int
-        self.conversion_dict[self.FIELD_TYPE.LONGLONG] = int
-        self.conversion_dict[self.FIELD_TYPE.FLOAT] = float
-        self.conversion_dict[self.FIELD_TYPE.NEWDECIMAL] = float
+        self.conversion_dict[FIELD_TYPE.DECIMAL] = int
+        self.conversion_dict[FIELD_TYPE.LONG] = int
+        self.conversion_dict[FIELD_TYPE.LONGLONG] = int
+        self.conversion_dict[FIELD_TYPE.FLOAT] = float
+        self.conversion_dict[FIELD_TYPE.NEWDECIMAL] = float
 
     def check_connection(self):
         if self.dbconn is None:
             return
         try:
             self.dbconn.ping()
-        except self.mysql_exceptions.OperationalError as e:
+        except _mysql_exceptions.OperationalError as e:
             if e[0] != 2006:
                 raise
             else:
@@ -68,25 +66,28 @@ class Database:
             kwargs[ckey] = self.connection_data.get(dkey)
 
         try:
-            self.dbconn = self.mysql.connect(**kwargs)
-        except self.mysql_exceptions.OperationalError as e:
+            self.dbconn = MySQLdb.connect(**kwargs)
+        except _mysql_exceptions.OperationalError as e:
             raise ServiceConnectionError(repr(e))
         self.plain_cursor = self.dbconn.cursor()
-        self.cursor = self.mysql.cursors.DictCursor(self.dbconn)
+        self.cursor = MySQLdb.cursors.DictCursor(self.dbconn)
         self.escape_string = self.dbconn.escape_string
         return True
 
     def disconnect(self):
         self.check_connection()
+        if hasattr(self.dbconn, 'commit'):
+            self.dbconn.commit()
         self.escape_string = self.escape_fake
         if hasattr(self.cursor, 'close'):
             self.cursor.close()
         if hasattr(self.dbconn, 'close'):
             self.dbconn.close()
-        self.dbconn = None
-        self.cursor = None
-        self.plain_cursor = None
         self.connection_data.clear()
+        del self.dbconn
+        del self.cursor
+        del self.plain_cursor
+        del self.connection_data
         return True
 
     def commit(self):
@@ -102,7 +103,7 @@ class Database:
                     continue
                 pty = self.cursor.execute(line)
             return pty
-        except self.mysql_exceptions.OperationalError as err:
+        except _mysql_exceptions.OperationalError as err:
             if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
@@ -110,7 +111,7 @@ class Database:
     def execute_query(self, *args):
         try:
             return self.cursor.execute(*args)
-        except self.mysql_exceptions.OperationalError as err:
+        except _mysql_exceptions.OperationalError as err:
             if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
@@ -118,7 +119,7 @@ class Database:
     def execute_many(self, query, myiter):
         try:
             return self.cursor.executemany(query, myiter)
-        except self.mysql_exceptions.OperationalError as err:
+        except _mysql_exceptions.OperationalError as err:
             if err[0] in (1205, 1213):
                 raise TransactionError(err[0], err[1])
             raise
