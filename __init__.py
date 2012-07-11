@@ -18,8 +18,12 @@ def _gc_collect():
     # now clear for real
     del gc.garbage[:]
     gc.collect()
+    _setup_timer()
 
-_gc_thread = Timer(3600, _gc_collect)
-_gc_thread.name = "HourlyGarbageCollector"
-_gc_thread.daemon = True
-_gc_thread.start()
+def _setup_timer():
+    timer = Timer(3600, _gc_collect)
+    timer.name = "HourlyGarbageCollector"
+    timer.daemon = True
+    timer.start()
+
+_setup_timer()
