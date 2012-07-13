@@ -11,21 +11,21 @@ thread.stack_size(1024 * 1024) # 1Mb, default is 8Mb
 def _gc_collect():
     # shows all the memleak info and stores
     # uncollectable objects to gc.garbage
-    sys.stderr.write("\n-- DUMP BEGIN --\n")
-    gc.set_debug(gc.DEBUG_LEAK)
+    #sys.stderr.write("\n-- DUMP BEGIN --\n")
+    #gc.set_debug(gc.DEBUG_LEAK)
     gc.collect()
-    sys.stderr.write("Uncollectable unreachable objects (sorry):\n")
-    for obj in gc.garbage:
-        try:
-            sys.stderr.write("%s\n" % (obj,))
-        except:
-            pass
-    sys.stderr.write("Quantity: %s\n" % (len(gc.garbage),))
-    sys.stderr.write("\n-- DUMP END --\n")
-    gc.set_debug(False)
+    #sys.stderr.write("Uncollectable unreachable objects (sorry):\n")
+    #for obj in gc.garbage:
+    #    try:
+    #        sys.stderr.write("%s\n" % (obj,))
+    #    except:
+    #        pass
+    #sys.stderr.write("Quantity: %s\n" % (len(gc.garbage),))
+    #sys.stderr.write("\n-- DUMP END --\n")
+    #gc.set_debug(False)
     # now empty the list
-    del gc.garbage[:]
-    gc.collect()
+    #del gc.garbage[:]
+    #gc.collect()
     _setup_timer()
 
 def _setup_timer():
