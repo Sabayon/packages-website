@@ -2,6 +2,9 @@ import gc
 import sys
 
 from threading import Timer
+import thread
+
+thread.stack_size(1024 * 1024) # 1Mb, default is 8Mb
 
 # Setup hourly garbage collection (and stats printing)
 
