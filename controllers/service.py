@@ -1159,11 +1159,27 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             return "-1"
         revision_path = os.path.join(dir_path,
             etpConst['etpdatabaserevisionfile'])
+        eapi3_signal = os.path.join(
+            dir_path, etpConst['etpdatabaseeapi3updates'])
+        # if the EAPI3 signal file is there, it means that the
+        # new repository has been uploaded but not yet prepared
+        # for consumption. Thus, the revision number should be
+        # lowered by one, in order to be able to notify updates
+        # again when the preparation is over.
+        eapi3_signal_available = os.path.lexists(eapi3_signal)
+        rev = "-1"
         try:
             with open(revision_path, "r") as rev_f:
-                return rev_f.readline().strip()
+                rev = rev_f.readline().strip()
         except (IOError, OSError):
-            return "-1"
+            pass
+        if eapi3_signal_available and rev != "-1":
+            try:
+                rev = str(max(0, int(rev) - 1))
+            except (TypeError, ValueError):
+                rev = "-1" # wtf, invalid rev
+
+        return rev
 
     def get_repository_metadata(self):
         """
