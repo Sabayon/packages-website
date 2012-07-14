@@ -67,7 +67,7 @@ class DistributionUGCInterface(Database):
             KEY `idkey` (`idkey`,`ddate`),
             KEY `idkey_2` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            ) ENGINE=MyISAM;
+            ) ENGINE=INNODB;
         """,
         'entropy_total_downloads': """
             CREATE TABLE `entropy_total_downloads` (
@@ -76,7 +76,7 @@ class DistributionUGCInterface(Database):
             `count` INT UNSIGNED NULL DEFAULT '0',
             UNIQUE KEY `idkey` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            ) ENGINE=MyISAM;
+            ) ENGINE=INNODB;
         """,
         'entropy_downloads_data': """
             CREATE TABLE `entropy_downloads_data` (
@@ -84,7 +84,7 @@ class DistributionUGCInterface(Database):
             `ip_address` VARCHAR(40) NULL DEFAULT '',
             `entropy_ip_locations_id` INT UNSIGNED NULL DEFAULT 0,
             FOREIGN KEY  (`iddownload`) REFERENCES `entropy_downloads` (`iddownload`)
-            ) ENGINE=MyISAM;
+            ) ENGINE=INNODB;
         """,
         'entropy_docs': """
             CREATE TABLE `entropy_docs` (
@@ -135,7 +135,7 @@ class DistributionUGCInterface(Database):
                 REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
             KEY `ip_address` (`ip_address`),
             KEY `entropy_ip_locations_id` (`entropy_ip_locations_id`)
-            ) ENGINE=MyISAM;
+            ) ENGINE=INNODB;
         """,
         'entropy_hardware_usage': """
             CREATE TABLE `entropy_hardware_usage` (
