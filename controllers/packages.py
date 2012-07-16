@@ -10,6 +10,8 @@ import tempfile
 import random
 random.seed()
 
+import Image
+
 from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
@@ -1535,6 +1537,15 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if fsize > model.config.UGC_MAX_UPLOAD_FILE_SIZE:
                 os.remove(tmp_file)
                 return "%s: %s" % (_("Error"), _("file too big"),)
+
+            if doctype == c.ugc_doctypes['icon']:
+                # resize image
+                try:
+                    self._resize_icon(tmp_file)
+                except AttributeError as err:
+                    return "%s: %s" % (
+                        _("Error"), _("cannot create thumbnail"),)
+
             file_name = os.path.join(pkgkey, orig_filename)
 
         # now handle the UGC add

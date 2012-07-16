@@ -12,6 +12,10 @@ from paste.request import construct_url
 import re
 import os
 import time
+
+# Imaging
+import Image
+
 import www.lib.helpers as h
 import www.model as model
 from htmlentitydefs import name2codepoint
@@ -21,6 +25,8 @@ etpConst['repositoriesconf'] = model.config.REPOSITORIES_CONF_PATH
 etpConst['dumpstoragedir'] = model.config.WEBSITE_REPO_CACHE_DIR
 
 from entropy.client.services.interfaces import Document
+
+import entropy.tools
 
 class WebsiteController:
 
@@ -42,6 +48,25 @@ class WebsiteController:
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
         import www.model.Portal
         self.Portal = www.model.Portal.Portal
+
+    def _resize_icon(self, image_path):
+        """
+        Resize file at image_path (validate file type) if it's larger than
+        128x128 pixels.
+        """
+        if not entropy.tools.is_supported_image_file(image_path):
+            raise AttributeError("Unsupported Image Type")
+
+        pix_size = 128
+        size = pix_size, pix_size
+        try:
+            im = Image.open(image_path)
+            w, h = im.size
+            if w > pix_size or h > pix_size:
+                im.thumbnail(size)
+                im.save(image_path, "PNG")
+        except IOError as err:
+            raise AttributeError("Unsupported Icon Type")
 
     def _get_logged_user_id(self):
         if session.get('logged_in') and session.get('entropy'):
