@@ -808,6 +808,26 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         return tmp_file, orig_filename
 
+    def _add_document_resize_icon(self, image_path):
+        """
+        Resize file at image_path (validate file type) if it's larger than
+        128x128 pixels.
+        """
+        if not entropy.tools.is_supported_image_file(image_path):
+            raise AttributeError("Unsupported Image Type")
+
+        import Image
+        pix_size = 128
+        size = pix_size, pix_size
+        try:
+            im = Image.open(image_path)
+            w, h = im.size
+            if w > pix_size or h > pix_size:
+                im.thumbnail(size)
+                im.save(image_path, "PNG")
+        except IOError as err:
+            raise AttributeError("Unsupported Icon Type")
+
     def _add_generic_file_document(self, package_name, document_type, username,
         user_id):
         """
@@ -838,6 +858,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 self._add_document_get_payload_file()
         except AttributeError as err:
             return self._generic_invalid_request(message = str(err))
+
+        if document_type == Document.ICON_TYPE_ID:
+            # resize image
+            try:
+                self._add_document_resize_icon(payload_tmp_file)
+            except AttributeError as err:
+                return self._generic_invalid_request(message = str(err))
 
         doc = None
         ugc = None
