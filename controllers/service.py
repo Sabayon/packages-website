@@ -712,17 +712,18 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             return ""
         return self._htmlencode(title)
 
-    def _add_document_get_description(self, req_field):
+    def _add_document_get_description(self, req_field, document_type):
         """
         Get description data from HTTP request, specific to add_document call.
 
         @raise AttributeError: if comment is invalid
         """
         desc = (request.params.get(req_field) or "").strip()
-        if not desc:
-            raise AttributeError("no description")
-        if len(desc) < 5:
-            raise AttributeError("description too short")
+        if document_type != Document.ICON_TYPE_ID:
+            if not desc:
+                raise AttributeError("no description")
+            if len(desc) < 5:
+                raise AttributeError("description too short")
         return self._htmlencode(desc)
 
     def _add_comment(self, package_name, document_type_id, username, user_id):
@@ -841,7 +842,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         try:
             description = self._add_document_get_description(
-                Document.DOCUMENT_DESCRIPTION_ID)
+                Document.DOCUMENT_DESCRIPTION_ID, document_type)
         except AttributeError:
             return self._generic_invalid_request(
                 message = "invalid description")
