@@ -5,6 +5,8 @@ import subprocess
 import shutil
 from datetime import datetime
 
+import MySQLdb
+
 # python-gdata
 import gdata
 import gdata.youtube
@@ -38,7 +40,7 @@ class DistributionUGCInterface(Database):
             CREATE TABLE `entropy_base` (
             `idkey` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `key` VARCHAR( 255 )  collate utf8_bin NOT NULL,
-            KEY `key` (`key`)
+            UNIQUE KEY `key` (`key`)
             ) ENGINE=INNODB;
         """,
         'entropy_votes': """
@@ -81,7 +83,7 @@ class DistributionUGCInterface(Database):
         'entropy_downloads_data': """
             CREATE TABLE `entropy_downloads_data` (
             `iddownload` INT UNSIGNED NOT NULL,
-            `ip_address` VARCHAR(40) NULL DEFAULT '',
+            `ip_address` VARCHAR(40) NOT NULL,
             `entropy_ip_locations_id` INT UNSIGNED NULL DEFAULT 0,
             FOREIGN KEY  (`iddownload`) REFERENCES `entropy_downloads` (`iddownload`)
             ) ENGINE=INNODB;
@@ -126,10 +128,10 @@ class DistributionUGCInterface(Database):
             `entropy_branches_id` INT NOT NULL,
             `entropy_release_strings_id` INT NOT NULL,
             `ts` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `ip_address` VARCHAR( 15 ),
-            `entropy_ip_locations_id` INT UNSIGNED NULL DEFAULT 0,
-            `creation_date` DATETIME DEFAULT NULL,
-            `hits` INT UNSIGNED NULL DEFAULT 0,
+            `ip_address` VARCHAR( 15 ) NOT NULL,
+            `entropy_ip_locations_id` INT UNSIGNED NOT NULL DEFAULT 0,
+            `creation_date` DATETIME NOT NULL,
+            `hits` INT UNSIGNED NOT NULL DEFAULT 0,
             FOREIGN KEY  (`entropy_branches_id`) REFERENCES `entropy_branches` (`entropy_branches_id`),
             FOREIGN KEY  (`entropy_release_strings_id`)
                 REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
@@ -149,7 +151,8 @@ class DistributionUGCInterface(Database):
         'entropy_branches': """
             CREATE TABLE `entropy_branches` (
             `entropy_branches_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `entropy_branch` VARCHAR( 100 )
+            `entropy_branch` VARCHAR( 100 ),
+            UNIQUE KEY `entropy_branch` (`entropy_branch`)
             ) ENGINE=INNODB;
         """,
         'entropy_release_strings': """
@@ -278,12 +281,6 @@ class DistributionUGCInterface(Database):
         self._update_total_downloads(idkey)
         # idtotaldownload = self.lastrowid()
         return iddownload
-
-    def _insert_entropy_branch(self, branch):
-        self.execute_query("""
-        INSERT INTO entropy_branches VALUES (%s,%s)
-        """, (None, branch,))
-        return self.lastrowid()
 
     def _insert_entropy_release_string(self, release_string):
         self.execute_query("""
@@ -483,7 +480,6 @@ class DistributionUGCInterface(Database):
         TODO: once the repository-manager crap is gone, rename all the
         image document types containing __icon__ as title to icon type
         """
-        
         self.execute_query("""
         SELECT SQL_CACHE * FROM entropy_docs, entropy_base
         WHERE entropy_base.`idkey` = entropy_docs.`idkey`
@@ -694,13 +690,30 @@ class DistributionUGCInterface(Database):
         mydict['score'] = self.get_user_score(userid)
         return mydict
 
+    def _handle_entropy_branches_id(self, branch):
+        branch_id = self._get_entropy_branches_id(branch)
+        if branch_id == -1:
+            # deal with races
+            self.execute_query("""
+            INSERT IGNORE INTO entropy_branches VALUES (%s,%s)
+            """, (None, branch,))
+            branch_id = self.lastrowid()
+            if not branch_id:
+                # race
+                branch_id = self._get_entropy_branches_id(branch)
+        return branch_id
+
     def _handle_pkgkey(self, key):
         idkey = self._get_idkey(key)
         if idkey == -1:
+            # deal with races
             self.execute_query("""
-            INSERT INTO entropy_base VALUES (%s,%s)
+            INSERT IGNORE INTO entropy_base VALUES (%s,%s)
             """, (None, key,))
-            return self.lastrowid()
+            idkey = self.lastrowid()
+            if not idkey:
+                # race
+                idkey = self._get_idkey(key)
         return idkey
 
     def insert_flood_control_check(self, userid):
@@ -804,10 +817,7 @@ class DistributionUGCInterface(Database):
     def do_download_stats(self, branch, release_string, hw_hash, pkgkeys,
         ip_addr):
 
-        branch_id = self._get_entropy_branches_id(branch)
-        if branch_id == -1:
-            branch_id = self._insert_entropy_branch(branch)
-
+        branch_id = self._handle_entropy_branches_id(branch)
         rel_strings_id = self._get_entropy_release_strings_id(release_string)
         if rel_strings_id == -1:
             rel_strings_id = self._insert_entropy_release_string(release_string)
