@@ -11,7 +11,7 @@ import time
 from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
-from www.lib.exceptions import TransactionError
+from www.lib.exceptions import TransactionError, ServiceConnectionError
 
 from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
     etpConst
@@ -363,6 +363,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             ugc = self._ugc()
             vote_data = ugc.get_ugc_votes(package_names)
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -408,6 +411,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             try:
                 ugc = self._ugc()
                 cached_obj = ugc.get_ugc_allvotes()
+            except ServiceConnectionError:
+                return self._generic_invalid_request(
+                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
             finally:
                 if ugc is not None:
                     ugc.disconnect()
@@ -465,6 +471,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             voted = ugc.do_vote(package_name, user_id, vote)
             if voted:
                 ugc.commit()
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -493,6 +502,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             ugc = self._ugc()
             down_data = ugc.get_ugc_downloads(package_names)
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -577,6 +589,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 package_names, ip_addr)
             if added:
                 ugc.commit()
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -615,6 +630,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             try:
                 ugc = self._ugc()
                 cached_obj = ugc.get_ugc_alldownloads()
+            except ServiceConnectionError:
+                return self._generic_invalid_request(
+                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
             finally:
                 if ugc is not None:
                     ugc.disconnect()
@@ -762,6 +780,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     return self._generic_invalid_request(
                         message = "invalid conversion")
                 doc = docs[0]
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -869,6 +890,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 return self._generic_invalid_request(
                     message = "conversion error")
             doc = docs[0]
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -971,6 +995,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                         'docs': docs,
                     }
                 cached_obj = data
+            except ServiceConnectionError:
+                return self._generic_invalid_request(
+                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
             finally:
                 if ugc is not None:
                     ugc.disconnect()
@@ -998,6 +1025,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             ugc = self._ugc()
             raw_docs = ugc.get_ugc_metadata_by_identifiers(document_ids)
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()
@@ -1031,6 +1061,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 document_type_id)
             if status:
                 ugc.commit()
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
         finally:
             if ugc is not None:
                 ugc.disconnect()

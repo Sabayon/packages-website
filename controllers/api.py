@@ -5,6 +5,7 @@ from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
 from www.lib.dict2xml import dict_to_xml
+from www.lib.exceptions import ServiceConnectionError
 
 from entropy.const import etpConst
 from entropy.exceptions import SystemDatabaseError
@@ -63,24 +64,32 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             return sorted(pkgs_data, key = key_sorter)
 
         def _downloads_order():
-            ugc = self._ugc()
+            ugc = None
             try:
+                ugc = self._ugc()
                 key_sorter = lambda x: ugc.get_ugc_vote(
                     entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter)
+            except ServiceConnectionError:
+                return []
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
 
         def _vote_order():
-            ugc = self._ugc()
+            ugc = None
             try:
+                ugc = self._ugc()
                 key_sorter = lambda x: ugc.get_ugc_download(
                     entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
+            except ServiceConnectionError:
+                return []
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
 
         order_map = {
             "alphabet": _alphabet_order,
@@ -511,8 +520,9 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         try:
             if dbconn is None:
                 return self._api_error(renderer, 503, "repository not available")
-            ugc = self._ugc()
+            ugc = None
             try:
+                ugc = self._ugc()
                 pkgs_data = {}
                 for package_hash, (package_id, repository_id, a, b, p) in packages:
                     if details:
@@ -526,9 +536,13 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                             "package not available")
                     pkgs_data[package_hash] = pkg_data
                 response['r'] = pkgs_data
+            except ServiceConnectionError:
+                return self._api_error(
+                    renderer, 503, "service not available")
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
         except Exception as err:
             return self._api_error(renderer, 503, repr(err))
         finally:

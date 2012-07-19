@@ -11,6 +11,8 @@ except ImportError:
     from www.private import *
 from paste.request import construct_url
 
+from www.lib.exceptions import ServiceConnectionError
+
 SITE_URI = 'http://www.sabayon.org'
 SITE_URI_SSL = 'https://www.sabayon.org'
 FORUM_URI = "http://forum.sabayon.org"
@@ -124,7 +126,11 @@ def setup_login_data(model, c, session):
     import www.model.UGC as ugc
     myugc = None
     try:
-        myugc = ugc.UGC()
+        try:
+            myugc = ugc.UGC()
+        except ServiceConnectionError:
+            # ignore here
+            return
         if session.get('logged_in') and session.get('entropy'):
             if session['entropy'].get('entropy_user_id'):
                 c.front_page_user_stats = myugc.get_user_stats(
