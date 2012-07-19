@@ -828,6 +828,9 @@ class DistributionUGCInterface(Database):
         if self.STATS_MAP['installer'] in pkgkeys:
             hits = 0
 
+        entropy_ip_locations_id = self._handle_entropy_ip_locations_id(
+            ip_addr)
+
         query = """
         INSERT INTO entropy_distribution_usage
         (entropy_branches_id, entropy_release_strings_id,
