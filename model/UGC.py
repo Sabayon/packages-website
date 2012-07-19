@@ -281,7 +281,7 @@ class DistributionUGCInterface(Database):
 
     def _update_total_downloads(self, idkeys):
         for idkey in idkeys:
-            self.execute_query("""
+            rows_affected = self.execute_query("""
             UPDATE entropy_total_downloads SET `count` = `count`+1
             WHERE `idkey` = %s LIMIT 1;
             """, (idkey,))
@@ -810,7 +810,7 @@ class DistributionUGCInterface(Database):
         n_a = None
         if hw_hash:
             hw_hash = hw_hash.strip()
-            if len(hw_hash) != _hw_hash_len: # SHA512 size
+            if len(hw_hash) != _hw_hash_len: # SHA256 size
                 hw_hash = n_a
             else:
                 hw_hash = hw_hash.strip()[:_hw_hash_len]
