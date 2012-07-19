@@ -65,7 +65,7 @@ class DistributionUGCInterface(Database):
             `iddownload` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `idkey` INT UNSIGNED NOT NULL,
             `ddate` DATE NOT NULL,
-            `count` INT UNSIGNED NULL DEFAULT '0',
+            `count` INT UNSIGNED NOT NULL DEFAULT '0',
             KEY `idkey` (`idkey`,`ddate`),
             KEY `idkey_2` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
