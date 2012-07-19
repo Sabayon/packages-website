@@ -289,7 +289,7 @@ class DistributionUGCInterface(Database):
         for idkey in idkeys:
             rows_affected = self.execute_query("""
             UPDATE entropy_total_downloads SET `count` = `count`+1
-            WHERE `idkey` = %s LIMIT 1;
+            WHERE `idkey` = %s;
             """, (idkey,))
             if not rows_affected:
                 self.execute_query("""
@@ -760,7 +760,7 @@ class DistributionUGCInterface(Database):
 
             query = """
             UPDATE entropy_downloads SET `count` = `count` + 1
-            WHERE idkey = %s AND ddate = %s LIMIT 1;
+            WHERE idkey = %s AND ddate = %s;
             """
             rows_affected = self.execute_query(query, (idkey, date,))
             if not rows_affected:
