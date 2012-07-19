@@ -752,9 +752,9 @@ class DistributionUGCInterface(Database):
 
             query = """
             UPDATE entropy_downloads SET `count` = `count` + 1
-            WHERE idkey = %s AND ddate = %s;
+            WHERE idkey = %s AND ddate = CURDATE();
             """
-            rows_affected = self.execute_query(query, (idkey, date,))
+            rows_affected = self.execute_query(query, (idkey,))
             if not rows_affected:
                 query = """
                 INSERT INTO entropy_downloads
