@@ -116,7 +116,7 @@ class DistributionUGCInterface(Database):
         'entropy_docs_keywords': """
             CREATE TABLE `entropy_docs_keywords` (
             `iddoc` INT UNSIGNED NOT NULL,
-            `keyword` VARCHAR( 100 ),
+            `keyword` VARCHAR( 100 ) NOT NULL,
             KEY `keyword` (`keyword`),
             FOREIGN KEY  (`iddoc`) REFERENCES `entropy_docs` (`iddoc`)
                 ON DELETE CASCADE
@@ -135,7 +135,7 @@ class DistributionUGCInterface(Database):
             FOREIGN KEY  (`entropy_branches_id`) REFERENCES `entropy_branches` (`entropy_branches_id`),
             FOREIGN KEY  (`entropy_release_strings_id`)
                 REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
-            KEY `ip_address` (`ip_address`),
+            UNIQUE KEY `ip_address` (`ip_address`),
             KEY `entropy_ip_locations_id` (`entropy_ip_locations_id`)
             ) ENGINE=INNODB;
         """,
@@ -824,34 +824,24 @@ class DistributionUGCInterface(Database):
 
         self._do_downloads(pkgkeys, ip_addr = ip_addr)
 
-        entropy_distribution_usage_id = \
-            self._is_user_ip_available_in_entropy_distribution_usage(ip_addr)
-
         hits = 1
         if self.STATS_MAP['installer'] in pkgkeys:
             hits = 0
-        if entropy_distribution_usage_id == -1:
-            entropy_ip_locations_id = self._handle_entropy_ip_locations_id(
-                ip_addr)
-            self.execute_query("""
-            INSERT INTO entropy_distribution_usage
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (None, branch_id, rel_strings_id, None, ip_addr,
-                    entropy_ip_locations_id, self._get_datetime(), hits,))
-            entropy_distribution_usage_id = self.lastrowid()
-        else:
-            self.execute_query("""
-            UPDATE entropy_distribution_usage SET `entropy_branches_id` = %s, 
-            `entropy_release_strings_id` = %s, 
-            `hits` = `hits`+%s 
-            WHERE `entropy_distribution_usage_id` = %s
-            """, (
-                    branch_id,
-                    rel_strings_id,
-                    hits,
-                    entropy_distribution_usage_id,
-                )
-            )
+
+        query = """
+        INSERT INTO entropy_distribution_usage
+        (entropy_branches_id, entropy_release_strings_id,
+         ip_address, entropy_ip_locations_id,
+         creation_date, hits)
+        VALUES (%s, %s, %s, %s, CURDATE(), %s)
+        ON DUPLICATE KEY UPDATE hits = hits + 1;
+        """
+        self.execute_query(
+            query,
+            (branch_id, rel_strings_id,
+             ip_addr, entropy_ip_locations_id,
+             hits))
+        entropy_distribution_usage_id = self.lastrowid()
 
         # store hardware hash if set
         if hw_hash and not \
