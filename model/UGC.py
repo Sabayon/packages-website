@@ -806,11 +806,25 @@ class DistributionUGCInterface(Database):
         entropy_distribution_usage_id = self.lastrowid()
 
         # store hardware hash if set
-        if hw_hash and not \
-            self._is_entropy_hardware_usage_stats_available(
+        _hw_hash_len = 64
+        n_a = None
+        if hw_hash:
+            hw_hash = hw_hash.strip()
+            if len(hw_hash) != _hw_hash_len: # SHA512 size
+                hw_hash = n_a
+            else:
+                hw_hash = hw_hash.strip()[:_hw_hash_len]
+                if " " in hw_hash:
+                    # spaces not allowed
+                    hw_hash = n_a
+
+        if hw_hash:
+
+            if not self._is_entropy_hardware_usage_stats_available(
                 entropy_distribution_usage_id):
 
-            self._do_entropy_hardware_usage_stats(entropy_distribution_usage_id,
+            self._do_entropy_hardware_usage_stats(
+                entropy_distribution_usage_id,
                 hw_hash)
 
         return True
@@ -825,7 +839,7 @@ class DistributionUGCInterface(Database):
     def _is_entropy_hardware_usage_stats_available(self,
         entropy_distribution_usage_id):
         self.execute_query("""
-        SELECT entropy_hardware_usage_id  FROM entropy_hardware_usage
+        SELECT entropy_hardware_usage_id FROM entropy_hardware_usage
         WHERE `entropy_distribution_usage_id` = %s
         """, (entropy_distribution_usage_id,))
         data = self.fetchone()
