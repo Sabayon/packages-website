@@ -202,6 +202,12 @@ class DistributionUGCInterface(Database):
         self.__system_settings = SystemSettings()
         self._system_name = self.__system_settings['system']['name']
 
+    def _get_date(self):
+        mytime = time.time()
+        mydate = datetime.fromtimestamp(mytime)
+        mydate = datetime(mydate.year, mydate.month, mydate.day)
+        return mydate
+
     def _get_geoip_data_from_ip_address(self, ip_address):
         geoip_dbpath = self.connection_data.get('geoip_dbpath', '')
         if os.path.isfile(geoip_dbpath) and os.access(geoip_dbpath, os.R_OK):
@@ -729,9 +735,10 @@ class DistributionUGCInterface(Database):
         idkey = self._handle_pkgkey(pkgkey)
         if self._has_user_already_voted(idkey, userid):
             return False
+        date = self._get_date()
         self.execute_query("""
-        INSERT INTO entropy_votes VALUES (%s,%s,%s,CURDATE(),%s,%s)
-        """, (None, idkey, userid, vote, None,))
+        INSERT INTO entropy_votes VALUES (%s,%s,%s,%s,%s,%s)
+        """, (None, idkey, userid, date, vote, None,))
         self._update_user_score(userid)
         return True
 
@@ -746,22 +753,24 @@ class DistributionUGCInterface(Database):
 
     def _do_downloads(self, pkgkeys, ip_addr = None):
         idkeys = set()
+        date = self._get_date()
+
         for pkgkey in pkgkeys:
             idkey = self._handle_pkgkey(pkgkey)
 
             query = """
             UPDATE entropy_downloads SET `count` = `count` + 1
-            WHERE idkey = %s AND ddate = CURDATE() LIMIT 1;
+            WHERE idkey = %s AND ddate = %s LIMIT 1;
             """
-            rows_affected = self.execute_query(query, (idkey,))
+            rows_affected = self.execute_query(query, (idkey, date,))
             if not rows_affected:
                 query = """
                 INSERT INTO entropy_downloads
                 (idkey, ddate, count)
-                VALUES (%s, CURDATE(), %s)
+                VALUES (%s, %s, %s)
                 ON DUPLICATE KEY UPDATE `count` = `count` + 1;
                 """
-                self.execute_query(query, (idkey, 1))
+                self.execute_query(query, (idkey, date, 1))
 
             idkeys.add(idkey)
 
@@ -786,20 +795,21 @@ class DistributionUGCInterface(Database):
 
         entropy_ip_locations_id = self._handle_entropy_ip_locations_id(
             ip_addr)
+        date = self._get_date()
 
         query = """
         INSERT INTO entropy_distribution_usage
         (entropy_branches_id, entropy_release_strings_id,
          ip_address, entropy_ip_locations_id,
          creation_date, hits)
-        VALUES (%s, %s, %s, %s, CURDATE(), %s)
+        VALUES (%s, %s, %s, %s, %s, %s)
         ON DUPLICATE KEY UPDATE hits = hits + %s;
         """
         self.execute_query(
             query,
             (branch_id, rel_strings_id,
              ip_addr, entropy_ip_locations_id,
-             hits, hits))
+             date, hits, hits))
         entropy_distribution_usage_id = self.lastrowid()
 
         # store hardware hash if set
