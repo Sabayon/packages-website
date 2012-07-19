@@ -768,9 +768,6 @@ class DistributionUGCInterface(Database):
         if idkeys:
             self._update_total_downloads(idkeys)
 
-        del iddownloads
-        del idkeys
-
         return True
 
     def do_download_stats(self, branch, release_string, hw_hash, pkgkeys,
