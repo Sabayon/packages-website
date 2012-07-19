@@ -80,14 +80,6 @@ class DistributionUGCInterface(Database):
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=INNODB;
         """,
-        'entropy_downloads_data': """
-            CREATE TABLE `entropy_downloads_data` (
-            `iddownload` INT UNSIGNED NOT NULL,
-            `ip_address` VARCHAR(40) NOT NULL,
-            `entropy_ip_locations_id` INT UNSIGNED NULL DEFAULT 0,
-            FOREIGN KEY  (`iddownload`) REFERENCES `entropy_downloads` (`iddownload`)
-            ) ENGINE=INNODB;
-        """,
         'entropy_docs': """
             CREATE TABLE `entropy_docs` (
             `iddoc` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -299,12 +291,6 @@ class DistributionUGCInterface(Database):
                 (%s, %s)
                 ON DUPLICATE KEY UPDATE `count` = `count` + 1;
                 """, (idkey, 1))
-
-    def _store_download_data(self, iddownloads, ip_addr):
-        entropy_ip_locations_id = self._handle_entropy_ip_locations_id(ip_addr)
-        self.execute_many("""
-        INSERT INTO entropy_downloads_data VALUES (%s,%s,%s)
-        """, [(x, ip_addr, entropy_ip_locations_id,) for x in iddownloads])
 
     def _get_idkey(self, key):
         self.execute_query("""
@@ -759,7 +745,6 @@ class DistributionUGCInterface(Database):
         return False
 
     def _do_downloads(self, pkgkeys, ip_addr = None):
-        iddownloads = set()
         idkeys = set()
         for pkgkey in pkgkeys:
             idkey = self._handle_pkgkey(pkgkey)
@@ -777,14 +762,9 @@ class DistributionUGCInterface(Database):
                 ON DUPLICATE KEY UPDATE `count` = `count` + 1;
                 """
                 self.execute_query(query, (idkey, 1))
-            iddownload = self.lastrowid()
-            if (iddownload > 0) and ip_addr is not None:
-                iddownloads.add(iddownload)
 
             idkeys.add(idkey)
 
-        if iddownloads:
-            self._store_download_data(iddownloads, ip_addr)
         if idkeys:
             self._update_total_downloads(idkeys)
 
@@ -803,9 +783,9 @@ class DistributionUGCInterface(Database):
 
         self._do_downloads(pkgkeys, ip_addr = ip_addr)
 
-        hits = 1
+        hits = len(pkgkeys)
         if self.STATS_MAP['installer'] in pkgkeys:
-            hits = 0
+            hits = 1
 
         entropy_ip_locations_id = self._handle_entropy_ip_locations_id(
             ip_addr)
@@ -816,13 +796,13 @@ class DistributionUGCInterface(Database):
          ip_address, entropy_ip_locations_id,
          creation_date, hits)
         VALUES (%s, %s, %s, %s, CURDATE(), %s)
-        ON DUPLICATE KEY UPDATE hits = hits + 1;
+        ON DUPLICATE KEY UPDATE hits = hits + %s;
         """
         self.execute_query(
             query,
             (branch_id, rel_strings_id,
              ip_addr, entropy_ip_locations_id,
-             hits))
+             hits, hits))
         entropy_distribution_usage_id = self.lastrowid()
 
         # store hardware hash if set
