@@ -823,9 +823,9 @@ class DistributionUGCInterface(Database):
             if not self._is_entropy_hardware_usage_stats_available(
                 entropy_distribution_usage_id):
 
-            self._do_entropy_hardware_usage_stats(
-                entropy_distribution_usage_id,
-                hw_hash)
+                self._do_entropy_hardware_usage_stats(
+                    entropy_distribution_usage_id,
+                    hw_hash)
 
         return True
 
