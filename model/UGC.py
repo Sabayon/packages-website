@@ -66,7 +66,7 @@ class DistributionUGCInterface(Database):
             `idkey` INT UNSIGNED NOT NULL,
             `ddate` DATE NOT NULL,
             `count` INT UNSIGNED NOT NULL DEFAULT '0',
-            KEY `idkey` (`idkey`,`ddate`),
+            UNIQUE KEY `idkey` (`idkey`,`ddate`),
             KEY `idkey_2` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=INNODB;
@@ -259,29 +259,6 @@ class DistributionUGCInterface(Database):
             INSERT INTO entropy_doctypes VALUES (%s, %s)
             """, (self.DOC_TYPES[mydoctype], mydoctype,))
 
-    def _get_date(self):
-        mytime = time.time()
-        mydate = datetime.fromtimestamp(mytime)
-        mydate = datetime(mydate.year, mydate.month, mydate.day)
-        return mydate
-
-    def _get_datetime(self):
-        mytime = time.time()
-        mydate = datetime.fromtimestamp(mytime)
-        mydate = datetime(mydate.year, mydate.month, mydate.day, mydate.hour,
-            mydate.minute, mydate.second)
-        return mydate
-
-    def _insert_download(self, idkey, ddate):
-        self.execute_query("""
-        INSERT INTO entropy_downloads VALUES (%s,%s,%s,%s)
-        """, (None, idkey, ddate, 1))
-        iddownload = self.lastrowid()
-
-        self._update_total_downloads(idkey)
-        # idtotaldownload = self.lastrowid()
-        return iddownload
-
     def _insert_entropy_release_string(self, release_string):
         self.execute_query("""
         INSERT INTO entropy_release_strings VALUES (%s, %s)
@@ -310,39 +287,24 @@ class DistributionUGCInterface(Database):
                         self._insert_entropy_ip_locations_id(ip_lat, ip_long)
         return entropy_ip_locations_id
 
-    def _update_total_downloads(self, idkey):
-        rows_affected = self.execute_query("""
-        UPDATE entropy_total_downloads SET `count` = `count`+1
-        WHERE `idkey` = %s
-        """, (idkey,))
-        if not rows_affected:
+    def _update_total_downloads(self, idkeys):
+        for idkey in idkeys:
             self.execute_query("""
-            INSERT INTO entropy_total_downloads VALUES (%s,%s,%s)
-            """, (None, idkey, 1))
-
-    def _update_download(self, iddownload, idkey):
-        self.execute_query("""
-        UPDATE entropy_downloads SET `count` = `count`+1 WHERE `iddownload` = %s
-        """, (iddownload,))
-        # this doesn't check if a record is already available, but should be
-        # fine
-        # TODO: when the old public interface (repository service) is dropped
-        # move this to a trigger
-        self._update_total_downloads(idkey)
+            UPDATE entropy_total_downloads SET `count` = `count`+1
+            WHERE `idkey` = %s LIMIT 1;
+            """, (idkey,))
+            if not rows_affected:
+                self.execute_query("""
+                INSERT INTO entropy_total_downloads (`idkey`, `count`) VALUES
+                (%s, %s)
+                ON DUPLICATE KEY UPDATE `count` = `count` + 1;
+                """, (idkey, 1))
 
     def _store_download_data(self, iddownloads, ip_addr):
         entropy_ip_locations_id = self._handle_entropy_ip_locations_id(ip_addr)
         self.execute_many("""
         INSERT INTO entropy_downloads_data VALUES (%s,%s,%s)
         """, [(x, ip_addr, entropy_ip_locations_id,) for x in iddownloads])
-
-    def _get_iddownload(self, idkey, ddate):
-        self.execute_query("""
-        SELECT `iddownload` FROM entropy_downloads WHERE `idkey` = %s
-        AND `ddate` = %s
-        """, (idkey, ddate,))
-        data = self.fetchone() or {}
-        return data.get('iddownload', -1)
 
     def _get_idkey(self, key):
         self.execute_query("""
@@ -779,12 +741,11 @@ class DistributionUGCInterface(Database):
 
     def do_vote(self, pkgkey, userid, vote):
         idkey = self._handle_pkgkey(pkgkey)
-        mydate = self._get_date()
         if self._has_user_already_voted(idkey, userid):
             return False
         self.execute_query("""
-        INSERT INTO entropy_votes VALUES (%s,%s,%s,%s,%s,%s)
-        """, (None, idkey, userid, mydate, vote, None,))
+        INSERT INTO entropy_votes VALUES (%s,%s,%s,CURDATE(),%s,%s)
+        """, (None, idkey, userid, vote, None,))
         self._update_user_score(userid)
         return True
 
@@ -798,20 +759,38 @@ class DistributionUGCInterface(Database):
         return False
 
     def _do_downloads(self, pkgkeys, ip_addr = None):
-        mydate = self._get_date()
         iddownloads = set()
+        idkeys = set()
         for pkgkey in pkgkeys:
             idkey = self._handle_pkgkey(pkgkey)
-            iddownload = self._get_iddownload(idkey, mydate)
-            if iddownload == -1:
-                iddownload = self._insert_download(idkey, mydate)
-            else:
-                self._update_download(iddownload, idkey)
-            if (iddownload > 0) and isinstance(ip_addr, const_get_stringtype()):
+
+            query = """
+            UPDATE entropy_downloads SET `count` = `count` + 1
+            WHERE idkey = %s AND ddate = CURDATE() LIMIT 1;
+            """
+            rows_affected = self.execute_query(query, (idkey,))
+            if not rows_affected:
+                query = """
+                INSERT INTO entropy_downloads
+                (idkey, ddate, count)
+                VALUES (%s, CURDATE(), %s)
+                ON DUPLICATE KEY UPDATE `count` = `count` + 1;
+                """
+                self.execute_query(query, (idkey, 1))
+            iddownload = self.lastrowid()
+            if (iddownload > 0) and ip_addr is not None:
                 iddownloads.add(iddownload)
+
+            idkeys.add(idkey)
 
         if iddownloads:
             self._store_download_data(iddownloads, ip_addr)
+        if idkeys:
+            self._update_total_downloads(idkeys)
+
+        del iddownloads
+        del idkeys
+
         return True
 
     def do_download_stats(self, branch, release_string, hw_hash, pkgkeys,
