@@ -708,8 +708,8 @@ class DistributionUGCInterface(Database):
         if idkey == -1:
             # deal with races
             self.execute_query("""
-            INSERT IGNORE INTO entropy_base VALUES (%s,%s)
-            """, (None, key,))
+            INSERT IGNORE INTO entropy_base (`key`) VALUES (%s);
+            """, (key,))
             idkey = self.lastrowid()
             if not idkey:
                 # race
