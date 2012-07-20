@@ -124,9 +124,11 @@ class DistributionUGCInterface(Database):
             `entropy_ip_locations_id` INT UNSIGNED NOT NULL DEFAULT 0,
             `creation_date` DATETIME NOT NULL,
             `hits` INT UNSIGNED NOT NULL DEFAULT 0,
+
             FOREIGN KEY  (`entropy_branches_id`) REFERENCES `entropy_branches` (`entropy_branches_id`),
             FOREIGN KEY  (`entropy_release_strings_id`)
                 REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
+
             UNIQUE KEY `ip_address` (`ip_address`),
             KEY `entropy_ip_locations_id` (`entropy_ip_locations_id`)
             ) ENGINE=INNODB;
@@ -146,14 +148,15 @@ class DistributionUGCInterface(Database):
         'entropy_branches': """
             CREATE TABLE `entropy_branches` (
             `entropy_branches_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `entropy_branch` VARCHAR( 100 ),
+            `entropy_branch` VARCHAR( 100 ) NOT NULL,
             UNIQUE KEY `entropy_branch` (`entropy_branch`)
             ) ENGINE=INNODB;
         """,
         'entropy_release_strings': """
             CREATE TABLE `entropy_release_strings` (
             `entropy_release_strings_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `release_string` VARCHAR( 255 )
+            `release_string` VARCHAR( 255 ) NOT NULL,
+            UNIQUE KEY `release_string` (`release_string`)
             ) ENGINE=INNODB;
         """,
         'entropy_ip_locations': """
@@ -253,12 +256,6 @@ class DistributionUGCInterface(Database):
             self.execute_query("""
             INSERT INTO entropy_doctypes VALUES (%s, %s)
             """, (self.DOC_TYPES[mydoctype], mydoctype,))
-
-    def _insert_entropy_release_string(self, release_string):
-        self.execute_query("""
-        INSERT INTO entropy_release_strings VALUES (%s, %s)
-        """, (None, release_string,))
-        return self.lastrowid()
 
     def _insert_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
         self.execute_query("""
@@ -654,6 +651,19 @@ class DistributionUGCInterface(Database):
                 branch_id = self._get_entropy_branches_id(branch)
         return branch_id
 
+    def _handle_entropy_release_strings_id(self, release_string):
+        rel_id = self._get_entropy_release_strings_id(release_string)
+        if rel_id == -1:
+            # deal with races
+            self.execute_query("""
+            INSERT IGNORE INTO entropy_release_strings VALUES (%s,%s)
+            """, (None, release_string,))
+            rel_id = self.lastrowid()
+            if not rel_id:
+                # race
+                rel_id = self._get_entropy_release_strings_id(release_string)
+        return rel_id
+
     def _handle_pkgkey(self, key):
         idkey = self._get_idkey(key)
         if idkey == -1:
@@ -780,9 +790,7 @@ class DistributionUGCInterface(Database):
         ip_addr):
 
         branch_id = self._handle_entropy_branches_id(branch)
-        rel_strings_id = self._get_entropy_release_strings_id(release_string)
-        if rel_strings_id == -1:
-            rel_strings_id = self._insert_entropy_release_string(release_string)
+        rel_strings_id = self._handle_entropy_release_strings_id(release_string)
 
         self._do_downloads(pkgkeys, ip_addr = ip_addr)
 
