@@ -173,7 +173,7 @@ class DistributionUGCInterface(Database):
             `entropy_ip_locations_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `ip_latitude` FLOAT( 8,5 ),
             `ip_longitude` FLOAT( 8,5 ),
-            KEY `ip_locations_lat_lon` (`ip_latitude`,`ip_longitude`)
+            UNIQUE KEY `ip_locations_lat_lon` (`ip_latitude`,`ip_longitude`)
             ) ENGINE=INNODB;
         """,
     }
@@ -266,26 +266,36 @@ class DistributionUGCInterface(Database):
             INSERT INTO entropy_doctypes VALUES (%s, %s)
             """, (self.DOC_TYPES[mydoctype], mydoctype,))
 
-    def _insert_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
-        self.execute_query("""
-        INSERT INTO entropy_ip_locations VALUES (%s, %s, %s)
-        """, (None, ip_latitude, ip_longitude,))
-        return self.lastrowid()
-
     def _handle_entropy_ip_locations_id(self, ip_addr):
-        entropy_ip_locations_id = 0
+        entropy_ip_locations_id = 0 # default
+        ip_lat, ip_long = None, None
+
         geo_data = self._get_geoip_data_from_ip_address(ip_addr)
-        if isinstance(geo_data, dict):
+
+        if geo_data is not None:
             ip_lat = geo_data.get('latitude')
             ip_long = geo_data.get('longitude')
-            if isinstance(ip_lat, float) and isinstance(ip_long, float):
+            if ip_lat is not None and ip_long is not None:
                 ip_lat = round(ip_lat, 5)
                 ip_long = round(ip_long, 5)
-                entropy_ip_locations_id = self._get_entropy_ip_locations_id(
-                    ip_lat, ip_long)
-                if entropy_ip_locations_id == -1:
-                    entropy_ip_locations_id = \
-                        self._insert_entropy_ip_locations_id(ip_lat, ip_long)
+
+        if ip_lat is not None and ip_long is not None:
+            entropy_ip_locations_id = self._get_entropy_ip_locations_id(
+                ip_lat, ip_long)
+            if entropy_ip_locations_id == -1:
+
+                self.execute_query("""
+                INSERT IGNORE INTO entropy_ip_locations VALUES (%s, %s, %s)
+                """, (None, ip_latitude, ip_longitude,))
+                entropy_ip_locations_id = self.lastrowid()
+
+                if not entropy_ip_locations_id:
+                    # race
+                    entropy_ip_locations_id = self._get_entropy_ip_locations_id(
+                        ip_lat, ip_long)
+                if not entropy_ip_locations_id:
+                    entropy_ip_locations_id = 0 # force to default
+
         return entropy_ip_locations_id
 
     def _update_total_downloads(self, idkeys):
