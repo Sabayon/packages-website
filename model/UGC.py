@@ -750,16 +750,18 @@ class DistributionUGCInterface(Database):
         for pkgkey in pkgkeys:
             idkey = self._handle_pkgkey(pkgkey)
 
+            # only first day of month
             query = """
             UPDATE entropy_downloads SET `count` = `count` + 1
-            WHERE idkey = %s AND ddate = CURDATE();
+            WHERE idkey = %s AND
+            ddate = DATE_FORMAT(CURDATE(), '%Y-%m-01');
             """
             rows_affected = self.execute_query(query, (idkey,))
             if not rows_affected:
                 query = """
                 INSERT INTO entropy_downloads
                 (idkey, ddate, count)
-                VALUES (%s, CURDATE(), %s)
+                VALUES (%s, DATE_FORMAT(CURDATE(), '%Y-%m-01'), %s)
                 ON DUPLICATE KEY UPDATE `count` = `count` + 1;
                 """
                 self.execute_query(query, (idkey, 1))
