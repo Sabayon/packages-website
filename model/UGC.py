@@ -80,6 +80,15 @@ class DistributionUGCInterface(Database):
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=INNODB;
         """,
+        'entropy_daily_downloads': """
+            CREATE TABLE `entropy_daily_downloads` (
+            `iddailydownload` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+           `ddate` DATE NOT NULL,
+            `count` INT UNSIGNED NOT NULL,
+            UNIQUE KEY `ddate` (`ddate`)
+            ) ENGINE=INNODB;
+        """,
+
         'entropy_docs': """
             CREATE TABLE `entropy_docs` (
             `iddoc` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -291,6 +300,18 @@ class DistributionUGCInterface(Database):
                 (%s, %s)
                 ON DUPLICATE KEY UPDATE `count` = `count` + 1;
                 """, (idkey, 1))
+
+    def _update_daily_downloads(self, count):
+        rows_affected = self.execute_query("""
+        UPDATE entropy_daily_downloads SET `count` = `count` + %s
+        WHERE `ddate` = CURDATE();
+        """, (count,))
+        if not rows_affected:
+            self.execute_query("""
+            INSERT INTO entropy_daily_downloads (`ddate`, `count`) VALUES
+            (CURDATE(), %s)
+            ON DUPLICATE KEY UPDATE `count` = `count` + %s;
+            """, (count, count))
 
     def _get_idkey(self, key):
         self.execute_query("""
@@ -783,6 +804,7 @@ class DistributionUGCInterface(Database):
 
         if idkeys:
             self._update_total_downloads(idkeys)
+            self._update_daily_downloads(len(idkeys))
 
         return True
 
