@@ -133,11 +133,14 @@ class DistributionUGCInterface(Database):
         """,
         'entropy_hardware_usage': """
             CREATE TABLE `entropy_hardware_usage` (
-            `entropy_hardware_usage_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `entropy_hardware_usage_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `entropy_distribution_usage_id` INT UNSIGNED NOT NULL,
-            `entropy_hardware_hash` VARCHAR ( 80 ),
-            FOREIGN KEY  (`entropy_distribution_usage_id`)
-                REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
+            `entropy_hardware_hash` VARCHAR(80) NOT NULL,
+            PRIMARY KEY (`entropy_hardware_usage_id`),
+            UNIQUE KEY `entropy_distribution_usage_id` (`entropy_distribution_usage_id`),
+            CONSTRAINT `entropy_hardware_usage_ibfk_1`
+              FOREIGN KEY (`entropy_distribution_usage_id`)
+              REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
             ) ENGINE=INNODB;
         """,
         'entropy_branches': """
@@ -819,33 +822,11 @@ class DistributionUGCInterface(Database):
                     hw_hash = n_a
 
         if hw_hash:
-
-            if not self._is_entropy_hardware_usage_stats_available(
-                entropy_distribution_usage_id):
-
-                self._do_entropy_hardware_usage_stats(
-                    entropy_distribution_usage_id,
-                    hw_hash)
+            self.execute_query("""
+            INSERT IGNORE INTO entropy_hardware_usage VALUES (%s,%s,%s)
+            """, (None, entropy_distribution_usage_id, hw_hash,))
 
         return True
-
-    def _do_entropy_hardware_usage_stats(self, entropy_distribution_usage_id,
-        hw_hash):
-
-        self.execute_query("""
-        INSERT INTO entropy_hardware_usage VALUES (%s,%s,%s)
-        """, (None, entropy_distribution_usage_id, hw_hash,))
-
-    def _is_entropy_hardware_usage_stats_available(self,
-        entropy_distribution_usage_id):
-        self.execute_query("""
-        SELECT entropy_hardware_usage_id FROM entropy_hardware_usage
-        WHERE `entropy_distribution_usage_id` = %s
-        """, (entropy_distribution_usage_id,))
-        data = self.fetchone()
-        if data:
-            return True
-        return False
 
     def _is_user_ip_available_in_entropy_distribution_usage(self, ip_address):
         self.execute_query("""
