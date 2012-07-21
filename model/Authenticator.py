@@ -21,6 +21,3 @@ class Authenticator(phpBB3AuthInterface):
             user_id = data.get('user_id')
         return user_id
 
-    def __del__(self):
-        if hasattr(self,'disconnect'):
-            self.disconnect()

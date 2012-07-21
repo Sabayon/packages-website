@@ -20,7 +20,7 @@ etpConst['entropygid'] = config.DEFAULT_WEB_GID
 import entropy.dump
 import entropy.tools
 
-import entropy.exceptions as etp_exceptions
+from entropy.exceptions import PermissionDenied
 from entropy.misc import EntropyGeoIP
 from entropy.client.services.interfaces import Document, DocumentFactory
 from entropy.core.settings.base import SystemSettings
@@ -229,12 +229,12 @@ class DistributionUGCInterface(Database):
     def _setup_store_path(self, path):
         path = os.path.realpath(path)
         if not os.path.isabs(path):
-            raise etp_exceptions.PermissionDenied("not a valid directory path")
+            raise PermissionDenied("not a valid directory path")
         if not os.path.isdir(path):
             try:
                 os.makedirs(path)
             except OSError as err:
-                raise etp_exceptions.PermissionDenied(err)
+                raise PermissionDenied(err)
             if etpConst['entropygid'] != None:
                 const_setup_perms(path, etpConst['entropygid'],
                     recursion = False)
@@ -925,7 +925,7 @@ class DistributionUGCInterface(Database):
             try:
                 os.makedirs(dest_dir)
             except OSError as err:
-                raise etp_exceptions.PermissionDenied(err)
+                raise PermissionDenied(err)
             if etpConst['entropygid'] != None:
                 const_setup_perms(dest_dir, etpConst['entropygid'],
                     recursion = False)

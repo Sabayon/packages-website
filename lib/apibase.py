@@ -16,6 +16,9 @@ from pylons.i18n import _, ungettext, N_
 from paste.request import construct_url
 
 import www.model as model
+import www.model.Entropy.Entropy as Entropy
+import www.model.UGC.UGC as UGC
+
 from entropy.exceptions import SystemDatabaseError
 try:
     from entropy.db.exceptions import ProgrammingError, OperationalError, \
@@ -58,10 +61,8 @@ class ApibaseController:
         that your data is properly input validated (using self._*_re
         objects) before calling these methods.
         """
-        import www.model.Entropy
-        import www.model.UGC
-        self._ugc = www.model.UGC.UGC
-        self._entropy = www.model.Entropy.Entropy
+        self._ugc = UGC
+        self._entropy = Entropy
         self._cacher = EntropyCacher()
         # same as hostname regexp
         # repository_id validation rule

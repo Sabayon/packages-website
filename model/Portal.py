@@ -19,13 +19,6 @@ class Portal(DistributionAuthInterface):
         self.connect()
         self.dbconn.set_character_set('utf8')
 
-    def __del__(self):
-        if hasattr(self,'disconnect'):
-            try:
-                self.disconnect()
-            except ServiceConnectionError:
-                pass
-
     def check_connection(self):
         pass
 

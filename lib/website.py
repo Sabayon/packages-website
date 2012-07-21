@@ -18,6 +18,9 @@ import Image
 
 import www.lib.helpers as h
 import www.model as model
+import www.model.Portal.Portal as Portal
+import www.model.Authenticator.Authenticator as Authenticator
+
 from htmlentitydefs import name2codepoint
 from entropy.const import etpConst
 etpConst['entropygid'] = model.config.DEFAULT_WEB_GID
@@ -46,8 +49,8 @@ class WebsiteController:
         self.small_img_dirname = 'small'
         self.VIRUS_CHECK_EXEC = model.config.VIRUS_CHECK_EXEC
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
-        import www.model.Portal
-        self.Portal = www.model.Portal.Portal
+        self.Portal = Portal
+        self.Authenticator = Authenticator
 
     def _resize_icon(self, image_path):
         """

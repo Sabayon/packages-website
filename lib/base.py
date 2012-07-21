@@ -4,6 +4,8 @@ Provides the BaseController class for subclassing, and other objects
 utilized by Controllers.
 """
 import os
+import urllib
+
 from pylons import tmpl_context as c
 from pylons import app_globals as g
 from pylons import cache, config, request, response, session, url
@@ -14,8 +16,12 @@ from pylons.i18n import _, ungettext, N_, set_lang, add_fallback
 from pylons.i18n.translation import LanguageError
 from pylons.templating import render_mako
 
+from paste.request import construct_url
+
 import www.lib.helpers as h
 import www.model as model
+import www.model.Portal.Portal as Portal
+import www.model.UGC.UGC as UGC
 
 def is_valid_string(mystr):
     lower = xrange(0, 32)
@@ -88,10 +94,63 @@ class BaseController(WSGIController):
         except (AttributeError, KeyError):
             user_agent = None
         c.user_agent = user_agent
-        model.config.setup_internal(model, c, session, request)
+        self._generate_internal_metadata()
+
+    def _generate_login_statistics(self):
+        myugc = None
+        try:
+            try:
+                myugc = UGC()
+            except ServiceConnectionError:
+                # ignore here
+                return
+            if session.get('logged_in') and session.get('entropy'):
+                if session['entropy'].get('entropy_user_id'):
+                    c.front_page_user_stats = myugc.get_user_stats(
+                        session['entropy']['entropy_user_id'])
+        finally:
+            if myugc is not None:
+                myugc.disconnect()
+                del myugc
+
+    def _generate_internal_metadata(self):
+        session.cookie_expires = False
+        session.cookie_domain = '.sabayon.org'
+
+        c.HTTP_PROTOCOL = model.config.get_http_protocol(request)
+        if is_https(request):
+            c.site_uri = model.config.SITE_URI_SSL
+            c.forum_uri = model.config.FORUM_URI_SSL
+        else:
+            c.site_uri = model.config.SITE_URI
+            c.forum_uri = FORUM_URI
+        c.login_uri = model.config.LOGIN_URI
+        c.www_current_url = construct_url(request.environ)
+
+        c.this_uri = request.environ.get('PATH_INFO')
+        if request.environ.get('QUERY_STRING'):
+            c.this_uri += '?' + request.environ['QUERY_STRING']
+        c.this_uri_full = model.config.SITE_URI + c.this_uri
+        c.this_uri_full_quoted = urllib.quote(
+            model.config.htmlencode(c.this_uri_full))
+
+        self._generate_login_statistics()
+        session.save()
 
     def _generate_login_metadata(self):
-        model.config.setup_permission_data(model, c, session)
+        if session.get('entropy') and session.get('logged_in'):
+            if session['entropy'].get('entropy_user_id'):
+                portal = None
+                try:
+                    portal = Portal()
+                    c.is_user_administrator = portal.check_admin(
+                        session['entropy']['entropy_user_id'])
+                    c.is_user_moderator = portal.check_moderator(
+                        session['entropy']['entropy_user_id'])
+                finally:
+                    if portal is not None:
+                        portal.disconnect()
+                        del portal
 
     def __call__(self, environ, start_response):
         """Invoke the Controller"""

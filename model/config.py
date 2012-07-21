@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import hashlib
+import time
+import re
 import os
 import datetime, random, os, urllib
 from pylons.i18n import _, N_
@@ -116,90 +118,24 @@ def get_http_protocol(request):
         return "https"
     return "http"
 
-def setup_internal(model, c, session, request):
-    setup_session(session)
-    setup_misc_vars(c, request)
-    setup_login_data(model, c, session)
-    session.save()
-
-def setup_login_data(model, c, session):
-    import www.model.UGC as ugc
-    myugc = None
-    try:
-        try:
-            myugc = ugc.UGC()
-        except ServiceConnectionError:
-            # ignore here
-            return
-        if session.get('logged_in') and session.get('entropy'):
-            if session['entropy'].get('entropy_user_id'):
-                c.front_page_user_stats = myugc.get_user_stats(
-                    session['entropy']['entropy_user_id'])
-    finally:
-        if myugc is not None:
-            myugc.disconnect()
-            del myugc
-
-def setup_permission_data(model, c, session):
-    if session.get('entropy') and session.get('logged_in'):
-        if session['entropy'].get('entropy_user_id'):
-            import www.model.Portal
-            portal = www.model.Portal.Portal()
-            try:
-                c.is_user_administrator = portal.check_admin(
-                    session['entropy']['entropy_user_id'])
-                c.is_user_moderator = portal.check_moderator(
-                    session['entropy']['entropy_user_id'])
-            finally:
-                portal.disconnect()
-                del portal
-
-def setup_session(session):
-    session.cookie_expires = False
-    session.cookie_domain = '.sabayon.org'
-
-def setup_misc_vars(c, request):
-
-    c.HTTP_PROTOCOL = get_http_protocol(request)
-    if is_https(request):
-        c.site_uri = SITE_URI_SSL
-        c.forum_uri = FORUM_URI_SSL
-    else:
-        c.site_uri = SITE_URI
-        c.forum_uri = FORUM_URI
-
-    c.login_uri = LOGIN_URI
-
-    c.www_current_url = construct_url(request.environ)
-
-    c.this_uri = request.environ.get('PATH_INFO')
-    if request.environ.get('QUERY_STRING'):
-        c.this_uri += '?' + request.environ['QUERY_STRING']
-    c.this_uri_full = SITE_URI + c.this_uri
-    c.this_uri_full_quoted = urllib.quote(htmlencode(c.this_uri_full))
-
 def hash_string(s):
     m = hashlib.md5()
     m.update(s)
     return m.hexdigest()
 
 def get_current_date():
-    import time
     my = time.gmtime()
     return "%s/%s/%s" % (my[2],my[1],my[0],)
 
 def get_current_day_month():
-    import time
     my = time.gmtime()
     return "%s%s" % (my[2],my[1],)
 
 def remove_html_tags(data):
-    import re
     p = re.compile(r'<.*?>')
     return p.sub('', data)
 
 def remove_phpbb_tags(data):
-    import re
     p = re.compile(r'\[.*?\]')
     return p.sub('', data)
 

@@ -12,6 +12,7 @@ from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController
 from www.lib.exceptions import TransactionError, ServiceConnectionError
+from www.lib.phpbb import Authenticator
 
 from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
     etpConst
@@ -38,7 +39,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
     @property
     def _auth(self):
         if self.__service_auth is None:
-            from www.lib.phpbb import Authenticator
             self.__service_auth = Authenticator()
         return self.__service_auth
 
