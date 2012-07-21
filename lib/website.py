@@ -18,8 +18,8 @@ import Image
 
 import www.lib.helpers as h
 import www.model as model
-import www.model.Portal.Portal as Portal
-import www.model.Authenticator.Authenticator as Authenticator
+import www.model.Portal as Portal
+import www.model.Authenticator as Authenticator
 
 from htmlentitydefs import name2codepoint
 from entropy.const import etpConst
@@ -49,8 +49,8 @@ class WebsiteController:
         self.small_img_dirname = 'small'
         self.VIRUS_CHECK_EXEC = model.config.VIRUS_CHECK_EXEC
         self.VIRUS_CHECK_ARGS = model.config.VIRUS_CHECK_ARGS
-        self.Portal = Portal
-        self.Authenticator = Authenticator
+        self.Portal = Portal.Portal
+        self.Authenticator = Authenticator.Authenticator
 
     def _resize_icon(self, image_path):
         """

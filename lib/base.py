@@ -20,8 +20,8 @@ from paste.request import construct_url
 
 import www.lib.helpers as h
 import www.model as model
-import www.model.Portal.Portal as Portal
-import www.model.UGC.UGC as UGC
+import www.model.Portal as Portal
+import www.model.UGC as UGC
 
 def is_valid_string(mystr):
     lower = xrange(0, 32)
@@ -100,7 +100,7 @@ class BaseController(WSGIController):
         myugc = None
         try:
             try:
-                myugc = UGC()
+                myugc = UGC.UGC()
             except ServiceConnectionError:
                 # ignore here
                 return
@@ -142,7 +142,7 @@ class BaseController(WSGIController):
             if session['entropy'].get('entropy_user_id'):
                 portal = None
                 try:
-                    portal = Portal()
+                    portal = Portal.Portal()
                     c.is_user_administrator = portal.check_admin(
                         session['entropy']['entropy_user_id'])
                     c.is_user_moderator = portal.check_moderator(

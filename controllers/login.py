@@ -2,7 +2,6 @@
 import logging
 from www.lib.base import *
 from www.lib.website import *
-import www.model.Portal.Portal as Portal
 
 
 from pylons.i18n import _
