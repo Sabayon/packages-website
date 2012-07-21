@@ -118,12 +118,12 @@ class BaseController(WSGIController):
         session.cookie_domain = '.sabayon.org'
 
         c.HTTP_PROTOCOL = model.config.get_http_protocol(request)
-        if is_https(request):
+        if model.config.is_https(request):
             c.site_uri = model.config.SITE_URI_SSL
             c.forum_uri = model.config.FORUM_URI_SSL
         else:
             c.site_uri = model.config.SITE_URI
-            c.forum_uri = FORUM_URI
+            c.forum_uri = model.config.FORUM_URI
         c.login_uri = model.config.LOGIN_URI
         c.www_current_url = construct_url(request.environ)
 
