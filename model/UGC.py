@@ -32,9 +32,6 @@ from www.lib.exceptions import ServiceConnectionError
 
 class DistributionUGCInterface(Database):
 
-    # ONLY WITH INNODB, ON DELETE CASCADE WORKS !!!
-    # INNODB is much slower for big data (it seems), that's why it's not
-    # used everywhere
     SQL_TABLES = {
         'entropy_base': """
             CREATE TABLE `entropy_base` (
@@ -67,7 +64,6 @@ class DistributionUGCInterface(Database):
             `ddate` DATE NOT NULL,
             `count` INT UNSIGNED NOT NULL DEFAULT '0',
             UNIQUE KEY `idkey` (`idkey`,`ddate`),
-            KEY `idkey_2` (`idkey`),
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=INNODB;
         """,
@@ -100,7 +96,6 @@ class DistributionUGCInterface(Database):
             `title` VARCHAR( 512 ),
             `description` VARCHAR( 4000 ),
             `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            KEY `idkey` (`idkey`),
             KEY `userid` (`userid`),
             KEY `idkey_2` (`idkey`,`userid`,`iddoctype`),
             KEY `title` (`title`(333)),
@@ -177,25 +172,25 @@ class DistributionUGCInterface(Database):
             ) ENGINE=INNODB;
         """,
     }
-    VOTE_RANGE = list(range(1, 6))
-    VIRUS_CHECK_EXEC = '/usr/bin/clamscan'
-    VIRUS_CHECK_ARGS = []
-    entropy_docs_title_len = 512
-    entropy_docs_description_len = 4000
-    entropy_docs_keyword_len = 100
-    COMMENTS_SCORE_WEIGHT = 5
-    DOCS_SCORE_WEIGHT = 10
-    VOTES_SCORE_WEIGHT = 2
-    STATS_MAP = {
-        'installer': "installer",
-    }
+
 
     def __init__(self, connection_data, store_path, store_url = None):
 
+        self.entropy_docs_title_len = 512
+        self.entropy_docs_description_len = 4000
+        self.entropy_docs_keyword_len = 100
         if store_url is None:
             store_url = ""
         self._store_url = store_url
         self.FLOOD_INTERVAL = 30
+        self.VOTE_RANGE = [1, 2, 3, 4, 5]
+        self.COMMENTS_SCORE_WEIGHT = 5
+        self.DOCS_SCORE_WEIGHT = 10
+        self.VOTES_SCORE_WEIGHT = 2
+        self.STATS_MAP = {
+            'installer': "installer",
+        }
+
         self.DOC_TYPES = {
             'comments': Document.COMMENT_TYPE_ID,
             'image': Document.IMAGE_TYPE_ID,
@@ -884,8 +879,8 @@ class DistributionUGCInterface(Database):
         if not os.access(filepath, os.R_OK):
             return False, None
 
-        args = [self.VIRUS_CHECK_EXEC]
-        args += self.VIRUS_CHECK_ARGS
+        args = [config.VIRUS_CHECK_EXEC]
+        args += config.VIRUS_CHECK_ARGS
         args += [filepath]
         with open("/dev/null", "w") as f:
             p = subprocess.Popen(args, stdout = f, stderr = f)

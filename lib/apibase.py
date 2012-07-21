@@ -5,6 +5,7 @@ import hashlib
 import os
 import re
 import time
+import sys
 
 from pylons import tmpl_context as c
 from pylons import app_globals as g
@@ -145,6 +146,7 @@ class ApibaseController:
         validated = self._cacher.pop(cache_key,
             cache_dir = model.config.WEBSITE_CACHE_DIR)
 
+        dbconn = None
         try:
             dbconn = entropy._open_db(repository_id, arch, product, branch)
             if dbconn is None:
@@ -153,13 +155,16 @@ class ApibaseController:
                 dbconn.validate()
                 self._cacher.save(cache_key, True,
                     cache_dir = model.config.WEBSITE_CACHE_DIR)
-            return dbconn
-        except (ProgrammingError, OperationalError, SystemDatabaseError):
-            try:
-                dbconn.close()
-            except:
-                pass
-            return None
+        except (ProgrammingError, OperationalError,
+                SystemDatabaseError, Exception) as exc:
+            sys.stderr.write("Error _api_get_repo: %s\n" % (repr(exc),))
+            if dbconn is not None:
+                try:
+                    dbconn.close()
+                except:
+                    pass
+                dbconn = None
+        return dbconn
 
     def _api_get_params(self, entropy = None):
         """
