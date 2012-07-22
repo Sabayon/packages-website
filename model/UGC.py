@@ -23,7 +23,6 @@ import entropy.tools
 from entropy.exceptions import PermissionDenied
 from entropy.misc import EntropyGeoIP
 from entropy.client.services.interfaces import Document, DocumentFactory
-from entropy.core.settings.base import SystemSettings
 from entropy.i18n import _
 
 from www.lib.mysql import Database
@@ -208,7 +207,6 @@ class DistributionUGCInterface(Database):
         #self._initialize_tables()
         #self._initialize_doctypes()
         self._setup_store_path(store_path)
-        #self.__system_settings = SystemSettings()
         self._system_name = "Sabayon Linux"
         self.connect()
 

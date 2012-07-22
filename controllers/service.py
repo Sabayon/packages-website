@@ -275,6 +275,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except TypeError:
             abort(503)
         finally:
+            if isinstance(response['r'], dict):
+                response['r'].clear()
             response['r'] = None
             response.clear()
 

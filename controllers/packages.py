@@ -72,14 +72,18 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if idproduct not in model.config.available_products:
                 idproduct = model.config.default_product
             product = model.config.available_products.get(idproduct)
+
             arch = request.params.get("a") or model.config.default_arch
             if arch not in model.config.available_arches:
                 arch = model.config.default_arch
+
             releases = set()
             old_data_format = {}
             ugc_cache = {}
-            ugc = self._ugc(https=model.config.is_https(request))
+
+            ugc = None
             try:
+                ugc = self._ugc(https=model.config.is_https(request))
                 for pkg_tuple in c.search_pkgs:
                     p_id, r, a, b, p = pkg_tuple
                     pkg_data = c.packages_data.get(pkg_tuple)
@@ -109,8 +113,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                         }
                         obj.append(item)
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
                 ugc_cache.clear()
                 del ugc_cache
 
@@ -212,13 +217,16 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         results = [(package_id, repository_id, arch, branch, product)]
         c.search_pkgs = results
 
-        ugc = self._ugc(https=model.config.is_https(request))
+        ugc = None
         try:
+            ugc = self._ugc(https=model.config.is_https(request))
             data_map = self._get_packages_extended_metadata(entropy, ugc,
                 results)
         finally:
-            ugc.disconnect()
-            del ugc
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
+
         c.packages_data = data_map
         try:
             data_obj = data_map[results[0]]
@@ -693,17 +701,20 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
-        ugc = self._ugc(https=model.config.is_https(request))
+
         metadata = None
+        ugc = None
         try:
+            ugc = self._ugc(https=model.config.is_https(request))
             if repo is not None:
                 atom = repo.retrieveAtom(package_id)
                 if atom is not None:
                     key = entropy_dep.dep_getkey(atom)
                     metadata = self._get_ugc_extended_metadata(ugc, key)
         finally:
-            ugc.disconnect()
-            del ugc
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
             if repo is not None:
                 repo.close()
 
@@ -1200,12 +1211,14 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             # a rough optimization is to sort results only up to
             # from_pkg + max_results.
             if o != model.config.default_sorting:
-                ugc = self._ugc(https=model.config.is_https(request))
+                ugc = None
                 try:
+                    ugc = self._ugc(https=model.config.is_https(request))
                     self._sort_by_results(entropy, ugc, o, results)
                 finally:
-                    ugc.disconnect()
-                    del ugc
+                    if ugc is not None:
+                        ugc.disconnect()
+                        del ugc
 
             # caching
             # NOTE: EntropyCacher is not started, so cannot use push()
@@ -1231,27 +1244,34 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.total_search_results = results_len
 
         if results:
-            ugc = self._ugc(https=model.config.is_https(request))
+            ugc = None
             try:
+                ugc = self._ugc(https=model.config.is_https(request))
                 data_map = self._get_packages_base_metadata(entropy, ugc,
                     results)
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
             c.packages_data = data_map
+
         elif searching_default:
             results = self._api_get_similar_packages(entropy, q,
                 filter_cb = filter_cb)
             if results:
                 if results_len > max_results:
                     results = results[:max_results]
-                ugc = self._ugc(https=model.config.is_https(request))
+
+                ugc = None
                 try:
+                    ugc = self._ugc(https=model.config.is_https(request))
                     data_map = self._get_packages_base_metadata(entropy, ugc,
                         results)
                 finally:
-                    ugc.disconnect()
-                    del ugc
+                    if ugc is not None:
+                        ugc.disconnect()
+                        del ugc
+
                 c.search_pkgs = results
                 c.packages_data = data_map
                 c.did_you_mean = True
@@ -1309,13 +1329,15 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             else:
                 search_pkgs = bin_search_pkgs
 
-            ugc = self._ugc(https=model.config.is_https(request))
+            ugc = None
             try:
+                ugc = self._ugc(https=model.config.is_https(request))
                 data_map = self._get_packages_base_metadata(entropy, ugc,
                     search_pkgs)
             finally:
-                ugc.disconnect()
-                del ugc
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
 
             cached_obj = search_pkgs, data_map
 
@@ -1417,8 +1439,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         except (ValueError,TypeError,):
             return "%s: %s" % (_("Error"), _("invalid document"),)
 
-        ugc = self._ugc(https=model.config.is_https(request))
+        ugc = None
         try:
+            ugc = self._ugc(https=model.config.is_https(request))
             iddoc_user_id = ugc.get_iddoc_userid(iddoc)
             if iddoc_user_id is None:
                 return "%s: %s" % (_("Error"), _("invalid document specified"),)
@@ -1437,8 +1460,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if status:
                 ugc.commit()
         finally:
-            ugc.disconnect()
-            del ugc
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
+
         if status is None:
             return "%s: %s" % (_("Error"),
                 _("you know what? I cannot handle this document"),)
@@ -1549,8 +1574,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             file_name = os.path.join(pkgkey, orig_filename)
 
         # now handle the UGC add
-        ugc = self._ugc(https=model.config.is_https(request))
+        ugc = None
         try:
+            ugc = self._ugc(https=model.config.is_https(request))
             status, iddoc = ugc.insert_document_autosense(pkgkey, doctype,
                 user_id, username, comment_text, tmp_file, file_name,
                 orig_filename, title, description, keywords)
@@ -1568,8 +1594,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 c.ugc_doc = ugc_data[0]
             self._expand_ugc_doc_metadata(ugc, c.ugc_doc)
         finally:
-            ugc.disconnect()
-            del ugc
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
         return self._render('/ugc_show_doc.html', renderer = "html")
 
     def vote(self):
@@ -1610,20 +1637,24 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if not error:
 
-            ugc = self._ugc(https=model.config.is_https(request))
-            if vote not in ugc.VOTE_RANGE:
-                err_msg = _('vote not in range')
-                error = True
-            else:
-                voted = ugc.do_vote(pkgkey, user_id, vote)
-                if not voted:
-                    err_msg = _('you already voted this')
+            ugc = None
+            try:
+                ugc = self._ugc(https=model.config.is_https(request))
+                if vote not in ugc.VOTE_RANGE:
+                    err_msg = _('vote not in range')
                     error = True
                 else:
-                    ugc.commit()
-                    c.new_vote = ugc.get_ugc_vote(pkgkey)
-            ugc.disconnect()
-            del ugc
+                    voted = ugc.do_vote(pkgkey, user_id, vote)
+                    if not voted:
+                        err_msg = _('you already voted this')
+                        error = True
+                    else:
+                        ugc.commit()
+                        c.new_vote = ugc.get_ugc_vote(pkgkey)
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
 
         c.error = error
         c.err_msg = err_msg
