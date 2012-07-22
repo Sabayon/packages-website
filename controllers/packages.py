@@ -562,19 +562,30 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
         repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         content = None
+        tmp_fd, tmp_path = None, None
         try:
             if repo is not None:
-                # sqlite3 from debian bug, order by is DAMN slow
-                content = list(repo.retrieveContent(package_id))
-                content.sort()
+                tmp_fd, tmp_path = tempfile.mkstemp(
+                    prefix="PackagesController.RetrieveContent")
+                content = repo.retrieveContentIter(
+                    package_id, order_by="file")
+                with entropy_tools.codecs_fdopen(tmp_fd, "w", "utf-8") as tmp_f:
+                    for path, ftype in content:
+                        tmp_f.write(path)
+                        tmp_f.write("<br/>\n")
+
+            show_what_data['data'] = tmp_path
+            c.package_show_what = show_what_data
+            return self.show(hash_id)
+
         finally:
             if repo is not None:
                 repo.close()
-
-        show_what_data['data'] = content
-        c.package_show_what = show_what_data
-
-        return self.show(hash_id)
+            if tmp_fd is not None:
+                try:
+                    os.close(tmp_fd)
+                except (OSError, IOError):
+                    pass
 
     def _show_install(self, hash_id):
         decoded_data = self._parse_hash_id(hash_id)

@@ -1,12 +1,27 @@
-% if c.package_show_what['data']:
+% if c.package_show_what['data'] is not None:
     <div class="package-widget-show-revdeps">
         <div class="package-widget-show-deps-generic package-widget-show-deps-runtime">
             <div class="package-widget-show-deps-title">
                 ${_("Files belonging to package")}
             </div>
-            % for path in c.package_show_what['data']:
-                <div class="package-widget-show-deps-item">${path | h,trim}</div>
-            % endfor
+            <%
+               path = c.package_show_what['data']
+               import codecs, os
+               try:
+                   with codecs.open(path, "r", "utf-8") as f:
+                       while True:
+                           chunk = f.read(4096)
+                           if not chunk:
+                               break
+                           context.write(chunk)
+               except (IOError, OSError):
+                   pass
+               finally:
+                   try:
+                       os.remove(path)
+                   except (IOError, OSError):
+                       pass
+            %>
         </div>
     </div>
 % else:
@@ -15,4 +30,4 @@
                 ${_("No files belonging to package")}
             </div>
         </div>
-% endif 
+% endif
