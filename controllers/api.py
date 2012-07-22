@@ -66,7 +66,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         def _downloads_order():
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 key_sorter = lambda x: ugc.get_ugc_vote(
                     entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter)
@@ -80,7 +80,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         def _vote_order():
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 key_sorter = lambda x: ugc.get_ugc_download(
                     entropy_dep.dep_getkey(x[5].retrieveAtom(x[0])))
                 return sorted(pkgs_data, key = key_sorter, reverse = True)
@@ -522,7 +522,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 return self._api_error(renderer, 503, "repository not available")
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 pkgs_data = {}
                 for package_hash, (package_id, repository_id, a, b, p) in packages:
                     if details:

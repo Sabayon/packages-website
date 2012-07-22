@@ -1149,12 +1149,16 @@ class DistributionUGCInterface(Database):
 
 class UGC(DistributionUGCInterface):
 
-    def __init__(self, conn_data = None):
+    def __init__(self, conn_data = None, https=True):
         if conn_data is None:
             conn_data = config.ugc_connection_data
 
         store_path = conn_data.get("store_path", config.ugc_store_path)
-        store_url = conn_data.get("store_url", config.ugc_store_url)
+        if https:
+            store_url = conn_data.get("store_url", config.ugc_store_url)
+        else:
+            store_url = conn_data.get("http_store_url",
+                                      config.http_ugc_store_url)
 
         DistributionUGCInterface.__init__(self, conn_data, store_path,
             store_url)

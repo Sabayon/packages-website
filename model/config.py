@@ -88,7 +88,7 @@ community_repos_ugc_connection_data = {}
 
 ugc_store_path = "/sabayon/www/community.sabayon.org/ugc"
 ugc_store_url = "https://community.sabayon.org/ugc"
-ugc_args = [ugc_connection_data,ugc_store_path,ugc_store_url]
+http_ugc_store_url = "http://community.sabayon.org/ugc"
 
 GROUP_SHOW_URL = "/group"
 CATEGORY_SHOW_URL = "/category"

@@ -78,7 +78,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             releases = set()
             old_data_format = {}
             ugc_cache = {}
-            ugc = self._ugc()
+            ugc = self._ugc(https=model.config.is_https(request))
             try:
                 for pkg_tuple in c.search_pkgs:
                     p_id, r, a, b, p = pkg_tuple
@@ -212,7 +212,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         results = [(package_id, repository_id, arch, branch, product)]
         c.search_pkgs = results
 
-        ugc = self._ugc()
+        ugc = self._ugc(https=model.config.is_https(request))
         try:
             data_map = self._get_packages_extended_metadata(entropy, ugc,
                 results)
@@ -693,7 +693,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
-        ugc = self._ugc()
+        ugc = self._ugc(https=model.config.is_https(request))
         metadata = None
         try:
             if repo is not None:
@@ -1200,7 +1200,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             # a rough optimization is to sort results only up to
             # from_pkg + max_results.
             if o != model.config.default_sorting:
-                ugc = self._ugc()
+                ugc = self._ugc(https=model.config.is_https(request))
                 try:
                     self._sort_by_results(entropy, ugc, o, results)
                 finally:
@@ -1231,7 +1231,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.total_search_results = results_len
 
         if results:
-            ugc = self._ugc()
+            ugc = self._ugc(https=model.config.is_https(request))
             try:
                 data_map = self._get_packages_base_metadata(entropy, ugc,
                     results)
@@ -1245,7 +1245,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if results:
                 if results_len > max_results:
                     results = results[:max_results]
-                ugc = self._ugc()
+                ugc = self._ugc(https=model.config.is_https(request))
                 try:
                     data_map = self._get_packages_base_metadata(entropy, ugc,
                         results)
@@ -1309,7 +1309,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             else:
                 search_pkgs = bin_search_pkgs
 
-            ugc = self._ugc()
+            ugc = self._ugc(https=model.config.is_https(request))
             try:
                 data_map = self._get_packages_base_metadata(entropy, ugc,
                     search_pkgs)
@@ -1417,7 +1417,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         except (ValueError,TypeError,):
             return "%s: %s" % (_("Error"), _("invalid document"),)
 
-        ugc = self._ugc()
+        ugc = self._ugc(https=model.config.is_https(request))
         try:
             iddoc_user_id = ugc.get_iddoc_userid(iddoc)
             if iddoc_user_id is None:
@@ -1549,7 +1549,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             file_name = os.path.join(pkgkey, orig_filename)
 
         # now handle the UGC add
-        ugc = self._ugc()
+        ugc = self._ugc(https=model.config.is_https(request))
         try:
             status, iddoc = ugc.insert_document_autosense(pkgkey, doctype,
                 user_id, username, comment_text, tmp_file, file_name,
@@ -1610,7 +1610,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if not error:
 
-            ugc = self._ugc()
+            ugc = self._ugc(https=model.config.is_https(request))
             if vote not in ugc.VOTE_RANGE:
                 err_msg = _('vote not in range')
                 error = True

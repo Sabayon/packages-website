@@ -361,7 +361,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             vote_data = ugc.get_ugc_votes(package_names)
         except ServiceConnectionError:
             return self._generic_invalid_request(
@@ -409,7 +409,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if cached_obj is None:
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 cached_obj = ugc.get_ugc_allvotes()
             except ServiceConnectionError:
                 return self._generic_invalid_request(
@@ -467,7 +467,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             voted = ugc.do_vote(package_name, user_id, vote)
             if voted:
                 ugc.commit()
@@ -500,7 +500,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             down_data = ugc.get_ugc_downloads(package_names)
         except ServiceConnectionError:
             return self._generic_invalid_request(
@@ -583,7 +583,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             added = ugc.do_download_stats(
                 branch, release_string, hw_hash,
                 package_names, ip_addr)
@@ -628,7 +628,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if cached_obj is None:
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 cached_obj = ugc.get_ugc_alldownloads()
             except ServiceConnectionError:
                 return self._generic_invalid_request(
@@ -767,7 +767,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         doc = None
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             # commit is very important
             status, iddoc = ugc.insert_comment(package_name, user_id,
                 username, comment, title, keywords)
@@ -872,7 +872,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         ugc = None
         message = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             file_name = os.path.join(package_name, orig_filename)
             status, iddoc = ugc.insert_document_autosense(package_name,
                 document_type, user_id, username, None, payload_tmp_file,
@@ -981,7 +981,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             data = {}
             ugc = None
             try:
-                ugc = self._ugc()
+                ugc = self._ugc(https=False)
                 for package_name in package_names:
                     total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
                         package_name, document_types, offset = offset,
@@ -1023,7 +1023,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             raw_docs = ugc.get_ugc_metadata_by_identifiers(document_ids)
         except ServiceConnectionError:
             return self._generic_invalid_request(
@@ -1051,7 +1051,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         ugc = None
         try:
-            ugc = self._ugc()
+            ugc = self._ugc(https=False)
             # get document type
             document_type_id = ugc.get_iddoctype(document_id)
             if document_type_id == -1:
