@@ -7,6 +7,7 @@ import shutil
 import cgi
 import re
 import time
+import copy
 
 from www.lib.base import *
 from www.lib.website import *
@@ -273,6 +274,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             return json.dumps(response)
         except TypeError:
             abort(503)
+        finally:
+            response['r'] = None
+            response.clear()
 
     def data_send_available(self):
         """
