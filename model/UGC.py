@@ -205,12 +205,12 @@ class DistributionUGCInterface(Database):
         ]
         Database.__init__(self)
         self.set_connection_data(connection_data)
-        self.connect()
-        self._initialize_tables()
-        self._initialize_doctypes()
+        #self._initialize_tables()
+        #self._initialize_doctypes()
         self._setup_store_path(store_path)
-        self.__system_settings = SystemSettings()
-        self._system_name = self.__system_settings['system']['name']
+        #self.__system_settings = SystemSettings()
+        self._system_name = "Sabayon Linux"
+        self.connect()
 
     def _get_geoip_data_from_ip_address(self, ip_address):
         geoip_dbpath = self.connection_data.get('geoip_dbpath', '')
