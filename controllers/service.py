@@ -275,9 +275,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except TypeError:
             abort(503)
         finally:
-            if isinstance(response['r'], dict):
+            if isinstance(response.get('r'), dict):
                 response['r'].clear()
-            response['r'] = None
+                response['r'] = None
             response.clear()
 
     def data_send_available(self):
