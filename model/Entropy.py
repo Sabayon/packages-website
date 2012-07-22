@@ -6,6 +6,10 @@ from entropy.exceptions import SystemDatabaseError
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
 from entropy.client.interfaces import Client
 from entropy.db.exceptions import DatabaseError
+from entropy.cache import EntropyCacher
+# do not write to memory, especially when xcache=False
+# this is just enforced here.
+EntropyCacher.STASHING_CACHE = False
 
 class Entropy(Client):
 
