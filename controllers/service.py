@@ -412,32 +412,35 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             date_str = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.hour)
             sha.update(repr(date_str))
             sha.update(repr(repository_id))
-            cache_key = "_get_available_votes_" + sha.hexdigest()
+            cache_key = "_get_available_votes_tmpl_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if cached_obj is not None:
+                return cached_obj
 
-        if cached_obj is None:
-            ugc = None
-            try:
-                ugc = self._ugc(https=False)
-                cached_obj = ugc.get_ugc_allvotes()
-            except ServiceConnectionError:
-                return self._generic_invalid_request(
-                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-            finally:
-                if ugc is not None:
-                    ugc.disconnect()
-                    del ugc
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            data = ugc.get_ugc_allvotes()
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
 
-            if model.config.WEBSITE_CACHING:
-                self._cacher.save(cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        # ok valid
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = cached_obj
-        return self._service_render(response)
+        response['r'] = data
+        cached_obj = self._service_render(response)
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(
+                cache_key, cached_obj,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        return cached_obj
 
     def add_vote(self):
         """
@@ -631,32 +634,35 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             date_str = "%s-%s-%s" % (now.year, now.month, now.day)
             sha.update(repr(date_str))
             sha.update(repr(repository_id))
-            cache_key = "_get_available_downloads_" + sha.hexdigest()
+            cache_key = "_get_available_downloads_tmpl_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
+            if cached_obj is not None:
+                return cached_obj
 
-        if cached_obj is None:
-            ugc = None
-            try:
-                ugc = self._ugc(https=False)
-                cached_obj = ugc.get_ugc_alldownloads()
-            except ServiceConnectionError:
-                return self._generic_invalid_request(
-                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-            finally:
-                if ugc is not None:
-                    ugc.disconnect()
-                    del ugc
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            data = ugc.get_ugc_alldownloads()
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
 
-            if model.config.WEBSITE_CACHING:
-                self._cacher.save(cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        # ok valid
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = cached_obj
-        return self._service_render(response)
+        response['r'] = data
+        cached_obj = self._service_render(response)
+
+        if model.config.WEBSITE_CACHING:
+            self._cacher.save(
+                cache_key, cached_obj,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+        return cached_obj
 
     def add_document(self):
         """
