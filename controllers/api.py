@@ -376,8 +376,8 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             date, size, rev = base_data
         pkg_key = entropy_dep.dep_getkey(atom)
 
-        docs_number = len(ugc.get_ugc_metadata_doctypes(pkg_key,
-            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]))
+        has_more, docs = ugc.get_ugc_metadata_doctypes(pkg_key,
+            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES])
 
         pkg_data = {
             'atom': atom,
@@ -419,6 +419,8 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         on_disk_size = entropy_repository.retrieveOnDiskSize(package_id)
         pkg_key = entropy_dep.dep_getkey(atom)
         t_time = float(date)
+        has_more, docs = ugc.get_ugc_metadata_doctypes(pkg_key,
+                [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES])
 
         pkg_data = {
             'version': version,
@@ -442,8 +444,8 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             'arch': arch,
             'product': product,
             'package_id': package_id,
-            'docs': ugc.get_ugc_metadata_doctypes(pkg_key,
-                [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES]),
+            'docs': docs,
+            'has_more_docs': has_more,
         }
         for mydoc in pkg_data['docs']:
             self._expand_ugc_doc_metadata(ugc, mydoc)

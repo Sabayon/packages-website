@@ -969,6 +969,14 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if cache:
             cache = cache and model.config.WEBSITE_CACHING
 
+        # using the new get_ugc_metadata_doctypes()
+        # @todo: drop revision=="0" after 2012
+        revision = request.params.get("rev")
+        if revision is None:
+            revision = "0"
+        if revision != "1":
+            revision = "1"
+
         cached_obj = None
         cache_key = None
         if cache:
@@ -977,7 +985,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(repository_id))
             sha.update(repr(document_types))
             sha.update(latest_str)
-            cache_key = "_service_get_documents_" + sha.hexdigest()
+            sha.update(revision)
+            cache_key = "_service_get_documents2_" + sha.hexdigest()
             cached_obj = self._cacher.pop(cache_key,
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
@@ -999,18 +1008,32 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             try:
                 ugc = self._ugc(https=False)
                 for package_name in package_names:
-                    total, pkg_data_list = ugc.get_ugc_metadata_doctypes(
-                        package_name, document_types, offset = offset,
-                        length = chunk_size, latest = latest)
+                    p_data = {}
+
+                    if revision == "1":
+                        has_more, pkg_data_list = \
+                            ugc.get_ugc_metadata_doctypes(
+                            package_name, document_types, offset = offset,
+                            length = chunk_size, latest = latest)
+                        p_data['has_more'] = has_more
+                    else:
+                        total, pkg_data_list = \
+                            ugc.get_ugc_metadata_doctypes_compat(
+                            package_name, document_types, offset = offset,
+                            length = chunk_size, latest = latest)
+                        p_data['total'] = total
+
                     try:
-                        docs = self._ugc_document_data_to_document(pkg_data_list)
+                        docs = self._ugc_document_data_to_document(
+                            pkg_data_list)
                     except AttributeError:
                         return self._generic_invalid_request()
-                    data[package_name] = {
-                        'total': total,
-                        'docs': docs,
-                    }
+
+                    p_data['docs'] = docs
+                    data[package_name] = p_data
+
                 cached_obj = data
+
             except ServiceConnectionError:
                 return self._generic_invalid_request(
                     code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)

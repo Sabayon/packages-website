@@ -370,7 +370,48 @@ class DistributionUGCInterface(Database):
         return [x['keyword'] for x in self.fetchall()]
 
     def get_ugc_metadata_doctypes(self, pkgkey, typeslist, offset = 0,
+        length = 10, latest = False):
+
+        if latest:
+            order_by = "DESC"
+        else:
+            order_by = "ASC"
+
+        if len(typeslist) == 1:
+            self.execute_query("""
+                SELECT SQL_CACHE *
+                FROM entropy_docs, entropy_base WHERE 
+                entropy_docs.`idkey` = entropy_base.`idkey` AND 
+                entropy_base.`key` = %s AND 
+                ( entropy_docs.`iddoctype` = %s  )
+                ORDER BY entropy_docs.`ts` """ + order_by + """
+                LIMIT %s, %s""", (pkgkey, typeslist[0], offset, length + 1,))
+        else:
+            self.execute_query("""
+                SELECT SQL_CACHE *
+                FROM entropy_docs,entropy_base WHERE 
+                entropy_docs.`idkey` = entropy_base.`idkey` AND 
+                entropy_base.`key` = %s AND 
+                ( entropy_docs.`iddoctype` IN %s  )
+                ORDER BY entropy_docs.`ts` """ + order_by + """
+                LIMIT %s, %s""", (pkgkey, typeslist, offset, length + 1,))
+
+        raw_docs = self.fetchall()
+
+        count = len(raw_docs)
+        has_more = False
+        if count > length:
+            has_more = True
+            raw_docs = raw_docs[:-1]
+        return has_more, [self._get_ugc_extra_metadata(x) for x in raw_docs]
+    def get_ugc_metadata_doctypes_compat(
+        self, pkgkey, typeslist, offset = 0,
         length = 100, latest = False):
+        """
+        @todo: drop this after 2012. It is flawed since
+        SQL_CALC_FOUND_ROWS forces a full table scan.
+        It is kept for backward compatibility.
+        """
 
         if latest:
             order_by = "DESC"

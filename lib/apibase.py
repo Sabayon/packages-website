@@ -985,17 +985,20 @@ class ApibaseController:
         if doc.get('size'):
             doc['size'] = entropy_tools.bytes_into_human(doc.get('size'))
 
-    def _get_ugc_extended_metadata(self, ugc, package_key):
+    def _get_ugc_extended_metadata(
+        self, ugc, package_key, offset = 0, length = 100):
         """
         Get extended User Generated Metadata for given package key using given
         UGC interface.
         """
-        count, docs = ugc.get_ugc_metadata_doctypes(package_key,
-            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES])
+        has_more, docs = ugc.get_ugc_metadata_doctypes(package_key,
+            [ugc.DOC_TYPES[x] for x in ugc.DOC_TYPES],
+            offset = offset, length = length)
         data = {
             'vote': ugc.get_ugc_vote(package_key),
             'downloads': ugc.get_ugc_download(package_key),
             'docs': docs,
+            'has_more_docs': has_more,
         }
         for doc in docs:
             self._expand_ugc_doc_metadata(ugc, doc)
