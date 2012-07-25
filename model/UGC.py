@@ -409,7 +409,8 @@ class DistributionUGCInterface(Database):
         length = 100, latest = False):
         """
         @todo: drop this after 2012. It is flawed since
-        SQL_CALC_FOUND_ROWS forces a full table scan.
+        SQL_CALC_FOUND_ROWS forces a full result set generation
+        voiding the benefit of the LIMIT clause.
         It is kept for backward compatibility.
         """
 
