@@ -957,7 +957,8 @@ class ApibaseController:
         """
         return repository_id in model.config.source_repositories
 
-    def _get_ugc_base_metadata(self, entropy, ugc, repository_id, package_key):
+    def _get_ugc_base_metadata(
+        self, entropy, ugc, repository_id, package_key):
         """
         Get basic User Generated Metadata for given package key using given
         UGC interface.

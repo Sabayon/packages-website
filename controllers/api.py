@@ -393,11 +393,13 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             'package_id': package_id,
             'vote': round(ugc.get_ugc_vote(pkg_key), 2),
             'downloads': ugc.get_ugc_download(pkg_key),
-            'docs_number': docs_number,
+            'docs_number': len(docs),
+            'has_more_docs': has_more,
         }
         return pkg_data
 
-    def _get_api_package_detailed_info(self, entropy_repository, ugc, package_id,
+    def _get_api_package_detailed_info(self, entropy_repository,
+                                       ugc, package_id,
         repository_id, arch, branch, product):
         """
         Internal method. Return a dict containing all the detailed info of a
@@ -460,7 +462,8 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             entropy_repository.retrieveConflicts(package_id))
 
         pkg_data['sha1'], pkg_data['sha256'], pkg_data['sha512'], \
-            pkg_data['gpg'] = entropy_repository.retrieveSignatures(package_id)
+            pkg_data['gpg'] = entropy_repository.retrieveSignatures(
+            package_id)
 
         return pkg_data
 
@@ -519,12 +522,14 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             product)
         try:
             if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
+                return self._api_error(
+                    renderer, 503, "repository not available")
             ugc = None
             try:
                 ugc = self._ugc(https=False)
                 pkgs_data = {}
-                for package_hash, (package_id, repository_id, a, b, p) in packages:
+                for package_hash, \
+                        (package_id, repository_id, a, b, p) in packages:
                     if details:
                         pkg_data = self._get_api_package_detailed_info(
                             dbconn, ugc, package_id, repository_id, a, b, p)
