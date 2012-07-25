@@ -379,22 +379,30 @@ class DistributionUGCInterface(Database):
 
         if len(typeslist) == 1:
             self.execute_query("""
-                SELECT SQL_CACHE *
-                FROM entropy_docs, entropy_base WHERE 
-                entropy_docs.`idkey` = entropy_base.`idkey` AND 
-                entropy_base.`key` = %s AND 
-                ( entropy_docs.`iddoctype` = %s  )
-                ORDER BY entropy_docs.`ts` """ + order_by + """
-                LIMIT %s, %s""", (pkgkey, typeslist[0], offset, length + 1,))
+            SELECT SQL_CACHE *
+            FROM entropy_docs
+            INNER JOIN (
+              SELECT SQL_CACHE entropy_base.idkey
+              FROM entropy_base
+              WHERE entropy_base.`key` = %s
+            ) AS t2 USING(idkey)
+            WHERE entropy_docs.iddoctype = %s
+            ORDER BY entropy_docs.`ts` """ + order_by + """
+            LIMIT %s, %s
+            """, (pkgkey, typeslist[0], offset, length + 1))
         else:
             self.execute_query("""
-                SELECT SQL_CACHE *
-                FROM entropy_docs,entropy_base WHERE 
-                entropy_docs.`idkey` = entropy_base.`idkey` AND 
-                entropy_base.`key` = %s AND 
-                ( entropy_docs.`iddoctype` IN %s  )
-                ORDER BY entropy_docs.`ts` """ + order_by + """
-                LIMIT %s, %s""", (pkgkey, typeslist, offset, length + 1,))
+            SELECT SQL_CACHE *
+            FROM entropy_docs
+            INNER JOIN (
+              SELECT SQL_CACHE entropy_base.idkey
+              FROM entropy_base
+              WHERE entropy_base.`key` = %s
+            ) AS t2 USING(idkey)
+            WHERE entropy_docs.iddoctype IN %s
+            ORDER BY entropy_docs.`ts` """ + order_by + """
+            LIMIT %s, %s
+            """, (pkgkey, typeslist, offset, length + 1))
 
         raw_docs = self.fetchall()
 
