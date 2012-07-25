@@ -679,7 +679,7 @@ class DistributionUGCInterface(Database):
             """, (myscore, userid,))
         else:
             self.execute_query("""
-            INSERT INTO entropy_user_scores VALUES (%s,%s)
+            INSERT IGNORE INTO entropy_user_scores VALUES (%s,%s)
             """, (userid, myscore,))
         return myscore
 
