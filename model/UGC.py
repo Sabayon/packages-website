@@ -94,12 +94,14 @@ class DistributionUGCInterface(Database):
             `ddata` TEXT NOT NULL,
             `title` VARCHAR( 512 ),
             `description` VARCHAR( 4000 ),
-            `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ON UPDATE CURRENT_TIMESTAMP,
             KEY `userid` (`userid`),
             KEY `idkey_2` (`idkey`,`userid`,`iddoctype`),
             KEY `title` (`title`(333)),
-            KEY `description` (`description`(333)),
-            FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
+            FOREIGN KEY (`idkey`) REFERENCES `entropy_base` (`idkey`),
+            FOREIGN KEY (`iddoctype_fk`)
+                REFERENCES `entropy_doctypes` (`iddoctype`)
             ) ENGINE=INNODB;
         """,
         'entropy_doctypes': """
@@ -411,7 +413,9 @@ class DistributionUGCInterface(Database):
         if count > length:
             has_more = True
             raw_docs = raw_docs[:-1]
-        return has_more, [self._get_ugc_extra_metadata(x) for x in raw_docs]
+        return has_more, [self._get_ugc_extra_metadata(x, key = pkgkey) \
+                              for x in raw_docs]
+
     def get_ugc_metadata_doctypes_compat(
         self, pkgkey, typeslist, offset = 0,
         length = 100, latest = False):
@@ -474,11 +478,14 @@ class DistributionUGCInterface(Database):
         """, (identifiers,))
         return [self._get_ugc_extra_metadata(x) for x in self.fetchall()]
 
-    def _get_ugc_extra_metadata(self, mydict):
+    def _get_ugc_extra_metadata(self, mydict, key = None):
         mydict['store_url'] = None
         mydict['keywords'] = self._get_ugc_keywords(mydict['iddoc'])
         if "key" in mydict:
             mydict['pkgkey'] = mydict['key']
+        elif key is not None:
+            mydict['pkgkey'] = key
+            mydict['key'] = key
         else:
             mydict['pkgkey'] = self._get_pkgkey(mydict['idkey'])
         # for binary files, get size too
@@ -502,30 +509,37 @@ class DistributionUGCInterface(Database):
         TODO: once the repository-manager crap is gone, rename all the
         image document types containing __icon__ as title to icon type
         """
+        image_dt = self.DOC_TYPES['image']
+        icon_dt = self.DOC_TYPES['icon']
         self.execute_query("""
-        SELECT SQL_CACHE * FROM entropy_docs, entropy_base
-        WHERE entropy_base.`idkey` = entropy_docs.`idkey`
-        AND entropy_base.`key` = %s
-        AND ( 
-        ( entropy_docs.iddoctype = %s AND entropy_docs.title = "__icon__"
-        ) OR ( entropy_docs.iddoctype = %s
-        ))
+        SELECT SQL_CACHE ddata FROM entropy_docs INNER JOIN
+          (
+            SELECT SQL_CACHE entropy_base.idkey FROM entropy_base
+            WHERE entropy_base.`key` = %s
+          ) AS t2 USING(idkey)
+        WHERE entropy_docs.iddoctype IN (%s, %s)
+        AND ((entropy_docs.iddoctype = %s AND
+               entropy_docs.title = '__icon__')
+         OR entropy_docs.iddoctype = %s )
         ORDER BY entropy_docs.ts DESC
-        LIMIT 1""", (pkgkey, self.DOC_TYPES['image'], self.DOC_TYPES['icon']))
+        LIMIT 1
+        """, (pkgkey, image_dt, icon_dt, image_dt,
+              icon_dt))
         data = self.fetchone() or {}
         icon_path = data.get('ddata')
         if not isinstance(icon_path, const_get_stringtype()) \
             and (icon_path is not None):
             icon_path = icon_path.tostring()
         if icon_path is not None:
-            icon_path = os.path.join(self._store_url, icon_path.lstrip("/"))
+            icon_path = os.path.join(
+                self._store_url, icon_path.lstrip("/"))
         return icon_path
 
     def get_ugc_vote(self, pkgkey):
         self.execute_query("""
         SELECT SQL_CACHE avg(entropy_votes.`vote`) as avg_vote
-        FROM entropy_votes,entropy_base WHERE 
-        entropy_base.`key` = %s AND 
+        FROM entropy_votes,entropy_base WHERE
+        entropy_base.`key` = %s AND
         entropy_base.idkey = entropy_votes.idkey""", (pkgkey,))
         data = self.fetchone() or {}
         avg_vote = data.get('avg_vote')
@@ -540,7 +554,7 @@ class DistributionUGCInterface(Database):
             # a new vote and wants to get back his value
             self.execute_query("""
             SELECT SQL_CACHE avg(entropy_votes.`vote`) as avg_vote
-            FROM entropy_votes, entropy_base WHERE 
+            FROM entropy_votes, entropy_base WHERE
             entropy_base.idkey = entropy_votes.idkey
             AND entropy_base.`key` = %s""", (pkgkeys[0],))
             data = self.fetchone() or {}
@@ -548,8 +562,8 @@ class DistributionUGCInterface(Database):
 
         self.execute_query("""
         SELECT SQL_CACHE entropy_base.`key` as `vkey`,
-        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM 
-        entropy_votes,entropy_base WHERE 
+        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM
+        entropy_votes,entropy_base WHERE
         entropy_votes.`idkey` = entropy_base.`idkey` AND
         entropy_base.`key` IN %s
         GROUP BY entropy_base.`key`
@@ -557,10 +571,13 @@ class DistributionUGCInterface(Database):
         return dict((x['vkey'], x['avg_vote']) for x in self.fetchall())
 
     def get_ugc_allvotes(self):
+        """
+        @todo: remove when Sulfur will be phased out
+        """
         self.execute_query("""
         SELECT SQL_CACHE entropy_base.`key` as `vkey`,
-        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM 
-        entropy_votes,entropy_base WHERE 
+        round(avg(entropy_votes.vote), 2) as `avg_vote` FROM
+        entropy_votes,entropy_base WHERE
         entropy_votes.`idkey` = entropy_base.`idkey` GROUP BY entropy_base.`key`
         """)
         return dict((x['vkey'], x['avg_vote']) for x in self.fetchall())
@@ -598,6 +615,9 @@ class DistributionUGCInterface(Database):
         return dict((x['vkey'], x['tot_downloads']) for x in self.fetchall())
 
     def get_ugc_alldownloads(self):
+        """
+        @todo: remove when Sulfur will be phased out
+        """
         self.execute_query("""
         SELECT SQL_CACHE
             entropy_base.`key` as vkey,
