@@ -717,7 +717,6 @@ class DistributionUGCInterface(Database):
         return data.get('votes', 0), data.get('votes_avg', 0.0)
 
     def get_user_stats(self, userid):
-
         mydict = {}
         data = self._get_user_doctypes_count(userid)
         mydict['comments'] = data.get(self.DOC_TYPES['comments'], 0)
@@ -885,7 +884,8 @@ class DistributionUGCInterface(Database):
         ip_addr):
 
         branch_id = self._handle_entropy_branches_id(branch)
-        rel_strings_id = self._handle_entropy_release_strings_id(release_string)
+        rel_strings_id = self._handle_entropy_release_strings_id(
+            release_string)
 
         self._do_downloads(pkgkeys, ip_addr = ip_addr)
 
@@ -933,7 +933,8 @@ class DistributionUGCInterface(Database):
 
     def _is_user_ip_available_in_entropy_distribution_usage(self, ip_address):
         self.execute_query("""
-        SELECT entropy_distribution_usage_id FROM entropy_distribution_usage
+        SELECT entropy_distribution_usage_id
+        FROM entropy_distribution_usage
         WHERE `ip_address` = %s
         """, (ip_address,))
         data = self.fetchone() or {}
@@ -1111,7 +1112,8 @@ class DistributionUGCInterface(Database):
             while os.path.lexists(new_video_path):
                 scount += 1
                 bpath = "%s.%s" % (str(scount), os.path.basename(file_name),)
-                new_video_path = os.path.join(os.path.dirname(video_path), bpath)
+                new_video_path = os.path.join(
+                    os.path.dirname(video_path), bpath)
             shutil.move(video_path, new_video_path)
 
         yt_service = self.get_youtube_service()
