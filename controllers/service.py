@@ -395,6 +395,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
     def get_available_votes(self):
         """
         Get all the available votes.
+
+        @todo: remove when Sulfur is KO
         """
         try:
             self._validate_repository_id()
@@ -409,7 +411,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             # use today date
             now = datetime.now()
             # update hourly !!
-            date_str = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.hour)
+            date_str = "%s-%s" % (now.year, now.month)
             sha.update(repr(date_str))
             sha.update(repr(repository_id))
             cache_key = "_get_available_votes_tmpl_" + sha.hexdigest()
@@ -618,6 +620,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
     def get_available_downloads(self):
         """
         Get all the available downloads.
+        @todo: remove when Sulfur is KO
         """
         try:
             self._validate_repository_id()
@@ -631,7 +634,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha = hashlib.sha1()
             # use today date
             now = datetime.now()
-            date_str = "%s-%s-%s" % (now.year, now.month, now.day)
+            date_str = "%s-%s" % (now.year, now.month)
             sha.update(repr(date_str))
             sha.update(repr(repository_id))
             cache_key = "_get_available_downloads_tmpl_" + sha.hexdigest()
