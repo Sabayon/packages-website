@@ -384,7 +384,7 @@ class DistributionUGCInterface(Database):
         # -1 is an invalid value and it is excluded automatically
         # by MySQL anyway.
         if len(typeslist) < 2:
-            typeslist = [x for x in typeslist] + [-1]
+            typeslist = list(typeslist) + [-1]
 
         # if we're given the last_iddoc, optimize the
         # LIMIT clause away
@@ -476,7 +476,6 @@ class DistributionUGCInterface(Database):
     def get_ugc_metadata_by_identifiers(self, identifiers):
         if len(identifiers) < 2:
             identifiers = list(identifiers) + [0]
-            identifiers += [0]
         self.execute_query("""
         SELECT * FROM entropy_docs WHERE `iddoc` IN %s
         """, (identifiers,))
@@ -548,18 +547,8 @@ class DistributionUGCInterface(Database):
         return avg_vote
 
     def get_ugc_votes(self, pkgkeys):
-
-        if len(pkgkeys) == 1:
-            # then return data without caching, probably user just pushed
-            # a new vote and wants to get back his value
-            self.execute_query("""
-            SELECT SQL_CACHE avg(entropy_votes.`vote`) as avg_vote
-            FROM entropy_votes, entropy_base WHERE
-            entropy_base.idkey = entropy_votes.idkey
-            AND entropy_base.`key` = %s""", (pkgkeys[0],))
-            data = self.fetchone() or {}
-            return {pkgkeys[0]: data.get('avg_vote', None),}
-
+        if len(pkgkeys) < 2:
+            pkgkeys = list(pkgkeys) + [None]
         self.execute_query("""
         SELECT SQL_CACHE entropy_base.`key` as `vkey`,
         round(avg(entropy_votes.vote), 2) as `avg_vote` FROM
@@ -598,11 +587,8 @@ class DistributionUGCInterface(Database):
         return downloads
 
     def get_ugc_downloads(self, pkgkeys):
-        if len(pkgkeys) == 1:
-            pkgkey = pkgkeys[0]
-            downloads = self.get_ugc_download(pkgkey)
-            return {pkgkey: downloads,}
-
+        if len(pkgkeys) < 2:
+            pkgkeys = list(pkgkeys) + [None]
         self.execute_query("""
         SELECT SQL_CACHE
             entropy_base.`key` as vkey,
