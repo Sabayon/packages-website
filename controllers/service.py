@@ -10,6 +10,7 @@ import time
 import copy
 import codecs
 import signal
+import sys
 
 from threading import Timer
 
@@ -24,7 +25,7 @@ from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
 from entropy.services.client import WebService
 from entropy.client.services.interfaces import ClientWebService, Document, \
     DocumentFactory, RepositoryWebService
-from entropy.misc import EmailSender
+from entropy.misc import EmailSender, ParallelTask
 
 import entropy.tools
 import entropy.dep
@@ -536,6 +537,51 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = down_data
         return self._service_render(response)
 
+    def _add_downloads(self, package_names, branch,
+                       release_string, hw_hash, ip_addr):
+        """
+        Add downloads stats for package.
+        """
+        are_repos = False
+        if (len(package_names) == 1) and ("installer" in package_names):
+            # Support for our Installer
+            are_repos = True
+
+        if not are_repos:
+            are_repos = False
+            if len(package_names) < 10:
+                are_repos = True
+                for package_name in package_names:
+                    if package_name not in self._supported_repository_ids:
+                        are_repos = False
+                        break
+
+        if not are_repos:
+            # validate package names
+            entropy_client = self._entropy()
+            avail = self._api_are_matches_available(entropy_client,
+                                                    package_names)
+            if not avail:
+                sys.stderr.write("_add_downloads: invalid packages\n")
+                return
+
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            added = ugc.do_download_stats(
+                branch, release_string, hw_hash,
+                package_names, ip_addr)
+            if added:
+                ugc.commit()
+        except ServiceConnectionError as err:
+            sys.stderr.write(
+                "_add_downloads: ServiceConnectionError: %s\n" % (repr(err),))
+            return
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
+
     def add_downloads(self):
         """
         Add downloads stats for package.
@@ -571,50 +617,19 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if not entropy.tools.is_valid_string(hw_hash):
             return self._generic_invalid_request()
 
-        are_repos = False
-        if (len(package_names) == 1) and ("installer" in package_names):
-            # Support for our Installer
-            are_repos = True
-
-        if not are_repos:
-            are_repos = False
-            if len(package_names) < 10:
-                are_repos = True
-                for package_name in package_names:
-                    if package_name not in self._supported_repository_ids:
-                        are_repos = False
-                        break
-
-        if not are_repos:
-            # validate package names
-            entropy_client = self._entropy()
-            avail = self._api_are_matches_available(entropy_client,
-                                                    package_names)
-            if not avail:
-                return self._generic_invalid_request(
-                    message = "invalid packages")
-
         ip_addr = self._get_ip_address(request)
 
-        ugc = None
-        try:
-            ugc = self._ugc(https=False)
-            added = ugc.do_download_stats(
-                branch, release_string, hw_hash,
-                package_names, ip_addr)
-            if added:
-                ugc.commit()
-        except ServiceConnectionError:
-            return self._generic_invalid_request(
-                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
-                del ugc
+        task = ParallelTask(
+            self._add_downloads,
+            package_names, branch,
+            release_string, hw_hash, ip_addr)
+        task.name = "AddDownloadsThread"
+        task.daemon = True
+        task.start()
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = added
+        response['r'] = True
         return self._service_render(response)
 
     def get_available_downloads(self):
