@@ -973,12 +973,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             cache = cache and model.config.WEBSITE_CACHING
 
         # using the new get_ugc_metadata_doctypes()
-        # @todo: drop revision=="0" after 2012
+        # @todo: drop revision!="1" after 2012
         revision = request.params.get("rev")
-        if not revision:
-            revision = "0"
-        elif revision != "1":
-            revision = "1"
 
         cached_obj = None
         cache_key = None
