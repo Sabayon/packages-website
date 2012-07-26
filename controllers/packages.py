@@ -249,10 +249,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         name, package_id, repository_id, arch, branch, product = decoded_data
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         provided_mime = None
         category = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 provided_mime = repo.retrieveProvidedMime(package_id)
                 category = repo.retrieveCategory(package_id)
@@ -286,9 +287,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         changelog = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 changelog = repo.retrieveChangelog(package_id)
         finally:
@@ -314,9 +316,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         dependencies = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 dependencies = repo.retrieveDependencies(package_id,
                     extended = True)
@@ -371,9 +374,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         revdep_meta = []
-        repo = self._api_get_repo(entropy, repository_id, arch, branch,
-            product)
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 if revdep_cache is not None:
                     repo._setLiveCache("reverseDependenciesMetadata",
@@ -472,9 +475,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         provided_mime = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 provided_mime = repo.retrieveProvidedMime(package_id)
         finally:
@@ -498,9 +502,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         provided_libs = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 provided_libs = repo.retrieveProvidedLibraries(package_id)
         finally:
@@ -529,9 +534,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         needed_libs = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 needed_libs = repo.retrieveNeeded(package_id)
         finally:
@@ -560,10 +566,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         content = None
         tmp_fd, tmp_path = None, None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 tmp_fd, tmp_path = tempfile.mkstemp(
                     prefix="PackagesController.RetrieveContent")
@@ -599,9 +606,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             repository_id, {}).get('packages', [])
         excluded = model.config.EXCLUDED_MIRROR_NAMES
 
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         download = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 download = repo.retrieveDownloadURL(package_id)
         finally:
@@ -684,9 +692,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
         sources = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is not None:
                 sources = repo.retrieveSources(package_id,
                     extended = True)
@@ -711,11 +720,12 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
 
         entropy = self._entropy()
-        repo = self._api_get_repo(entropy, repository_id, arch, branch, product)
 
         metadata = None
         ugc = None
         try:
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             ugc = self._ugc(https=model.config.is_https(request))
             if repo is not None:
                 atom = repo.retrieveAtom(package_id)
@@ -985,6 +995,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 for repo in repo_cache.values():
                     repo.close()
 
+        repo_cache.clear()
         download_cache.clear()
         votes_cache.clear()
 
