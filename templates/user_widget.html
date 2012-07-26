@@ -37,10 +37,6 @@
                     <b>${_("My Comments")}</b>: ${c.front_page_user_stats['comments']}
                     <br/><b>${_("My Docs")}</b>: ${c.front_page_user_stats['docs']}
                     <br/><b>${_("My Votes")}</b>: ${int(c.front_page_user_stats['votes'])}
-                    <br/><b>${_("My Avg")}</b>: ${round(c.front_page_user_stats['votes_avg'],2)}
-                    % if c.front_page_user_stats:
-                        <br/><b>${_("Score")}</b>: ${c.front_page_user_stats['score']}
-                    % endif
                 %endif
             </div>
         </div>

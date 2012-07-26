@@ -980,8 +980,6 @@ class ApibaseController:
         return data
 
     def _expand_ugc_doc_metadata(self, ugc, doc):
-        if doc.get('userid'):
-            doc['score'] = ugc.get_user_score(doc['userid'])
         if doc.get('size'):
             doc['size'] = entropy_tools.bytes_into_human(doc.get('size'))
 

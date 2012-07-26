@@ -53,12 +53,6 @@ class DistributionUGCInterface(Database):
                   REFERENCES `entropy_base` (`idkey`)
             ) ENGINE=INNODB
         """,
-        'entropy_user_scores': """
-            CREATE TABLE `entropy_user_scores` (
-            `userid` INT UNSIGNED NOT NULL PRIMARY KEY,
-            `score` INT UNSIGNED NOT NULL DEFAULT 0
-            ) ENGINE=INNODB;
-        """,
         'entropy_downloads': """
             CREATE TABLE `entropy_downloads` (
             `iddownload` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -643,63 +637,6 @@ class DistributionUGCInterface(Database):
         data = self.fetchone() or {}
         return data.get('userid', None)
 
-    def _get_user_score_ranking(self, userid):
-        self.execute_query('SET @row = 0')
-        self.execute_query("""
-        SELECT Row, col_a FROM (SELECT @row := @row + 1 AS Row, userid AS col_a
-        FROM entropy_user_scores ORDER BY score DESC) As derived1
-        WHERE col_a = %s""", (userid,))
-        data = self.fetchone() or {}
-        ranking = data.get('Row', 0) # key can be avail but is None
-        if not ranking:
-            return 0
-        return ranking
-
-    def _is_user_score_available(self, userid):
-        rows = self.execute_query("""
-        SELECT `userid` FROM entropy_user_scores WHERE `userid` = %s
-        """, (userid,))
-        if rows:
-            return True
-        return False
-
-    def _calculate_user_score(self, userid):
-        docs_cnts = self._get_user_doctypes_count(userid)
-        votes, votes_avg = self._get_user_votes_stats(userid)
-        comments = 0
-        docs = 0
-        for key, val in docs_cnts.items():
-            if key == self.DOC_TYPES['comments']:
-                comments += val
-            else:
-                docs += val
-        return (comments*self.COMMENTS_SCORE_WEIGHT) + \
-            (docs*self.DOCS_SCORE_WEIGHT) + \
-            (votes*self.VOTES_SCORE_WEIGHT)
-
-    def _update_user_score(self, userid):
-        avail = self._is_user_score_available(userid)
-        myscore = self._calculate_user_score(userid)
-        if avail:
-            self.execute_query("""
-            UPDATE entropy_user_scores SET score = %s WHERE `userid` = %s
-            """, (myscore, userid,))
-        else:
-            self.execute_query("""
-            INSERT IGNORE INTO entropy_user_scores VALUES (%s,%s)
-            """, (userid, myscore,))
-        return myscore
-
-    def get_user_score(self, userid):
-        self.execute_query("""
-        SELECT score FROM entropy_user_scores WHERE userid = %s
-        """, (userid,))
-        data = self.fetchone() or {}
-        myscore = data.get('score')
-        if myscore is None:
-            myscore = self._update_user_score(userid)
-        return myscore
-
     def _get_user_generic_doctype_count(self, userid, doctype,
         doctype_sql_cmp = "="):
         self.execute_query("""
@@ -718,10 +655,10 @@ class DistributionUGCInterface(Database):
 
     def _get_user_votes_stats(self, userid):
         self.execute_query("""
-        SELECT count(`idvote`) as votes, round(avg(`vote`), 2) as vote_avg
+        SELECT count(`idvote`) as votes
         FROM entropy_votes WHERE `userid` = %s""", (userid,))
         data = self.fetchone() or {}
-        return data.get('votes', 0), data.get('votes_avg', 0.0)
+        return data.get('votes', 0)
 
     def get_user_stats(self, userid):
         mydict = {}
@@ -732,10 +669,8 @@ class DistributionUGCInterface(Database):
         mydict['yt_videos'] = data.get(self.DOC_TYPES['youtube_video'], 0)
         mydict['docs'] = mydict['images'] + mydict['files'] + \
             mydict['yt_videos']
-        mydict['votes'], mydict['votes_avg'] = self._get_user_votes_stats(
-            userid)
+        mydict['votes'] = self._get_user_votes_stats(userid)
         mydict['total_docs'] = mydict['comments'] + mydict['docs']
-        mydict['score'] = self.get_user_score(userid)
         return mydict
 
     def _handle_entropy_branches_id(self, branch):
@@ -810,7 +745,6 @@ class DistributionUGCInterface(Database):
                 description, None,))
         iddoc = self.lastrowid()
         self._insert_keywords(iddoc, keywords)
-        self._update_user_score(userid)
         return iddoc
 
     def _insert_keywords(self, iddoc, keywords):
@@ -834,8 +768,6 @@ class DistributionUGCInterface(Database):
         self.execute_query("""
         DELETE FROM entropy_docs WHERE `iddoc` = %s AND `iddoctype` = %s
         """, (iddoc, self.DOC_TYPES['comments'],))
-        if userid:
-            self._update_user_score(userid)
         return True, iddoc
 
     def do_vote(self, pkgkey, userid, vote):
@@ -848,7 +780,6 @@ class DistributionUGCInterface(Database):
         """, (idkey, userid, vote,))
         if rows < 1:
             return False
-        self._update_user_score(userid)
         return True
 
     def _has_user_already_voted(self, idkey, userid):
@@ -1044,7 +975,6 @@ class DistributionUGCInterface(Database):
         store_url = os.path.basename(dest_path)
         if self._store_url:
             store_url = os.path.join(self._store_url, store_url)
-        self._update_user_score(userid)
         return True, (iddoc, store_url)
 
     def insert_image(self, pkgkey, userid, username, image_path, file_name,
@@ -1097,8 +1027,6 @@ class DistributionUGCInterface(Database):
         self.execute_query("""
         DELETE FROM entropy_docs WHERE `iddoc` = %s AND `iddoctype` = %s
         """, (iddoc, doc_type,))
-        if userid:
-            self._update_user_score(userid)
         return True, (iddoc, None)
 
     def insert_youtube_video(self, pkgkey, userid, username, video_path,
@@ -1207,8 +1135,6 @@ class DistributionUGCInterface(Database):
 
         if deleted:
             do_remove()
-        if userid:
-            self._update_user_score(userid)
         return deleted, (iddoc, video_id,)
 
     def get_youtube_service(self):

@@ -1,7 +1,7 @@
 <%include file="/ugc_doc_header.html"/>
 <%include file="/ugc_show_doc_inner_body.html"/>
 <div class="package-ugc-doc-header">
-    ${_("written by %s, around %s") % ('<b><a href="' + c.profile_uri + '/' + c.ugc_doc['username'] + '">' + c.ugc_doc['username'] + '</a></b>', c.ugc_doc['ts'],)} | ${_("User score")}: <b><span class="ugc_score_${c.ugc_doc['userid']}">${c.ugc_doc['score']}</span></b> | ${_("Size")}: <b>${c.ugc_doc['size']}</b>
+    ${_("written by %s, around %s") % ('<b><a href="' + c.profile_uri + '/' + c.ugc_doc['username'] + '">' + c.ugc_doc['username'] + '</a></b>', c.ugc_doc['ts'],)} | ${_("Size")}: <b>${c.ugc_doc['size']}</b>
     <% 
         c.iddoc = c.ugc_doc['iddoc']
         c.error_div = "package-ugc-doc-error-%s" % (c.ugc_doc['iddoc'],)
