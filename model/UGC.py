@@ -476,7 +476,6 @@ class DistributionUGCInterface(Database):
     def get_ugc_metadata_by_identifiers(self, identifiers):
         if len(identifiers) < 2:
             identifiers = list(identifiers) + [0]
-            identifiers += [0]
         self.execute_query("""
         SELECT * FROM entropy_docs WHERE `iddoc` IN %s
         """, (identifiers,))
