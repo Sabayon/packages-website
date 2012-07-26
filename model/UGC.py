@@ -98,7 +98,6 @@ class DistributionUGCInterface(Database):
                 ON UPDATE CURRENT_TIMESTAMP,
             KEY `userid` (`userid`),
             KEY `idkey_2` (`idkey`,`userid`,`iddoctype`),
-            KEY `title` (`title`(333)),
             FOREIGN KEY (`idkey`) REFERENCES `entropy_base` (`idkey`),
             FOREIGN KEY (`iddoctype_fk`)
                 REFERENCES `entropy_doctypes` (`iddoctype`)
@@ -517,14 +516,10 @@ class DistributionUGCInterface(Database):
             SELECT SQL_CACHE entropy_base.idkey FROM entropy_base
             WHERE entropy_base.`key` = %s
           ) AS t2 USING(idkey)
-        WHERE entropy_docs.iddoctype IN (%s, %s)
-        AND ((entropy_docs.iddoctype = %s AND
-               entropy_docs.title = '__icon__')
-         OR entropy_docs.iddoctype = %s )
+        WHERE entropy_docs.iddoctype = %s
         ORDER BY entropy_docs.ts DESC
         LIMIT 1
-        """, (pkgkey, image_dt, icon_dt, image_dt,
-              icon_dt))
+        """, (pkgkey, icon_dt))
         data = self.fetchone() or {}
         icon_path = data.get('ddata')
         if not isinstance(icon_path, const_get_stringtype()) \
