@@ -111,7 +111,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             raise AttributeError("no package_names")
 
         package_names = package_names.split()
-        if len(package_names) > 200:
+        if len(package_names) > 24:
             # WTF !?!?!?!
             raise AttributeError("wtf too big")
         # validate package_names
@@ -119,7 +119,12 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             self._validate_package_names(package_names)
         except AttributeError:
             raise
-        return [entropy.dep.dep_getkey(x) for x in package_names]
+        pkg_names = list(set(
+                [entropy.dep.dep_getkey(x) for x in package_names]))
+
+        # increase determinism
+        pkg_names.sort()
+        return pkg_names
 
     def _get_package_name(self):
         """
@@ -148,7 +153,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if len(type_filters) > len(Document.SUPPORTED_TYPES):
             raise AttributeError("too many filters")
         try:
-            type_filters = [int(x) for x in type_filters]
+            type_filters = list(set([int(x) for x in type_filters]))
         except (TypeError, ValueError):
             raise AttributeError("malformed filters")
 
@@ -156,6 +161,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             if document_type_id not in Document.SUPPORTED_TYPES:
                 raise AttributeError("unsupported filters")
 
+        # increase determinism
+        type_filters.sort()
         return type_filters
 
     def _get_document_type_id(self):
@@ -184,6 +191,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             raise AttributeError("document ids not found")
         try:
             document_ids = [int(x) for x in document_ids]
+            if len(document_ids) > 24:
+                raise ValueError()
+            document_ids = list(set(document_ids))
         except (ValueError, TypeError):
             raise AttributeError("document ids are invalid")
 
@@ -192,6 +202,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if invalid_ints:
             raise AttributeError("document ids are invalid (2)")
 
+        # increase determinism
+        document_ids.sort()
         return document_ids
 
     def _get_package_ids(self):
@@ -204,6 +216,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             raise AttributeError("package ids not found")
         try:
             package_ids = [int(x) for x in package_ids]
+            # do not enforce an upper bound
+            package_ids = list(set(package_ids))
         except (ValueError, TypeError):
             raise AttributeError("package ids are invalid")
 
@@ -212,6 +226,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if invalid_ints:
             raise AttributeError("package ids are invalid (2)")
 
+        # increase determinism
+        package_ids.sort()
         return package_ids
 
     def _get_document_id(self):
