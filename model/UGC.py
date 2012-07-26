@@ -41,13 +41,17 @@ class DistributionUGCInterface(Database):
         """,
         'entropy_votes': """
             CREATE TABLE `entropy_votes` (
-            `idvote` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            `idkey` INT UNSIGNED NOT NULL,
-            `userid` INT UNSIGNED NOT NULL,
-            `vote` TINYINT NOT NULL,
-            `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
-            ) ENGINE=INNODB;
+              `idvote` int(10) unsigned NOT NULL AUTO_INCREMENT,
+              `idkey` int(10) unsigned NOT NULL,
+              `userid` int(10) unsigned NOT NULL,
+              `vote` tinyint(4) NOT NULL,
+              `ts` timestamp NOT NULL
+                  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              PRIMARY KEY (`idvote`),
+              UNIQUE KEY `already_voted` (`idkey`,`userid`),
+              CONSTRAINT `entropy_votes_ibfk_1` FOREIGN KEY (`idkey`)
+                  REFERENCES `entropy_base` (`idkey`)
+            ) ENGINE=INNODB
         """,
         'entropy_user_scores': """
             CREATE TABLE `entropy_user_scores` (
@@ -82,7 +86,6 @@ class DistributionUGCInterface(Database):
             UNIQUE KEY `ddate` (`ddate`)
             ) ENGINE=INNODB;
         """,
-
         'entropy_docs': """
             CREATE TABLE `entropy_docs` (
             `iddoc` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -119,19 +122,21 @@ class DistributionUGCInterface(Database):
         """,
         'entropy_distribution_usage': """
             CREATE TABLE `entropy_distribution_usage` (
-            `entropy_distribution_usage_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `entropy_distribution_usage_id` INT UNSIGNED
+                NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `entropy_branches_id` INT NOT NULL,
             `entropy_release_strings_id` INT NOT NULL,
-            `ts` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `ts` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                DEFAULT CURRENT_TIMESTAMP,
             `ip_address` VARCHAR( 15 ) NOT NULL,
             `entropy_ip_locations_id` INT UNSIGNED NOT NULL DEFAULT 0,
             `creation_date` DATETIME NOT NULL,
             `hits` INT UNSIGNED NOT NULL DEFAULT 0,
-
-            FOREIGN KEY  (`entropy_branches_id`) REFERENCES `entropy_branches` (`entropy_branches_id`),
+            FOREIGN KEY  (`entropy_branches_id`)
+                REFERENCES `entropy_branches` (`entropy_branches_id`),
             FOREIGN KEY  (`entropy_release_strings_id`)
-                REFERENCES `entropy_release_strings` (`entropy_release_strings_id`),
-
+                REFERENCES `entropy_release_strings`
+                    (`entropy_release_strings_id`),
             UNIQUE KEY `ip_address` (`ip_address`),
             KEY `entropy_ip_locations_id` (`entropy_ip_locations_id`)
             ) ENGINE=INNODB;
@@ -142,36 +147,40 @@ class DistributionUGCInterface(Database):
             `entropy_distribution_usage_id` INT UNSIGNED NOT NULL,
             `entropy_hardware_hash` VARCHAR(80) NOT NULL,
             PRIMARY KEY (`entropy_hardware_usage_id`),
-            UNIQUE KEY `entropy_distribution_usage_id` (`entropy_distribution_usage_id`),
+            UNIQUE KEY `entropy_distribution_usage_id`
+                (`entropy_distribution_usage_id`),
             CONSTRAINT `entropy_hardware_usage_ibfk_1`
               FOREIGN KEY (`entropy_distribution_usage_id`)
-              REFERENCES `entropy_distribution_usage` (`entropy_distribution_usage_id`)
+                  REFERENCES `entropy_distribution_usage`
+                      (`entropy_distribution_usage_id`)
             ) ENGINE=INNODB;
         """,
         'entropy_branches': """
             CREATE TABLE `entropy_branches` (
-            `entropy_branches_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `entropy_branches_id` INT UNSIGNED
+                NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `entropy_branch` VARCHAR( 100 ) NOT NULL,
             UNIQUE KEY `entropy_branch` (`entropy_branch`)
             ) ENGINE=INNODB;
         """,
         'entropy_release_strings': """
             CREATE TABLE `entropy_release_strings` (
-            `entropy_release_strings_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `entropy_release_strings_id` INT UNSIGNED
+                NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `release_string` VARCHAR( 255 ) NOT NULL,
             UNIQUE KEY `release_string` (`release_string`)
             ) ENGINE=INNODB;
         """,
         'entropy_ip_locations': """
             CREATE TABLE `entropy_ip_locations` (
-            `entropy_ip_locations_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `entropy_ip_locations_id` INT UNSIGNED
+                NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `ip_latitude` FLOAT( 8,5 ),
             `ip_longitude` FLOAT( 8,5 ),
             UNIQUE KEY `ip_locations_lat_lon` (`ip_latitude`,`ip_longitude`)
             ) ENGINE=INNODB;
         """,
     }
-
 
     def __init__(self, connection_data, store_path, store_url = None):
 
@@ -348,7 +357,7 @@ class DistributionUGCInterface(Database):
 
     def _get_entropy_ip_locations_id(self, ip_latitude, ip_longitude):
         self.execute_query("""
-        SELECT `entropy_ip_locations_id` FROM 
+        SELECT `entropy_ip_locations_id` FROM
         entropy_ip_locations WHERE
         `ip_latitude` = %s AND `ip_longitude` = %s
         """, (ip_latitude, ip_longitude,))
@@ -437,18 +446,18 @@ class DistributionUGCInterface(Database):
         if len(typeslist) == 1:
             self.execute_query("""
                 SELECT SQL_CACHE SQL_CALC_FOUND_ROWS *
-                FROM entropy_docs, entropy_base WHERE 
-                entropy_docs.`idkey` = entropy_base.`idkey` AND 
-                entropy_base.`key` = %s AND 
+                FROM entropy_docs, entropy_base WHERE
+                entropy_docs.`idkey` = entropy_base.`idkey` AND
+                entropy_base.`key` = %s AND
                 ( entropy_docs.`iddoctype` = %s  )
                 ORDER BY entropy_docs.`ts` """ + order_by + """
                 LIMIT %s, %s""", (pkgkey, typeslist[0], offset, length,))
         else:
             self.execute_query("""
                 SELECT SQL_CACHE SQL_CALC_FOUND_ROWS *
-                FROM entropy_docs,entropy_base WHERE 
-                entropy_docs.`idkey` = entropy_base.`idkey` AND 
-                entropy_base.`key` = %s AND 
+                FROM entropy_docs,entropy_base WHERE
+                entropy_docs.`idkey` = entropy_base.`idkey` AND
+                entropy_base.`key` = %s AND
                 ( entropy_docs.`iddoctype` IN %s  )
                 ORDER BY entropy_docs.`ts` """ + order_by + """
                 LIMIT %s, %s""", (pkgkey, typeslist, offset, length,))
