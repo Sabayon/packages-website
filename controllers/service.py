@@ -975,9 +975,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         # using the new get_ugc_metadata_doctypes()
         # @todo: drop revision=="0" after 2012
         revision = request.params.get("rev")
-        if revision is None:
+        if not revision:
             revision = "0"
-        if revision != "1":
+        elif revision != "1":
             revision = "1"
 
         cached_obj = None
