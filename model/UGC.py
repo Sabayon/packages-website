@@ -371,39 +371,44 @@ class DistributionUGCInterface(Database):
         return [x['keyword'] for x in self.fetchall()]
 
     def get_ugc_metadata_doctypes(self, pkgkey, typeslist, offset = 0,
-        length = 10, latest = False):
-
+        length = 10, latest = False, last_iddoc = None):
+        """
+        @todo: make last_iddoc mandatory to improve speed.
+        """
         if latest:
             order_by = "DESC"
         else:
             order_by = "ASC"
 
-        if len(typeslist) == 1:
-            self.execute_query("""
-            SELECT SQL_CACHE *
-            FROM entropy_docs
-            INNER JOIN (
-              SELECT SQL_CACHE entropy_base.idkey
-              FROM entropy_base
-              WHERE entropy_base.`key` = %s
-            ) AS t2 USING(idkey)
-            WHERE entropy_docs.iddoctype = %s
-            ORDER BY entropy_docs.`ts` """ + order_by + """
-            LIMIT %s, %s
-            """, (pkgkey, typeslist[0], offset, length + 1))
-        else:
-            self.execute_query("""
-            SELECT SQL_CACHE *
-            FROM entropy_docs
-            INNER JOIN (
-              SELECT SQL_CACHE entropy_base.idkey
-              FROM entropy_base
-              WHERE entropy_base.`key` = %s
-            ) AS t2 USING(idkey)
-            WHERE entropy_docs.iddoctype IN %s
-            ORDER BY entropy_docs.`ts` """ + order_by + """
-            LIMIT %s, %s
-            """, (pkgkey, typeslist, offset, length + 1))
+        # IN trick to avoid writing the same query twice here
+        # -1 is an invalid value and it is excluded automatically
+        # by MySQL anyway.
+        if len(typeslist) < 2:
+            typeslist = [x for x in typeslist] + [-1]
+
+        # if we're given the last_iddoc, optimize the
+        # LIMIT clause away
+        limit_clause = "%s, %s"
+        iddoc_clause = ""
+        args = (pkgkey, typeslist, offset, length + 1)
+        if last_iddoc is not None:
+            limit_clause = "%s"
+            iddoc_clause = "entropy_docs.iddoc > %s"
+            args = (pkgkey, last_iddoc, typeslist, length + 1)
+
+        self.execute_query("""
+        SELECT SQL_CACHE *
+        FROM entropy_docs
+        INNER JOIN (
+          SELECT SQL_CACHE entropy_base.idkey
+          FROM entropy_base
+          WHERE entropy_base.`key` = %s
+        ) AS t2 USING(idkey)
+        WHERE
+        """ + iddoc_clause + """
+        entropy_docs.iddoctype IN %s
+        ORDER BY entropy_docs.`ts` """ + order_by + """
+        LIMIT """ + limit_clause, args)
 
         raw_docs = self.fetchall()
 
