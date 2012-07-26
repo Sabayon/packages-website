@@ -44,7 +44,6 @@ class DistributionUGCInterface(Database):
             `idvote` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `idkey` INT UNSIGNED NOT NULL,
             `userid` INT UNSIGNED NOT NULL,
-            `vdate` DATE NOT NULL,
             `vote` TINYINT NOT NULL,
             `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY  (`idkey`) REFERENCES `entropy_base` (`idkey`)
@@ -831,12 +830,15 @@ class DistributionUGCInterface(Database):
         return True, iddoc
 
     def do_vote(self, pkgkey, userid, vote):
-        idkey = self._handle_pkgkey(pkgkey)
-        if self._has_user_already_voted(idkey, userid):
+        if vote not in self.VOTE_RANGE:
             return False
-        self.execute_query("""
-        INSERT INTO entropy_votes VALUES (%s,%s,%s,CURDATE(),%s,%s)
-        """, (None, idkey, userid, vote, None,))
+        idkey = self._handle_pkgkey(pkgkey)
+        rows = self.execute_query("""
+        INSERT IGNORE INTO entropy_votes (idkey, userid, vote)
+        VALUES (%s, %s, %s)
+        """, (idkey, userid, vote,))
+        if rows < 1:
+            return False
         self._update_user_score(userid)
         return True
 
