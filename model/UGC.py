@@ -87,7 +87,7 @@ class DistributionUGCInterface(Database):
             `userid` INT UNSIGNED NOT NULL,
             `username` VARCHAR( 255 ),
             `iddoctype` TINYINT NOT NULL,
-            `ddata` TEXT NOT NULL,
+            `ddata` VARCHAR( 160 ) NOT NULL,
             `title` VARCHAR( 512 ),
             `description` VARCHAR( 4000 ),
             `ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -528,9 +528,6 @@ class DistributionUGCInterface(Database):
         """, (pkgkey, icon_dt))
         data = self.fetchone() or {}
         icon_path = data.get('ddata')
-        if not isinstance(icon_path, const_get_stringtype()) \
-            and (icon_path is not None):
-            icon_path = icon_path.tostring()
         if icon_path is not None:
             icon_path = os.path.join(
                 self._store_url, icon_path.lstrip("/"))
@@ -1016,9 +1013,6 @@ class DistributionUGCInterface(Database):
         """, (iddoc, doc_type,))
         data = self.fetchone() or {}
         mypath = data.get('ddata')
-        if not isinstance(mypath, const_get_stringtype()) and \
-            (mypath is not None):
-            mypath = mypath.tostring()
         if mypath is not None:
             mypath = os.path.join(self.STORE_PATH, mypath)
             if os.path.isfile(mypath) and os.access(mypath, os.W_OK):
