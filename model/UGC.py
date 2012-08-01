@@ -102,7 +102,7 @@ class DistributionUGCInterface(Database):
         'entropy_doctypes': """
             CREATE TABLE `entropy_doctypes` (
             `iddoctype` TINYINT NOT NULL PRIMARY KEY,
-            `description` TEXT NOT NULL
+            `description` VARCHAR( 80 ) NOT NULL
             ) ENGINE=INNODB;
         """,
         'entropy_docs_keywords': """
@@ -497,8 +497,6 @@ class DistributionUGCInterface(Database):
         mydict['size'] = 0
         if mydict['iddoctype'] in self.UPLOADED_DOC_TYPES:
             myfilename = mydict['ddata']
-            if not isinstance(myfilename, const_get_stringtype()):
-                myfilename = myfilename.tostring()
             mypath = os.path.join(self.STORE_PATH, myfilename)
             try:
                 mydict['size'] = entropy.tools.get_file_size(mypath)
