@@ -402,7 +402,7 @@ class DistributionUGCInterface(Database):
         SELECT SQL_CACHE *
         FROM entropy_docs
         INNER JOIN (
-          SELECT SQL_CACHE entropy_base.idkey
+          SELECT entropy_base.idkey
           FROM entropy_base
           WHERE entropy_base.`key` = %s
         ) AS t2 USING(idkey)
@@ -517,7 +517,7 @@ class DistributionUGCInterface(Database):
         self.execute_query("""
         SELECT SQL_CACHE ddata FROM entropy_docs INNER JOIN
           (
-            SELECT SQL_CACHE entropy_base.idkey FROM entropy_base
+            SELECT entropy_base.idkey FROM entropy_base
             WHERE entropy_base.`key` = %s
           ) AS t2 USING(idkey)
         WHERE entropy_docs.iddoctype = %s
