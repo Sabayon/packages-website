@@ -1007,6 +1007,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         # @todo: drop revision!="1" after 2012
         revision = request.params.get("rev")
         if revision is None:
+            # typo in client lib, I used "revision"
+            revision = request.params.get("revision")
+        if revision is None:
             revision = "0"
 
         cached_obj = None
