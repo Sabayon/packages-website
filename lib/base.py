@@ -22,6 +22,7 @@ import www.lib.helpers as h
 import www.model as model
 import www.model.Portal as Portal
 import www.model.UGC as UGC
+from www.lib.exceptions import ServiceConnectionError
 
 def is_valid_string(mystr):
     lower = xrange(0, 32)
@@ -73,6 +74,7 @@ class BaseController(WSGIController):
         c.group_icon_url_64 = "/images/packages/groups/64x64"
         c.group_icon_url_48 = "/images/packages/groups/48x48"
         c.meta_list_url = "/images/packages/metalist"
+        c.sabayon_www = model.config.SABAYON_WWW
         c.base_package_show_url = model.config.PACKAGE_SHOW_URL
         c.base_search_url = model.config.PACKAGE_SEARCH_URL
         c.base_group_url = model.config.GROUP_SHOW_URL
