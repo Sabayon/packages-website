@@ -86,12 +86,9 @@ class WebsiteController:
                 pass
 
     def _get_ip_address(self, request):
-        ip_addr = request.environ.get('REMOTE_ADDR')
-        if ip_addr == "127.0.0.1":
-            # not useful
-            ip_proxy_addr = request.environ.get('HTTP_X_FORWARDED_FOR')
-            if ip_proxy_addr:
-                return ip_proxy_addr
+        ip_addr = request.environ.get('HTTP_X_FORWARDED_FOR')
+        if not ip_addr:
+            ip_addr = request.environ.get('REMOTE_ADDR')
         return ip_addr
 
     def _set_user_perms(self, user_id, portal):
