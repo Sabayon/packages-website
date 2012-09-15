@@ -282,7 +282,7 @@ class DistributionUGCInterface(Database):
 
                 self.execute_query("""
                 INSERT IGNORE INTO entropy_ip_locations VALUES (%s, %s, %s)
-                """, (None, ip_latitude, ip_longitude,))
+                """, (None, ip_lat, ip_long,))
                 entropy_ip_locations_id = self.lastrowid()
 
                 if not entropy_ip_locations_id:
