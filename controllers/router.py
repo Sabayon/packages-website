@@ -28,6 +28,8 @@ class RouterController(WSGIController):
         return ip_addr
 
     def route(self, target):
+        if not target:
+            return abort(404)
         ip_address = self._get_ip_address(request)
         geoip = EntropyGeoIP(self._geoip_path)
         data = geoip.get_geoip_record_from_ip(ip_address)
@@ -45,9 +47,9 @@ class RouterController(WSGIController):
             if not mirrors and continent != fallback_continent:
                 mirrors = mrs.continent_mirrors(fallback_continent)
             if not mirrors:
-                abort(404)
+                return abort(404)
         except ServiceConnectionError:
-            abort(404)
+            return abort(404)
         finally:
             if mrs is not None:
                 mrs.disconnect()
