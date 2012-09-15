@@ -3,6 +3,8 @@ import hashlib
 import time
 import re
 import os
+import pwd
+import grp
 import datetime, random, os, urllib
 from pylons.i18n import _, N_
 ugc_connection_data = {}
@@ -15,7 +17,12 @@ from paste.request import construct_url
 
 from www.lib.exceptions import ServiceConnectionError
 
+# Environment variables
 SABAYON_WWW = os.getenv("SABAYON_WWW", "/sabayon/www")
+DEFAULT_WEB_USER = os.getenv("DEFAULT_WEB_USER", "entropy")
+DEFAULT_WEB_GROUP = os.getenv("DEFAULT_WEB_GROUP", "entropy")
+DEFAULT_WEB_UID = int(pwd.getpwnam(DEFAULT_WEB_USER).pw_uid)
+DEFAULT_WEB_GID = int(grp.getgrnam(DEFAULT_WEB_GROUP).gr_gid)
 
 SITE_URI = 'http://www.sabayon.org'
 SITE_URI_SSL = 'https://www.sabayon.org'
@@ -28,10 +35,7 @@ VIRUS_CHECK_EXEC = '/usr/bin/clamscan'
 VIRUS_CHECK_ARGS = []
 DEFAULT_CHMOD_DIR = 0775
 DEFAULT_CHMOD_FILE = 0664
-DEFAULT_WEB_USER = "entropy"
-DEFAULT_WEB_UID = 1000
-DEFAULT_WEB_GROUP = "entropy"
-DEFAULT_WEB_GID = 1000
+
 GLSA_URI = "http://www.gentoo.org/rdf/en/glsa-index.rdf"
 MY_ETP_DIR = "/home/entropy/"
 ETP_PATH = SABAYON_WWW + '/packages.sabayon.org/www/entropy/lib'
