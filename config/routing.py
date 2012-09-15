@@ -22,6 +22,7 @@ def make_map(config):
     # CUSTOM ROUTES HERE
 
     map.connect('/', controller='packages', action='index')
+    map.connect('/r/*target', controller='router', action='route')
     map.connect('/search', controller='packages', action='quicksearch')
     map.connect('/quicksearch', controller='packages', action='quicksearch')
     map.connect('/archswitch/{arch}', controller='packages', action='archswitch')
