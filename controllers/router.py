@@ -33,14 +33,19 @@ class RouterController(WSGIController):
         data = geoip.get_geoip_record_from_ip(ip_address)
         country = geoip.get_geoip_country_code_from_ip(ip_address)
         continent = geoip.COUNTRY_CONTINENT.get(country)
+        fallback_continent = "EU"
 
         if continent is None:
-            continent = "EU" # fallback continent
+            continent = fallback_continent # fallback continent
 
         mrs = None
         try:
             mrs = Mirrors()
             mirrors = mrs.continent_mirrors(continent)
+            if not mirrors and continent != fallback_continent:
+                mirrors = mrs.continent_mirrors(fallback_continent)
+            if not mirrors:
+                abort(404)
         except ServiceConnectionError:
             abort(404)
         finally:
