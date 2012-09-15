@@ -21,11 +21,11 @@ import entropy.dump
 import entropy.tools
 
 from entropy.exceptions import PermissionDenied
-from entropy.misc import EntropyGeoIP
 from entropy.client.services.interfaces import Document, DocumentFactory
 from entropy.i18n import _
 
 from www.lib.mysql import Database
+from www.lib.geoip import EntropyGeoIP
 from www.lib.exceptions import ServiceConnectionError
 
 
