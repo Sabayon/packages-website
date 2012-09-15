@@ -43,6 +43,7 @@ WEBSITE_TMP_DIR = SABAYON_WWW + '/packages.sabayon.org/temp'
 WEBSITE_CACHE_DIR = SABAYON_WWW + '/packages.sabayon.org/cache'
 WEBSITE_REPO_CACHE_DIR = WEBSITE_CACHE_DIR + "/_repos"
 COMMUNITY_REPOS_DIR = SABAYON_WWW + "/community.sabayon.org/repos/"
+GEOIP_DB_PATH = SABAYON_WWW + "/geoip/GeoLiteCity.dat"
 REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
 # new method also!
 os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH

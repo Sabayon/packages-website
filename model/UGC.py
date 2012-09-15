@@ -214,10 +214,10 @@ class DistributionUGCInterface(Database):
         self.connect()
 
     def _get_geoip_data_from_ip_address(self, ip_address):
-        geoip_dbpath = self.connection_data.get('geoip_dbpath', '')
-        if os.path.isfile(geoip_dbpath) and os.access(geoip_dbpath, os.R_OK):
+        if os.path.isfile(config.GEOIP_DB_PATH) and \
+                os.access(config.GEOIP_DB_PATH, os.R_OK):
             try:
-                geo = EntropyGeoIP(geoip_dbpath)
+                geo = EntropyGeoIP(config.GEOIP_DB_PATH)
                 return geo.get_geoip_record_from_ip(ip_address)
             except: # lame, but I don't know what exceptions are thrown
                 pass
