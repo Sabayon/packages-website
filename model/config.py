@@ -15,6 +15,8 @@ from paste.request import construct_url
 
 from www.lib.exceptions import ServiceConnectionError
 
+SABAYON_WWW = os.getenv("SABAYON_WWW", "/sabayon/www")
+
 SITE_URI = 'http://www.sabayon.org'
 SITE_URI_SSL = 'https://www.sabayon.org'
 FORUM_URI = "http://forum.sabayon.org"
@@ -32,11 +34,11 @@ DEFAULT_WEB_GROUP = "entropy"
 DEFAULT_WEB_GID = 1000
 GLSA_URI = "http://www.gentoo.org/rdf/en/glsa-index.rdf"
 MY_ETP_DIR = "/home/entropy/"
-ETP_PATH = '/sabayon/www/packages.sabayon.org/www/entropy/lib'
-WEBSITE_TMP_DIR = '/sabayon/www/packages.sabayon.org/temp'
-WEBSITE_CACHE_DIR = '/sabayon/www/packages.sabayon.org/cache'
+ETP_PATH = SABAYON_WWW + '/packages.sabayon.org/www/entropy/lib'
+WEBSITE_TMP_DIR = SABAYON_WWW + '/packages.sabayon.org/temp'
+WEBSITE_CACHE_DIR = SABAYON_WWW + '/packages.sabayon.org/cache'
 WEBSITE_REPO_CACHE_DIR = WEBSITE_CACHE_DIR + "/_repos"
-COMMUNITY_REPOS_DIR = "/sabayon/www/community.sabayon.org/repos/"
+COMMUNITY_REPOS_DIR = SABAYON_WWW + "/community.sabayon.org/repos/"
 REPOSITORIES_CONF_PATH = ETP_PATH + "/../conf/repositories.conf.example"
 # new method also!
 os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH
@@ -86,7 +88,7 @@ source_repositories = ["portage"]
 # UGC #
 community_repos_ugc_connection_data = {}
 
-ugc_store_path = "/sabayon/www/community.sabayon.org/ugc"
+ugc_store_path = SABAYON_WWW + "/community.sabayon.org/ugc"
 ugc_store_url = "https://community.sabayon.org/ugc"
 http_ugc_store_url = "http://community.sabayon.org/ugc"
 
