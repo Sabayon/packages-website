@@ -9,6 +9,7 @@ import datetime, random, os, urllib
 from pylons.i18n import _, N_
 ugc_connection_data = {}
 phpbb_connection_data = {}
+mirror_connection_data = {}
 try:
     from private import *
 except ImportError:
