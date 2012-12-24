@@ -41,6 +41,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         self.__service_auth = None
         self._supported_repository_ids = ["sabayonlinux.org",
             "sabayon-weekly", "sabayon-limbo"]
+        self._supported_reposerv_repository_ids = ["sabayonlinux.org",
+            "sabayon-limbo"]
 
     @property
     def _auth(self):
@@ -82,6 +84,18 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         if repository_id is None:
             repository_id = self._get_repository_id()
         if repository_id not in self._supported_repository_ids:
+            raise AttributeError("unsupported repository_id")
+
+    def _validate_reposerv_repository_id(self, repository_id):
+        """
+        Validate provided repository_id in HTTP request against those supported
+        by the EAPI3 Repository update service of this instance.
+
+        @raise AttributeError: if invalid
+        """
+        if repository_id is None:
+            repository_id = self._get_repository_id()
+        if repository_id not in self._supported_reposerv_repository_ids:
             raise AttributeError("unsupported repository_id")
 
     def _get_repository_id(self):
@@ -1237,6 +1251,11 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         r = self._get_repository_id()
         if r not in avail_repos:
             raise AssertionError("invalid repository identifier")
+
+        try:
+            self._validate_reposerv_repository_id(r)
+        except AttributeError:
+            raise AssertionError("unsupported repository")
 
         # validate arch
         avail_arches = self._get_available_arches(entropy_client, r, p)
