@@ -7,12 +7,7 @@ import shutil
 import cgi
 import re
 import time
-import copy
-import codecs
-import signal
 import sys
-
-from threading import Timer
 
 from www.lib.base import *
 from www.lib.website import *
@@ -1417,118 +1412,71 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except AttributeError as err:
             return self._generic_invalid_request(message = str(err))
 
-        if len(package_ids) > RepositoryWebService.MAXIMUM_PACKAGE_REQUEST_SIZE:
+        max_len = RepositoryWebService.MAXIMUM_PACKAGE_REQUEST_SIZE
+        if len(package_ids) > max_len:
             return self._generic_invalid_request(
                 message = "too many package_ids")
         package_ids = sorted(package_ids)
 
         cached_obj = None
         if model.config.WEBSITE_CACHING:
+            mtime = self._get_valid_repository_mtime(
+                entropy_client, r, a, b, p)
+
             sha = hashlib.sha1()
-            sha.update(repr(self._get_valid_repository_mtime(entropy_client,
-                r, a, b, p)))
-            sha.update(repr(package_ids))
+            sha.update("%f;" % (mtime,))
+            sha.update(";".join(["%s" % (x,) for x in package_ids]))
+            sha.update(";")
             sha.update(r)
+            sha.update(";")
             sha.update(a)
+            sha.update(";")
             sha.update(b)
+            sha.update(";")
             sha.update(p)
-            cache_key = "_service_get_packages_metadata_tmpl_" + sha.hexdigest()
+            cache_key = "_service_get_packages_metadata_%s_%s_%s_%s_%s" % (
+                sha.hexdigest(), r, a, b, p)
+
             cached_obj = self._cacher.pop(
                 cache_key, cache_dir = model.config.WEBSITE_CACHE_DIR)
             if cached_obj is not None:
                 return cached_obj
 
-        def _task(tmp_path):
-            with codecs.open(tmp_path, "w", "utf-8") as tmp_w:
-                repo = None
-                try:
-                    repo = self._api_get_repo(entropy_client, r, a, b, p)
-                    if repo is None:
-                        tmp_w.write(self._generic_invalid_request(
-                            message = "unavailable repository"))
-                        return
-
-                    cached_obj = {}
-                    for package_id in package_ids:
-                        pkg_meta = repo.getPackageData(package_id,
-                            content_insert_formatted = True,
-                            get_content = False, get_changelog = False)
-                        if pkg_meta is None:
-                            # request is out of sync, we can abort everything
-                            tmp_w.write(
-                                self._generic_invalid_request(
-                                    message = \
-                                        "requesting unavailable packages"))
-                            return
-
-                        self._reposerv_json_pkg_data(pkg_meta)
-                        cached_obj[package_id] = pkg_meta
-
-                    response = self._api_base_response(
-                        WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-                    response['r'] = cached_obj
-                    tmp_w.write(self._service_render(response))
-
-                finally:
-                    if repo is not None:
-                        repo.close()
-
-        tmp_fd, tmp_path = None, None
+        repo = None
         try:
+            repo = self._api_get_repo(entropy_client, r, a, b, p)
+            if repo is None:
+                return self._generic_invalid_request(
+                    message = "invalid repository")
 
-            tmp_fd, tmp_path = tempfile.mkstemp(
-                prefix="get_packages_metadata")
+            pkg_data = {}
+            for package_id in package_ids:
+                pkg_meta = repo.getPackageData(package_id,
+                    content_insert_formatted = True,
+                    get_content = False, get_changelog = False)
+                if pkg_meta is None:
+                    # request is out of sync, we can abort everything
+                    return self._generic_invalid_request(
+                        message = "requesting unavailable packages")
 
-            _child_timeout = 20
+                self._reposerv_json_pkg_data(pkg_meta)
+                pkg_data[package_id] = pkg_meta
 
-            pid = None
-            timer = None
-            try:
-                pid = os.fork()
-                rc_pid = None
-                if pid == 0:
-                    _task(tmp_path)
-                else:
-                    def _kill_pid():
-                        try:
-                            os.kill(pid, signal.SIGTERM)
-                        except OSError:
-                            # errno 3
-                            pass
-                    # start timer
-                    timer = Timer(_child_timeout, _kill_pid)
-                    timer.start()
-                    rc_pid, rc = os.waitpid(pid, os.P_WAIT)
-                    timer.cancel()
-            finally:
-                if pid == 0:
-                    os._exit(0)
-                elif pid is not None:
-                    try:
-                        os.kill(pid, signal.SIGTERM)
-                    except OSError:
-                        # errno 3
-                        pass
+            response = self._api_base_response(
+                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+            response['r'] = pkg_data
+            cached_obj = self._service_render(response)
 
-            with codecs.open(tmp_path, "r", "utf-8") as tmp_f:
-                cached_obj = tmp_f.read()
-                if model.config.WEBSITE_CACHING:
-                    self._cacher.save(
-                        cache_key, cached_obj,
-                        cache_dir = model.config.WEBSITE_CACHE_DIR)
-                return cached_obj
+            if model.config.WEBSITE_CACHING:
+                self._cacher.save(
+                    cache_key, cached_obj,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+            return cached_obj
 
         finally:
-            if tmp_fd is not None:
-                try:
-                    os.close(tmp_fd)
-                except (OSError, IOError):
-                    pass
-            if tmp_path is not None:
-                try:
-                    os.remove(tmp_path)
-                except (OSError, IOError):
-                    pass
+            if repo is not None:
+                repo.close()
 
     def repository_revision(self):
         """
