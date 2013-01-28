@@ -872,7 +872,10 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    pkg_ids, rc = repo.atomMatch(q, multiMatch = True)
+                    try:
+                        pkg_ids, rc = repo.atomMatch(q, multiMatch = True)
+                    except DatabaseError:  # image malformed?
+                        continue
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
