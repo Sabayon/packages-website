@@ -941,8 +941,11 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    pkg_ids = [x[0] for x in entropy.get_meant_packages(q,
-                            valid_repos = [repo])]
+                    try:
+                        pkg_ids = [x[0] for x in entropy.get_meant_packages(
+                                q, valid_repos = [repo])]
+                    except DatabaseError:
+                        continue
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
