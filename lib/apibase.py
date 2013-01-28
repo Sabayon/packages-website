@@ -477,8 +477,11 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    pkg_ids = repo.searchPackages(q, order_by = "atom",
-                        just_id = True)
+                    try:
+                        pkg_ids = repo.searchPackages(q, order_by = "atom",
+                                                      just_id = True)
+                    except DatabaseError:
+                        continue
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
