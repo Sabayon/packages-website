@@ -344,7 +344,8 @@ class ApibaseController:
                             cat_desc = desc_map['en']
                         if cat_desc is not None:
                             category_descriptions[mycat] = cat_desc
-
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -477,16 +478,15 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    try:
-                        pkg_ids = repo.searchPackages(q, order_by = "atom",
-                                                      just_id = True)
-                    except DatabaseError:
-                        continue
+                    pkg_ids = repo.searchPackages(q, order_by = "atom",
+                                                  just_id = True)
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -520,6 +520,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -556,6 +558,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -592,6 +596,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -627,6 +633,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -667,6 +675,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -702,6 +712,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -735,6 +747,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -773,16 +787,20 @@ class ApibaseController:
                     repo_categories = repo.listAllCategories()
                     expanded_cats = set()
                     for g_cat in categories:
-                        expanded_cats.update([x for x in repo_categories if \
-                            x.startswith(g_cat)])
+                        expanded_cats.update(
+                            [x for x in repo_categories if \
+                                 x.startswith(g_cat)])
                     pkg_ids = set()
                     for cat in sorted(expanded_cats):
                         pkg_ids |= repo.searchCategory(cat, just_id = True)
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
-                    data.extend((pkg_id, repository_id, arch, branch, product) \
-                        for pkg_id in pkg_ids)
+                    data.extend(
+                        (pkg_id, repository_id, arch, branch, product) \
+                            for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -816,6 +834,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -849,6 +869,8 @@ class ApibaseController:
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -875,15 +897,14 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    try:
-                        pkg_ids, rc = repo.atomMatch(q, multiMatch = True)
-                    except DatabaseError:  # image malformed?
-                        continue
+                    pkg_ids, rc = repo.atomMatch(q, multiMatch = True)
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -914,6 +935,8 @@ class ApibaseController:
                         if rc == 0:
                             matched_set.add(package)
                     current_set -= matched_set
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
@@ -941,16 +964,15 @@ class ApibaseController:
                 product)
             try:
                 if repo is not None:
-                    try:
-                        pkg_ids = [x[0] for x in entropy.get_meant_packages(
-                                q, valid_repos = [repo])]
-                    except DatabaseError:
-                        continue
+                    pkg_ids = [x[0] for x in entropy.get_meant_packages(
+                            q, valid_repos = [repo])]
                     if filter_cb is not None:
                         pkg_ids = [pkg_id for pkg_id in pkg_ids if \
                             filter_cb(repo, pkg_id)]
                     data.extend((pkg_id, repository_id, arch, branch, product) \
                         for pkg_id in pkg_ids)
+            except DatabaseError:
+                continue
             finally:
                 if repo is not None:
                     repo.close()
