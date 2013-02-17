@@ -668,6 +668,23 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         name, package_id, repository_id, arch, branch, product = decoded_data
 
         entropy = self._entropy()
+        repo = None
+        original_repository_id = None
+        try:
+           repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
+            if repo is not None:
+                original_repository_id = repo.getInstalledPackageRepository(
+                    package_id)
+        finally:
+            if repo is not None:
+                repo.close()
+
+        if (original_repository_id != repository_id) and \
+                (original_repository_id is not None):
+            # sabayon-weekly support
+            repository_id = original_repository_id
+
         show_what_data = {
             'what': "download",
             'data': entropy.get_mirrors(repository_id, arch, product, branch),
