@@ -43,9 +43,9 @@ WEBSITE_CACHE_DIR = SABAYON_WWW + '/packages.sabayon.org/cache'
 WEBSITE_REPO_CACHE_DIR = WEBSITE_CACHE_DIR + "/_repos"
 COMMUNITY_REPOS_DIR = SABAYON_WWW + "/community.sabayon.org/repos/"
 GEOIP_DB_PATH = SABAYON_WWW + "/geoip/GeoLiteCity.dat"
-ENTROPY_ETC_DIR = SABAYON_WWW + "/packages.sabayon.org/model"
-REPOSITORIES_CONF_PATH = ENTROPY_ETC_DIR + "/repositories.conf"
-os.environ["DEV_ETP_ETC_DIR"] = ENTROPY_ETC_DIR
+REPOSITORIES_CONF_PATH = SABAYON_WWW + "/packages.sabayon.org/model/repositories.conf"
+# new method also!
+os.environ['ETP_REPOSITORIES_CONF'] = REPOSITORIES_CONF_PATH
 EXCLUDED_MIRROR_NAMES = ["pkg.sabayon.org", "ftp.fsn.hu", "ftp.rnl.ist.utl.pt",
     "mirror.dun.nu", "ftp.cc.uoc.gr", "mirrors.cs.wmich.edu",
     "riksun.riken.go.jp"]
