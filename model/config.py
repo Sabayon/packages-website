@@ -16,8 +16,6 @@ except ImportError:
     from www.private import *
 from paste.request import construct_url
 
-from www.lib.exceptions import ServiceConnectionError
-
 # Environment variables
 SABAYON_WWW = os.getenv("SABAYON_WWW", "/sabayon/www")
 DEFAULT_WEB_USER = os.getenv("DEFAULT_WEB_USER", "entropy")
@@ -161,3 +159,7 @@ def htmlencode(text):
     text = text.replace('<', '&lt;')
     text = text.replace('>', '&gt;')
     return text
+
+
+# Import Entropy now
+from www.lib.exceptions import ServiceConnectionError
