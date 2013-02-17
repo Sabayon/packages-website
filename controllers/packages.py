@@ -671,15 +671,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         settings = entropy.Settings()
-        down_data = settings['repositories'].get(
-            'available', {}).get(repository_id)
-        if not down_data:
-            # assume that main repo can be used.
-            down_data = settings['repositories'].get(
-                'available', {}).get(model.config.ETP_REPOSITORY)
         show_what_data = {
             'what': "download",
-            'data': down_data,
+            'data': settings['repositories'].get('available', {}).get(repository_id),
             'excluded': model.config.EXCLUDED_MIRROR_NAMES,
         }
         c.package_show_what = show_what_data
