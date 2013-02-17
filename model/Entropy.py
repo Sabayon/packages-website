@@ -11,6 +11,8 @@ from entropy.cache import EntropyCacher
 # this is just enforced here.
 EntropyCacher.STASHING_CACHE = False
 
+import entropy.tools
+
 class Entropy(Client):
 
     def init_singleton(self):
@@ -117,6 +119,30 @@ class Entropy(Client):
 
         return sorted([x for x in set(repositories) if x not \
             in config.disabled_repositories]) # remove dupies
+
+    def get_mirrors(self, repoid, arch, product, branch):
+        """
+        Get Repository built-in mirrors.
+        """
+        dir_path = self._guess_repo_db_path(repoid, arch, product, branch)
+        if dir_path is None:
+            return tuple()
+
+        mirror_path = os.path.join(
+            dir_path, etpConst['etpdatabasemirrorsfile'])
+        if not os.path.isfile(mirror_path):
+            return tuple()
+
+        mirrors = entropy.tools.generic_file_content_parser(
+            mirror_path, encoding=etpConst['conf_encoding'])
+
+        expanded_mirrors = []
+        for mirror in mirrors:
+            mirror = entropy.tools.expand_plain_package_mirror(
+                mirror, product, repoid)
+            expanded_mirrors.append(mirror)
+
+        return tuple(expanded_mirrors)
 
     def _open_db(self, repoid, arch, product, branch, xcache = False):
         """

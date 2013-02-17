@@ -602,8 +602,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         settings = entropy.Settings()
-        mirrors = settings['repositories'].get('available', {}).get(
-            repository_id, {}).get('packages', [])
+        mirrors = entropy.get_mirrors(repository_id, arch, product, branch)
         excluded = model.config.EXCLUDED_MIRROR_NAMES
 
         download = None
@@ -673,7 +672,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         settings = entropy.Settings()
         show_what_data = {
             'what': "download",
-            'data': settings['repositories'].get('available', {}).get(repository_id),
+            'data': entropy.get_mirrors(repository_id, arch, product, branch),
             'excluded': model.config.EXCLUDED_MIRROR_NAMES,
         }
         c.package_show_what = show_what_data

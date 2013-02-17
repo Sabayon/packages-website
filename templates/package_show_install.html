@@ -23,7 +23,7 @@
                 ${_("A download will start <b>automatically</b> within a few seconds, if not, please <b>right click</b> on one of the links below and select <b>Save as</b>.")}
             </div>
             <%
-                mirrors = reversed(c.package_show_what['data'])
+                mirrors = c.package_show_what['data']
                 from entropy.tools import spliturl
                 import os.path
             %>

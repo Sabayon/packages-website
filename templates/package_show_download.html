@@ -6,7 +6,7 @@
                 ${_("Download mirrors")}
             </div>
             <%
-                mirrors = reversed(c.package_show_what['data']['packages'])
+                mirrors = c.package_show_what['data']
                 from entropy.tools import spliturl
                 import os.path
             %>
