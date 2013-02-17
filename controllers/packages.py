@@ -671,7 +671,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         repo = None
         original_repository_id = None
         try:
-           repo = self._api_get_repo(
+            repo = self._api_get_repo(
                 entropy, repository_id, arch, branch, product)
             if repo is not None:
                 original_repository_id = repo.getInstalledPackageRepository(
