@@ -1287,6 +1287,32 @@ class ApibaseController:
             }
             data.append(obj)
 
+            # upstream package info
+            upstream_pkg_url = "http://packages.gentoo.org/package/%s" % (
+                package_key,)
+            obj = {
+                'id': "upstream_pkg",
+                'name': _("Upstream package"),
+                'icon': "icon_package.png",
+                'url': upstream_pkg_url,
+                'alt': _("Gentoo package information"),
+                'extra_url_meta': "rel=\"nofollow\"",
+            }
+            data.append(obj)
+
+            # upstream CVS
+            vcs_url = "http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86"
+            upstream_vcs_url = "%s/%s" % (vcs_url, package_key,)
+            obj = {
+                'id': "upstream_vcs",
+                'name': _("Upstream VCS package"),
+                'icon': "icon_source.png",
+                'url': upstream_vcs_url,
+                'alt': _("Gentoo VCS package directory"),
+                'extra_url_meta': "rel=\"nofollow\"",
+            }
+            data.append(obj)
+
             # security
             obj = {
                 'id': "security",
