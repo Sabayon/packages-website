@@ -1517,7 +1517,7 @@ class ApibaseController:
         brief_list_hash = 2
         is_source_repo = self._is_source_repository(repository_id)
         sha = hashlib.sha1()
-        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|v2" % (
+        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|v3" % (
             repository_id,
             package_id,
             arch,
