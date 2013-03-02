@@ -1517,7 +1517,7 @@ class ApibaseController:
         brief_list_hash = 2
         is_source_repo = self._is_source_repository(repository_id)
         sha = hashlib.sha1()
-        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s" % (
+        hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|v2" % (
             repository_id,
             package_id,
             arch,
@@ -1653,6 +1653,53 @@ class ApibaseController:
                 'split': False,
                 'icon': "icon_attach.png",
             })
+
+            extra_download = entropy_repository.retrieveExtraDownload(
+                package_id) or []
+            for down_id, extra_down in enumerate(extra_download, 1):
+
+                extra_key = 'extra_download_%d_download' % (down_id,)
+                data[extra_key] = extra_down['download']
+                brief_list.append({
+                    'key': extra_key,
+                    'name': _("Extra %s package file") % (extra_down['type'],),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_package.png",
+                })
+
+                extra_key = 'extra_download_%d_size' % (down_id,)
+                data[extra_key] = extra_down['size']
+                brief_list.append({
+                    'key': extra_key,
+                    'name': _("Extra %s package size") % (extra_down['type'],),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_attach.png",
+                })
+
+                extra_key = 'extra_download_%d_disksize' % (down_id,)
+                data[extra_key] = extra_down['disksize']
+                brief_list.append({
+                    'key': extra_key,
+                    'name': _("Extra %s package disk size") % (
+                            extra_down['type'],),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_attach.png",
+                })
+
+                extra_key = 'extra_download_%d_sha256' % (down_id,)
+                data[extra_key] = extra_down['sha256']
+                brief_list.append({
+                    'key': extra_key,
+                    'name': _("Extra %s package SHA 256") % (
+                            extra_down['type'],),
+                    'url': None,
+                    'split': False,
+                    'icon': "icon_attach.png",
+                })
+
         brief_list.append({
             'key': "useflags",
             'name': _("USE flags"),
