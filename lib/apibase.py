@@ -1663,7 +1663,7 @@ class ApibaseController:
                 brief_data[extra_key] = extra_down['download']
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("%s file") % (extra_down['type'],),
+                    'name': _("%s file") % (extra_down['type'].capitalize(),),
                     'url': None,
                     'split': False,
                     'icon': "icon_package.png",
@@ -1674,7 +1674,7 @@ class ApibaseController:
                     extra_down['size'])
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("%s size") % (extra_down['type'],),
+                    'name': _("%s size") % (extra_down['type'].capitalize(),),
                     'url': None,
                     'split': False,
                     'icon': "icon_attach.png",
@@ -1686,7 +1686,7 @@ class ApibaseController:
                 brief_list.append({
                     'key': extra_key,
                     'name': _("%s disk size") % (
-                            extra_down['type'],),
+                            extra_down['type'].capitalize(),),
                     'url': None,
                     'split': False,
                     'icon': "icon_attach.png",
@@ -1697,7 +1697,7 @@ class ApibaseController:
                 brief_list.append({
                     'key': extra_key,
                     'name': _("%s SHA 256") % (
-                            extra_down['type'],),
+                            extra_down['type'].capitalize(),),
                     'url': None,
                     'split': False,
                     'icon': "icon_attach.png",
