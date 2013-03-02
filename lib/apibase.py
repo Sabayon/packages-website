@@ -1549,6 +1549,7 @@ class ApibaseController:
         if o_size is not None:
             ondisksize = entropy_tools.bytes_into_human(o_size)
 
+        brief_data = {}
         brief_list = []
         brief_list.append({
             'key': "repository_id",
@@ -1659,7 +1660,7 @@ class ApibaseController:
             for down_id, extra_down in enumerate(extra_download, 1):
 
                 extra_key = 'extra_download_%d_download' % (down_id,)
-                data[extra_key] = extra_down['download']
+                brief_data[extra_key] = extra_down['download']
                 brief_list.append({
                     'key': extra_key,
                     'name': _("Extra %s package file") % (extra_down['type'],),
@@ -1669,7 +1670,7 @@ class ApibaseController:
                 })
 
                 extra_key = 'extra_download_%d_size' % (down_id,)
-                data[extra_key] = extra_down['size']
+                brief_data[extra_key] = extra_down['size']
                 brief_list.append({
                     'key': extra_key,
                     'name': _("Extra %s package size") % (extra_down['type'],),
@@ -1679,7 +1680,7 @@ class ApibaseController:
                 })
 
                 extra_key = 'extra_download_%d_disksize' % (down_id,)
-                data[extra_key] = extra_down['disksize']
+                brief_data[extra_key] = extra_down['disksize']
                 brief_list.append({
                     'key': extra_key,
                     'name': _("Extra %s package disk size") % (
@@ -1690,7 +1691,7 @@ class ApibaseController:
                 })
 
                 extra_key = 'extra_download_%d_sha256' % (down_id,)
-                data[extra_key] = extra_down['sha256']
+                brief_data[extra_key] = extra_down['sha256']
                 brief_list.append({
                     'key': extra_key,
                     'name': _("Extra %s package SHA 256") % (
@@ -1735,6 +1736,7 @@ class ApibaseController:
             entropy_repository.retrieveSignatures(package_id)
 
         data.update(base_data)
+        data.update(brief_data)
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
