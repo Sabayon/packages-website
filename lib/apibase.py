@@ -1663,27 +1663,29 @@ class ApibaseController:
                 brief_data[extra_key] = extra_down['download']
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("Extra %s package file") % (extra_down['type'],),
+                    'name': _("%s file") % (extra_down['type'],),
                     'url': None,
                     'split': False,
                     'icon': "icon_package.png",
                 })
 
                 extra_key = 'extra_download_%d_size' % (down_id,)
-                brief_data[extra_key] = extra_down['size']
+                brief_data[extra_key] = entropy_tools.bytes_into_human(
+                    extra_down['size'])
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("Extra %s package size") % (extra_down['type'],),
+                    'name': _("%s size") % (extra_down['type'],),
                     'url': None,
                     'split': False,
                     'icon': "icon_attach.png",
                 })
 
                 extra_key = 'extra_download_%d_disksize' % (down_id,)
-                brief_data[extra_key] = extra_down['disksize']
+                brief_data[extra_key] = entropy_tools.bytes_into_human(
+                    extra_down['disksize'])
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("Extra %s package disk size") % (
+                    'name': _("%s disk size") % (
                             extra_down['type'],),
                     'url': None,
                     'split': False,
@@ -1694,7 +1696,7 @@ class ApibaseController:
                 brief_data[extra_key] = extra_down['sha256']
                 brief_list.append({
                     'key': extra_key,
-                    'name': _("Extra %s package SHA 256") % (
+                    'name': _("%s SHA 256") % (
                             extra_down['type'],),
                     'url': None,
                     'split': False,
