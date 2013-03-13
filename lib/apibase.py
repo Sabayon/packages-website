@@ -1153,6 +1153,9 @@ class ApibaseController:
         return "%s/%s/%s" % (model.config.PACKAGE_SHOW_URL, hash_id, target)
 
     def __get_metadata_install_app_item(self, hash_id):
+        """
+        Deprecated.
+        """
         return {
             'id': "install",
             'name': _("Install (beta)"),
@@ -1390,14 +1393,14 @@ class ApibaseController:
             }
             data.append(obj)
 
-        if not is_source_repo:
-            if not is_source_repo and \
-                (repository_id == model.config.ETP_REPOSITORY):
-
-                # install
-                obj = self.__get_metadata_install_app_item(hash_id)
-                obj['url'] += "#package-widget-show-what"
-                data.append(obj)
+        # Deprecated.
+        #if not is_source_repo:
+        #    if not is_source_repo and \
+        #        (repository_id == model.config.ETP_REPOSITORY):
+        #        # install
+        #        obj = self.__get_metadata_install_app_item(hash_id)
+        #        obj['url'] += "#package-widget-show-what"
+        #        data.append(obj)
 
         return data
 
@@ -1499,8 +1502,9 @@ class ApibaseController:
                 atom, entropy_repository.retrieveChangelog(package_id)),
             'meta_items': meta_items,
         }
-        if repository_id == model.config.ETP_REPOSITORY:
-            data['app_install'] = self.__get_metadata_install_app_item(hash_id)
+        # Deprecated.
+        #if repository_id == model.config.ETP_REPOSITORY:
+        #    data['app_install'] = self.__get_metadata_install_app_item(hash_id)
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,

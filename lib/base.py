@@ -84,7 +84,8 @@ class BaseController(WSGIController):
         c.base_switch_updates_url = model.config.PACKAGE_SWITCH_UPDATES_URL
         c.base_switch_updates_type_url = model.config.PACKAGE_SWITCH_UPDATES_TYPE_URL
         c.base_switch_sortby_url = model.config.PACKAGE_SWITCH_SORTBY_URL
-        c.base_install_app_mirror_url = model.config.PACKAGE_INSTALL_GET_ETP
+	# Deprecated.
+        # c.base_install_app_mirror_url = model.config.PACKAGE_INSTALL_GET_ETP
         c.default_sorting = model.config.default_sorting
         c.search_prefixes = self.PREFIXES
         c.search_form_max_length = model.config.SEARCH_FORM_MAX_LENGTH

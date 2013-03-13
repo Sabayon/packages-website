@@ -30,7 +30,8 @@ def make_map(config):
     map.connect('/updateswitch/{amount}', controller='packages', action='updateswitch')
     map.connect('/updatetype/{update_type}', controller='packages', action='updatetype')
     map.connect('/sortswitch/{sortby}', controller='packages', action='sortswitch')
-    map.connect('/getinstall', controller='packages', action='getinstall')
+    # Deprecated.
+    # map.connect('/getinstall', controller='packages', action='getinstall')
 
     map.connect('/group/{group}', controller='packages', action='group')
     map.connect('/category/{category}', controller='packages', action='category')

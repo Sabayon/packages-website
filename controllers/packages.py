@@ -595,6 +595,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                     pass
 
     def _show_install(self, hash_id):
+        """
+        Deprecated.
+        """
         decoded_data = self._parse_hash_id(hash_id)
         if decoded_data is None:
             return redirect(url("/"))
@@ -643,9 +646,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         c.package_show_what = show_what_data
         return self.show(hash_id)
 
-    def getinstall(self):
+    def _getinstall(self):
         """
         This method is triggered by the install app button in package details.
+	Deprecated, made protected (was: getinstall()).
         """
         # download token
         k = request.params.get("k")
@@ -775,7 +779,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             "needed_libs": self._show_needed_libs,
             "content": self._show_content,
             "download": self._show_download,
-            "install": self._show_install,
+            # "install": self._show_install,
             "sources": self._show_sources,
             "ugc": self._show_ugc,
         }
