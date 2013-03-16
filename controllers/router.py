@@ -55,14 +55,9 @@ class RouterController(WSGIController):
                 mrs.disconnect()
 
         # pick one random mirror
-        while True:
-            # TODO: make sure url exists?
-            rand_idx = random.randint(0, len(mirrors) - 1)
-            mirror = mirrors[rand_idx]
-            url = os.path.join(mirror, target)
-            break
+        mirror = random.choice(mirrors)
+        url = os.path.join(mirror, target)
         return redirect(url)
-
 
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
