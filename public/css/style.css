@@ -63,7 +63,7 @@ input {
 }
 
 #right-area {
-    margin: 0 0 0 740px;
+    margin: 0 0 0 73em;
     min-height: 300px;
 }
 
@@ -212,6 +212,7 @@ input {
 
 .package-widget-meta-description {
     max-width: 550px;
+    max-height: 1em;
     color: #DDDDDD;
 }
 
@@ -244,6 +245,7 @@ input {
 .package-widget-base-meta-area {
     padding-top: 5px;
     padding-left: 8px;
+    max-height: 1em;
 }
 
 .package-widget-first-area {

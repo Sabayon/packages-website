@@ -51,7 +51,7 @@
                     % endif
                     |
                 % endif
-                ${_("date")}: <b>${c.pkg_data['date']}</b>
+                ${_("date")}: <b>${c.pkg_data.get('date', "").split()[0]}</b>
             </div>
         </div>
 
