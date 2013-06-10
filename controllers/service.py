@@ -1265,13 +1265,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         try:
             out_fd, out_path = tempfile.mkstemp(
                 dir=model.config.WEBSITE_TMP_DIR,
-                prefix="packages.get_package_ids.out")
+                prefix="%s.out" % (command,))
             err_fd, err_path = tempfile.mkstemp(
                 dir=model.config.WEBSITE_TMP_DIR,
-                prefix="packages.get_package_ids.err")
+                prefix="%s.err" % (command,))
 
             proc = subprocess.Popen(
-                (model.config.SRV_WORKER, "packages.get_package_ids"),
+                (model.config.SRV_WORKER, command),
                 env=env, stderr=err_fd, stdout=out_fd)
             exit_st = proc.wait()
 
