@@ -285,8 +285,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         env["package_names"] = request.params.get("package_names") or ""
 
         try:
-            return self._exec_worker_cmd(
-                "service.get_downloads", env)
+            return self._exec_worker_cmd("service.get_downloads",
+                                         env, set_env=False)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
