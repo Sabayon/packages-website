@@ -832,7 +832,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         out_fd, out_path = None, None
         err_fd, err_path = None, None
-        enc = "utf-8"
+        enc = "raw_unicode_escape"
         try:
             out_fd, out_path = tempfile.mkstemp(
                 dir=model.config.WEBSITE_TMP_DIR,
@@ -858,7 +858,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     if more:
                         raise AssertionError("outcome too big: %s bytes" % (
                                 out_f.tell(),))
-                    return const_convert_to_rawstring(output, from_enctype=enc)
+                    return const_convert_to_unicode(output, enctype=enc)
             else:
                 with codecs.open(err_path, "r", encoding=enc) as out_f:
                     output = out_f.read(102400)
