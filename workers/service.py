@@ -254,7 +254,6 @@ class StandaloneController(ApibaseController):
         finally:
             if ugc is not None:
                 ugc.disconnect()
-                del ugc
 
         # fill unavailable packages with None value
         for package_name in package_names:
@@ -268,6 +267,46 @@ class StandaloneController(ApibaseController):
         self.data(self._service_render(response))
         return 0
 
+    def get_votes(self):
+        """
+        Get votes for given package names passed (in request)
+        """
+        try:
+            repository_id = self._get_repository_id(params=os.environ)
+            self._validate_repository_id(repository_id)
+        except AttributeError as err:
+            self.error(err)
+            return 1
+
+        try:
+            package_names = self._get_package_names(params=os.environ)
+        except AttributeError as err:
+            self.error(err)
+            return 1
+
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            vote_data = ugc.get_ugc_votes(package_names)
+        except ServiceConnectionError:
+            self.error("connection error")
+            return 1
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+
+        # fill unavailable packages with None value
+        for package_name in package_names:
+            if package_name not in vote_data:
+                vote_data[package_name] = None
+
+        # ok valid
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = vote_data
+        self.data(self._service_render(response))
+        return 0
+
 
 if __name__ == "__main__":
 
@@ -278,6 +317,7 @@ if __name__ == "__main__":
         "service.get_packages_metadata": con.get_packages_metadata,
         "service.get_repository_metadata": con.get_repository_metadata,
         "service.get_downloads": con.get_downloads,
+        "service.get_votes": con.get_votes,
         }
 
     try:

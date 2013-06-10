@@ -274,39 +274,13 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get votes for given package names passed (in request)
         """
-        try:
-            repository_id = self._get_repository_id()
-            self._validate_repository_id(repository_id)
-        except AttributeError:
-            return self._generic_invalid_request()
+        env = os.environ.copy()
+        env["package_names"] = request.params.get("package_names") or ""
 
         try:
-            package_names = self._get_package_names()
-        except AttributeError:
-            return self._generic_invalid_request()
-
-        ugc = None
-        try:
-            ugc = self._ugc(https=False)
-            vote_data = ugc.get_ugc_votes(package_names)
-        except ServiceConnectionError:
-            return self._generic_invalid_request(
-                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
-                del ugc
-
-        # fill unavailable packages with None value
-        for package_name in package_names:
-            if package_name not in vote_data:
-                vote_data[package_name] = None
-
-        # ok valid
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = vote_data
-        return self._service_render(response)
+            return self._exec_worker_cmd("service.get_votes", env)
+        except Exception as err:
+            return self._generic_invalid_request(message = str(err))
 
     def get_available_votes(self):
         """
