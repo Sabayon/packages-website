@@ -202,8 +202,9 @@ class StandaloneController(ApibaseController):
         try:
             repo = self._api_get_repo(entropy_client, r, a, b, p)
             if repo is None:
-                return self._generic_invalid_request(
-                    message = "unavailable repository")
+                self.error("unavailable repository")
+                return 1
+
             meta = {
                 'sets': dict((x, list(y)) for x, y in \
                     repo.retrievePackageSets().items()),
