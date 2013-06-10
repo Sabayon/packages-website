@@ -163,6 +163,42 @@ class ApibaseController(object):
         type_filters.sort()
         return type_filters
 
+    def _ugc_document_data_to_document(self, repository_id, document_data_list):
+        """
+        Convert raw UGC document metadata list to Document list.
+
+        @raise AttributeError: if document data is malformed
+        """
+        outcome = []
+        for raw_document in document_data_list:
+            self._validate_keywords(raw_document['keywords'])
+            try:
+                iddoc = int(raw_document['iddoc'])
+            except (TypeError, ValueError):
+                raise AttributeError("invalid iddoc")
+            try:
+                iddoctype = int(raw_document['iddoctype'])
+                if iddoctype not in Document.SUPPORTED_TYPES:
+                    raise ValueError()
+            except (TypeError, ValueError):
+                raise AttributeError("invalid iddoctype")
+
+            doc = Document(repository_id, iddoc, iddoctype)
+            unix_time = time.mktime(raw_document['ts'].timetuple())
+            doc[Document.DOCUMENT_TIMESTAMP_ID] = unix_time
+            doc[Document.DOCUMENT_DATA_ID] = raw_document['ddata']
+            doc[Document.DOCUMENT_KEYWORDS_ID] = \
+                " ".join(raw_document['keywords'])
+            # these are html encoded ;-)
+            doc[Document.DOCUMENT_TITLE_ID] = raw_document['title']
+            doc[DocumentFactory.DOCUMENT_USERNAME_ID] = raw_document['username']
+            doc[Document.DOCUMENT_DESCRIPTION_ID] = \
+                raw_document['description']
+            doc[Document.DOCUMENT_URL_ID] = raw_document['store_url']
+            outcome.append(doc)
+
+        return outcome
+
     def _validate_package_names(self, package_names):
         """
         Validate package names string list.

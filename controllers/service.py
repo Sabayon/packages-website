@@ -135,47 +135,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         return document_id
 
-    def _ugc_document_data_to_document(self, document_data_list):
-        """
-        Convert raw UGC document metadata list to Document list.
-
-        @raise AttributeError: if document data is malformed
-        """
-        outcome = []
-        try:
-            repository_id = self._get_repository_id()
-            self._validate_repository_id(repository_id)
-        except AttributeError:
-            raise
-        for raw_document in document_data_list:
-            self._validate_keywords(raw_document['keywords'])
-            try:
-                iddoc = int(raw_document['iddoc'])
-            except (TypeError, ValueError):
-                raise AttributeError("invalid iddoc")
-            try:
-                iddoctype = int(raw_document['iddoctype'])
-                if iddoctype not in Document.SUPPORTED_TYPES:
-                    raise ValueError()
-            except (TypeError, ValueError):
-                raise AttributeError("invalid iddoctype")
-
-            doc = Document(repository_id, iddoc, iddoctype)
-            unix_time = time.mktime(raw_document['ts'].timetuple())
-            doc[Document.DOCUMENT_TIMESTAMP_ID] = unix_time
-            doc[Document.DOCUMENT_DATA_ID] = raw_document['ddata']
-            doc[Document.DOCUMENT_KEYWORDS_ID] = \
-                " ".join(raw_document['keywords'])
-            # these are html encoded ;-)
-            doc[Document.DOCUMENT_TITLE_ID] = raw_document['title']
-            doc[DocumentFactory.DOCUMENT_USERNAME_ID] = raw_document['username']
-            doc[Document.DOCUMENT_DESCRIPTION_ID] = \
-                raw_document['description']
-            doc[Document.DOCUMENT_URL_ID] = raw_document['store_url']
-            outcome.append(doc)
-
-        return outcome
-
     def data_send_available(self):
         """
         Reads test_data field from the POST/GET request, calculates its
@@ -482,7 +441,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             # unsupported !
             return self._generic_invalid_request(
                 message = "invalid document type request")
-        return func(package_name, document_type_id, username, user_id)
+        return func(repository_id, package_name, document_type_id,
+                    username, user_id)
 
     def _add_document_get_comment(self, req_field):
         """
@@ -522,7 +482,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 raise AttributeError("description too short")
         return self._htmlencode(desc)
 
-    def _add_comment(self, package_name, document_type_id, username, user_id):
+    def _add_comment(self, repository_id, package_name, document_type_id,
+                     username, user_id):
         """
         Add comment, reading data from request.
         """
@@ -553,7 +514,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 ugc.commit()
                 raw_docs = ugc.get_ugc_metadata_by_identifiers([iddoc])
                 try:
-                    docs = self._ugc_document_data_to_document(raw_docs)
+                    docs = self._ugc_document_data_to_document(
+                        repository_id, raw_docs)
                 except AttributeError:
                     return self._generic_invalid_request(
                         message = "invalid conversion")
@@ -608,8 +570,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         return tmp_file, orig_filename
 
-    def _add_generic_file_document(self, package_name, document_type, username,
-        user_id):
+    def _add_generic_file_document(self, repository_id, package_name,
+                                   document_type, username,
+                                   user_id):
         """
         Add Generic file-based (with payload in HTTP Request parameters)
         Document to the repo.
@@ -663,7 +626,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             ugc.commit()
             raw_docs = ugc.get_ugc_metadata_by_identifiers([iddoc])
             try:
-                docs = self._ugc_document_data_to_document(raw_docs)
+                docs = self._ugc_document_data_to_document(
+                    repository_id, raw_docs)
             except AttributeError:
                 return self._generic_invalid_request(
                     message = "conversion error")
@@ -715,6 +679,12 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get Document objects given their identifier.
         """
         try:
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
+        except AttributeError:
+            return self._generic_invalid_request(message = "invalid repository")
+
+        try:
             document_ids = self._get_document_ids()
         except AttributeError:
             return self._generic_invalid_request()
@@ -731,7 +701,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 ugc.disconnect()
                 del ugc
 
-        docs = self._ugc_document_data_to_document(raw_docs)
+        docs = self._ugc_document_data_to_document(repository_id, raw_docs)
         data = dict((doc.document_id(), doc) for doc in docs)
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
