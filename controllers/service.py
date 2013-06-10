@@ -667,6 +667,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         revision = request.params.get("rev")
         if revision is None:
+            revision = request.params.get("revision")
+        if revision is None:
             return self._generic_invalid_request(
                 message = "rev param not passed")
 
