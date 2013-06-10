@@ -69,14 +69,6 @@ class StandaloneController(ApibaseController):
 
 if __name__ == "__main__":
 
-    # params are passed via env
-    env = {
-        "arch": "amd64",
-        "product": "standard",
-        "branch": "5",
-        "__repository_id__": "sabayonlinux.org",
-        }
-    os.environ.update(env)
 
     con = StandaloneController()
     args_map = {
