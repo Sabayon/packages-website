@@ -239,7 +239,7 @@ class StandaloneController(ApibaseController):
             return 1
 
         try:
-            package_names = self._get_package_names()
+            package_names = self._get_package_names(params=os.environ)
         except AttributeError as err:
             self.error(err)
             return 1
