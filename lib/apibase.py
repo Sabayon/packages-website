@@ -35,7 +35,7 @@ import entropy.tools as entropy_tools
 from entropy.cache import EntropyCacher
 from entropy.i18n import _LOCALE
 
-from entropy.client.services.interfaces import Document
+from entropy.client.services.interfaces import Document, DocumentFactory
 
 import entropy.dep
 
