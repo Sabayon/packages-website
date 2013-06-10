@@ -660,6 +660,72 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get Document objects for given package_names. Filtering them out
         using "filter" directive.
         """
+        # get cached?
+        cache = request.params.get("cache")
+        if cache:
+            cache = cache and model.config.WEBSITE_CACHING
+
+        revision = request.params.get("rev")
+        if revision is None:
+            return self._generic_invalid_request(
+                message = "rev param not passed")
+
+        # maybe I can get the data without forking?
+        if cache:
+            try:
+                repository_id = self._get_repository_id()
+                self._validate_repository_id(repository_id)
+            except AttributeError as err:
+                return self._generic_invalid_request(message = str(err))
+
+            try:
+                package_names = self._get_package_names()
+            except AttributeError as err:
+                return self._generic_invalid_request(message = str(err))
+
+            # validate type filters
+            try:
+                document_types = self._get_document_type_filter()
+            except AttributeError as err:
+                return self._generic_invalid_request(message = str(err))
+
+            if not document_types:
+                # get all the docs, if no filter is set
+                document_types.extend(Document.SUPPORTED_TYPES)
+
+           # if latest == "1", return results from
+            # latest to oldest
+            latest_str = os.environ.get("latest")
+            if latest_str:
+                if latest_str == "0":
+                    latest = False
+                else:
+                    latest = True
+            else:
+                latest_str = "0"
+                latest = False
+
+            cached_obj = None
+            cache_key = None
+            if cache:
+                # XXX: if you change anything here, also make the same
+                # modifications in workers/service.py
+                sha = hashlib.sha1()
+                sha.update(repr(package_names))
+                sha.update(repr(repository_id))
+                sha.update(repr(document_types))
+                sha.update(latest_str)
+                sha.update(revision)
+                cache_key = "_service_get_documents2_" + sha.hexdigest()
+                cached_obj = self._cacher.pop(cache_key,
+                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+
+            if cached_obj is not None:
+                response = self._api_base_response(
+                    WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+                response['r'] = cached_obj
+                return self._service_render(response)
+
         env = os.environ.copy()
         env["package_names"] = request.params.get("package_names") or ""
         env["latest"] = request.params.get("latest") or ""
