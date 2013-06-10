@@ -138,6 +138,31 @@ class ApibaseController(object):
         pkg_names.sort()
         return pkg_names
 
+    def _get_document_type_filter(self, params=None):
+        """
+        Get Document type filter list from HTTP request data.
+        Validate them and raise AttributeError in case of failure.
+        """
+        if params is None:
+            params = request.params
+
+        type_filters = (params.get("filter") or "").strip()
+        type_filters = type_filters.split()
+        if len(type_filters) > len(Document.SUPPORTED_TYPES):
+            raise AttributeError("too many filters")
+        try:
+            type_filters = list(set([int(x) for x in type_filters]))
+        except (TypeError, ValueError):
+            raise AttributeError("malformed filters")
+
+        for document_type_id in type_filters:
+            if document_type_id not in Document.SUPPORTED_TYPES:
+                raise AttributeError("unsupported filters")
+
+        # increase determinism
+        type_filters.sort()
+        return type_filters
+
     def _validate_package_names(self, package_names):
         """
         Validate package names string list.
