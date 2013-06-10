@@ -65,20 +65,20 @@ default_branch = "5"
 default_product = "standard"
 default_arch = "amd64"
 available_products = {
-    "standard": _("Sabayon Linux Standard"),
+    "standard": "Sabayon Linux Standard",
 }
 available_arches = {
     "amd64": "amd64",
     "x86": "x86",
     "armv7l": "armv7l",
     "armv6l": "armv6l",
-    "arch": _("Source"),
+    "arch": "source",
 }
 available_sortings = {
-    "relevance": _("Relevance"),
-    "alphabet": _("Alphabet"),
-    "downloads": _("Downloads"),
-    "votes": _("Votes"),
+    "relevance": "Relevance",
+    "alphabet": "Alphabet",
+    "downloads": "Downloads",
+    "votes": "Votes",
 }
 default_sorting = "relevance"
 
