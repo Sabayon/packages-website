@@ -859,7 +859,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     if more:
                         raise AssertionError("outcome too big: %s bytes" % (
                                 out_f.tell(),))
-                    return const_convert_to_unicode(output, enctype=enc)
+                    return output
             else:
                 with codecs.open(err_path, "r", encoding=enc) as out_f:
                     output = out_f.read(102400)
