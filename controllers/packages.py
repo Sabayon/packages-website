@@ -1446,7 +1446,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         if not (pkgkey and atom and repoid):
             return ""
 
-        
         product = request.params.get('product')
         arch = request.params.get('arch')
         if product not in model.config.available_products:

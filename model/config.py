@@ -20,6 +20,8 @@ from paste.request import construct_url
 SABAYON_WWW = os.getenv("SABAYON_WWW", "/sabayon/www")
 DEFAULT_WEB_USER = os.getenv("DEFAULT_WEB_USER", "entropy")
 DEFAULT_WEB_GROUP = os.getenv("DEFAULT_WEB_GROUP", "entropy")
+SRV_WORKER = os.path.join(
+    SABAYON_WWW, "packages.sabayon.org/www/www/workers/service.py")
 DEFAULT_WEB_UID = int(pwd.getpwnam(DEFAULT_WEB_USER).pw_uid)
 DEFAULT_WEB_GID = int(grp.getgrnam(DEFAULT_WEB_GROUP).gr_gid)
 

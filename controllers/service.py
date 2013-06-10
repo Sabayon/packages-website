@@ -1,9 +1,10 @@
 import os
-import json
 import hashlib
+import codecs
 import errno
 import tempfile
 import shutil
+import subprocess
 import cgi
 import re
 import time
@@ -36,8 +37,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         self.__service_auth = None
         self._supported_repository_ids = ["sabayonlinux.org",
             "sabayon-weekly", "sabayon-limbo"]
-        self._supported_reposerv_repository_ids = ["sabayonlinux.org",
-            "sabayon-limbo"]
 
     @property
     def _auth(self):
@@ -80,25 +79,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             repository_id = self._get_repository_id()
         if repository_id not in self._supported_repository_ids:
             raise AttributeError("unsupported repository_id")
-
-    def _validate_reposerv_repository_id(self, repository_id):
-        """
-        Validate provided repository_id in HTTP request against those supported
-        by the EAPI3 Repository update service of this instance.
-
-        @raise AttributeError: if invalid
-        """
-        if repository_id is None:
-            repository_id = self._get_repository_id()
-        if repository_id not in self._supported_reposerv_repository_ids:
-            raise AttributeError("unsupported repository_id")
-
-    def _get_repository_id(self):
-        """
-        Return the repository_id string contained in HTTP request metadata.
-        There is no validation here !!
-        """
-        return request.params.get("__repository_id__")
 
     def _generic_invalid_request(self, code = None, message = None):
         """
@@ -298,17 +278,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             outcome.append(doc)
 
         return outcome
-
-    def _service_render(self, response):
-        try:
-            return json.dumps(response)
-        except TypeError:
-            abort(503)
-        finally:
-            if isinstance(response.get('r'), dict):
-                response['r'].clear()
-                response['r'] = None
-            response.clear()
 
     def data_send_available(self):
         """
@@ -1223,47 +1192,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def _reposerv_get_params(self, entropy_client):
-        """
-        Read from HTTP Request the following parameters:
-        - arch = architecture
-        - product = product
-        - branch = branch
-        - __repository_id__ = repository
-        """
-        # arch
-        a = request.params.get('arch')
-        if a not in model.config.available_arches:
-            raise AssertionError("invalid architecture")
-
-        # product
-        p = request.params.get('product')
-        if p not in model.config.available_products:
-            raise AssertionError("invalid product")
-
-        avail_repos = self._get_available_repositories(entropy_client, p, a)
-        # repository
-        r = self._get_repository_id()
-        if r not in avail_repos:
-            raise AssertionError("invalid repository identifier")
-
-        try:
-            self._validate_reposerv_repository_id(r)
-        except AttributeError:
-            raise AssertionError("unsupported repository")
-
-        # validate arch
-        avail_arches = self._get_available_arches(entropy_client, r, p)
-        if a not in avail_arches:
-            raise AssertionError("invalid architecture (2)")
-
-        # validate branch
-        b = request.params.get('branch')
-        if b not in self._get_available_branches(entropy_client, r, p):
-            raise AssertionError("invalid branches")
-
-        return r, a, b, p
-
     def repository_service_available(self):
         """
         Inform caller that we are up and running, ready to accept repository
@@ -1314,6 +1242,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get Repository Metadata.
         """
+        
         entropy_client = self._entropy()
         try:
             r, a, b, p = self._reposerv_get_params(entropy_client)
@@ -1345,30 +1274,88 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             if repo is not None:
                 repo.close()
 
+    def _exec_worker_cmd(self, command, env, max_size=4096000):
+        """
+        
+        """
+        entropy_client = self._entropy()
+        r, a, b, p = self._reposerv_get_params(entropy_client)
+
+        env.update(
+            {
+                "__repository_id__": r,
+                "arch": a,
+                "branch": b,
+                "product": p,
+                }
+            )
+
+        out_fd, out_path = None, None
+        err_fd, err_path = None, None
+        enc = "raw_unicode_escape"
+        try:
+            out_fd, out_path = tempfile.mkstemp(
+                dir=model.config.WEBSITE_TMP_DIR,
+                prefix="packages.get_package_ids.out")
+            err_fd, err_path = tempfile.mkstemp(
+                dir=model.config.WEBSITE_TMP_DIR,
+                prefix="packages.get_package_ids.err")
+
+            proc = subprocess.Popen(
+                (model.config.SRV_WORKER, "packages.get_package_ids"),
+                env=env, stderr=err_fd, stdout=out_fd)
+            exit_st = proc.wait()
+
+            os.close(out_fd)
+            out_fd = None
+            os.close(err_fd)
+            err_fd = None
+
+            if exit_st == 0:
+                with codecs.open(out_path, "r", encoding=enc) as out_f:
+                    output = out_f.read(max_size)
+                    more = out_f.read(1)
+                    if more:
+                        raise AssertionError("outcome too big: %s bytes" % (
+                                out_f.tell(),))
+                    return const_convert_to_rawstring(output, from_enctype=enc)
+            else:
+                with codecs.open(err_path, "r", encoding=enc) as out_f:
+                    output = out_f.read(102400)
+                    raise Exception(output)
+
+        finally:
+            if out_fd is not None:
+                try:
+                    os.close(out_fd)
+                except OSError:
+                    pass
+            if err_fd is not None:
+                try:
+                    os.close(err_fd)
+                except OSError:
+                    pass
+            if out_path is not None:
+                try:
+                    os.remove(out_path)
+                except OSError:
+                    pass
+            if err_path is not None:
+                try:
+                    os.remove(err_path)
+                except OSError:
+                    pass
+
     def get_package_ids(self):
         """
         Get Package Identifiers available inside repository.
         """
-        entropy_client = self._entropy()
-        try:
-            r, a, b, p = self._reposerv_get_params(entropy_client)
-        except AssertionError as err:
-            return self._generic_invalid_request(message = str(err))
 
-        repo = None
         try:
-            repo = self._api_get_repo(entropy_client, r, a, b, p)
-            if repo is None:
-                return self._generic_invalid_request(
-                    message = "unavailable repository")
-            package_ids = repo.listAllPackageIds(order_by = "package_id")
-            response = self._api_base_response(
-                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-            response['r'] = package_ids
-            return self._service_render(response)
-        finally:
-            if repo is not None:
-                repo.close()
+            exit_st = self._exec_worker_cmd(
+                "packages.get_package_ids", os.environ)
+        except Exception as err:
+            return self._generic_invalid_request(message = str(err))
 
     def _reposerv_json_pkg_data(self, pkg_data):
         """
@@ -1401,6 +1388,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get Package Identifiers available inside repository.
         """
+        
         entropy_client = self._entropy()
         try:
             r, a, b, p = self._reposerv_get_params(entropy_client)
@@ -1482,6 +1470,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Return the current repository revision.
         """
+        
         entropy_client = self._entropy()
         try:
             r, a, b, p = self._reposerv_get_params(entropy_client)

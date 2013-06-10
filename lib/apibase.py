@@ -6,6 +6,7 @@ import os
 import re
 import time
 import sys
+import json
 
 from pylons import tmpl_context as c
 from pylons import app_globals as g
@@ -54,7 +55,7 @@ GROUP_ICONS_MAP = {
     '__fallback__': "applications-other.png",
 }
 
-class ApibaseController:
+class ApibaseController(object):
 
     def __init__(self):
         """
@@ -68,6 +69,19 @@ class ApibaseController:
         # same as hostname regexp
         # repository_id validation rule
         self._repo_re = re.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", re.IGNORECASE)
+        self._supported_reposerv_repository_ids = ["sabayonlinux.org",
+            "sabayon-limbo"]
+
+    def _service_render(self, response):
+        try:
+            return json.dumps(response)
+        except TypeError:
+            abort(503)
+        finally:
+            if isinstance(response.get('r'), dict):
+                response['r'].clear()
+                response['r'] = None
+            response.clear()
 
     def _validate_package_names(self, package_names):
         """
@@ -208,6 +222,71 @@ class ApibaseController:
             o = "alphabet"
 
         return r, a, b, p, o
+
+    def _get_repository_id(self, params=None):
+        """
+        Return the repository_id string contained in HTTP request metadata.
+        There is no validation here !!
+        """
+        if params is None:
+            params = request.params
+        return params.get("__repository_id__")
+
+    def _validate_reposerv_repository_id(self, repository_id):
+        """
+        Validate provided repository_id in HTTP request against those supported
+        by the EAPI3 Repository update service of this instance.
+
+        @raise AttributeError: if invalid
+        """
+        if repository_id is None:
+            repository_id = self._get_repository_id()
+        if repository_id not in self._supported_reposerv_repository_ids:
+            raise AttributeError("unsupported repository_id")
+
+    def _reposerv_get_params(self, entropy_client, params=None):
+        """
+        Read from HTTP Request the following parameters:
+        - arch = architecture
+        - product = product
+        - branch = branch
+        - __repository_id__ = repository
+        """
+        if params is None:
+            params = request.params
+
+        # arch
+        a = params.get('arch')
+        if a not in model.config.available_arches:
+            raise AssertionError("invalid architecture")
+
+        # product
+        p = params.get('product')
+        if p not in model.config.available_products:
+            raise AssertionError("invalid product")
+
+        avail_repos = self._get_available_repositories(entropy_client, p, a)
+        # repository
+        r = self._get_repository_id(params=params)
+        if r not in avail_repos:
+            raise AssertionError("invalid repository identifier")
+
+        try:
+            self._validate_reposerv_repository_id(r)
+        except AttributeError:
+            raise AssertionError("unsupported repository")
+
+        # validate arch
+        avail_arches = self._get_available_arches(entropy_client, r, p)
+        if a not in avail_arches:
+            raise AssertionError("invalid architecture (2)")
+
+        # validate branch
+        b = params.get('branch')
+        if b not in self._get_available_branches(entropy_client, r, p):
+            raise AssertionError("invalid branches")
+
+        return r, a, b, p
 
     def _api_encode_package(self, package_id, repository_id, a, b, p):
         """
