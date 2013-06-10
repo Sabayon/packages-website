@@ -815,7 +815,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def _exec_worker_cmd(self, command, env, max_size=4096000, set_env=True):
+    def _exec_worker_cmd(self, command, env, set_env=True):
         """
         Execute a command through the external worker.
         """
@@ -831,60 +831,29 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     }
                 )
 
-        out_fd, out_path = None, None
-        err_fd, err_path = None, None
         enc = "raw_unicode_escape"
         try:
-            out_fd, out_path = tempfile.mkstemp(
-                dir=model.config.WEBSITE_TMP_DIR,
-                prefix="%s.out" % (command,))
-            err_fd, err_path = tempfile.mkstemp(
-                dir=model.config.WEBSITE_TMP_DIR,
-                prefix="%s.err" % (command,))
 
             proc = subprocess.Popen(
                 (model.config.SRV_WORKER, command),
-                env=env, stderr=err_fd, stdout=out_fd)
-            exit_st = proc.wait()
+                env=env, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
-            os.close(out_fd)
-            out_fd = None
-            os.close(err_fd)
-            err_fd = None
+            stdout, stderr = proc.communicate()
+
+            exit_st = proc.wait()
+            proc = None
 
             if exit_st == 0:
-                with codecs.open(out_path, "r", encoding=enc) as out_f:
-                    output = out_f.read(max_size)
-                    more = out_f.read(1)
-                    if more:
-                        raise AssertionError("outcome too big: %s bytes" % (
-                                out_f.tell(),))
-                    return output
+                return stdout
             else:
-                with codecs.open(err_path, "r", encoding=enc) as out_f:
-                    output = out_f.read(102400)
-                    raise Exception(output)
+                raise Exception(stderr)
 
         finally:
-            if out_fd is not None:
+            if proc is not None:
                 try:
-                    os.close(out_fd)
-                except OSError:
-                    pass
-            if err_fd is not None:
-                try:
-                    os.close(err_fd)
-                except OSError:
-                    pass
-            if out_path is not None:
-                try:
-                    os.remove(out_path)
-                except OSError:
-                    pass
-            if err_path is not None:
-                try:
-                    os.remove(err_path)
-                except OSError:
+                    proc.terminate()
+                    proc.kill()
+                except Exception:
                     pass
 
     def repository_service_available(self):
