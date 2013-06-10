@@ -16,8 +16,8 @@ from www.lib.apibase import ApibaseController
 from www.lib.exceptions import TransactionError, ServiceConnectionError
 from www.lib.phpbb import Authenticator
 
-from entropy.const import const_convert_to_rawstring, const_get_stringtype, \
-    etpConst
+from entropy.const import const_convert_to_rawstring, const_convert_to_unicode, \
+    const_get_stringtype, etpConst
 from entropy.services.client import WebService
 from entropy.client.services.interfaces import ClientWebService, Document, \
     DocumentFactory, RepositoryWebService
