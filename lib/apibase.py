@@ -74,6 +74,8 @@ class ApibaseController(object):
         self._repo_re = re.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", re.IGNORECASE)
         self._supported_reposerv_repository_ids = ["sabayonlinux.org",
             "sabayon-limbo"]
+        self._supported_repository_ids = ["sabayonlinux.org",
+            "sabayon-weekly", "sabayon-limbo"]
 
     def _service_render(self, response):
         try:

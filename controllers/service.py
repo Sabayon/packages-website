@@ -35,8 +35,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         WebsiteController.__init__(self)
         ApibaseController.__init__(self)
         self.__service_auth = None
-        self._supported_repository_ids = ["sabayonlinux.org",
-            "sabayon-weekly", "sabayon-limbo"]
 
     @property
     def _auth(self):
