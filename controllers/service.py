@@ -282,59 +282,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
-    def get_available_votes(self):
-        """
-        Get all the available votes.
-
-        @todo: remove when Sulfur is KO
-        """
-        try:
-            repository_id = self._get_repository_id()
-            self._validate_repository_id(repository_id)
-        except AttributeError:
-            return self._generic_invalid_request()
-        repository_id = self._get_repository_id()
-
-        cached_obj = None
-        cache_key = None
-        if model.config.WEBSITE_CACHING:
-            sha = hashlib.sha1()
-            # use today date
-            now = datetime.now()
-            # update hourly !!
-            date_str = "%s-%s" % (now.year, now.month)
-            sha.update(repr(date_str))
-            sha.update(repr(repository_id))
-            cache_key = "_get_available_votes_tmpl_" + sha.hexdigest()
-            cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-            if cached_obj is not None:
-                return cached_obj
-
-        ugc = None
-        try:
-            ugc = self._ugc(https=False)
-            data = ugc.get_ugc_allvotes()
-        except ServiceConnectionError:
-            return self._generic_invalid_request(
-                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
-                del ugc
-
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = data
-        cached_obj = self._service_render(response)
-
-        if model.config.WEBSITE_CACHING:
-            self._cacher.save(
-                cache_key, cached_obj,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        return cached_obj
-
     def add_vote(self):
         """
         Add vote for package. This method requires authentication.
@@ -499,57 +446,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
         response['r'] = True
         return self._service_render(response)
-
-    def get_available_downloads(self):
-        """
-        Get all the available downloads.
-        @todo: remove when Sulfur is KO
-        """
-        try:
-            repository_id = self._get_repository_id()
-            self._validate_repository_id(repository_id)
-        except AttributeError:
-            return self._generic_invalid_request()
-        repository_id = self._get_repository_id()
-
-        cached_obj = None
-        cache_key = None
-        if model.config.WEBSITE_CACHING:
-            sha = hashlib.sha1()
-            # use today date
-            now = datetime.now()
-            date_str = "%s-%s" % (now.year, now.month)
-            sha.update(repr(date_str))
-            sha.update(repr(repository_id))
-            cache_key = "_get_available_downloads_tmpl_" + sha.hexdigest()
-            cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-            if cached_obj is not None:
-                return cached_obj
-
-        ugc = None
-        try:
-            ugc = self._ugc(https=False)
-            data = ugc.get_ugc_alldownloads()
-        except ServiceConnectionError:
-            return self._generic_invalid_request(
-                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
-                del ugc
-
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = data
-        cached_obj = self._service_render(response)
-
-        if model.config.WEBSITE_CACHING:
-            self._cacher.save(
-                cache_key, cached_obj,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        return cached_obj
 
     def add_document(self):
         """
