@@ -68,18 +68,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         user_id = self._auth.login(username, password)
         return username, user_id
 
-    def _validate_repository_id(self, repository_id = None):
-        """
-        Validate provided repository_id in HTTP request against those supported
-        by this instance.
-
-        @raise AttributeError: if invalid
-        """
-        if repository_id is None:
-            repository_id = self._get_repository_id()
-        if repository_id not in self._supported_repository_ids:
-            raise AttributeError("unsupported repository_id")
-
     def _generic_invalid_request(self, code = None, message = None):
         """
         Generate a generic invalid request HTTP response
@@ -88,49 +76,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             code = WebService.WEB_SERVICE_INVALID_REQUEST_CODE
         response = self._api_base_response(code, message = message)
         return self._service_render(response)
-
-    def _get_package_names(self):
-        """
-        Get package names list from HTTP request data.
-        Validate them and raise AttributeError in case of failure.
-        """
-        package_names = request.params.get("package_names") or ""
-        package_names = package_names.strip()
-        if not package_names:
-            raise AttributeError("no package_names")
-
-        package_names = package_names.split()
-        if len(package_names) > 24:
-            # WTF !?!?!?!
-            raise AttributeError("wtf too big")
-        # validate package_names
-        try:
-            self._validate_package_names(package_names)
-        except AttributeError:
-            raise
-        pkg_names = list(set(
-                [entropy.dep.dep_getkey(x) for x in package_names]))
-
-        # increase determinism
-        pkg_names.sort()
-        return pkg_names
-
-    def _get_package_name(self):
-        """
-        Get package name list from HTTP request data.
-        Validate them and raise AttributeError in case of failure.
-        """
-        package_name = (request.params.get("package_name") or "").strip()
-        if not package_name:
-            raise AttributeError("no package_name")
-
-        # validate package_names
-        try:
-            self._validate_package_names([package_name])
-            package_name = entropy.dep.dep_getkey(package_name)
-        except AttributeError:
-            raise
-        return package_name
 
     def _get_document_type_filter(self):
         """
@@ -223,7 +168,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         outcome = []
         try:
             repository_id = self._get_repository_id()
-            self._validate_repository_id(repository_id = repository_id)
+            self._validate_repository_id(repository_id)
         except AttributeError:
             raise
         for raw_document in document_data_list:
@@ -311,7 +256,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         NOTE: this should be used only across HTTPS
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 
@@ -331,7 +277,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get votes for given package names passed (in request)
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 
@@ -370,7 +317,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         @todo: remove when Sulfur is KO
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
         repository_id = self._get_repository_id()
@@ -420,7 +368,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Add vote for package. This method requires authentication.
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 
@@ -475,37 +424,10 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get downloads for given package names passed (in request)
         """
         try:
-            self._validate_repository_id()
-        except AttributeError:
-            return self._generic_invalid_request()
-
-        try:
-            package_names = self._get_package_names()
-        except AttributeError:
-            return self._generic_invalid_request()
-
-        ugc = None
-        try:
-            ugc = self._ugc(https=False)
-            down_data = ugc.get_ugc_downloads(package_names)
-        except ServiceConnectionError:
-            return self._generic_invalid_request(
-                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
-        finally:
-            if ugc is not None:
-                ugc.disconnect()
-                del ugc
-
-        # fill unavailable packages with None value
-        for package_name in package_names:
-            if package_name not in down_data:
-                down_data[package_name] = None
-
-        # ok valid
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = down_data
-        return self._service_render(response)
+            return self._exec_worker_cmd(
+                "service.get_downloads", os.environ)
+        except Exception as err:
+            return self._generic_invalid_request(message = str(err))
 
     def _add_downloads(self, package_names, branch,
                        release_string, hw_hash, ip_addr):
@@ -557,7 +479,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Add downloads stats for package.
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 
@@ -608,7 +531,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         @todo: remove when Sulfur is KO
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
         repository_id = self._get_repository_id()
@@ -658,7 +582,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         header and body. Files are base64 encoded.
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 
@@ -670,7 +595,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         # validate repository id from document
         repository_id = request.params.get(Document.DOCUMENT_REPOSITORY_ID)
         try:
-            self._validate_repository_id(repository_id = repository_id)
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request(message = "invalid repository")
 
@@ -920,7 +845,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         using "filter" directive.
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
         repository_id = self._get_repository_id()
@@ -1246,7 +1172,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         metadata requests.
         """
         try:
-            self._validate_repository_id()
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
         except AttributeError:
             return self._generic_invalid_request()
 

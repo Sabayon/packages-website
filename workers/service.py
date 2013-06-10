@@ -22,6 +22,7 @@ environ['paste.registry'].register(myglobal, obj)
 import model
 
 from www.lib.apibase import ApibaseController
+from www.lib.exceptions import ServiceConnectionError
 
 from entropy.services.client import WebService
 from entropy.client.services.interfaces import RepositoryWebService
@@ -226,6 +227,47 @@ class StandaloneController(ApibaseController):
             if repo is not None:
                 repo.close()
 
+    def get_downloads(self):
+        """
+        Get downloads for given package names passed (in request)
+        """
+        try:
+            repository_id = self._get_repository_id(params=os.environ)
+            self._validate_repository_id(repository_id)
+        except AttributeError as err:
+            self.error(err)
+            return 1
+
+        try:
+            package_names = self._get_package_names()
+        except AttributeError as err:
+            self.error(err)
+            return 1
+
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            down_data = ugc.get_ugc_downloads(package_names)
+        except ServiceConnectionError:
+            self.error("connection error")
+            return 1
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+                del ugc
+
+        # fill unavailable packages with None value
+        for package_name in package_names:
+            if package_name not in down_data:
+                down_data[package_name] = None
+
+        # ok valid
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = down_data
+        self.data(self._service_render(response))
+        return 0
+
 
 if __name__ == "__main__":
 
@@ -235,6 +277,7 @@ if __name__ == "__main__":
         "service.repository_revision": con.repository_revision,
         "service.get_packages_metadata": con.get_packages_metadata,
         "service.get_repository_metadata": con.get_repository_metadata,
+        "service.get_downloads": con.get_downloads,
         }
 
     try:

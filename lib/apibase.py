@@ -37,6 +37,9 @@ from entropy.i18n import _LOCALE
 
 from entropy.client.services.interfaces import Document
 
+import entropy.dep
+
+
 GROUP_ICONS_MAP = {
     'accessibility': "preferences-desktop-accessibility.png",
     'development': "applications-development.png",
@@ -82,6 +85,56 @@ class ApibaseController(object):
                 response['r'].clear()
                 response['r'] = None
             response.clear()
+
+    def _get_package_name(self, params=None):
+        """
+        Get package name list from HTTP request data.
+        Validate them and raise AttributeError in case of failure.
+        """
+        if params is None:
+            params = request.params
+
+        package_name = params.get("package_name") or ""
+        package_name = package_name.strip()
+        if not package_name:
+            raise AttributeError("no package_name")
+
+        # validate package_names
+        try:
+            self._validate_package_names([package_name])
+            package_name = entropy.dep.dep_getkey(package_name)
+        except AttributeError:
+            raise
+        return package_name
+
+    def _get_package_names(self, params=None):
+        """
+        Get package names list from HTTP request data.
+        Validate them and raise AttributeError in case of failure.
+        """
+        if params is None:
+            params = request.params
+
+        package_names = params.get("package_names") or ""
+        package_names = package_names.strip()
+        if not package_names:
+            raise AttributeError("no package_names")
+
+        package_names = package_names.split()
+        if len(package_names) > 24:
+            # WTF !?!?!?!
+            raise AttributeError("wtf too big")
+        # validate package_names
+        try:
+            self._validate_package_names(package_names)
+        except AttributeError:
+            raise
+        pkg_names = list(set(
+                [entropy.dep.dep_getkey(x) for x in package_names]))
+
+        # increase determinism
+        pkg_names.sort()
+        return pkg_names
 
     def _validate_package_names(self, package_names):
         """
@@ -232,6 +285,16 @@ class ApibaseController(object):
             params = request.params
         return params.get("__repository_id__")
 
+    def _validate_repository_id(self, repository_id):
+        """
+        Validate provided repository_id in HTTP request against those supported
+        by this instance.
+
+        @raise AttributeError: if invalid
+        """
+        if repository_id not in self._supported_repository_ids:
+            raise AttributeError("unsupported repository_id")
+
     def _validate_reposerv_repository_id(self, repository_id):
         """
         Validate provided repository_id in HTTP request against those supported
@@ -239,8 +302,6 @@ class ApibaseController(object):
 
         @raise AttributeError: if invalid
         """
-        if repository_id is None:
-            repository_id = self._get_repository_id()
         if repository_id not in self._supported_reposerv_repository_ids:
             raise AttributeError("unsupported repository_id")
 
@@ -1945,7 +2006,6 @@ class ApibaseController(object):
         """
         return self._get_packages_internal_metadata(entropy, ugc,
             package_tuples, extended = False)
-
 
     def _get_packages_extended_metadata(self, entropy, ugc, package_tuples):
         """
