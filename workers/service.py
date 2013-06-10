@@ -66,13 +66,27 @@ class StandaloneController(ApibaseController):
             if repo is not None:
                 repo.close()
 
+    def repository_revision(self):
+        entropy_client = self._entropy()
+        try:
+            r, a, b, p = self._reposerv_get_params(entropy_client, os.environ)
+        except AssertionError as err:
+            self.error("%s\n" % (err,))
+            return 1
+
+        revision = self._reposerv_get_revision(entropy_client, r, a, b, p)
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = revision
+        return self._service_render(response)
+
 
 if __name__ == "__main__":
 
-
     con = StandaloneController()
     args_map = {
-        "packages.get_package_ids": con.get_package_ids
+        "service.get_package_ids": con.get_package_ids,
+        "service.repository_revision": con.repository_revision,
         }
 
     try:

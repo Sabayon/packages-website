@@ -30,7 +30,7 @@ except ImportError:
         DatabaseError
 
 from entropy.const import const_convert_to_unicode, \
-    const_convert_to_rawstring, ETP_ARCH_MAP
+    const_convert_to_rawstring, ETP_ARCH_MAP, etpConst
 import entropy.tools as entropy_tools
 from entropy.cache import EntropyCacher
 from entropy.i18n import _LOCALE
@@ -287,6 +287,37 @@ class ApibaseController(object):
             raise AssertionError("invalid branches")
 
         return r, a, b, p
+
+    def _reposerv_get_revision(self, entropy_client, r, a, b, p):
+        """
+        Get repository revision.
+        """
+        dir_path = entropy_client._guess_repo_db_path(r, a, p, b)
+        if dir_path is None:
+            return "-1"
+        revision_path = os.path.join(dir_path,
+            etpConst['etpdatabaserevisionfile'])
+        eapi3_signal = os.path.join(
+            dir_path, etpConst['etpdatabaseeapi3updates'])
+        # if the EAPI3 signal file is there, it means that the
+        # new repository has been uploaded but not yet prepared
+        # for consumption. Thus, the revision number should be
+        # lowered by one, in order to be able to notify updates
+        # again when the preparation is over.
+        eapi3_signal_available = os.path.lexists(eapi3_signal)
+        rev = "-1"
+        try:
+            with open(revision_path, "r") as rev_f:
+                rev = rev_f.readline().strip()
+        except (IOError, OSError):
+            pass
+        if eapi3_signal_available and rev != "-1":
+            try:
+                rev = str(max(0, int(rev) - 1))
+            except (TypeError, ValueError):
+                rev = "-1" # wtf, invalid rev
+
+        return rev
 
     def _api_encode_package(self, package_id, repository_id, a, b, p):
         """

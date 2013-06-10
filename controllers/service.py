@@ -1207,37 +1207,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def _reposerv_get_revision(self, entropy_client, r, a, b, p):
-        """
-        Get repository revision.
-        """
-        dir_path = entropy_client._guess_repo_db_path(r, a, p, b)
-        if dir_path is None:
-            return "-1"
-        revision_path = os.path.join(dir_path,
-            etpConst['etpdatabaserevisionfile'])
-        eapi3_signal = os.path.join(
-            dir_path, etpConst['etpdatabaseeapi3updates'])
-        # if the EAPI3 signal file is there, it means that the
-        # new repository has been uploaded but not yet prepared
-        # for consumption. Thus, the revision number should be
-        # lowered by one, in order to be able to notify updates
-        # again when the preparation is over.
-        eapi3_signal_available = os.path.lexists(eapi3_signal)
-        rev = "-1"
-        try:
-            with open(revision_path, "r") as rev_f:
-                rev = rev_f.readline().strip()
-        except (IOError, OSError):
-            pass
-        if eapi3_signal_available and rev != "-1":
-            try:
-                rev = str(max(0, int(rev) - 1))
-            except (TypeError, ValueError):
-                rev = "-1" # wtf, invalid rev
-
-        return rev
-
     def get_repository_metadata(self):
         """
         Get Repository Metadata.
@@ -1350,10 +1319,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get Package Identifiers available inside repository.
         """
-
         try:
             return self._exec_worker_cmd(
-                "packages.get_package_ids", os.environ)
+                "service.get_package_ids", os.environ)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
@@ -1470,15 +1438,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Return the current repository revision.
         """
-        
-        entropy_client = self._entropy()
         try:
-            r, a, b, p = self._reposerv_get_params(entropy_client)
-        except AssertionError as err:
+            return self._exec_worker_cmd(
+                "service.repository_revision", os.environ)
+        except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
-        revision = self._reposerv_get_revision(entropy_client, r, a, b, p)
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = revision
-        return self._service_render(response)
