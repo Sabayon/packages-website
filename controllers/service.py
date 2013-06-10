@@ -421,9 +421,12 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get downloads for given package names passed (in request)
         """
+        env = os.environ.copy()
+        env["package_names"] = request.params.get("package_names") or ""
+
         try:
             return self._exec_worker_cmd(
-                "service.get_downloads", os.environ)
+                "service.get_downloads", env)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
