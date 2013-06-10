@@ -832,7 +832,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         out_fd, out_path = None, None
         err_fd, err_path = None, None
-        enc = "raw_unicode_escape"
+        enc = "utf-8"
         try:
             out_fd, out_path = tempfile.mkstemp(
                 dir=model.config.WEBSITE_TMP_DIR,
