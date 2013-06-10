@@ -1168,22 +1168,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def repository_service_available(self):
-        """
-        Inform caller that we are up and running, ready to accept repository
-        metadata requests.
-        """
-        
-        try:
-            self._validate_repository_id()
-        except AttributeError:
-            return self._generic_invalid_request()
-
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = True
-        return self._service_render(response)
-
     def _exec_worker_cmd(self, command, env, max_size=4096000):
         """
         Execute a command through the external worker.
@@ -1255,6 +1239,21 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                     os.remove(err_path)
                 except OSError:
                     pass
+
+    def repository_service_available(self):
+        """
+        Inform caller that we are up and running, ready to accept repository
+        metadata requests.
+        """
+        try:
+            self._validate_repository_id()
+        except AttributeError:
+            return self._generic_invalid_request()
+
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = True
+        return self._service_render(response)
 
     def get_repository_metadata(self):
         """
