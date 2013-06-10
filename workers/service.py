@@ -78,7 +78,8 @@ class StandaloneController(ApibaseController):
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)
         response['r'] = revision
-        return self._service_render(response)
+        self.data(self._service_render(response))
+        return 0
 
 
 if __name__ == "__main__":

@@ -1443,4 +1443,3 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 "service.repository_revision", os.environ)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
-
