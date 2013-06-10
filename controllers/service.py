@@ -195,30 +195,6 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         document_ids.sort()
         return document_ids
 
-    def _get_package_ids(self):
-        """
-        Get Entropy Package ids from HTTP request data.
-        """
-        package_ids = (request.params.get("package_ids") or \
-            "").strip().split()
-        if not package_ids:
-            raise AttributeError("package ids not found")
-        try:
-            package_ids = [int(x) for x in package_ids]
-            # do not enforce an upper bound
-            package_ids = list(set(package_ids))
-        except (ValueError, TypeError):
-            raise AttributeError("package ids are invalid")
-
-        # check data
-        invalid_ints = [x for x in package_ids if x < 1]
-        if invalid_ints:
-            raise AttributeError("package ids are invalid (2)")
-
-        # increase determinism
-        package_ids.sort()
-        return package_ids
-
     def _get_document_id(self):
         """
         Get Document ids from HTTP request data.
@@ -1197,6 +1173,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Inform caller that we are up and running, ready to accept repository
         metadata requests.
         """
+        
         try:
             self._validate_repository_id()
         except AttributeError:
@@ -1207,45 +1184,9 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def get_repository_metadata(self):
-        """
-        Get Repository Metadata.
-        """
-        
-        entropy_client = self._entropy()
-        try:
-            r, a, b, p = self._reposerv_get_params(entropy_client)
-        except AssertionError as err:
-            return self._generic_invalid_request(message = str(err))
-
-        repo = None
-        try:
-            repo = self._api_get_repo(entropy_client, r, a, b, p)
-            if repo is None:
-                return self._generic_invalid_request(
-                    message = "unavailable repository")
-            meta = {
-                'sets': dict((x, list(y)) for x, y in \
-                    repo.retrievePackageSets().items()),
-                'treeupdates_actions': repo.listAllTreeUpdatesActions(),
-                'treeupdates_digest': repo.retrieveRepositoryUpdatesDigest(r),
-                'revision': self._reposerv_get_revision(
-                    entropy_client, r, a, b, p),
-                'checksum': repo.checksum(do_order = True,
-                    strict = False, strings = True,
-                    include_signatures = True),
-            }
-            response = self._api_base_response(
-                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-            response['r'] = meta
-            return self._service_render(response)
-        finally:
-            if repo is not None:
-                repo.close()
-
     def _exec_worker_cmd(self, command, env, max_size=4096000):
         """
-        
+        Execute a command through the external worker.
         """
         entropy_client = self._entropy()
         r, a, b, p = self._reposerv_get_params(entropy_client)
@@ -1315,6 +1256,16 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 except OSError:
                     pass
 
+    def get_repository_metadata(self):
+        """
+        Get Repository Metadata.
+        """
+        try:
+            return self._exec_worker_cmd(
+                "service.get_repository_metadata", os.environ)
+        except Exception as err:
+            return self._generic_invalid_request(message = str(err))
+
     def get_package_ids(self):
         """
         Get Package Identifiers available inside repository.
@@ -1325,114 +1276,17 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
-    def _reposerv_json_pkg_data(self, pkg_data):
-        """
-        Convert Entropy Package Metadata dict to a more json friendly format.
-        """
-        def _do_convert_from_set(obj):
-            new_obj = []
-            for sub in obj:
-                if isinstance(sub, (tuple, list, set, frozenset)):
-                    sub = _do_convert_from_set(sub)
-                elif isinstance(sub, dict):
-                    sub = _do_convert_dict(sub)
-                new_obj.append(sub)
-            return new_obj
-
-        def _do_convert_dict(d):
-            for k, v in d.iteritems():
-                if isinstance(v, (tuple, list, set, frozenset)):
-                    # this changes the data pointed at pkg_data
-                    del d[k]
-                    d[k] = _do_convert_from_set(v)
-                elif isinstance(v, dict):
-                    del d[k]
-                    d[k] = _do_convert_dict(v)
-            return d
-
-        return _do_convert_dict(pkg_data)
-
     def get_packages_metadata(self):
         """
         Get Package Identifiers available inside repository.
         """
-        
-        entropy_client = self._entropy()
+        env = os.environ.copy()
+        env["package_ids"] = request.params.get("package_ids") or ""
         try:
-            r, a, b, p = self._reposerv_get_params(entropy_client)
-        except AssertionError as err:
+            return self._exec_worker_cmd(
+                "service.get_packages_metadata", env)
+        except Exception as err:
             return self._generic_invalid_request(message = str(err))
-
-        try:
-            package_ids = self._get_package_ids()
-        except AttributeError as err:
-            return self._generic_invalid_request(message = str(err))
-
-        max_len = RepositoryWebService.MAXIMUM_PACKAGE_REQUEST_SIZE
-        if len(package_ids) > max_len:
-            return self._generic_invalid_request(
-                message = "too many package_ids")
-        package_ids = sorted(package_ids)
-
-        cached_obj = None
-        if model.config.WEBSITE_CACHING:
-            mtime = self._get_valid_repository_mtime(
-                entropy_client, r, a, b, p)
-
-            sha = hashlib.sha1()
-            sha.update("%f;" % (mtime,))
-            sha.update(";".join(["%s" % (x,) for x in package_ids]))
-            sha.update(";")
-            sha.update(r)
-            sha.update(";")
-            sha.update(a)
-            sha.update(";")
-            sha.update(b)
-            sha.update(";")
-            sha.update(p)
-            cache_key = "_service_get_packages_metadata_%s_%s_%s_%s_%s" % (
-                sha.hexdigest(), r, a, b, p)
-
-            cached_obj = self._cacher.pop(
-                cache_key, cache_dir = model.config.WEBSITE_CACHE_DIR)
-            if cached_obj is not None:
-                return cached_obj
-
-        repo = None
-        try:
-            repo = self._api_get_repo(entropy_client, r, a, b, p)
-            if repo is None:
-                return self._generic_invalid_request(
-                    message = "invalid repository")
-
-            pkg_data = {}
-            for package_id in package_ids:
-                pkg_meta = repo.getPackageData(package_id,
-                    content_insert_formatted = True,
-                    get_content = False, get_changelog = False)
-                if pkg_meta is None:
-                    # request is out of sync, we can abort everything
-                    return self._generic_invalid_request(
-                        message = "requesting unavailable packages")
-
-                self._reposerv_json_pkg_data(pkg_meta)
-                pkg_data[package_id] = pkg_meta
-
-            response = self._api_base_response(
-                WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-            response['r'] = pkg_data
-            cached_obj = self._service_render(response)
-
-            if model.config.WEBSITE_CACHING:
-                self._cacher.save(
-                    cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-            return cached_obj
-
-        finally:
-            if repo is not None:
-                repo.close()
 
     def repository_revision(self):
         """

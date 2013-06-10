@@ -244,6 +244,33 @@ class ApibaseController(object):
         if repository_id not in self._supported_reposerv_repository_ids:
             raise AttributeError("unsupported repository_id")
 
+    def _reposerv_json_pkg_data(self, pkg_data):
+        """
+        Convert Entropy Package Metadata dict to a more json friendly format.
+        """
+        def _do_convert_from_set(obj):
+            new_obj = []
+            for sub in obj:
+                if isinstance(sub, (tuple, list, set, frozenset)):
+                    sub = _do_convert_from_set(sub)
+                elif isinstance(sub, dict):
+                    sub = _do_convert_dict(sub)
+                new_obj.append(sub)
+            return new_obj
+
+        def _do_convert_dict(d):
+            for k, v in d.iteritems():
+                if isinstance(v, (tuple, list, set, frozenset)):
+                    # this changes the data pointed at pkg_data
+                    del d[k]
+                    d[k] = _do_convert_from_set(v)
+                elif isinstance(v, dict):
+                    del d[k]
+                    d[k] = _do_convert_dict(v)
+            return d
+
+        return _do_convert_dict(pkg_data)
+
     def _reposerv_get_params(self, entropy_client, params=None):
         """
         Read from HTTP Request the following parameters:
