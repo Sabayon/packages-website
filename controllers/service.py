@@ -920,6 +920,14 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         finally:
             if proc is not None:
                 try:
+                    proc.stdout.close()
+                except Exception:
+                    pass
+                try:
+                    proc.stderr.close()
+                except Exception:
+                    pass
+                try:
                     proc.terminate()
                     proc.kill()
                 except Exception:
