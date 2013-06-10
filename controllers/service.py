@@ -1352,7 +1352,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
 
         try:
-            exit_st = self._exec_worker_cmd(
+            return self._exec_worker_cmd(
                 "packages.get_package_ids", os.environ)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
