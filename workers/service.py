@@ -402,7 +402,7 @@ class StandaloneController(ApibaseController):
                     try:
                         docs = self._ugc_document_data_to_document(
                             pkg_data_list)
-                    except AttributeError:
+                    except AttributeError as err:
                         self.error(err)
                         return 1
 
