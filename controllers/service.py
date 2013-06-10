@@ -213,9 +213,11 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         env = os.environ.copy()
         env["package_names"] = request.params.get("package_names") or ""
+        env["__repository_id__"] = self._get_repository_id()
 
         try:
-            return self._exec_worker_cmd("service.get_votes", env)
+            return self._exec_worker_cmd("service.get_votes",
+                                         env, set_env=False)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
@@ -662,6 +664,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         env["latest"] = request.params.get("latest") or ""
         env["cache"] = request.params.get("cache") or ""
         env["offset"] = request.params.get("offset") or ""
+        env["__repository_id__"] = self._get_repository_id()
+
         rev = request.params.get("rev")
         rev2 = request.params.get("revision")
         if rev:
@@ -670,7 +674,8 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             os.environ["rev"] = rev2
 
         try:
-            return self._exec_worker_cmd("service.get_documents", env)
+            return self._exec_worker_cmd("service.get_documents",
+                                         env, set_env=False)
         except Exception as err:
             return self._generic_invalid_request(message = str(err))
 
@@ -808,21 +813,21 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         response['r'] = True
         return self._service_render(response)
 
-    def _exec_worker_cmd(self, command, env, max_size=4096000):
+    def _exec_worker_cmd(self, command, env, max_size=4096000, set_env=True):
         """
         Execute a command through the external worker.
         """
-        entropy_client = self._entropy()
-        r, a, b, p = self._reposerv_get_params(entropy_client)
-
-        env.update(
-            {
-                "__repository_id__": r,
-                "arch": a,
-                "branch": b,
-                "product": p,
-                }
-            )
+        if set_env:
+            entropy_client = self._entropy()
+            r, a, b, p = self._reposerv_get_params(entropy_client)
+            env.update(
+                {
+                    "__repository_id__": r,
+                    "arch": a,
+                    "branch": b,
+                    "product": p,
+                    }
+                )
 
         out_fd, out_path = None, None
         err_fd, err_path = None, None
