@@ -832,6 +832,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
                 )
 
         enc = "raw_unicode_escape"
+        proc = None
         try:
 
             proc = subprocess.Popen(
