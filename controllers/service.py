@@ -283,6 +283,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         env = os.environ.copy()
         env["package_names"] = request.params.get("package_names") or ""
+        env["__repository_id__"] = self._get_repository_id()
 
         try:
             return self._exec_worker_cmd("service.get_downloads",
