@@ -665,6 +665,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         env["latest"] = request.params.get("latest") or ""
         env["cache"] = request.params.get("cache") or ""
         env["offset"] = request.params.get("offset") or ""
+        env["filter"] = request.params.get("filter") or ""
         env["__repository_id__"] = self._get_repository_id()
 
         rev = request.params.get("rev")
