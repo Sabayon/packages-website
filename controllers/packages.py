@@ -1166,10 +1166,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
             elif not t:
                 # try to understand string
-                if q.startswith("/"):
-                    default_searches = ["path"]
-                    searching_default = False
-                elif q.startswith("@"):
+                #disable path search, can eat ram
+                #if q.startswith("/"):
+                #    default_searches = ["path"]
+                #    searching_default = False
+                if q.startswith("@"):
                     default_searches = ["sets"]
                     searching_default = False
                 elif q.startswith("application/"):
