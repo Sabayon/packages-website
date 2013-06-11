@@ -150,14 +150,15 @@ class StandaloneController(ApibaseController):
             cached_obj = self._cacher.pop(
                 cache_key, cache_dir = model.config.WEBSITE_CACHE_DIR)
             if cached_obj is not None:
-                return cached_obj
+                self.error(cached_obj)
+                return 0
 
         repo = None
         try:
             repo = self._api_get_repo(entropy_client, r, a, b, p)
             if repo is None:
-                return self._generic_invalid_request(
-                    message = "invalid repository")
+                self.data("invalid repository")
+                return 1
 
             pkg_data = {}
             for package_id in package_ids:
@@ -166,8 +167,8 @@ class StandaloneController(ApibaseController):
                     get_content = False, get_changelog = False)
                 if pkg_meta is None:
                     # request is out of sync, we can abort everything
-                    return self._generic_invalid_request(
-                        message = "requesting unavailable packages")
+                    self.error("requesting unavailable packages")
+                    return 1
 
                 self._reposerv_json_pkg_data(pkg_meta)
                 pkg_data[package_id] = pkg_meta
@@ -182,7 +183,8 @@ class StandaloneController(ApibaseController):
                     cache_key, cached_obj,
                     cache_dir = model.config.WEBSITE_CACHE_DIR)
 
-            return cached_obj
+            self.data(cached_obj)
+            return 0
 
         finally:
             if repo is not None:
