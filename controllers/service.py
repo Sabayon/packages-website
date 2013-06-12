@@ -307,14 +307,14 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get downloads for given package names passed (in request)
         """
         try:
-            repository_id = self._get_repository_id(params=os.environ)
+            repository_id = self._get_repository_id()
             self._validate_repository_id(repository_id)
         except AttributeError as err:
             return self._generic_invalid_request(
                 message = "invalid repository")
 
         try:
-            package_names = self._get_package_names(params=os.environ)
+            package_names = self._get_package_names()
         except AttributeError as err:
             return self._generic_invalid_request(
                 message = "invalid package names")
