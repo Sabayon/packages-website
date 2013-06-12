@@ -211,15 +211,40 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get votes for given package names passed (in request)
         """
-        env = os.environ.copy()
-        env["package_names"] = request.params.get("package_names") or ""
-        env["__repository_id__"] = self._get_repository_id()
+        try:
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
+        except AttributeError as err:
+            self.error(err)
+            return 1
 
         try:
-            return self._exec_worker_cmd("service.get_votes",
-                                         env, set_env=False)
-        except Exception as err:
-            return self._generic_invalid_request(message = str(err))
+            package_names = self._get_package_names()
+        except AttributeError as err:
+            self.error(err)
+            return 1
+
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            vote_data = ugc.get_ugc_votes(package_names)
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+
+        # fill unavailable packages with None value
+        for package_name in package_names:
+            if package_name not in vote_data:
+                vote_data[package_name] = None
+
+        # ok valid
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = vote_data
+        return self._service_render(response)
 
     def add_vote(self):
         """
@@ -281,15 +306,40 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         Get downloads for given package names passed (in request)
         """
-        env = os.environ.copy()
-        env["package_names"] = request.params.get("package_names") or ""
-        env["__repository_id__"] = self._get_repository_id()
+        try:
+            repository_id = self._get_repository_id(params=os.environ)
+            self._validate_repository_id(repository_id)
+        except AttributeError as err:
+            return self._generic_invalid_request(
+                message = "invalid repository")
 
         try:
-            return self._exec_worker_cmd("service.get_downloads",
-                                         env, set_env=False)
-        except Exception as err:
-            return self._generic_invalid_request(message = str(err))
+            package_names = self._get_package_names(params=os.environ)
+        except AttributeError as err:
+            return self._generic_invalid_request(
+                message = "invalid package names")
+
+        ugc = None
+        try:
+            ugc = self._ugc(https=False)
+            down_data = ugc.get_ugc_downloads(package_names)
+        except ServiceConnectionError:
+            return self._generic_invalid_request(
+                code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
+        finally:
+            if ugc is not None:
+                ugc.disconnect()
+
+        # fill unavailable packages with None value
+        for package_name in package_names:
+            if package_name not in down_data:
+                down_data[package_name] = None
+
+        # ok valid
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = down_data
+        return self._service_render(response)
 
     def _add_downloads(self, package_names, branch,
                        release_string, hw_hash, ip_addr):
