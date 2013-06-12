@@ -710,94 +710,116 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         Get Document objects for given package_names. Filtering them out
         using "filter" directive.
         """
+        try:
+            repository_id = self._get_repository_id()
+            self._validate_repository_id(repository_id)
+        except AttributeError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        try:
+            package_names = self._get_package_names()
+        except AttributeError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        # validate type filters
+        try:
+            document_types = self._get_document_type_filter()
+        except AttributeError as err:
+            return self._generic_invalid_request(message = str(err))
+
+        if not document_types:
+            # get all the docs, if no filter is set
+            document_types.extend(Document.SUPPORTED_TYPES)
+
+        # if latest == "1", return results from
+        # latest to oldest
+        latest_str = request.params.get("latest")
+        if latest_str:
+            if latest_str == "0":
+                latest = False
+            else:
+                latest = True
+        else:
+            latest_str = "0"
+            latest = False
+
         # get cached?
         cache = request.params.get("cache")
         if cache:
             cache = cache and model.config.WEBSITE_CACHING
 
+        # using the new get_ugc_metadata_doctypes()
         revision = request.params.get("rev")
         if revision is None:
-            revision = request.params.get("revision")
-        if revision is None:
-            return self._generic_invalid_request(
-                message = "rev param not passed")
+            return self._generic_invalid_request(message="revision needed")
 
-        # maybe I can get the data without forking?
+        cached_obj = None
+        cache_key = None
         if cache:
-            try:
-                repository_id = self._get_repository_id()
-                self._validate_repository_id(repository_id)
-            except AttributeError as err:
-                return self._generic_invalid_request(message = str(err))
+            sha = hashlib.sha1()
+            sha.update(repr(package_names))
+            sha.update(repr(repository_id))
+            sha.update(repr(document_types))
+            sha.update(latest_str)
+            sha.update(revision)
+            cache_key = "_service_get_documents2_" + sha.hexdigest()
+            cached_obj = self._cacher.pop(cache_key,
+                cache_dir = model.config.WEBSITE_CACHE_DIR)
 
-            try:
-                package_names = self._get_package_names()
-            except AttributeError as err:
-                return self._generic_invalid_request(message = str(err))
-
-            # validate type filters
-            try:
-                document_types = self._get_document_type_filter()
-            except AttributeError as err:
-                return self._generic_invalid_request(message = str(err))
-
-            if not document_types:
-                # get all the docs, if no filter is set
-                document_types.extend(Document.SUPPORTED_TYPES)
-
-           # if latest == "1", return results from
-            # latest to oldest
-            latest_str = os.environ.get("latest")
-            if latest_str:
-                if latest_str == "0":
-                    latest = False
-                else:
-                    latest = True
+        if cached_obj is None:
+            # validate offset, if any
+            offset = request.params.get("offset")
+            if not offset:
+                offset = 0
             else:
-                latest_str = "0"
-                latest = False
+                try:
+                    offset = int(offset)
+                except (TypeError, ValueError):
+                    offset = 0
 
-            cached_obj = None
-            cache_key = None
-            if cache:
-                # XXX: if you change anything here, also make the same
-                # modifications in workers/service.py
-                sha = hashlib.sha1()
-                sha.update(repr(package_names))
-                sha.update(repr(repository_id))
-                sha.update(repr(document_types))
-                sha.update(latest_str)
-                sha.update(revision)
-                cache_key = "_service_get_documents2_" + sha.hexdigest()
-                cached_obj = self._cacher.pop(cache_key,
+            chunk_size = 15
+
+            data = {}
+            ugc = None
+            try:
+                ugc = self._ugc(https=False)
+                for package_name in package_names:
+                    p_data = {}
+
+                    has_more, pkg_data_list = \
+                        ugc.get_ugc_metadata_doctypes(
+                        package_name, document_types, offset = offset,
+                        length = chunk_size, latest = latest)
+                    p_data['has_more'] = has_more
+
+                    try:
+                        docs = self._ugc_document_data_to_document(
+                            repository_id, pkg_data_list)
+                    except AttributeError as err:
+                        return self._generic_invalid_request(message = str(err))
+
+                    p_data['docs'] = docs
+                    data[package_name] = p_data
+
+                cached_obj = data
+
+            except ServiceConnectionError:
+                return self._generic_invalid_request(
+                    code = WebService.WEB_SERVICE_RESPONSE_ERROR_CODE)
+
+            finally:
+                if ugc is not None:
+                    ugc.disconnect()
+                    del ugc
+
+            if cache and (cached_obj is not None):
+                self._cacher.save(cache_key, cached_obj,
                     cache_dir = model.config.WEBSITE_CACHE_DIR)
 
-            if cached_obj is not None:
-                response = self._api_base_response(
-                    WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-                response['r'] = cached_obj
-                return self._service_render(response)
-
-        env = os.environ.copy()
-        env["package_names"] = request.params.get("package_names") or ""
-        env["latest"] = request.params.get("latest") or ""
-        env["cache"] = request.params.get("cache") or ""
-        env["offset"] = request.params.get("offset") or ""
-        env["filter"] = request.params.get("filter") or ""
-        env["__repository_id__"] = self._get_repository_id()
-
-        rev = request.params.get("rev")
-        rev2 = request.params.get("revision")
-        if rev:
-            os.environ["rev"] = rev
-        elif rev2:
-            os.environ["rev"] = rev2
-
-        try:
-            return self._exec_worker_cmd("service.get_documents",
-                                         env, set_env=False)
-        except Exception as err:
-            return self._generic_invalid_request(message = str(err))
+        response = self._api_base_response(
+            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
+        response['r'] = cached_obj
+        return self._service_render(response)
 
     def get_documents_by_id(self):
         """

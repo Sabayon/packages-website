@@ -229,128 +229,6 @@ class StandaloneController(ApibaseController):
             if repo is not None:
                 repo.close()
 
-    def get_documents(self):
-        """
-        Get Document objects for given package_names. Filtering them out
-        using "filter" directive.
-        """
-        try:
-            repository_id = self._get_repository_id(params=os.environ)
-            self._validate_repository_id(repository_id)
-        except AttributeError as err:
-            self.error(err)
-            return 1
-
-        try:
-            package_names = self._get_package_names(params=os.environ)
-        except AttributeError as err:
-            self.error(err)
-            return 1
-
-        # validate type filters
-        try:
-            document_types = self._get_document_type_filter(params=os.environ)
-        except AttributeError as err:
-            self.error(err)
-            return 1
-
-        if not document_types:
-            # get all the docs, if no filter is set
-            document_types.extend(Document.SUPPORTED_TYPES)
-
-        # if latest == "1", return results from
-        # latest to oldest
-        latest_str = os.environ.get("latest")
-        if latest_str:
-            if latest_str == "0":
-                latest = False
-            else:
-                latest = True
-        else:
-            latest_str = "0"
-            latest = False
-
-        # get cached?
-        cache = os.environ.get("cache")
-        if cache:
-            cache = cache and model.config.WEBSITE_CACHING
-
-        # using the new get_ugc_metadata_doctypes()
-        revision = os.environ.get("rev")
-        if revision is None:
-            self.error("revision needed")
-            return 1
-
-        cached_obj = None
-        cache_key = None
-        if cache:
-            sha = hashlib.sha1()
-            sha.update(repr(package_names))
-            sha.update(repr(repository_id))
-            sha.update(repr(document_types))
-            sha.update(latest_str)
-            sha.update(revision)
-            cache_key = "_service_get_documents2_" + sha.hexdigest()
-            cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        if cached_obj is None:
-            # validate offset, if any
-            offset = os.environ.get("offset")
-            if not offset:
-                offset = 0
-            else:
-                try:
-                    offset = int(offset)
-                except (TypeError, ValueError):
-                    offset = 0
-
-            chunk_size = 15
-
-            data = {}
-            ugc = None
-            try:
-                ugc = self._ugc(https=False)
-                for package_name in package_names:
-                    p_data = {}
-
-                    has_more, pkg_data_list = \
-                        ugc.get_ugc_metadata_doctypes(
-                        package_name, document_types, offset = offset,
-                        length = chunk_size, latest = latest)
-                    p_data['has_more'] = has_more
-
-                    try:
-                        docs = self._ugc_document_data_to_document(
-                            repository_id, pkg_data_list)
-                    except AttributeError as err:
-                        self.error(err)
-                        return 1
-
-                    p_data['docs'] = docs
-                    data[package_name] = p_data
-
-                cached_obj = data
-
-            except ServiceConnectionError:
-                self.error("connection error")
-                return 1
-
-            finally:
-                if ugc is not None:
-                    ugc.disconnect()
-                    del ugc
-
-            if cache and (cached_obj is not None):
-                self._cacher.save(cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
-
-        response = self._api_base_response(
-            WebService.WEB_SERVICE_RESPONSE_CODE_OK)
-        response['r'] = cached_obj
-        self.data(self._service_render(response))
-        return 0
-
 
 if __name__ == "__main__":
 
@@ -360,7 +238,6 @@ if __name__ == "__main__":
         "service.repository_revision": con.repository_revision,
         "service.get_packages_metadata": con.get_packages_metadata,
         "service.get_repository_metadata": con.get_repository_metadata,
-        "service.get_documents": con.get_documents,
         }
 
     try:
