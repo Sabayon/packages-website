@@ -113,18 +113,16 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         NOTE: order_by doesn't have any effect here.
         """
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(self._entropy(), repository_id, arch,
+        repo = self._api_get_repo(self._entropy(), repository_id, arch,
             branch, product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            response['r'] = sorted(dbconn.listAllCategories())
+            if repo is None:
+                return self._api_error(
+                    renderer, 503, "repository not available")
+            response['r'] = sorted(repo.listAllCategories())
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -140,13 +138,14 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         response = self._api_base_response(200)
         entropy = self._entropy()
         spm_class = entropy.Spm_class()
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            categories = sorted(dbconn.listAllCategories())
+            if repo is None:
+                return self._api_error(renderer, 503,
+                                       "repository not available")
+            categories = sorted(repo.listAllCategories())
             groups = spm_class.get_package_groups().copy()
             for data in groups.values():
                 exp_cats = set()
@@ -156,10 +155,7 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                 data['categories'] = sorted(exp_cats)
             response['r'] = groups
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -174,27 +170,25 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
 
         response = self._api_base_response(200)
         entropy = self._entropy()
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            pkg_ids = dbconn.searchPackages(search_term, just_id = True)
+            if repo is None:
+                return self._api_error(renderer, 503,
+                                       "repository not available")
+            pkg_ids = repo.searchPackages(search_term, just_id = True)
             pkgs_data = [
-                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                (pkg_id, repository_id, arch, branch, product, repo) for \
                     pkg_id in pkg_ids]
 
             ordered_pkgs = self._api_order_by(pkgs_data, order_by)
-            # drop dbconn
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
+
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -219,13 +213,14 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            categories = sorted(dbconn.listAllCategories())
+            if repo is None:
+                return self._api_error(renderer, 503,
+                                       "repository not available")
+            categories = sorted(repo.listAllCategories())
             pkg_ids = set()
             for group in requested_groups:
                 group_data = groups[group]
@@ -236,20 +231,19 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                         x.startswith(g_cat)])
                 for my_category in my_categories:
                     # now get packages belonging to this category
-                    pkg_ids |= dbconn.listPackageIdsInCategory(my_category)
+                    pkg_ids |= repo.listPackageIdsInCategory(my_category)
+
             pkgs_data = [
-                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                (pkg_id, repository_id, arch, branch, product, repo) for \
                     pkg_id in pkg_ids]
             ordered_pkgs = self._api_order_by(pkgs_data, order_by)
-            # drop dbconn
+            # drop repo
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
+
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -265,13 +259,14 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            categories = dbconn.listAllCategories()
+            if repo is None:
+                return self._api_error(renderer, 503,
+                                       "repository not available")
+            categories = repo.listAllCategories()
             # validate categories
             categories_validation = requested_categories - set(categories)
             if categories_validation:
@@ -280,20 +275,18 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             pkg_ids = set()
             for category in categories:
                 # now get packages belonging to this category
-                pkg_ids |= dbconn.listPackageIdsInCategory(category)
+                pkg_ids |= repo.listPackageIdsInCategory(category)
             pkgs_data = [
-                (pkg_id, repository_id, arch, branch, product, dbconn) for \
+                (pkg_id, repository_id, arch, branch, product, repo) for \
                     pkg_id in pkg_ids]
             ordered_pkgs = self._api_order_by(pkgs_data, order_by)
-            # drop dbconn
+
             ordered_pkgs = [(p_id, r, a, b, p) for (p_id, r, a, b, p, x) in \
                 ordered_pkgs]
             response['r'] = [self._api_encode_package(*x) for x in ordered_pkgs]
+
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -315,13 +308,15 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
             return self._api_error(renderer, 400, "bad request")
 
         response = self._api_base_response(200)
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
 
         try:
-            if dbconn is None:
-                return self._api_error(renderer, 503, "repository not available")
-            categories = sorted(dbconn.listAllCategories())
+            if repo is None:
+                return self._api_error(renderer, 503,
+                                       "repository not available")
+
+            categories = sorted(repo.listAllCategories())
             out_cats = set()
             for group in requested_groups:
                 group_data = groups[group]
@@ -330,11 +325,9 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                     out_cats.update([x for x in categories if \
                         x.startswith(g_cat)])
             response['r'] = sorted(out_cats)
+
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 
@@ -520,12 +513,13 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
 
         response = self._api_base_response(200)
         entropy = self._entropy()
-        dbconn = self._api_get_repo(entropy, repository_id, arch, branch,
+        repo = self._api_get_repo(entropy, repository_id, arch, branch,
             product)
         try:
-            if dbconn is None:
+            if repo is None:
                 return self._api_error(
                     renderer, 503, "repository not available")
+
             ugc = None
             try:
                 ugc = self._ugc(https=False)
@@ -534,27 +528,27 @@ class ApiController(BaseController, WebsiteController, ApibaseController):
                         (package_id, repository_id, a, b, p) in packages:
                     if details:
                         pkg_data = self._get_api_package_detailed_info(
-                            dbconn, ugc, package_id, repository_id, a, b, p)
+                            repo, ugc, package_id, repository_id, a, b, p)
                     else:
                         pkg_data = self._get_api_package_basic_info(
-                            dbconn, ugc, package_id, repository_id, a, b, p)
+                            repo, ugc, package_id, repository_id, a, b, p)
                     if pkg_data is None:
                         return self._api_error(renderer, 503,
                             "package not available")
                     pkgs_data[package_hash] = pkg_data
                 response['r'] = pkgs_data
+
             except ServiceConnectionError:
                 return self._api_error(
                     renderer, 503, "service not available")
+
             finally:
                 if ugc is not None:
                     ugc.disconnect()
                     del ugc
+
         except Exception as err:
-            return self._api_error(renderer, 503, repr(err))
-        finally:
-            if dbconn is not None:
-                dbconn.close()
+            return self._api_error(renderer, 503, "%s" % (err,))
 
         return self._api_render(response, renderer)
 

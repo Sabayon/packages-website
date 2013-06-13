@@ -251,15 +251,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
         provided_mime = None
         category = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                provided_mime = repo.retrieveProvidedMime(package_id)
-                category = repo.retrieveCategory(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            provided_mime = repo.retrieveProvidedMime(package_id)
+            category = repo.retrieveCategory(package_id)
 
         if provided_mime is None:
             return self.show(hash_id)
@@ -288,14 +284,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         changelog = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                changelog = repo.retrieveChangelog(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            changelog = repo.retrieveChangelog(package_id)
 
         if (changelog is not None) and (changelog != "None"):
             # fixup bug (!= "None")
@@ -317,15 +309,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         dependencies = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                dependencies = repo.retrieveDependencies(package_id,
-                    extended = True)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            dependencies = repo.retrieveDependencies(
+                package_id, extended = True)
 
         if dependencies is not None:
             data = {}
@@ -374,38 +362,33 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 cache_dir = model.config.WEBSITE_CACHE_DIR)
 
         revdep_meta = []
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                if revdep_cache is not None:
-                    repo._setLiveCache("reverseDependenciesMetadata",
-                        revdep_cache)
-                pkg_ids = repo.retrieveReverseDependencies(package_id)
-                if revdep_cache is None:
-                    revdep_cache = repo._getLiveCache(
-                        "reverseDependenciesMetadata")
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            if revdep_cache is not None:
+                repo._setLiveCache("reverseDependenciesMetadata",
+                    revdep_cache)
+            pkg_ids = repo.retrieveReverseDependencies(package_id)
+            if revdep_cache is None:
+                revdep_cache = repo._getLiveCache(
+                    "reverseDependenciesMetadata")
 
-                def key_sorter(x):
-                    atom = repo.retrieveAtom(x)
-                    if atom:
-                        return entropy_dep.dep_getkey(atom)
-                    else:
-                        return "0"
+            def key_sorter(x):
+                atom = repo.retrieveAtom(x)
+                if atom:
+                    return entropy_dep.dep_getkey(atom)
+                else:
+                    return "0"
 
-                for pkg_id in sorted(pkg_ids, key = key_sorter):
-                    pkg_hash_id = self._api_human_encode_package(
-                        repo.retrieveName(pkg_id), pkg_id, repository_id, arch,
-                        branch, product)
+            for pkg_id in sorted(pkg_ids, key = key_sorter):
+                pkg_hash_id = self._api_human_encode_package(
+                    repo.retrieveName(pkg_id), pkg_id, repository_id, arch,
+                    branch, product)
 
-                    revdep_meta.append({
-                        'hash_id': pkg_hash_id,
-                        'atom': repo.retrieveAtom(pkg_id),
-                    })
-
-        finally:
-            if repo is not None:
-                repo.close()
+                revdep_meta.append({
+                    'hash_id': pkg_hash_id,
+                    'atom': repo.retrieveAtom(pkg_id),
+                })
 
         if model.config.WEBSITE_CACHING:
             if revdep_cache is not None:
@@ -476,14 +459,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         provided_mime = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                provided_mime = repo.retrieveProvidedMime(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            provided_mime = repo.retrieveProvidedMime(package_id)
 
         show_what_data['data'] = provided_mime
         c.package_show_what = show_what_data
@@ -503,14 +482,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         provided_libs = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                provided_libs = repo.retrieveProvidedLibraries(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            provided_libs = repo.retrieveProvidedLibraries(package_id)
 
         show_what_data['data'] = {
             'provided_libs': provided_libs,
@@ -535,14 +510,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         needed_libs = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                needed_libs = repo.retrieveNeeded(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            needed_libs = repo.retrieveNeeded(package_id)
 
         show_what_data['data'] = {
             'needed_libs': needed_libs,
@@ -586,8 +557,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             return self.show(hash_id)
 
         finally:
-            if repo is not None:
-                repo.close()
             if tmp_fd is not None:
                 try:
                     os.close(tmp_fd)
@@ -608,14 +577,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         excluded = model.config.EXCLUDED_MIRROR_NAMES
 
         download = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                download = repo.retrieveDownloadURL(package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            download = repo.retrieveDownloadURL(package_id)
 
         if download is None:
             return redirect(url("/"))
@@ -674,15 +639,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         entropy = self._entropy()
         repo = None
         original_repository_id = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                original_repository_id = repo.getInstalledPackageRepository(
-                    package_id)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            original_repository_id = repo.getInstalledPackageRepository(
+                package_id)
 
         if (original_repository_id != repository_id) and \
                 (original_repository_id is not None):
@@ -711,15 +672,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         entropy = self._entropy()
         sources = None
-        try:
-            repo = self._api_get_repo(
-                entropy, repository_id, arch, branch, product)
-            if repo is not None:
-                sources = repo.retrieveSources(package_id,
-                    extended = True)
-        finally:
-            if repo is not None:
-                repo.close()
+        repo = self._api_get_repo(
+            entropy, repository_id, arch, branch, product)
+        if repo is not None:
+            sources = repo.retrieveSources(
+                package_id, extended = True)
 
         show_what_data['data'] = sources
         c.package_show_what = show_what_data
@@ -754,8 +711,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             if ugc is not None:
                 ugc.disconnect()
                 del ugc
-            if repo is not None:
-                repo.close()
 
         show_what_data['data'] = metadata
         c.package_show_what = show_what_data
@@ -939,18 +894,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         Sort list of package tuples (results) using sort by "o" directive,
         which is one of model.config.available_sortings.
         """
-        repo_cache = {}
 
         def _sort_alphabet(x):
             (pkg_id, repository_id, arch, branch, product) = x
-            repo_coords = (repository_id, arch, branch, product)
-            repo = repo_cache.get(repo_coords)
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is None:
-                repo = self._api_get_repo(entropy, repository_id, arch, branch,
-                    product)
-                if repo is None:
-                    return "~"
-                repo_cache[repo_coords] = repo
+                return "~"
             atom = repo.retrieveAtom(pkg_id)
             if not atom:
                 return "~"
@@ -960,14 +910,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         def _sort_downloads(x):
             (pkg_id, repository_id, arch, branch, product) = x
-            repo_coords = (repository_id, arch, branch, product)
-            repo = repo_cache.get(repo_coords)
+            repo = self._api_get_repo(entropy, repository_id, arch, branch,
+                                      product)
             if repo is None:
-                repo = self._api_get_repo(entropy, repository_id, arch, branch,
-                    product)
-                if repo is None:
-                    return 0
-                repo_cache[repo_coords] = repo
+                return 0
             key_slot = repo.retrieveKeySlot(pkg_id)
             if not key_slot:
                 return 0
@@ -982,14 +928,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         def _sort_votes(x):
             (pkg_id, repository_id, arch, branch, product) = x
-            repo_coords = (repository_id, arch, branch, product)
-            repo = repo_cache.get(repo_coords)
+            repo = self._api_get_repo(
+                entropy, repository_id, arch, branch, product)
             if repo is None:
-                repo = self._api_get_repo(entropy, repository_id, arch, branch,
-                    product)
-                if repo is None:
-                    return "~"
-                repo_cache[repo_coords] = repo
+                return "~"
             key_slot = repo.retrieveKeySlot(pkg_id)
             if not key_slot:
                 return "~"
@@ -1007,13 +949,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         }
         sorter = sort_map.get(o)
         if sorter:
-            try:
-                results.sort(key = sorter)
-            finally:
-                for repo in repo_cache.values():
-                    repo.close()
+            results.sort(key = sorter)
 
-        repo_cache.clear()
         download_cache.clear()
         votes_cache.clear()
 

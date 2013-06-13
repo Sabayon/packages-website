@@ -288,12 +288,7 @@ class ApibaseController(object):
         except (ProgrammingError, OperationalError,
                 SystemDatabaseError, Exception) as exc:
             sys.stderr.write("Error _api_get_repo: %s\n" % (repr(exc),))
-            if dbconn is not None:
-                try:
-                    dbconn.close()
-                except:
-                    pass
-                dbconn = None
+            dbconn = None
         return dbconn
 
     def _api_get_params(self, entropy = None):
@@ -607,9 +602,6 @@ class ApibaseController(object):
                             category_descriptions[mycat] = cat_desc
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
 
         categories = sorted(categories)
         data = []
@@ -710,11 +702,7 @@ class ApibaseController(object):
         def _repo_filter(item):
             repo_id, arch, branch, product = item
             repo = self._api_get_repo(entropy, repo_id, arch, branch, product)
-            try:
-                return (repo is not None)
-            finally:
-                if repo is not None:
-                    repo.close()
+            return (repo is not None)
 
         return list(filter(_repo_filter, valid_list))
 
@@ -748,9 +736,7 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
+
         return data
 
     def _api_search_desc(self, entropy, q, filter_cb = None):
@@ -783,9 +769,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_lib(self, entropy, q, filter_cb = None):
@@ -821,9 +804,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_provided_lib(self, entropy, q, filter_cb = None):
@@ -859,9 +839,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_path(self, entropy, q, filter_cb = None):
@@ -896,9 +873,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_sets(self, entropy, q, filter_cb = None):
@@ -938,9 +912,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_mime(self, entropy, q, filter_cb = None):
@@ -975,9 +946,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_category(self, entropy, q, filter_cb = None):
@@ -1010,9 +978,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_group(self, entropy, q, filter_cb = None):
@@ -1062,9 +1027,6 @@ class ApibaseController(object):
                             for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_license(self, entropy, q, filter_cb = None):
@@ -1097,9 +1059,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_useflag(self, entropy, q, filter_cb = None):
@@ -1132,9 +1091,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_search_match(self, entropy, q, filter_cb = None):
@@ -1166,9 +1122,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _api_are_matches_available(self, entropy, packages):
@@ -1198,9 +1151,6 @@ class ApibaseController(object):
                     current_set -= matched_set
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
 
         return not current_set
 
@@ -1234,9 +1184,6 @@ class ApibaseController(object):
                         for pkg_id in pkg_ids)
             except DatabaseError:
                 continue
-            finally:
-                if repo is not None:
-                    repo.close()
         return data
 
     def _is_source_repository(self, repository_id):
@@ -1406,9 +1353,6 @@ class ApibaseController(object):
                 branch, product) for x in pkg_ids]
         except (OperationalError, DatabaseError):
             return []
-        finally:
-            if repo is not None:
-                repo.close()
 
     def __generate_action_url(self, hash_id, target):
         return "%s/%s/%s" % (model.config.PACKAGE_SHOW_URL, hash_id, target)
@@ -2017,18 +1961,13 @@ class ApibaseController(object):
         Get basic metadata of given entropy package tuples.
         """
         meta_map = {}
-        repo_cache = {}
         ugc_cache = {}
 
         try:
             for pkg_obj in package_tuples:
                 p_id, r, a, b, p = pkg_obj
 
-                if (r, a, b, p) in repo_cache:
-                    repo = repo_cache.get((r, a, b, p))
-                else:
-                    repo = self._api_get_repo(entropy, r, a, b, p)
-                    repo_cache[(r, a, b, p)] = repo
+                repo = self._api_get_repo(entropy, r, a, b, p)
 
                 try:
                     if repo is None:
@@ -2053,13 +1992,8 @@ class ApibaseController(object):
                     continue
 
         finally:
-            for repo in repo_cache.values():
-                if repo is not None:
-                    repo.close()
             ugc_cache.clear()
-            repo_cache.clear()
             del ugc_cache
-            del repo_cache
 
         return meta_map
 
