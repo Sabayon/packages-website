@@ -150,14 +150,14 @@ class StandaloneController(ApibaseController):
             cached_obj = self._cacher.pop(
                 cache_key, cache_dir = model.config.WEBSITE_CACHE_DIR)
             if cached_obj is not None:
-                self.error(cached_obj)
+                self.data(cached_obj)
                 return 0
 
         repo = None
         try:
             repo = self._api_get_repo(entropy_client, r, a, b, p)
             if repo is None:
-                self.data("invalid repository")
+                self.error("invalid repository")
                 return 1
 
             pkg_data = {}
