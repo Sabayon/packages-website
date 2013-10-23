@@ -755,6 +755,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
         cached_obj = None
         cache_key = None
+        cache_dir = None
         if cache:
             sha = hashlib.sha1()
             sha.update(repr(package_names))
@@ -763,8 +764,10 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha.update(latest_str)
             sha.update(revision)
             cache_key = "_service_get_documents2_" + sha.hexdigest()
+            cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                     "service_get_documents2")
             cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                          cache_dir = cache_dir)
 
         if cached_obj is None:
             # validate offset, if any
@@ -814,7 +817,7 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
 
             if cache and (cached_obj is not None):
                 self._cacher.save(cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                  cache_dir = cache_dir)
 
         response = self._api_base_response(
             WebService.WEB_SERVICE_RESPONSE_CODE_OK)

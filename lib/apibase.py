@@ -273,8 +273,10 @@ class ApibaseController(object):
             repository_id, arch, branch, product, repr(mtime))
         sha.update(hash_str)
         cache_key = "_api_get_repo_" + sha.hexdigest()
+        cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                 "api_get_repo")
         validated = self._cacher.pop(cache_key,
-            cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                     cache_dir = cache_dir)
 
         dbconn = None
         try:
@@ -284,7 +286,7 @@ class ApibaseController(object):
             if validated is None:
                 dbconn.validate()
                 self._cacher.save(cache_key, True,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                  cache_dir = cache_dir)
         except (ProgrammingError, OperationalError,
                 SystemDatabaseError, Exception) as exc:
             sys.stderr.write("Error _api_get_repo: %s\n" % (repr(exc),))
@@ -570,12 +572,15 @@ class ApibaseController(object):
         """
         Return Package Categories available.
         """
+        cache_dir = None
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
             cache_key = "_api_get_categories_" + sha.hexdigest()
+            cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                 "api_get_categories")
             data = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                    cache_dir = cache_dir)
             if data is not None:
                 return data
 
@@ -616,7 +621,7 @@ class ApibaseController(object):
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                              cache_dir = cache_dir)
 
         return data
 
@@ -1294,6 +1299,7 @@ class ApibaseController(object):
         arches = sorted(model.config.available_arches.keys())
 
         # caching
+        cache_dir = None
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             hash_str = "%s|%s|%s|%s|%s" % (
@@ -1305,8 +1311,10 @@ class ApibaseController(object):
             )
             sha.update(repr(hash_str))
             cache_key = "_get_latest_repo_type_packages3_" + sha.hexdigest()
+            cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                 "get_latest_repo_type_packages3")
             data = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                    cache_dir = cache_dir)
             if data is not None:
                 return data
 
@@ -1335,7 +1343,7 @@ class ApibaseController(object):
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                              cache_dir = cache_dir)
 
         return data
 
@@ -1634,11 +1642,13 @@ class ApibaseController(object):
         )
         sha.update(repr(hash_str))
         cache_key = "_get_package_base_metadata_" + sha.hexdigest()
+        cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                 "get_package_base_metadata")
 
         data = None
         if model.config.WEBSITE_CACHING:
             data = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                    cache_dir = cache_dir)
         if data is not None:
             return data
 
@@ -1713,7 +1723,7 @@ class ApibaseController(object):
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                              cache_dir = cache_dir)
 
         return data
 
@@ -1739,11 +1749,13 @@ class ApibaseController(object):
         )
         sha.update(repr(hash_str))
         cache_key = "_get_package_extended_metadata_" + sha.hexdigest()
+        cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
+                                 "get_package_extended_metadata")
 
         data = None
         if model.config.WEBSITE_CACHING:
             data = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                    cache_dir = cache_dir)
         if data is not None:
             return data
 
@@ -1951,7 +1963,7 @@ class ApibaseController(object):
 
         if model.config.WEBSITE_CACHING:
             self._cacher.save(cache_key, data,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+                              cache_dir = cache_dir)
 
         return data
 

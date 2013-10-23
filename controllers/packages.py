@@ -349,8 +349,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         # caching
         revdep_cache = None
+        cache_dir = None
 
         if model.config.WEBSITE_CACHING:
+            cache_dir = os.path.join(
+                model.config.WEBSITE_CACHE_DIR,
+                "show_reverse_dependencies")
+
             sha = hashlib.sha1()
             hash_str = "%s|%s|%s|%s|%s" % (
                 repository_id, arch, branch, product,
@@ -358,8 +363,8 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(hash_str)
             cache_key = "_show_reverse_dependencies_" + sha.hexdigest()
             # whacky thing !!
-            revdep_cache = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            revdep_cache = self._cacher.pop(
+                cache_key, cache_dir = cache_dir)
 
         revdep_meta = []
         repo = self._api_get_repo(
@@ -392,8 +397,10 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         if model.config.WEBSITE_CACHING:
             if revdep_cache is not None:
-                self._cacher.save(cache_key,
-                    revdep_cache, cache_dir = model.config.WEBSITE_CACHE_DIR)
+                self._cacher.save(
+                    cache_key,
+                    revdep_cache,
+                    cache_dir = cache_dir)
 
         if revdep_meta:
             show_what_data['data'] = revdep_meta
@@ -422,17 +429,21 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             now = datetime.now()
             cache_key = "_show_security_" + str(now.year) + \
                 str(now.month) + str(now.day)
+            cache_dir = os.path.join(
+                model.config.WEBSITE_CACHE_DIR,
+                "show_security")
 
             if model.config.WEBSITE_CACHING:
-                feed = self._cacher.pop(cache_key,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+                feed = self._cacher.pop(
+                    cache_key, cache_dir = cache_dir)
 
             if feed is None:
                 feed = feedparser.parse(model.config.GLSA_URI)
                 if model.config.WEBSITE_CACHING:
                     if isinstance(feed, dict):
-                        self._cacher.save(cache_key,
-                            feed, cache_dir = model.config.WEBSITE_CACHE_DIR)
+                        self._cacher.save(
+                            cache_key,
+                            feed, cache_dir = cache_dir)
 
             results = []
             for item in feed['entries']:
@@ -1049,6 +1060,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
         # caching
         results = None
+        cache_dir = None
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             sha.update(const_convert_to_rawstring(q))
@@ -1061,8 +1073,11 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
             sha.update(mtime_hash)
             cache_key = "quicksearch3_" + sha.hexdigest()
-            results = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            cache_dir = os.path.join(
+                model.config.WEBSITE_CACHE_DIR,
+                "quicksearch3")
+            results = self._cacher.pop(
+                cache_key, cache_dir = cache_dir)
 
         searching_default = True
         default_searches = ["match", "default"] #, "description"]
@@ -1201,8 +1216,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             # caching
             # NOTE: EntropyCacher is not started, so cannot use push()
             if model.config.WEBSITE_CACHING:
-                self._cacher.save(cache_key,
-                    results, cache_dir = model.config.WEBSITE_CACHE_DIR)
+                self._cacher.save(
+                    cache_key,
+                    results, cache_dir = cache_dir)
 
         results_len = len(results)
         if from_pkg > results_len:
@@ -1284,14 +1300,18 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             updates_show_type = "all"
 
         cached_obj = None
+        cache_dir = None
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
             sha.update(repr(updates_amount))
             sha.update(updates_show_type)
             cache_key = "_index4_" + sha.hexdigest()
-            cached_obj = self._cacher.pop(cache_key,
-                cache_dir = model.config.WEBSITE_CACHE_DIR)
+            cache_dir = os.path.join(
+                model.config.WEBSITE_CACHE_DIR,
+                "index4")
+            cached_obj = self._cacher.pop(
+                cache_key, cache_dir = cache_dir)
 
         if cached_obj is None:
             bin_search_pkgs = self._get_latest_binary_packages(entropy,
@@ -1321,7 +1341,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
             if model.config.WEBSITE_CACHING:
                 self._cacher.save(cache_key, cached_obj,
-                    cache_dir = model.config.WEBSITE_CACHE_DIR)
+                                  cache_dir = cache_dir)
 
         c.search_pkgs, c.packages_data = cached_obj
         c.search_showing_latest = True
