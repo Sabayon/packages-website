@@ -352,17 +352,21 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         cache_dir = None
 
         if model.config.WEBSITE_CACHING:
-            cache_dir = os.path.join(
-                model.config.WEBSITE_CACHE_DIR,
-                "show_reverse_dependencies")
 
             sha = hashlib.sha1()
             hash_str = "%s|%s|%s|%s|%s" % (
                 repository_id, arch, branch, product,
                 self._get_valid_repositories_mtime_hash(entropy))
             sha.update(hash_str)
-            cache_key = "_show_reverse_dependencies_" + sha.hexdigest()
-            # whacky thing !!
+
+            hexdigest = sha.hexdigest()
+            cache_key = "_show_reverse_dependencies_" + hexdigest
+
+            cache_dir = os.path.join(
+                model.config.WEBSITE_CACHE_DIR,
+                "show_reverse_dependencies",
+                self._hash_to_dirs(hexdigest))
+
             revdep_cache = self._cacher.pop(
                 cache_key, cache_dir = cache_dir)
 
@@ -1072,10 +1076,13 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(t))
             mtime_hash = self._get_valid_repositories_mtime_hash(entropy)
             sha.update(mtime_hash)
-            cache_key = "quicksearch3_" + sha.hexdigest()
+
+            hexdigest = sha.hexdigest()
+            cache_key = "quicksearch3_" + hexdigest
             cache_dir = os.path.join(
                 model.config.WEBSITE_CACHE_DIR,
-                "quicksearch3")
+                "quicksearch3",
+                self._hash_to_dirs(hexdigest))
             results = self._cacher.pop(
                 cache_key, cache_dir = cache_dir)
 
@@ -1306,10 +1313,12 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
             sha.update(repr(updates_amount))
             sha.update(updates_show_type)
-            cache_key = "_index4_" + sha.hexdigest()
+
+            hexdigest = sha.hexdigest()
+            cache_key = "_index4_" + hexdigest
             cache_dir = os.path.join(
                 model.config.WEBSITE_CACHE_DIR,
-                "index4")
+                "index4", self._hash_to_dirs(hexdigest))
             cached_obj = self._cacher.pop(
                 cache_key, cache_dir = cache_dir)
 

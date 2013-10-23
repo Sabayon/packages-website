@@ -7,6 +7,7 @@ import re
 import time
 import sys
 import json
+import collections
 
 from pylons import tmpl_context as c
 from pylons import app_globals as g
@@ -87,6 +88,22 @@ class ApibaseController(object):
                 response['r'].clear()
                 response['r'] = None
             response.clear()
+
+    @classmethod
+    def _hash_to_dirs(cls, hexdigest):
+        idx = 0
+        maxlen = len(hexdigest)
+        elements = collections.deque()
+        while idx < maxlen:
+            chars = ""
+            for x in range(2):
+                try:
+                    chars += hexdigest[idx]
+                except IndexError:
+                    break
+                idx += 1
+            elements.append(chars)
+        return os.path.sep.join(elements)
 
     def _get_package_name(self, params=None):
         """
@@ -272,9 +289,11 @@ class ApibaseController(object):
         hash_str = "%s:%s:%s:%s:%s" % (
             repository_id, arch, branch, product, repr(mtime))
         sha.update(hash_str)
-        cache_key = "_api_get_repo_" + sha.hexdigest()
+
+        hexdigest = sha.hexdigest()
+        cache_key = "_api_get_repo_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "api_get_repo")
+                                 "api_get_repo", self._hash_to_dirs(hexdigest))
         validated = self._cacher.pop(cache_key,
                                      cache_dir = cache_dir)
 
@@ -576,9 +595,12 @@ class ApibaseController(object):
         if model.config.WEBSITE_CACHING:
             sha = hashlib.sha1()
             sha.update(self._get_valid_repositories_mtime_hash(entropy))
-            cache_key = "_api_get_categories_" + sha.hexdigest()
+
+            hexdigest = sha.hexdigest()
+            cache_key = "_api_get_categories_" + hexdigest
             cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "api_get_categories")
+                                     "api_get_categories",
+                                     self._hash_to_dirs(hexdigest))
             data = self._cacher.pop(cache_key,
                                     cache_dir = cache_dir)
             if data is not None:
@@ -1310,9 +1332,12 @@ class ApibaseController(object):
                 self._get_valid_repositories_mtime_hash(entropy),
             )
             sha.update(repr(hash_str))
-            cache_key = "_get_latest_repo_type_packages3_" + sha.hexdigest()
+
+            hexdigest = sha.hexdigest()
+            cache_key = "_get_latest_repo_type_packages3_" + hexdigest
             cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "get_latest_repo_type_packages3")
+                                     "get_latest_repo_type_packages3",
+                                     self._hash_to_dirs(hexdigest))
             data = self._cacher.pop(cache_key,
                                     cache_dir = cache_dir)
             if data is not None:
@@ -1641,9 +1666,12 @@ class ApibaseController(object):
             meta_items_hash,
         )
         sha.update(repr(hash_str))
-        cache_key = "_get_package_base_metadata_" + sha.hexdigest()
+
+        hexdigest = sha.hexdigest()
+        cache_key = "_get_package_base_metadata_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "get_package_base_metadata")
+                                 "get_package_base_metadata",
+                                 self._hash_to_dirs(hexdigest))
 
         data = None
         if model.config.WEBSITE_CACHING:
@@ -1748,9 +1776,12 @@ class ApibaseController(object):
             brief_list_hash,
         )
         sha.update(repr(hash_str))
-        cache_key = "_get_package_extended_metadata_" + sha.hexdigest()
+
+        hexdigest = sha.hexdigest()
+        cache_key = "_get_package_extended_metadata_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "get_package_extended_metadata")
+                                 "get_package_extended_metadata",
+                                 self._hash_to_dirs(hexdigest))
 
         data = None
         if model.config.WEBSITE_CACHING:

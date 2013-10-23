@@ -763,9 +763,12 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             sha.update(repr(document_types))
             sha.update(latest_str)
             sha.update(revision)
-            cache_key = "_service_get_documents2_" + sha.hexdigest()
+
+            hexdigest = sha.hexdigest()
+            cache_key = "_service_get_documents2_" + hexdigest
             cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                     "service_get_documents2")
+                                     "service_get_documents2",
+                                     self._hash_to_dirs(hexdigest))
             cached_obj = self._cacher.pop(cache_key,
                                           cache_dir = cache_dir)
 
