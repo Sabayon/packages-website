@@ -364,7 +364,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
 
             cache_dir = os.path.join(
                 model.config.WEBSITE_CACHE_DIR,
-                "show_reverse_dependencies",
                 self._hash_to_dirs(hexdigest))
 
             revdep_cache = self._cacher.pop(
@@ -1081,7 +1080,6 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             cache_key = "quicksearch3_" + hexdigest
             cache_dir = os.path.join(
                 model.config.WEBSITE_CACHE_DIR,
-                "quicksearch3",
                 self._hash_to_dirs(hexdigest))
             results = self._cacher.pop(
                 cache_key, cache_dir = cache_dir)
@@ -1318,7 +1316,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             cache_key = "_index4_" + hexdigest
             cache_dir = os.path.join(
                 model.config.WEBSITE_CACHE_DIR,
-                "index4", self._hash_to_dirs(hexdigest))
+                self._hash_to_dirs(hexdigest))
             cached_obj = self._cacher.pop(
                 cache_key, cache_dir = cache_dir)
 

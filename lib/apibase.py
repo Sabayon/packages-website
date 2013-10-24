@@ -293,7 +293,7 @@ class ApibaseController(object):
         hexdigest = sha.hexdigest()
         cache_key = "_api_get_repo_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "api_get_repo", self._hash_to_dirs(hexdigest))
+                                 self._hash_to_dirs(hexdigest))
         validated = self._cacher.pop(cache_key,
                                      cache_dir = cache_dir)
 
@@ -599,7 +599,6 @@ class ApibaseController(object):
             hexdigest = sha.hexdigest()
             cache_key = "_api_get_categories_" + hexdigest
             cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                     "api_get_categories",
                                      self._hash_to_dirs(hexdigest))
             data = self._cacher.pop(cache_key,
                                     cache_dir = cache_dir)
@@ -1336,7 +1335,6 @@ class ApibaseController(object):
             hexdigest = sha.hexdigest()
             cache_key = "_get_latest_repo_type_packages3_" + hexdigest
             cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                     "get_latest_repo_type_packages3",
                                      self._hash_to_dirs(hexdigest))
             data = self._cacher.pop(cache_key,
                                     cache_dir = cache_dir)
@@ -1670,7 +1668,6 @@ class ApibaseController(object):
         hexdigest = sha.hexdigest()
         cache_key = "_get_package_base_metadata_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "get_package_base_metadata",
                                  self._hash_to_dirs(hexdigest))
 
         data = None
@@ -1780,7 +1777,6 @@ class ApibaseController(object):
         hexdigest = sha.hexdigest()
         cache_key = "_get_package_extended_metadata_" + hexdigest
         cache_dir = os.path.join(model.config.WEBSITE_CACHE_DIR,
-                                 "get_package_extended_metadata",
                                  self._hash_to_dirs(hexdigest))
 
         data = None
