@@ -94,7 +94,9 @@ class ApibaseController(object):
         idx = 0
         maxlen = len(hexdigest)
         elements = collections.deque()
-        while idx < maxlen:
+        maxsubdirs = 2
+        subdirs = 0
+        while idx < maxlen and subdirs < maxsubdirs:
             chars = ""
             for x in range(2):
                 try:
@@ -103,6 +105,9 @@ class ApibaseController(object):
                     break
                 idx += 1
             elements.append(chars)
+            subdirs += 1
+        elements.append(hexdigest)
+
         return os.path.sep.join(elements)
 
     def _get_package_name(self, params=None):
