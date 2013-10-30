@@ -215,13 +215,11 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
             repository_id = self._get_repository_id()
             self._validate_repository_id(repository_id)
         except AttributeError as err:
-            self.error(err)
             return 1
 
         try:
             package_names = self._get_package_names()
         except AttributeError as err:
-            self.error(err)
             return 1
 
         ugc = None
