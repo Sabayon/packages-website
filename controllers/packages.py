@@ -558,6 +558,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
                 entropy, repository_id, arch, branch, product)
             if repo is not None:
                 tmp_fd, tmp_path = tempfile.mkstemp(
+                    dir = model.config.WEBSITE_TMP_DIR,
                     prefix="PackagesController.RetrieveContent")
                 content = repo.retrieveContentIter(
                     package_id, order_by="file")
