@@ -557,8 +557,9 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
             repo = self._api_get_repo(
                 entropy, repository_id, arch, branch, product)
             if repo is not None:
+                # use CACHE_DIR so that files are LRU cleaned
                 tmp_fd, tmp_path = tempfile.mkstemp(
-                    dir = model.config.WEBSITE_TMP_DIR,
+                    dir = model.config.WEBSITE_CACHE_DIR,
                     prefix="PackagesController.RetrieveContent")
                 content = repo.retrieveContentIter(
                     package_id, order_by="file")
