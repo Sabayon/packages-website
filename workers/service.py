@@ -216,8 +216,7 @@ class StandaloneController(ApibaseController):
                 'revision': self._reposerv_get_revision(
                     entropy_client, r, a, b, p),
                 'checksum': repo.checksum(do_order = True,
-                    strict = False, strings = True,
-                    include_signatures = True),
+                    strict = False, include_signatures = True),
             }
 
             response = self._api_base_response(
