@@ -144,7 +144,7 @@ class StandaloneController(ApibaseController):
             sha.update(b)
             sha.update(";")
             sha.update(p)
-            cache_key = "_service_get_packages_metadata_%s_%s_%s_%s_%s" % (
+            cache_key = "_service_get_packages_metadata_%s_%s_%s_%s_%s_v2" % (
                 sha.hexdigest(), r, a, b, p)
 
             cached_obj = self._cacher.pop(
