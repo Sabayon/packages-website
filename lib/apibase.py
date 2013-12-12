@@ -74,7 +74,7 @@ class ApibaseController(object):
         # repository_id validation rule
         self._repo_re = re.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$", re.IGNORECASE)
         self._supported_reposerv_repository_ids = [
-            # "sabayonlinux.org",
+            "sabayonlinux.org",
             "sabayon-limbo"]
         self._supported_repository_ids = ["sabayonlinux.org",
             "sabayon-weekly", "sabayon-limbo"]
@@ -452,6 +452,15 @@ class ApibaseController(object):
             self._validate_reposerv_repository_id(r)
         except AttributeError:
             raise AssertionError("unsupported repository")
+
+        try:
+            version = int(params.get('__version__', 0))
+        except ValueError:
+            version = 0
+
+        if version < 254:
+            raise AssertionError(
+                "unsupported version %s, want 254" % (version,))
 
         # validate arch
         avail_arches = self._get_available_arches(entropy_client, r, p)
