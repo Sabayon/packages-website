@@ -161,7 +161,7 @@ class Entropy(Client):
             return None
         try:
             repo = self.open_generic_repository(db_path, xcache = xcache,
-                read_only = True, indexing_override = True)
+                read_only = True, indexing_override = True, direct=True)
             repo._setCacheSize(1024)
             return repo
         except DatabaseError as err:
