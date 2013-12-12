@@ -309,12 +309,16 @@ class ApibaseController(object):
                 return None
             if validated is None:
                 dbconn.validate()
-                self._cacher.save(cache_key, True,
-                                  cache_dir = cache_dir)
+                self._cacher.save(
+                    cache_key, True, cache_dir = cache_dir)
+
         except (ProgrammingError, OperationalError,
                 SystemDatabaseError, Exception) as exc:
             sys.stderr.write("Error _api_get_repo: %s\n" % (repr(exc),))
+            if dbconn is not None:
+                dbconn.close()
             dbconn = None
+
         return dbconn
 
     def _api_get_params(self, entropy = None):
