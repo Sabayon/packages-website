@@ -160,8 +160,10 @@ class Entropy(Client):
         if os.path.getsize(db_path) < 10:
             return None
         try:
-            repo = self.open_generic_repository(db_path, xcache = xcache,
-                read_only = True, indexing_override = True, direct=True)
+            repo = self.open_generic_repository(
+                db_path, xcache = xcache,
+                read_only = True, indexing_override = True, direct=True,
+                skip_checks=True)
             repo._setCacheSize(1024)
             return repo
         except DatabaseError as err:
