@@ -964,10 +964,12 @@ class ServiceController(BaseController, WebsiteController, ApibaseController):
         """
         if set_env:
             entropy_client = self._entropy()
-            r, a, b, p = self._reposerv_get_params(entropy_client)
+            r, a, b, p = self._reposerv_get_params(
+                entropy_client, params=request.params)
             env.update(
                 {
                     "__repository_id__": r,
+                    "__version__": request.params.get('__version__', "0"),
                     "arch": a,
                     "branch": b,
                     "product": p,
