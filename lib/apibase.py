@@ -458,7 +458,7 @@ class ApibaseController(object):
         except ValueError:
             version = 0
 
-        if version < 254:
+        if version < 254 and version != 1:
             raise AssertionError(
                 "unsupported version %s, want 254" % (version,))
 
