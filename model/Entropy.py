@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import threading
+
 import config
 from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
@@ -145,6 +147,8 @@ class Entropy(Client):
 
         return tuple(expanded_mirrors)
 
+    _open_db_tls = threading.local()
+
     def _open_db(self, repoid, arch, product, branch, xcache = False):
         """
         xcache is False by default, because in most cases (like search functions)
@@ -160,6 +164,14 @@ class Entropy(Client):
             return None
         if os.path.getsize(db_path) < 10:
             return None
+
+        if not hasattr(self._open_db_tls, "cache"):
+            self._open_db_tls.cache = {}
+
+        cache_key = (repoid, arch, product, branch)
+        if cache_key in self._open_db_tls.cache:
+            return self._open_db_tls[cache_key]
+
         try:
             repo = EntropyRepository(
                 readOnly = True,
@@ -169,12 +181,13 @@ class Entropy(Client):
                 indexing = True,
                 direct = True,
                 skipChecks = True)
-
-            return repo
         except DatabaseError as err:
             sys.stderr.write("Error opening %s: %s\n" % (
                     db_path, repr(err),))
-            return None
+            repo = None
+
+        self._open_db_tls[cache_key] = repo
+        return repo
 
     def output(*myargs, **mykwargs):
         pass
