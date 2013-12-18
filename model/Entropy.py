@@ -186,7 +186,7 @@ class Entropy(Client):
                     db_path, repr(err),))
             repo = None
 
-        self._open_db_tls[cache_key] = repo
+        self._open_db_tls.cache[cache_key] = repo
         return repo
 
     def output(*myargs, **mykwargs):
