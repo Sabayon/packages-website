@@ -170,7 +170,7 @@ class Entropy(Client):
 
         cache_key = (repoid, arch, product, branch)
         if cache_key in self._open_db_tls.cache:
-            return self._open_db_tls[cache_key]
+            return self._open_db_tls.cache[cache_key]
 
         try:
             repo = EntropyRepository(
