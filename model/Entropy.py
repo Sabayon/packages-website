@@ -5,7 +5,7 @@ from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
 from entropy.client.interfaces import Client
-from entropy.client.interfaces.db import GenericRepository
+from entropy.db import EntropyRepository
 from entropy.db.exceptions import DatabaseError
 from entropy.cache import EntropyCacher
 # do not write to memory, especially when xcache=False
@@ -161,7 +161,7 @@ class Entropy(Client):
         if os.path.getsize(db_path) < 10:
             return None
         try:
-            repo = GenericRepository(
+            repo = EntropyRepository(
                 readOnly = True,
                 dbFile = db_path,
                 name = repoid,
@@ -170,7 +170,6 @@ class Entropy(Client):
                 direct = True,
                 skipChecks = True)
 
-            repo._setCacheSize(512)
             return repo
         except DatabaseError as err:
             sys.stderr.write("Error opening %s: %s\n" % (
