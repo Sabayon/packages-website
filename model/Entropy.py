@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import threading
+
 import config
 from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
@@ -139,6 +141,32 @@ class Entropy(Client):
             expanded_mirrors.append(mirror)
 
         return tuple(expanded_mirrors)
+
+    _MAIN_THREAD = threading.current_thread()
+
+    @classmethod
+    def get_repository(cls, repository_id):
+        """
+        Monkey patch repository class objects with an appropriate
+        version of isMainThread.
+
+        This avoids EntropySQLRepository instances to start multiple
+        cleanup monitors for the ActionQueueWorkerThread, which can
+        be considered a second "MainThread" for repository instances.
+        """
+        repo_class = super(Entropy, cls).get_repository(repository_id)
+
+        current_thread = threading.current_thread()
+
+        def isMainThread(cls, thread_obj):
+            if thread_obj is Entropy._MAIN_THREAD:
+                return True
+            if thread_obj is current_thread:
+                return True
+            return False
+
+        repo_class.isMainThread = isMainThread
+        return repo_class
 
     def _open_db(self, repoid, arch, product, branch, xcache = False):
         """
