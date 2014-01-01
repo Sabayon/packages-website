@@ -18,10 +18,6 @@ class Entropy(Client):
     def init_singleton(self):
         Client.init_singleton(self, noclientdb = 2, repo_validation = False,
             load_ugc = False, xcache = False)
-        try:
-            self.clientLog.close()
-        except (AttributeError, IOError, OSError,):
-            pass
 
     def _guess_repo_db_path(self, repoid, arch, product, branch = None):
 
@@ -171,5 +167,6 @@ class Entropy(Client):
                     db_path, repr(err),))
             return None
 
-    def output(*myargs, **mykwargs):
+    @classmethod
+    def output(cls, *myargs, **mykwargs):
         pass
