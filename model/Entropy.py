@@ -7,6 +7,7 @@ from entropy.const import *
 from entropy.exceptions import SystemDatabaseError
 etpConst['entropygid'] = config.DEFAULT_WEB_GID
 from entropy.client.interfaces import Client
+from entropy.db import EntropyRepository
 from entropy.db.exceptions import DatabaseError
 from entropy.cache import EntropyCacher
 # do not write to memory, especially when xcache=False
@@ -145,6 +146,10 @@ class Entropy(Client):
     _MAIN_THREAD = threading.current_thread()
 
     @classmethod
+    def isMainThread(cls, _thread_obj):
+        return True
+
+    @classmethod
     def get_repository(cls, repository_id):
         """
         Monkey patch repository class objects with an appropriate
@@ -155,18 +160,10 @@ class Entropy(Client):
         be considered a second "MainThread" for repository instances.
         """
         repo_class = super(Entropy, cls).get_repository(repository_id)
-
-        current_thread = threading.current_thread()
-
-        def isMainThread(cls, thread_obj):
-            if thread_obj is Entropy._MAIN_THREAD:
-                return True
-            if thread_obj is current_thread:
-                return True
-            return False
-
-        repo_class.isMainThread = isMainThread
+        repo_class.isMainThread = Entropy.isMainThread
         return repo_class
+
+    _open_db_tls = threading.local()
 
     def _open_db(self, repoid, arch, product, branch, xcache = False):
         """
@@ -183,18 +180,34 @@ class Entropy(Client):
             return None
         if os.path.getsize(db_path) < 10:
             return None
+
+        if not hasattr(self._open_db_tls, "cache"):
+            self._open_db_tls.cache = {}
+
+        cache_key = (repoid, arch, product, branch)
+        if cache_key in self._open_db_tls.cache:
+            return self._open_db_tls.cache[cache_key]
+
         try:
-            repo = self.open_generic_repository(
-                db_path, xcache = xcache,
-                read_only = True, indexing_override = True, direct=True,
-                skip_checks=True)
-            repo._setCacheSize(1024)
-            return repo
+            repo = EntropyRepository(
+                readOnly = True,
+                dbFile = db_path,
+                name = repoid,
+                xcache = xcache,
+                indexing = True,
+                direct = True,
+                skipChecks = True)
         except DatabaseError as err:
             sys.stderr.write("Error opening %s: %s\n" % (
                     db_path, repr(err),))
-            return None
+            repo = None
+
+        self._open_db_tls.cache[cache_key] = repo
+        return repo
 
     @classmethod
     def output(cls, *myargs, **mykwargs):
         pass
+
+# Monkey patch isMainThread, see get_repository() docs
+EntropyRepository.isMainThread = Entropy.isMainThread
