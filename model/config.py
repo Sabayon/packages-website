@@ -72,7 +72,7 @@ available_products = {
 available_arches = {
     "amd64": "amd64",
     "x86": "x86",
-    "arch": "source",
+#    "arch": "source",
 }
 available_sortings = {
     "relevance": "Relevance",
@@ -83,12 +83,10 @@ available_sortings = {
 default_sorting = "relevance"
 
 disabled_repositories = [
-    "itsme",
     "community0",
     "community1",
-    "jenna",
 ]
-source_repositories = ["portage"]
+source_repositories = [] # "portage"]
 
 # UGC #
 community_repos_ugc_connection_data = {}
