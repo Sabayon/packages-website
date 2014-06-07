@@ -10,8 +10,6 @@ import tempfile
 import random
 random.seed()
 
-import Image
-
 from www.lib.base import *
 from www.lib.website import *
 from www.lib.apibase import ApibaseController

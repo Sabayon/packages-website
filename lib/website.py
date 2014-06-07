@@ -14,7 +14,10 @@ import os
 import time
 
 # Imaging
-import Image
+try:
+    from PIL import Image
+except ImportError:
+    import Image
 
 import www.lib.helpers as h
 import www.model as model
