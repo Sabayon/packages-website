@@ -4,10 +4,10 @@
             <div class="package-widget-show-deps-title">
                 ${_("Needed libraries")}
             </div>
-            % for soname in c.package_show_what['data']['needed_libs']:
+            % for usr_path, usr_soname, soname, elf, rpath in c.package_show_what['data']['needed_libs']:
                 <div class="package-widget-show-deps-item">
                     <a href="${c.base_search_url}?q=${c.search_prefixes['library'] | u}${soname | u}&a=${c.package_show_what['data']['arch'] | u}&b=${c.package_show_what['data']['branch'] | u}" rel="nofollow">
-                        ${soname | h,trim}
+                        ${soname | h,trim}:${elf | h,trim} by ${usr_path | h,trim}, RPATH="${rpath | h,trim}"
                     </a>
                 </div>
             % endfor

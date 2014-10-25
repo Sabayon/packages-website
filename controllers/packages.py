@@ -525,7 +525,7 @@ class PackagesController(BaseController, WebsiteController, ApibaseController):
         repo = self._api_get_repo(
             entropy, repository_id, arch, branch, product)
         if repo is not None:
-            needed_libs = repo.retrieveNeeded(package_id)
+            needed_libs = repo.retrieveNeededLibraries(package_id)
 
         show_what_data['data'] = {
             'needed_libs': needed_libs,
