@@ -1777,7 +1777,7 @@ class ApibaseController(object):
         Internal method used to build up extended metadata for package.
         """
         # caching
-        brief_list_hash = 2
+        brief_list_hash = 3
         is_source_repo = self._is_source_repository(repository_id)
         sha = hashlib.sha1()
         hash_str = "%s|%s|%s|%s|%s|%s|%s|%s|v3" % (
