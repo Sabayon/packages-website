@@ -1666,7 +1666,7 @@ class ApibaseController(object):
         Internal method used to build up basic metadata for package.
         """
         is_source_repo = self._is_source_repository(repository_id)
-        meta_items_hash = 1
+        meta_items_hash = 2
 
         # caching
         sha = hashlib.sha1()
