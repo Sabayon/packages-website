@@ -1559,7 +1559,7 @@ class ApibaseController(object):
             data.append(obj)
 
             # upstream CVS
-            vcs_url = "http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86"
+            vcs_url = "https://gitweb.gentoo.org/repo/gentoo.git/tree"
             upstream_vcs_url = "%s/%s" % (vcs_url, package_key,)
             obj = {
                 'id': "upstream_vcs",
