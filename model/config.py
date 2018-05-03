@@ -71,7 +71,7 @@ available_products = {
 }
 available_arches = {
     "amd64": "amd64",
-    "x86": "x86",
+    # "x86": "x86",
     "armv7l": "armv7l",
 #    "arch": "source",
 }
