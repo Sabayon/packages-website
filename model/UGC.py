@@ -122,7 +122,7 @@ class DistributionUGCInterface(Database):
             `entropy_release_strings_id` INT NOT NULL,
             `ts` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 DEFAULT CURRENT_TIMESTAMP,
-            `ip_address` VARCHAR( 15 ) NOT NULL,
+            `ip_address` VARCHAR( 40 ) NOT NULL,
             `entropy_ip_locations_id` INT UNSIGNED NOT NULL DEFAULT 0,
             `creation_date` DATETIME NOT NULL,
             `hits` INT UNSIGNED NOT NULL DEFAULT 0,
